@@ -1,0 +1,83 @@
+.container {
+  background-color: #f5f7fc;
+}
+
+.banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.adv-banner {
+  width: 100%;
+  height: auto;
+}
+
+.suggest {
+  text-align: center;
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-bottom-color: bisque;
+  margin-top: 50px;
+}
+
+.img-card {
+  width: 240px;
+  height: auto;
+  margin-bottom: 25px;
+}
+
+.home-product {
+  width: 100%;
+  height: auto;
+}
+
+.home-product > div {
+  width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(12, 80px);
+  column-gap: 20px;
+  row-gap: 20px;
+  align-items: center;
+}
+
+.box-card {
+  padding: 15px;
+}
+
+.card {
+  width: 280px;
+  height: 400px;
+  background-color: white; /* Màu hồng nhạt */
+
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.header-card {
+  display: flex;
+  justify-content: center;
+}
+
+.body-card {
+  height: 50px;
+  margin-bottom: 15px;
+}
+.footer-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0px;
+}
+.price {
+  margin: 0;
+}
+
+p {
+  margin: 0 0 0 0;
+}
+
+.load-more {
+  display: flex;
+  justify-content: center;
+}

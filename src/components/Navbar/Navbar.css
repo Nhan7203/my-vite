@@ -1,0 +1,134 @@
+.header {
+  width: 100%;
+  height: 200px;
+  box-shadow: 0 1px 5px -2px black;
+}
+
+.top-navbar {
+  height: 40px;
+  background: #fdf4fb;
+}
+.top-navbar-list {
+  font-size: 14px;
+  height: 100%;
+  background: #fdf4fb;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin: 0;
+  padding: 0;
+}
+
+.login {
+  display: flex;
+  align-items: center;
+}
+
+.login button {
+  font-size: 14px;
+  font-family: "Poppins";
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.navbar-search {
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.logo-img {
+  width: 90px;
+  height: 95px;
+  overflow: hidden;
+  margin-left: 20px;
+}
+
+.navbar-search {
+  height: 100px;
+}
+
+.box-search {
+  width: 555px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  background: #eb569c;
+  border-radius: 10px;
+  padding: 5px 0 5px 4px;
+  margin-left: 80px;
+}
+
+.box-search input {
+  width: 500px;
+  height: 100%;
+  border: 0;
+  outline: 0;
+  border-radius: 10px;
+  font-size: 20px;
+  padding-left: 20px;
+}
+
+.icon-search {
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.cart-noti-icons {
+  display: flex;
+  align-items: center;
+  color: black;
+}
+
+.icon-cart {
+  display: flex;
+}
+.icon-noti {
+  margin-left: 40px;
+  display: flex;
+  color: black;
+}
+.cart-icon {
+  color: black;
+}
+
+.cart-count {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: -15px;
+  margin-top: -12px;
+  border-radius: 11px;
+  font-size: 14px;
+  background: red;
+  color: white;
+}
+
+.bottom-navbar {
+  height: 60px;
+  background-color: #eb569c;
+}
+
+.bottom-navbar-list {
+  -webkit-text-fill-color: white;
+  height: 60px;
+  margin: 0;
+  font-style: italic;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: currentColor;
+}
+
+.bottom-navbar-list li {
+  margin: 50px;
+}
+a.white {
+  -webkit-text-fill-color: white;
+}
