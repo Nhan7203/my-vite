@@ -48,7 +48,7 @@
 .card {
   width: 280px;
   height: 400px;
-  background-color: white; /* Màu hồng nhạt */
+  background-color: white; 
 
   border-radius: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
@@ -74,7 +74,7 @@
 }
 
 p {
-  margin: 0 0 0 0;
+  margin: 0 ;
 }
 
 .load-more {
