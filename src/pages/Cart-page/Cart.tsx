@@ -1,8 +1,13 @@
 import Navbar from "../../components/Navbar/Navbar";
 import "./Cart.css";
-import igh from "../../assets/milk.png";
+import { useCart } from "./CartContext";
+import { FaRegTrashCan } from "react-icons/fa6";
 
-const Cart = () => {
+const ShoppingCart = () => {
+  const { cart, decrementQuantity, incrementQuantity, totals, removeItems } = useCart();
+
+  
+
   return (
     <div>
       <Navbar />
@@ -15,24 +20,48 @@ const Cart = () => {
               <ul>
                 <li>Price</li>
                 <li className="quantity">Quantity</li>
-                <li>Money</li>
+                <li className="total-amount">Total amount</li>
               </ul>
             </div>
-            <div className="detail-order">
-              <div
-                className="order-list"
-                style={{
-                  gridColumn: 1 / 13,
-                }}
-              >
-                <div className="img"> <img src={igh} className="ma" alt="" /></div>
-                <div className="name">2</div>
-                <div className="price-order">3</div>
-                <div className="quantity-count">4</div>
-                <div className="money">5</div>
-                <div className="icon">6</div>
+            {cart.map((product, index) => (
+              <div className="detail-order">
+                <div
+                  key={index}
+                  className="order-list"
+                  style={{
+                    gridColumn: 1 / 13,
+                  }}
+                >
+                  <div className="img">
+                    {" "}
+                    <img src={product.imageUrl} className="ma" alt="" />
+                  </div>
+                  <div className="name">{product.name}</div>
+                  <div className="price-order">{product.price}</div>
+                  <div className="quantity-count">
+                    <div
+                      className="decrease"
+                      onClick={() => decrementQuantity(product.productId)}
+                    >
+                      -
+                    </div>
+                    <input
+                      type="text"
+                      className="number"
+                      placeholder={`${product.quantityInStock}`}
+                    />
+                    <div
+                      className="increase"
+                      onClick={() => incrementQuantity(product.productId)}
+                    >
+                      +
+                    </div>
+                  </div>
+                  <div className="money">${totals[product.productId]}</div>
+                  <div className="icon" onClick={() => removeItems(product.productId)}><FaRegTrashCan /></div>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
           <div className="box-right">
             <div className="adress">
@@ -42,17 +71,17 @@ const Cart = () => {
               </div>
             </div>
             <div className="voucher">
-                <h4>Voucher</h4>
-                <div className="box-voucher">
-                  <div>Promo Code</div>
-                </div>
+              <h4>Voucher</h4>
+              <div className="box-voucher">
+                <div>Promo Code</div>
+              </div>
             </div>
             <div className="bill">
-                <div>Subtotal</div>
-                <div className="money-voucher">Voucher</div>
-                <div className="total">Total</div>
-                <div className="vat">(Incl. VAT)</div>
-                <div className="box-continue">Continue</div>
+              <div>Subtotal</div>
+              <div className="money-voucher">Voucher</div>
+              <div className="total">Total</div>
+              <div className="vat">(Incl. VAT)</div>
+              <div className="box-continue">Continue</div>
             </div>
           </div>
         </div>
@@ -61,4 +90,4 @@ const Cart = () => {
   );
 };
 
-export default Cart;
+export default ShoppingCart;

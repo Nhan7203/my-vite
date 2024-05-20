@@ -1,6 +1,11 @@
+
 export interface Product {
-	imageUrl: string;
-	name: string;
-	price: number;
-  }
+  productId: number;
+  imageUrl: string;
+  name: string;
+  price: number;
+  quantityInStock: number;
+}
+
+
 

@@ -15,20 +15,22 @@ import Blog from "./pages/Blog-page/Blog";
 import Voucher from "./pages/Voucher-page/Voucher";
 import Main from "./components/main/main-home/Main";
 import "./App.css"
-
+import { CartProvider } from './pages/Cart-page/CartContext';
 
 const Home = () => {
   return (
-    <div>
+   <div>
       <Navbar/>
       <Main/>
-    </div>
+      </div>
   );
 };
 
 const router = createBrowserRouter(
   createRoutesFromElements(
+  
     <Route>
+      
       <Route path="/" element={<Home />} />
       <Route path="/shop" element={<Shop />} />
       <Route path="/adress" element={<Adress />} />
@@ -39,14 +41,15 @@ const router = createBrowserRouter(
       <Route path="/blog" element={<Blog />} />
       <Route path="/voucher" element={<Voucher />} />
     </Route>
+    
   )
 );
 
 function App() {
   return (
-    <div className="">
+    <CartProvider>
       <RouterProvider router={router} />
-    </div>
+      </CartProvider>
   );
 }
 

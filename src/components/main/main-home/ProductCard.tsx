@@ -1,18 +1,16 @@
 import { BsCart3 } from "react-icons/bs";
 import { Product } from "./ProductData";
-
+import { useCart } from '../../../pages/Cart-page/CartContext';
 const getGridColumn = (index: number) => {
   const gridColumnMap = ["1 / 3", "4 / 6", "7 / 9", "10 / 12"];
 
   return gridColumnMap[index % gridColumnMap.length];
 };
-const ProductCard = ({
-  product,
-  index,
-}: {
-  product: Product;
-  index: number;
+const ProductCard = ({product,index}: {product: Product;index: number;
 }) => {
+
+  const { addToCart } = useCart();
+
   return (
     <div
       className="card"
@@ -31,7 +29,7 @@ const ProductCard = ({
 
         <div className="footer-card">
           <h2 className="price">{product.price}</h2>
-          <BsCart3 fontSize="1.5em" />
+          <BsCart3 className="icon"fontSize="1.5em" onClick={() => addToCart(product)}  />
         </div>
       </div>
     </div>

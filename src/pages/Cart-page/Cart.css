@@ -44,13 +44,14 @@
 }
 
 .Cart-Summary ul li {
-  margin-right: 40px;
+
   font-size: 14px;
   color: #67686c;
 }
 
 .quantity {
-  margin-left: 20px;
+  margin-left: 70px;
+  margin-right: 60px;
 }
 
 .detail-order {
@@ -71,18 +72,22 @@
 }
 .name {
   grid-column: 3/6;
+  font-size: 14px;
 }
 .price-order {
   grid-column: 6/8;
+  text-align: center;
 }
 .quantity-count {
   grid-column: 8/10;
 }
 .money {
   grid-column: 10/12;
+  text-align: center;
 }
 .icon {
   grid-column: 12/13;
+  margin-left: 10px;
 }
 
 .box-right {
@@ -123,8 +128,40 @@
     margin-top: 0;
 }
 
+.img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .ma{
     height: 100px;
+}
+
+.quantity-count{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+.decrease{
+  text-align: center;
+  width: 30px;
+  border: solid 0.5px;
+  cursor: pointer;
+}
+.number{
+  width: 30px;
+  height: 25px;
+  border: 0;
+  padding: 1px 0 1px 0;
+  text-align: center;
+}
+.increase{
+  text-align: center;
+  width: 30px;
+  border: solid 0.5px;
+  cursor: pointer;
+
 }
 
 .voucher{
@@ -174,6 +211,7 @@
   border-top: 1px solid #eaeaea;
   padding-top: 10px;
   font-size: 16px;
+  
 }
 
 .vat{

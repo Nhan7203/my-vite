@@ -4,6 +4,7 @@ import "./Main.css";
 import * as productitems from "../../../apiServices/productItems";
 import { useEffect, useState } from "react";
 
+
 const Main = () => {
   const [items, setItems] = useState([]);
 
@@ -15,10 +16,13 @@ const Main = () => {
     fetchData();
   }, []);
 
+
+
   const [noOfElement, setnoOfElement] = useState(8);
   const loadMore = () => {
     setnoOfElement(noOfElement + noOfElement);
   };
+ 
   const slice = items.slice(0, noOfElement);
 
   return (
@@ -32,7 +36,7 @@ const Main = () => {
       <div className="home-product">
         <div>
           {slice.map((product, index) => (
-            <ProductCard key={index} index={index} product={product} />
+            <ProductCard key={index} index={index} product={product}  />
           ))}
         </div>
       </div>
