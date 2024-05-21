@@ -58,7 +58,7 @@ const Register = () => {
                     </div>
                 </div>
 
-                <footer>
+                <div className='footer-register'>
                     <div>
                         <h2></h2>
                         <div>
@@ -105,7 +105,7 @@ const Register = () => {
                         <div className="line-end"></div>
                         <h5>Copyright&copy : m&b@gmail.com</h5>
                     </div>
-                </footer>
+                </div>
             </body>
 
 

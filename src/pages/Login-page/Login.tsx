@@ -47,7 +47,7 @@ const Login = () => {
           </div>
         </div>
 
-        <footer>
+        <div className='footer-login'>
           <div>
             <h2></h2>
             <div>
@@ -94,7 +94,7 @@ const Login = () => {
             <div className="line-end"></div>
             <h5>Copyright&copy : m&b@gmail.com</h5>
           </div>
-        </footer>
+        </div>
       </body>
 
 
