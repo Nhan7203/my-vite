@@ -22,7 +22,7 @@ const Main = () => {
   const loadMore = () => {
     setnoOfElement(noOfElement + noOfElement);
   };
- 
+
   const slice = items.slice(0, noOfElement);
 
   return (
@@ -36,7 +36,7 @@ const Main = () => {
       <div className="home-product">
         <div>
           {slice.map((product, index) => (
-            <ProductCard key={index} index={index} product={product}  />
+            <ProductCard key={index} index={index} product={product} />
           ))}
         </div>
       </div>

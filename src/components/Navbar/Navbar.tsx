@@ -3,7 +3,7 @@ import { IoNotificationsOutline } from "react-icons/io5";
 import { FaSearch } from "react-icons/fa";
 import { BsFillPeopleFill } from "react-icons/bs";
 import { GiPositionMarker } from "react-icons/gi";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import "./Navbar.css";
 
@@ -63,28 +63,28 @@ const Navbar = () => {
       <div className="bottom-navbar">
         <ul className="bottom-navbar-list">
           <li>
-            <Link to="/" className="white">
+            <NavLink to="/" className="nav-link" >
               Home
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to="/product" className="white">
+            <NavLink to="/product" className="nav-link">
               Product
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to="/Blog" className="white">
+            <NavLink to="/Blog" className="nav-link">
               Blog
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to="/Voucher" className="white">
+            <NavLink to="/Voucher" className="nav-link">
               Voucher
-            </Link>
+            </NavLink>
           </li>
         </ul>
       </div>
-    </nav>
+    </nav >
   );
 };
 

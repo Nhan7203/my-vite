@@ -7,7 +7,28 @@
 .top-navbar {
   height: 40px;
   background: #fdf4fb;
+  overflow: hidden;
 }
+
+.bottom-navbar a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 18px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.bottom-navbar .nav-link.active {
+  /* background-color: #b60052; */
+  background-color: #b60052 !important;
+}
+
+.bottom-navbar a:hover {
+  background-color: #b60052;
+  color: rgb(255, 255, 255);
+}
+
 .top-navbar-list {
   font-size: 14px;
   height: 100%;
@@ -86,11 +107,13 @@
 .icon-cart {
   display: flex;
 }
+
 .icon-noti {
   margin-left: 40px;
   display: flex;
   color: black;
 }
+
 .cart-icon {
   color: black;
 }
@@ -129,6 +152,7 @@
 .bottom-navbar-list li {
   margin: 50px;
 }
+
 a.white {
   -webkit-text-fill-color: white;
 }

@@ -16,21 +16,23 @@ import Voucher from "./pages/Voucher-page/Voucher";
 import Main from "./components/main/main-home/Main";
 import "./App.css"
 import { CartProvider } from './pages/Cart-page/CartContext';
-
+import Register from "./pages/Register-page/Register";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const Home = () => {
   return (
-   <div>
-      <Navbar/>
-      <Main/>
-      </div>
+    <div>
+      <Navbar />
+      <Main />
+    </div>
   );
 };
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-  
+
     <Route>
-      
+
       <Route path="/" element={<Home />} />
       <Route path="/shop" element={<Shop />} />
       <Route path="/adress" element={<Adress />} />
@@ -40,8 +42,9 @@ const router = createBrowserRouter(
       <Route path="/product" element={<Product />} />
       <Route path="/blog" element={<Blog />} />
       <Route path="/voucher" element={<Voucher />} />
+      <Route path="/register" element={<Register />} />
     </Route>
-    
+
   )
 );
 
@@ -49,7 +52,8 @@ function App() {
   return (
     <CartProvider>
       <RouterProvider router={router} />
-      </CartProvider>
+      < ToastContainer />
+    </CartProvider>
   );
 }
 
