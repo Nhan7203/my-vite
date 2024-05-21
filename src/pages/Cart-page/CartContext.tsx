@@ -1,17 +1,24 @@
 import { createContext, useState, useContext, useEffect } from 'react';
-
- interface Product {
-  productId: number;
-  imageUrl: string;
-  name: string;
-  price: number;
+import { ImageProduct } from '../../components/main/main-home/ProductData';
+import { Product } from "../../components/main/main-home/ProductData";
+export interface iProduct {
   quantityInStock: number;
+  productId: number;
+  forAgeId: number;
+  categoryId: number;
+  brandId: number;
+  name: string;
+  description: string;
+  price: number;
+  stock: number;
+  imageProducts: ImageProduct[];
+  isActive: boolean;
 }
 
 
 
 interface CartContextType {
-  cart: Product[];
+  cart: iProduct[];
   totals: { [productId: number]: number };
   addToCart: (product: Product) => void;
   incrementQuantity: (productId: number) => void;
@@ -30,7 +37,7 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  const [cart, setCart] = useState<Product[]>([]);
+  const [cart, setCart] = useState<iProduct[]>([]);
   const [totals, setTotals] = useState<{ [productId: number]: number }>({});
 
   useEffect(() => {
@@ -41,23 +48,23 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
- 
+
 
   const addToCart = (product: Product) => {
     const existingProduct = cart.find((item) => item.productId === product.productId);
     if (!existingProduct) {
-      
+
       const updatedCart = ([...cart, { ...product, quantityInStock: 1 }]);
       setCart(updatedCart);
       localStorage.setItem('cart', JSON.stringify(updatedCart));
       setTotals(calculateTotals(updatedCart));
-      
-      
-    } else {
-      const updatedCart =  cart.map((item) =>   
 
-          item.productId === product.productId ? { ...item, quantityInStock: item.quantityInStock + 1 } : item
-        );
+
+    } else {
+      const updatedCart = cart.map((item) =>
+
+        item.productId === product.productId ? { ...item, quantityInStock: item.quantityInStock + 1 } : item
+      );
       setCart(updatedCart);
       localStorage.setItem('cart', JSON.stringify(updatedCart));
       setTotals(calculateTotals(updatedCart));
@@ -65,10 +72,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const incrementQuantity = (productId: number) => {
-   
+
     const updatedCart = cart.map((item) =>
-        item.productId === productId ? { ...item, quantityInStock: item.quantityInStock + 1 } : item
-      );
+      item.productId === productId ? { ...item, quantityInStock: item.quantityInStock + 1 } : item
+    );
     setCart(updatedCart);
     localStorage.setItem('cart', JSON.stringify(updatedCart))
     setTotals(calculateTotals(updatedCart));
@@ -76,37 +83,37 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
 
   const decrementQuantity = (productId: number) => {
- 
+
     const updatedCart = cart.map((item) =>
-      
-        item.productId === productId && item.quantityInStock > 1
-          ? { ...item, quantityInStock: item.quantityInStock - 1 }
-          : item
-      )
-      setCart(updatedCart);
-      localStorage.setItem('cart', JSON.stringify(updatedCart))
-  
+
+      item.productId === productId && item.quantityInStock > 1
+        ? { ...item, quantityInStock: item.quantityInStock - 1 }
+        : item
+    )
+    setCart(updatedCart);
+    localStorage.setItem('cart', JSON.stringify(updatedCart))
+
     const existingProduct = cart.find((item) => item.productId === productId);
     if (existingProduct && existingProduct.quantityInStock > 1) {
       setTotals(calculateTotals(updatedCart));
     }
-    
+
     localStorage.setItem('cart', JSON.stringify(updatedCart));
   };
 
-  
-  const calculateTotals = (cart: Product[]) => {
+
+  const calculateTotals = (cart: iProduct[]) => {
     const newTotals: { [productId: number]: number } = {};
     cart.forEach((item) => {
-        newTotals[item.productId] = (newTotals[item.productId] || 0) + item.price * item.quantityInStock;
+      newTotals[item.productId] = (newTotals[item.productId] || 0) + item.price * item.quantityInStock;
     });
     return newTotals;
-};
+  };
 
-useEffect(() => {
-  const newTotals = calculateTotals(cart);
-  setTotals(newTotals);
-}, [cart]);
+  useEffect(() => {
+    const newTotals = calculateTotals(cart);
+    setTotals(newTotals);
+  }, [cart]);
 
 
   const removeItems = (productId: number) => {
@@ -116,8 +123,8 @@ useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(updatedCart));
   };
 
- 
-  
+
+
 
   return (
     <CartContext.Provider value={{ cart, totals, removeItems, addToCart, incrementQuantity, decrementQuantity }}>
