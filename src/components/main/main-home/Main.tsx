@@ -15,6 +15,18 @@ const Main = () => {
     };
     fetchData();
   }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const result = await productitems.add();
+  //       setItems(result);
+  //     } catch (error) {
+  //       console.error("There was an error fetching the product items: ", error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
 
 
 
@@ -24,6 +36,7 @@ const Main = () => {
   };
 
   const slice = items.slice(0, noOfElement);
+  // const slice = Array.isArray(items) ? items.slice(0, noOfElement) : [];
 
   return (
     <div className="container">

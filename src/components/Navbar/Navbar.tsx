@@ -3,14 +3,45 @@ import { IoNotificationsOutline } from "react-icons/io5";
 import { FaSearch } from "react-icons/fa";
 import { BsFillPeopleFill } from "react-icons/bs";
 import { GiPositionMarker } from "react-icons/gi";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, NavigateFunction } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import "./Navbar.css";
+import axios from 'axios';
+import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
+export interface Product {
+  name: string
+  productId: number
+}
 const Navbar = () => {
+  const navigate = useNavigate();
+
+  const [query, setQuery] = useState("");
+  const [products, setProducts] = useState<Product[]>([]);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`https://localhost:7030/api/Products?search=${query}`);
+      setProducts(response.data);
+      // const products = setProducts(response.data);
+      console.log('this is product log: ', products);
+      navigate('/product', { state: { products: products } });
+
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  }
+
+  const handleSearch = (event: { preventDefault: () => void; }) => {
+    event.preventDefault();
+    fetchData();
+  }
+
   return (
     <nav className="header">
       <div className="top-navbar">
+
         <ul className="top-navbar-list">
           <li>
             <Link to="/shop">Location: Thu Duc - HCM - VN</Link>
@@ -38,11 +69,15 @@ const Navbar = () => {
         <div className="navbar-logo">
           <img src={logo} alt="M&B-logo" className="logo-img" />
         </div>
+        <form onSubmit={handleSearch}>
+          <div className="box-search">
+            <input type="text" placeholder="What would you like to buy today?" value={query}
+              onChange={(e) => setQuery(e.target.value)} />
 
-        <div className="box-search">
-          <input type="text" placeholder="What would you like to buy today?" />
-          <FaSearch color="white" fontSize="1.5em" className="icon-search" />
-        </div>
+            <button type="submit"> <FaSearch color="white" fontSize="1.5em" className="icon-search" type="submit" /></button>
+          </div>
+        </form>
+
         <div className="cart-noti-icons">
           <div className="icon-cart">
             <Link to="/cart">
@@ -84,8 +119,10 @@ const Navbar = () => {
           </li>
         </ul>
       </div>
+
     </nav >
   );
+
 };
 
 export default Navbar;

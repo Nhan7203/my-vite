@@ -109,9 +109,24 @@
 }
 
 .head-sort {
+    border-radius: 10px;
     height: 56px;
-    background-color: #FFFFFF;
+    background-color: #FFF;
 }
+
+.head-sort li:hover {
+    background-color: #ff379b;
+    color: #FFF;
+    border-color: #fff;
+}
+
+.head-sort li.active {
+    background-color: #ff379b;
+    ;
+    color: #FFF;
+    border-color: #fff;
+}
+
 
 .head-sort>ul>li {
     padding: 10px 14px;
@@ -126,4 +141,24 @@
     background: #fff;
     border: 1px solid #eaeaea;
     border-radius: 8px;
+
+    width: 111px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    font-family: 'Poppins';
+    /* background-color: #ff379b; */
+}
+
+.head-sort>ul {
+    display: flex;
+    margin-top: 0px;
+    padding-top: 10px;
+    margin-bottom: 0px;
+    padding-bottom: 10px;
+    background-color: #FFF;
+    border-radius: 10px;
+    padding-left: 10px;
 }

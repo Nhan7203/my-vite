@@ -8,7 +8,27 @@
 // import logo from "../../assets/logo.png";
 import './Product.css'
 import Navbar from "../../components/Navbar/Navbar";
-const Product = () => {
+
+// const [products, setProducts] = useState<Product[]>([]);
+import { useLocation } from 'react-router-dom';
+import Footer from '../../components/Footer/footer';
+interface Product {
+  name: string
+  productId: number
+}
+
+interface LocationState {
+  products: Product[];
+}
+
+const Product: React.FC = () => {
+  const location = useLocation();
+  const state = location.state as LocationState
+  const products = state ? state.products : [];
+
+
+
+
   return (
     <>
       <Navbar />
@@ -287,8 +307,16 @@ const Product = () => {
                     </span>
                   </li>
                 </ul>
-              </div>
 
+              </div>
+              <div>
+                {products.map(product => (
+                  <div key={product.productId}>
+                    <h4>{product.name}</h4>
+
+                  </div>
+                ))}
+              </div>
             </div>
 
 
@@ -297,7 +325,7 @@ const Product = () => {
 
 
 
-
+        <Footer />
       </div>
 
     </>

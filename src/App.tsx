@@ -20,10 +20,12 @@ import Register from "./pages/Register-page/Register";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Footer from "./components/Footer/footer";
+
 const Home = () => {
   return (
     <div>
       <Navbar />
+      {/* <SearchForm /> */}
       <Main />
       <Footer />
 
@@ -46,6 +48,7 @@ const router = createBrowserRouter(
       <Route path="/blog" element={<Blog />} />
       <Route path="/voucher" element={<Voucher />} />
       <Route path="/register" element={<Register />} />
+
     </Route>
 
   )
