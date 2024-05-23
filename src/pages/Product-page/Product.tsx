@@ -8,15 +8,26 @@
 import "./Product.css";
 import Navbar from "../../components/Navbar/Navbar";
 import ProductList from "./ProductList";
-// const [products, setProducts] = useState<Product[]>([]);
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { aProduct } from "../../context/ShopContext";
 import Footer from "../../components/Footer/footer";
 
 const Product = () => {
   const location = useLocation();
-  const { products } = location.state as { products: aProduct[] };
-  console.log("local product: ", products)
+  const [isLoading, setIsLoading] = useState(true);
+  const [products, setProducts] = useState<aProduct[]>([]);
+
+  useEffect(() => {
+    if (location.state && location.state.products) {
+      setProducts(location.state.products);
+      setIsLoading(false);
+    }
+  }, [location.state]);
+
+  if (isLoading) {
+    return <div>Đang tải...</div>;
+  }
   return (
     <>
       <Navbar />

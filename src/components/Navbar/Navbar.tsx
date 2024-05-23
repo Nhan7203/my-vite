@@ -8,22 +8,21 @@ import logo from "../../assets/logo.png";
 import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { aProduct } from "../../context/ShopContext";
+
 import "./Navbar.css";
 
 const Navbar = () => {
   const navigate = useNavigate();
 
   const [query, setQuery] = useState("");
-  const [products, setProducts] = useState<aProduct[]>([]);
 
   const fetchData = async () => {
     try {
       const response = await axios.get(`https://localhost:7030/api/Products?search=${query}`);
-      setProducts(response.data);
+   
       // const products = setProducts(response.data);
       console.log('this is product log: ', response.data);
-      navigate('/product', { state: { products } });
+      navigate('/product', { state: { products: response.data} });
 
     } catch (error) {
       console.error("Error fetching data: ", error);
