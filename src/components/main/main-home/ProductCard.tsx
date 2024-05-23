@@ -1,6 +1,7 @@
 import { BsCart3 } from "react-icons/bs";
-import { Product } from "./ProductData";
+import { Link } from "react-router-dom"
 import { useCart } from '../../../pages/Cart-page/CartContext';
+import { Product } from '../../../context/ShopContext';
 
 const getGridColumn = (index: number) => {
   const gridColumnMap = ["1 / 3", "4 / 6", "7 / 9", "10 / 12"];
@@ -27,7 +28,7 @@ const ProductCard = ({ product, index }: {
     >
       <div className="box-card">
         <div className="header-card">
-          <img src={imageUrl} className="img-card" alt="" />
+          <Link to={`/productDetails/${product.productId}`}><img src={imageUrl} className="img-card" alt="" /></Link>
         </div>
 
         <div className="body-card">
