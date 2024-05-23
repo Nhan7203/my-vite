@@ -8,13 +8,17 @@
 // import logo from "../../assets/logo.png";
 import './Product.css'
 import Navbar from "../../components/Navbar/Navbar";
-
+import ProductList from './ProductList';
 // const [products, setProducts] = useState<Product[]>([]);
 import { useLocation } from 'react-router-dom';
 import Footer from '../../components/Footer/footer';
+
+
 interface Product {
   name: string
   productId: number
+  price: number;
+  imageUrl: string;
 }
 
 interface LocationState {
@@ -25,6 +29,7 @@ const Product: React.FC = () => {
   const location = useLocation();
   const state = location.state as LocationState
   const products = state ? state.products : [];
+
 
 
 
@@ -106,8 +111,25 @@ const Product: React.FC = () => {
                   <li>Price High - Low</li>
 
                 </ul>
+              </div>
 
+              <div>
+                {/* {products.map(product => (
+                  <div key={product.productId}>
+                    <h4>{product.name}</h4>
+              
 
+                  </div>
+                ))} */}
+                {products.map((product => (
+                  <ProductList
+                    key={product.productId}
+                    name={product.name}
+                    price={product.price}
+                    imageUrl={product.imageUrl}
+                  />
+
+                )))}
               </div>
 
             </div>
@@ -309,14 +331,11 @@ const Product: React.FC = () => {
                 </ul>
 
               </div>
-              <div>
-                {products.map(product => (
-                  <div key={product.productId}>
-                    <h4>{product.name}</h4>
 
-                  </div>
-                ))}
-              </div>
+
+
+
+
             </div>
 
 
@@ -326,7 +345,7 @@ const Product: React.FC = () => {
 
 
         <Footer />
-      </div>
+      </div >
 
     </>
 
