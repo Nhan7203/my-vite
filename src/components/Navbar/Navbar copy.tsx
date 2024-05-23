@@ -14,6 +14,7 @@ const SearchForm = () => {
     try {
       const response = await axios.get(`https://localhost:7030/api/Products?search=${query}`);
       setProducts(response.data);
+      console.log('this ís: ', response.data)
     } catch (error) {
       console.error("Error fetching data: ", error);
     }

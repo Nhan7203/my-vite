@@ -25,8 +25,7 @@ import "./App.css";
 const Home = () => {
   return (
     <div>
-      <Navbar />
-
+      <Navbar />    
       <Main />
       <Footer />
     </div>
