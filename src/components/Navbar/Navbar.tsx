@@ -5,28 +5,25 @@ import { BsFillPeopleFill } from "react-icons/bs";
 import { GiPositionMarker } from "react-icons/gi";
 import { NavLink, Link} from "react-router-dom";
 import logo from "../../assets/logo.png";
-import "./Navbar.css";
 import axios from 'axios';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import { aProduct } from "../../context/ShopContext";
+import "./Navbar.css";
 
-export interface Product {
-  name: string
-  productId: number
-}
 const Navbar = () => {
   const navigate = useNavigate();
 
   const [query, setQuery] = useState("");
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<aProduct[]>([]);
 
   const fetchData = async () => {
     try {
       const response = await axios.get(`https://localhost:7030/api/Products?search=${query}`);
       setProducts(response.data);
       // const products = setProducts(response.data);
-      console.log('this is product log: ', products);
-      navigate('/product', { state: { products: products } });
+      console.log('this is product log: ', response.data);
+      navigate('/product', { state: { products } });
 
     } catch (error) {
       console.error("Error fetching data: ", error);
@@ -69,14 +66,12 @@ const Navbar = () => {
         <div className="navbar-logo">
           <img src={logo} alt="M&B-logo" className="logo-img" />
         </div>
-        <form onSubmit={handleSearch}>
-          <div className="box-search">
+        <form className="box-search" onSubmit={handleSearch}>
             <input type="text" placeholder="What would you like to buy today?" value={query}
               onChange={(e) => setQuery(e.target.value)} />
 
-            <button type="submit"> <FaSearch color="white" fontSize="1.5em" className="icon-search" type="submit" /></button>
-          </div>
-        </form>
+            <button type="submit"> <FaSearch color="white" fontSize="1.8em" className="icon-search" type="submit" /></button>
+          </form>
 
         <div className="cart-noti-icons">
           <div className="icon-cart">

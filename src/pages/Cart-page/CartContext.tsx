@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react';
-import { ImageProduct,  Product } from '../../context/ShopContext';
+import { ImageProduct,  aProduct } from '../../context/ShopContext';
 
 export interface iProduct {
   quantityInStock: number;
@@ -18,7 +18,7 @@ export interface iProduct {
 interface CartContextType {
   cart: iProduct[];
   totals: { [productId: number]: number };
-  addToCart: (product: Product) => void;
+  addToCart: (product: aProduct) => void;
   incrementQuantity: (productId: number) => void;
   decrementQuantity: (productId: number) => void;
   removeItems: (productId: number) => void;
@@ -48,7 +48,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
 
 
-  const addToCart = (product: Product) => {
+  const addToCart = (product: aProduct) => {
     const existingProduct = cart.find((item) => item.productId === product.productId);
     if (!existingProduct) {
 

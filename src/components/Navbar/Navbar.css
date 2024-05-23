@@ -73,8 +73,8 @@
 }
 
 .box-search {
-  width: 555px;
-  height: 30px;
+  width: 559px;
+  height: 40px;
   display: flex;
   align-items: center;
   background: #eb569c;
@@ -84,18 +84,24 @@
 }
 
 .box-search input {
-  width: 500px;
-  height: 100%;
+  width: 510px;
+  height: 32px;
   border: 0;
   outline: 0;
   border-radius: 10px;
   font-size: 20px;
   padding-left: 20px;
 }
+.box-search button {
+  border: none;
+  background-color: #eb569c;
+  padding: 0;
+}
 
 .icon-search {
-  margin-left: 5px;
+  margin: 2px 0 0 10px;
   cursor: pointer;
+  
 }
 
 .cart-noti-icons {
