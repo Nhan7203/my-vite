@@ -3,7 +3,7 @@ import { IoNotificationsOutline } from "react-icons/io5";
 import { FaSearch } from "react-icons/fa";
 import { BsFillPeopleFill } from "react-icons/bs";
 import { GiPositionMarker } from "react-icons/gi";
-import { NavLink, Link, NavigateFunction } from "react-router-dom";
+import { NavLink, Link} from "react-router-dom";
 import logo from "../../assets/logo.png";
 import "./Navbar.css";
 import axios from 'axios';
