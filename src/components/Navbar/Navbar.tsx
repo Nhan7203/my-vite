@@ -98,7 +98,7 @@ const Navbar = () => {
       <div className="bottom-navbar">
         <ul className="bottom-navbar-list">
           <li>
-            <NavLink to="/" className="nav-link" >
+            <NavLink to="/" className="nav-link">
               Home
             </NavLink>
           </li>
@@ -119,10 +119,7 @@ const Navbar = () => {
           </li>
         </ul>
       </div>
-
-    </nav >
+    </nav>
   );
-
 };
-
 export default Navbar;

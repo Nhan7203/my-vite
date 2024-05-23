@@ -13,7 +13,6 @@ import ProductList from './ProductList';
 import { useLocation } from 'react-router-dom';
 import Footer from '../../components/Footer/footer';
 
-
 interface Product {
   name: string
   productId: number
@@ -348,6 +347,7 @@ const Product: React.FC = () => {
       </div >
 
     </>
+
 
   )
 }

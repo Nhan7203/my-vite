@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect } from 'react';
-import { ImageProduct } from '../../components/main/main-home/ProductData';
-import { Product } from "../../components/main/main-home/ProductData";
+import { ImageProduct,  Product } from '../../context/ShopContext';
+
 export interface iProduct {
   quantityInStock: number;
   productId: number;
@@ -14,8 +14,6 @@ export interface iProduct {
   imageProducts: ImageProduct[];
   isActive: boolean;
 }
-
-
 
 interface CartContextType {
   cart: iProduct[];
@@ -122,9 +120,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.removeItem('cart');
     localStorage.setItem('cart', JSON.stringify(updatedCart));
   };
-
-
-
 
   return (
     <CartContext.Provider value={{ cart, totals, removeItems, addToCart, incrementQuantity, decrementQuantity }}>
