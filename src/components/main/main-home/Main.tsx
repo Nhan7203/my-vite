@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useAllProduct } from "../../../context/ShopContext";
 
 const Main = () => {
-  
+ 
   const {allProduct} = useAllProduct();
 
   const [noOfElement, setnoOfElement] = useState(8);
