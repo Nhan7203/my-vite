@@ -7,6 +7,7 @@ import "./Main.css";
 import { useAllProduct } from "../../../context/ShopContext";
 
 const Main = () => {
+
   const { allProduct } = useAllProduct();
   const [noOfElement, setNoOfElement] = useState(8);
   const [currentSlide, setCurrentSlide] = useState(0);
