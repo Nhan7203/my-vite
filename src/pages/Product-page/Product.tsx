@@ -43,7 +43,7 @@ const Product = () => {
         }
 
         if (isForAgeChecked && forAgeId !== 0) {
-          queryParams.append("categoryId", forAgeId.toString());
+          queryParams.append("forAgeId", forAgeId.toString());
         }
 
         if (isBrandChecked && brandId !== 0) {
