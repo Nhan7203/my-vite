@@ -12,65 +12,74 @@ import Navbar from "../../components/Navbar/Navbar";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { aProduct } from "../../context/ShopContext";
-import { useAllProduct } from "../../context/ShopContext";
 
 const Product = () => {
   const [products, setProducts] = useState<aProduct[]>([]);
   const [categoryId, setCategoryId] = useState<number>(0);
+  const [forAgeId, setForAgeId] = useState<number>(0);
   const [orderBy, setOrderBy] = useState("");
   const [brandId, setBrandId] = useState<number>(0);
   const [isCategoryChecked, setIsCategoryChecked] = useState(false);
+  const [isForAgeChecked, setIsForAgeChecked] = useState(false);
   const [isBrandChecked, setIsBrandChecked] = useState(false);
-  const { allProduct } = useAllProduct();
   const location = useLocation();
   const [query, setQuery] = useState("");
+  const [isInitialLoad, setIsInitialLoad] = useState(false);
 
   useEffect(() => {
     if (location.state && location.state.query) {
       setQuery(location.state.query);
     }
+    setIsInitialLoad(true);
   }, [location.state]);
 
   useEffect(() => {
-    const fetchProductsByFilter = async () => {
-      const queryParams = new URLSearchParams();
+    if (isInitialLoad) {
+      const fetchProductsByFilter = async () => {
+        const queryParams = new URLSearchParams();
 
-      if (isCategoryChecked && categoryId !== 0) {
-        queryParams.append("categoryId", categoryId.toString());
-      }
+        if (isCategoryChecked && categoryId !== 0) {
+          queryParams.append("categoryId", categoryId.toString());
+        }
 
-      if (isBrandChecked && brandId !== 0) {
-        queryParams.append("brandId", brandId.toString());
-      }
+        if (isForAgeChecked && forAgeId !== 0) {
+          queryParams.append("categoryId", forAgeId.toString());
+        }
 
-      if (orderBy === "price") {
-        queryParams.append("orderBy", "price");
-      } else if (orderBy === "priceDesc") {
-        queryParams.append("orderBy", "priceDesc");
-      }
+        if (isBrandChecked && brandId !== 0) {
+          queryParams.append("brandId", brandId.toString());
+        }
 
-      let url = `https://localhost:7030/api/Products?${queryParams.toString()}`;
+        if (orderBy === "price") {
+          queryParams.append("orderBy", "price");
+        } else if (orderBy === "priceDesc") {
+          queryParams.append("orderBy", "priceDesc");
+        }
 
-      if (query) {
-        url += `&search=${query}`;
-      }
+        let url = `https://localhost:7030/api/Products?${queryParams.toString()}`;
 
-      const response = await axios.get(url);
-      setProducts(response.data);
-    };
+        if (query) {
+          url += `&search=${query}`;
+        }
 
-    fetchProductsByFilter();
+        const response = await axios.get(url);
+        setProducts(response.data);
+      };
+
+      fetchProductsByFilter();
+    }
   }, [
     isBrandChecked,
+    isForAgeChecked,
     isCategoryChecked,
-    allProduct,
     categoryId,
+    forAgeId,
     orderBy,
     brandId,
-    products,
     query,
+    isInitialLoad,
   ]);
-
+  console.log("this is product : ", products);
   const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     if (e.target.checked) {
@@ -93,6 +102,17 @@ const Product = () => {
     }
   };
 
+  const handleAgeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    if (e.target.checked) {
+      setForAgeId(Number(value));
+      setIsForAgeChecked(true);
+    } else {
+      setForAgeId(0);
+      setIsForAgeChecked(false);
+    }
+  };
+
   const handleOrderChange = (value: string) => {
     if (value === "price") {
       setOrderBy("price");
@@ -106,7 +126,7 @@ const Product = () => {
   return (
     <>
       <Navbar />
-
+      
       <div className="container">
         <div className="filter-product">
           <div className="space"></div>
@@ -118,7 +138,7 @@ const Product = () => {
                   <li>
                     <input
                       type="checkbox"
-                      value={1}
+                      value={2}
                       onChange={handleCategoryChange}
                     />
                   </li>
@@ -129,7 +149,11 @@ const Product = () => {
 
                 <ul>
                   <li>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      value={1}
+                      onChange={handleCategoryChange}
+                    />
                   </li>
                   <li>
                     <span>Powdered milk</span>
@@ -138,7 +162,11 @@ const Product = () => {
 
                 <ul>
                   <li>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      value={4}
+                      onChange={handleCategoryChange}
+                    />
                   </li>
                   <li>
                     <span>Fresh milk, Yogurt</span>
@@ -147,7 +175,11 @@ const Product = () => {
 
                 <ul>
                   <li>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      value={3}
+                      onChange={handleCategoryChange}
+                    />
                   </li>
                   <li>
                     <span>Nutritional drinks</span>
@@ -173,6 +205,7 @@ const Product = () => {
               </div>
 
               <div>
+                
                 {products.map((product) => (
                   <div className="detail-order" key={product.productId}>
                     <div className="order-list">
@@ -199,7 +232,11 @@ const Product = () => {
               <div className="content-cate">
                 <ul>
                   <li>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      value={1}
+                      onChange={handleAgeChange}
+                    />
                   </li>
                   <li>
                     <span>0 - 6 Month</span>
@@ -208,7 +245,11 @@ const Product = () => {
 
                 <ul>
                   <li>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      value={2}
+                      onChange={handleAgeChange}
+                    />
                   </li>
                   <li>
                     <span>6 - 12 Month</span>
@@ -217,7 +258,11 @@ const Product = () => {
 
                 <ul>
                   <li>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      value={3}
+                      onChange={handleAgeChange}
+                    />
                   </li>
                   <li>
                     <span>0 - 1 Year</span>
@@ -226,7 +271,11 @@ const Product = () => {
 
                 <ul>
                   <li>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      value={4}
+                      onChange={handleAgeChange}
+                    />
                   </li>
                   <li>
                     <span>1 - 2 year</span>
@@ -235,7 +284,11 @@ const Product = () => {
 
                 <ul>
                   <li>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      value={5}
+                      onChange={handleAgeChange}
+                    />
                   </li>
                   <li>
                     <span>+2 year</span>
@@ -251,7 +304,7 @@ const Product = () => {
                   <li>
                     <input
                       type="checkbox"
-                      value={6}
+                      value={5}
                       onChange={handleBrandChange}
                     />
                   </li>
@@ -262,7 +315,11 @@ const Product = () => {
 
                 <ul>
                   <li>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      value={3}
+                      onChange={handleBrandChange}
+                    />
                   </li>
                   <li>
                     <span>FrutoNyanya</span>
@@ -271,7 +328,11 @@ const Product = () => {
 
                 <ul>
                   <li>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      value={7}
+                      onChange={handleBrandChange}
+                    />
                   </li>
                   <li>
                     <span>Hoff</span>
@@ -280,7 +341,11 @@ const Product = () => {
 
                 <ul>
                   <li>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      value={1}
+                      onChange={handleBrandChange}
+                    />
                   </li>
                   <li>
                     <span>Meiji</span>
@@ -289,7 +354,11 @@ const Product = () => {
 
                 <ul>
                   <li>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      value={6}
+                      onChange={handleBrandChange}
+                    />
                   </li>
                   <li>
                     <span>Nestle</span>
@@ -298,7 +367,11 @@ const Product = () => {
 
                 <ul>
                   <li>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      value={10}
+                      onChange={handleBrandChange}
+                    />
                   </li>
                   <li>
                     <span>PediaSure</span>
@@ -307,7 +380,11 @@ const Product = () => {
 
                 <ul>
                   <li>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      value={4}
+                      onChange={handleBrandChange}
+                    />
                   </li>
                   <li>
                     <span>Sahmyook</span>
@@ -316,7 +393,11 @@ const Product = () => {
 
                 <ul>
                   <li>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      value={11}
+                      onChange={handleBrandChange}
+                    />
                   </li>
                   <li>
                     <span>Similac</span>
@@ -325,7 +406,11 @@ const Product = () => {
 
                 <ul>
                   <li>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      value={2}
+                      onChange={handleBrandChange}
+                    />
                   </li>
                   <li>
                     <span>THtruemilk</span>
@@ -334,7 +419,11 @@ const Product = () => {
 
                 <ul>
                   <li>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      value={9}
+                      onChange={handleBrandChange}
+                    />
                   </li>
                   <li>
                     <span>Vinamilk</span>
@@ -343,7 +432,11 @@ const Product = () => {
 
                 <ul>
                   <li>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      value={8}
+                      onChange={handleBrandChange}
+                    />
                   </li>
                   <li>
                     <span>Yakult</span>
@@ -360,5 +453,3 @@ const Product = () => {
 };
 
 export default Product;
-
-
