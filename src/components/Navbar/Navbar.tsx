@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { BsCart3 } from "react-icons/bs";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { FaSearch } from "react-icons/fa";
@@ -8,8 +9,22 @@ import logo from "../../assets/logo.png";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Navbar.css";
+import { useCart } from "../../pages/Cart-page/CartContext";
 
 const Navbar = () => {
+
+  const [cartCount, setCartCount] = useState(0);
+  const { cart } = useCart();
+
+  useEffect(() => {
+    // Calculate the total quantity in stock
+    const totalQuantityInStock = cart.reduce((total, product) => total + product.quantityInStock, 0);
+    setCartCount(totalQuantityInStock);
+  }, [cart]);
+
+  const handleLogo = () => {
+    location.href = "/";
+
   const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -18,6 +33,7 @@ const Navbar = () => {
     event.preventDefault();
     console.log("this is product log: ", searchQuery);
     navigate("/product", { state: { query: searchQuery } });
+
   };
 
   return (
@@ -47,7 +63,7 @@ const Navbar = () => {
       </div>
 
       <div className="navbar-search">
-        <div className="navbar-logo">
+        <div className="navbar-logo" onClick={() => handleLogo()}>
           <img src={logo} alt="M&B-logo" className="logo-img" />
         </div>
         <form className="box-search" onSubmit={handleSearch}>
@@ -74,7 +90,7 @@ const Navbar = () => {
             <Link to="/cart">
               <BsCart3 fontSize="2.0em" className="cart-icon" />
             </Link>
-            <div className="cart-count">0</div>
+            <div className="cart-count">{cartCount}</div>
           </div>
 
           <div className="icon-noti">
@@ -113,4 +129,5 @@ const Navbar = () => {
     </nav>
   );
 };
+
 export default Navbar;

@@ -1,22 +1,68 @@
 import './Register.css';
-import { Link } from "react-router-dom";
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
+
 const Register = () => {
-    const handleOnClick = () => {
-        location.href = "/";
-    }
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
-    const handleOnClickRegis = () => {
-        location.href = "/login";
+    const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setUsername(event.target.value);
+    };
 
+    const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(event.target.value);
+    };
 
-    }
+    const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setConfirmPassword(event.target.value);
+    };
+
+    const handleRegistration = async () => {
+        if (!username || !password || !confirmPassword) {
+
+            toast.error('Please fill in all the fields');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+
+            toast.error('Password and confirm password do not match');
+            return;
+        }
+
+        try {
+
+            const response = await axios.post('https://localhost:7030/api/Account/Register', {
+                email: username,
+                password: password,
+            });
+
+            if (response.status === 200) {
+                toast.done('Registration successful');
+                window.location.href = '/login';
+            }
+
+        } catch (error) {
+
+            toast.error('Registration failed');
+            console.error(error);
+        }
+    };
+
     return (
         <>
             <body>
                 <header>
                     <div>
-                        <div className="logo-mandb" onClick={() => handleOnClick()}>
+                        <div
+                            className="logo-mandb"
+                            onClick={() => (window.location.href = '/')}
+                        >
                             <h3>M</h3>
                             <h3 id="and">&</h3>
                             <h3>B.COM</h3>
@@ -33,32 +79,50 @@ const Register = () => {
                         <div className="form-login">
                             <h3 className="text-welcome">Register</h3>
                             <div>
-                                <label>Username</label>
-                                <input type="text" name="txtUserName" />
+                                <label>Email</label>
+                                <input
+                                    type="text"
+                                    name="txtUserName"
+                                    value={username}
+                                    onChange={handleUsernameChange}
+                                />
                             </div>
 
                             <div>
                                 <label>Password</label>
-                                <input type="password" name="txtPassword" />
+                                <input
+                                    type="password"
+                                    name="txtPassword"
+                                    value={password}
+                                    onChange={handlePasswordChange}
+                                />
                             </div>
                             <div>
-                                <label>Re-password</label>
-                                <input type="password" name="txtPassword" />
+                                <label>Confirm Password</label>
+                                <input
+                                    type="password"
+                                    name="txtConfirmPassword"
+                                    value={confirmPassword}
+                                    onChange={handleConfirmPasswordChange}
+                                />
                             </div>
-                            <input className="button-register" type="submit" name="btAction" value="Register" onClick={() => handleOnClickRegis()} />
+                            <input
+                                className="button-register"
+                                type="submit"
+                                name="btAction"
+                                value="Register"
+                                onClick={handleRegistration}
+                            />
 
-                            <p>You don’t have account ?
-                                {/* <a href="./Regi">Register</a> */}
-                                <Link to="/login">
-                                    Login
-                                </Link>
+                            <p>
+                                You already had an account?{' '}
+                                <Link to="/login">Login</Link>
                             </p>
                         </div>
-
                     </div>
                 </div>
 
-                <div className='footer-register'>
+                <div className="footer-register">
                     <div>
                         <h2></h2>
                         <div>
@@ -79,12 +143,8 @@ const Register = () => {
                             </ul>
                             <ul>
                                 <h3>Company</h3>
-                                <li>
-                                    About
-                                </li>
-                                <li>
-                                    Contact us
-                                </li>
+                                <li>About</li>
+                                <li>Contact us</li>
                             </ul>
                             <ul>
                                 <h3>Legal</h3>
@@ -103,16 +163,12 @@ const Register = () => {
                             <img src="/src/assets/twitter.svg" alt="" />
                         </div>
                         <div className="line-end"></div>
-                        <h5>Copyright&copy : m&b@gmail.com</h5>
+                        <h5>Copyright&copy;: m&b@gmail.com</h5>
                     </div>
                 </div>
             </body>
-
-
-
         </>
-
-    )
-}
+    );
+};
 
 export default Register;
