@@ -2,7 +2,7 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import * as productitems from "../apiServices/productItems";
 
-export interface Product {
+export interface aProduct {
   productId: number;
   forAgeId: number;
   categoryId: number;
@@ -22,7 +22,7 @@ export interface ImageProduct {
 }
 
 interface ShopContextType {
-  allProduct: Product[];
+  allProduct: aProduct[];
   
 }
 
@@ -39,7 +39,7 @@ export const useAllProduct = () => {
 
 
 const ShopContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const [allProduct, setAllProduct] = useState<Product[]>([]);
+  const [allProduct, setAllProduct] = useState<aProduct[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {

@@ -1,9 +1,9 @@
-import './Login.css';
+import "./Login.css";
 import { Link } from "react-router-dom";
 const Login = () => {
   const handleOnClick = () => {
     location.href = "/";
-  }
+  };
   return (
     <>
       <body>
@@ -35,19 +35,21 @@ const Login = () => {
                 <input type="password" name="txtPassword" />
               </div>
               <a href="">Forgot password?</a>
-              <input className="button-login" type="submit" name="btAction" value="Login" />
-              <p>You don’t have account ?
-                {/* <a href="./Regi">Register</a> */}
-                <Link to="/register">
-                  Register
-                </Link>
+              <input
+                className="button-login"
+                type="submit"
+                name="btAction"
+                value="Login"
+              />
+              <p>
+                You don’t have account ?{/* <a href="./Regi">Register</a> */}
+                <Link to="/register">Register</Link>
               </p>
             </div>
-
           </div>
         </div>
 
-        <div className='footer-login'>
+        <div className="footer-login">
           <div>
             <h2></h2>
             <div>
@@ -68,12 +70,8 @@ const Login = () => {
               </ul>
               <ul>
                 <h3>Company</h3>
-                <li>
-                  About
-                </li>
-                <li>
-                  Contact us
-                </li>
+                <li>About</li>
+                <li>Contact us</li>
               </ul>
               <ul>
                 <h3>Legal</h3>
@@ -96,12 +94,8 @@ const Login = () => {
           </div>
         </div>
       </body>
-
-
-
     </>
+  );
+};
 
-  )
-}
-
-export default Login
+export default Login;

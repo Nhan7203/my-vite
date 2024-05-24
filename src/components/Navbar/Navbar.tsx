@@ -5,9 +5,21 @@ import { BsFillPeopleFill } from "react-icons/bs";
 import { GiPositionMarker } from "react-icons/gi";
 import { NavLink, Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Navbar.css";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = (event: { preventDefault: () => void }) => {
+    event.preventDefault();
+    console.log("this is product log: ", searchQuery);
+    navigate("/product", { state: { query: searchQuery } });
+  };
+
   return (
     <nav className="header">
       <div className="top-navbar">
@@ -38,11 +50,25 @@ const Navbar = () => {
         <div className="navbar-logo">
           <img src={logo} alt="M&B-logo" className="logo-img" />
         </div>
+        <form className="box-search" onSubmit={handleSearch}>
+          <input
+            type="text"
+            placeholder="What would you like to buy today?"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
 
-        <div className="box-search">
-          <input type="text" placeholder="What would you like to buy today?" />
-          <FaSearch color="white" fontSize="1.5em" className="icon-search" />
-        </div>
+          <button type="submit">
+            {" "}
+            <FaSearch
+              color="white"
+              fontSize="1.8em"
+              className="icon-search"
+              type="submit"
+            />
+          </button>
+        </form>
+
         <div className="cart-noti-icons">
           <div className="icon-cart">
             <Link to="/cart">

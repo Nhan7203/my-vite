@@ -19,14 +19,14 @@ import Voucher from "./pages/Voucher-page/Voucher";
 import Main from "./components/main/main-home/Main";
 import Register from "./pages/Register-page/Register";
 import Footer from "./components/Footer/footer";
+
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
 const Home = () => {
   return (
     <div>
-      <Navbar />
-
+      <Navbar />    
       <Main />
       <Footer />
     </div>
