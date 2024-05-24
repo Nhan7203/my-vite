@@ -6,28 +6,103 @@
 // import { Link } from "react-router-dom";
 // import logo from "../../assets/logo.png";
 import "./Product.css";
+import Footer from "../../components/Footer/footer";
+import axios from "axios";
 import Navbar from "../../components/Navbar/Navbar";
-import ProductList from "./ProductList";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { aProduct } from "../../context/ShopContext";
-import Footer from "../../components/Footer/footer";
+import { useAllProduct } from "../../context/ShopContext";
 
 const Product = () => {
-  const location = useLocation();
-  const [isLoading, setIsLoading] = useState(true);
   const [products, setProducts] = useState<aProduct[]>([]);
+  const [categoryId, setCategoryId] = useState<number>(0);
+  const [orderBy, setOrderBy] = useState("");
+  const [brandId, setBrandId] = useState<number>(0);
+  const [isCategoryChecked, setIsCategoryChecked] = useState(false);
+  const [isBrandChecked, setIsBrandChecked] = useState(false);
+  const { allProduct } = useAllProduct();
+  const location = useLocation();
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
-    if (location.state && location.state.products) {
-      setProducts(location.state.products);
-      setIsLoading(false);
+    if (location.state && location.state.query) {
+      setQuery(location.state.query);
     }
   }, [location.state]);
 
-  if (isLoading) {
-    return <div>Đang tải...</div>;
-  }
+  useEffect(() => {
+    const fetchProductsByFilter = async () => {
+      const queryParams = new URLSearchParams();
+
+      if (isCategoryChecked && categoryId !== 0) {
+        queryParams.append("categoryId", categoryId.toString());
+      }
+
+      if (isBrandChecked && brandId !== 0) {
+        queryParams.append("brandId", brandId.toString());
+      }
+
+      if (orderBy === "price") {
+        queryParams.append("orderBy", "price");
+      } else if (orderBy === "priceDesc") {
+        queryParams.append("orderBy", "priceDesc");
+      }
+
+      let url = `https://localhost:7030/api/Products?${queryParams.toString()}`;
+
+      if (query) {
+        url += `&search=${query}`;
+      }
+
+      const response = await axios.get(url);
+      setProducts(response.data);
+    };
+
+    fetchProductsByFilter();
+  }, [
+    isBrandChecked,
+    isCategoryChecked,
+    allProduct,
+    categoryId,
+    orderBy,
+    brandId,
+    products,
+    query,
+  ]);
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    if (e.target.checked) {
+      setCategoryId(Number(value));
+      setIsCategoryChecked(true);
+    } else {
+      setCategoryId(0);
+      setIsCategoryChecked(false);
+    }
+  };
+
+  const handleBrandChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    if (e.target.checked) {
+      setBrandId(Number(value));
+      setIsBrandChecked(true);
+    } else {
+      setBrandId(0);
+      setIsBrandChecked(false);
+    }
+  };
+
+  const handleOrderChange = (value: string) => {
+    if (value === "price") {
+      setOrderBy("price");
+    } else if (value === "priceDesc") {
+      setOrderBy("priceDesc");
+    } else {
+      setOrderBy("");
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -41,7 +116,11 @@ const Product = () => {
               <div className="content-cate">
                 <ul>
                   <li>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      value={1}
+                      onChange={handleCategoryChange}
+                    />
                   </li>
                   <li>
                     <span>Nut milk</span>
@@ -80,26 +159,37 @@ const Product = () => {
             <div className="main-pro-list">
               <div className="head-sort">
                 <ul>
-                  <li> Price Low - High</li>
-                  <li>Price High - Low</li>
+                  <li>
+                    <button onClick={() => handleOrderChange("price")}>
+                      Price Low - High
+                    </button>
+                  </li>
+                  <li>
+                    <button onClick={() => handleOrderChange("priceDesc")}>
+                      Price High - Low
+                    </button>
+                  </li>
                 </ul>
               </div>
 
               <div>
-                {/* {products.map(product => (
-                  <div key={product.productId}>
-                    <h4>{product.name}</h4>
-              
-
-                  </div>
-                ))} */}
                 {products.map((product) => (
-                  <ProductList
-                    key={product.productId}
-                    name={product.name}
-                    price={product.price}
-                    imageUrl={product.imageProducts[0].imageUrl}
-                  />
+                  <div className="detail-order" key={product.productId}>
+                    <div className="order-list">
+                      <div className="img">
+                        <img
+                          src={product.imageProducts[0].imageUrl}
+                          className="ma"
+                          alt=""
+                        />
+                      </div>
+                      <div className="name">{product.name}</div>
+                      <div className="price-order">{product.price}</div>
+                      <div className="quantity-count">
+                        <div className="decrease"></div>
+                      </div>
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -159,7 +249,11 @@ const Product = () => {
               <div className="content-cate">
                 <ul>
                   <li>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      value={6}
+                      onChange={handleBrandChange}
+                    />
                   </li>
                   <li>
                     <span>137degree</span>
@@ -266,3 +360,5 @@ const Product = () => {
 };
 
 export default Product;
+
+

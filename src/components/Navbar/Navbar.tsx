@@ -3,10 +3,9 @@ import { IoNotificationsOutline } from "react-icons/io5";
 import { FaSearch } from "react-icons/fa";
 import { BsFillPeopleFill } from "react-icons/bs";
 import { GiPositionMarker } from "react-icons/gi";
-import { NavLink, Link} from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
-import axios from 'axios';
-import { useState } from 'react';
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import "./Navbar.css";
@@ -14,30 +13,17 @@ import "./Navbar.css";
 const Navbar = () => {
   const navigate = useNavigate();
 
-  const [query, setQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(`https://localhost:7030/api/Products?search=${query}`);
-   
-      // const products = setProducts(response.data);
-      console.log('this is product log: ', response.data);
-      navigate('/product', { state: { products: response.data} });
-
-    } catch (error) {
-      console.error("Error fetching data: ", error);
-    }
-  }
-
-  const handleSearch = (event: { preventDefault: () => void; }) => {
+  const handleSearch = (event: { preventDefault: () => void }) => {
     event.preventDefault();
-    fetchData();
-  }
+    console.log("this is product log: ", searchQuery);
+    navigate("/product", { state: { query: searchQuery } });
+  };
 
   return (
     <nav className="header">
       <div className="top-navbar">
-
         <ul className="top-navbar-list">
           <li>
             <Link to="/shop">Location: Thu Duc - HCM - VN</Link>
@@ -66,11 +52,23 @@ const Navbar = () => {
           <img src={logo} alt="M&B-logo" className="logo-img" />
         </div>
         <form className="box-search" onSubmit={handleSearch}>
-            <input type="text" placeholder="What would you like to buy today?" value={query}
-              onChange={(e) => setQuery(e.target.value)} />
+          <input
+            type="text"
+            placeholder="What would you like to buy today?"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
 
-            <button type="submit"> <FaSearch color="white" fontSize="1.8em" className="icon-search" type="submit" /></button>
-          </form>
+          <button type="submit">
+            {" "}
+            <FaSearch
+              color="white"
+              fontSize="1.8em"
+              className="icon-search"
+              type="submit"
+            />
+          </button>
+        </form>
 
         <div className="cart-noti-icons">
           <div className="icon-cart">
