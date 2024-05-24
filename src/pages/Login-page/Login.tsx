@@ -1,9 +1,70 @@
 import './Login.css';
+import React, { useState } from 'react';
 import { Link } from "react-router-dom";
+import { loginApi } from './LoginServices';
+import { toast } from 'react-toastify';
+// import jwt, { JwtPayload } from 'jsonwebtoken';
+
 const Login = () => {
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!email || !password) {
+      toast.error("Missing Email or Password");
+      return;
+    }
+
+    try {
+      const response = await loginApi(email, password);
+
+      if (response.status === 200) {
+        // Login successful
+        //Lay-Luu token vao local storage
+        const { token, user } = response.data;
+        localStorage.setItem('token', token);
+
+        // const decodedToken = jwt.decode(token) as JwtPayload;
+
+        if (user.roleId === 1) {
+          alert("Oke thg lon nay User ne");
+          //Redirect to 'User' page
+        }
+        else if (user.roleId === 2) {
+          alert("Oke thg lon nay Staff ne");
+          // Redirect to 'Staff' page
+
+        } else if (user.roleId === 3) {
+          alert("Oke thg lon nay Admin ne");
+          // Redirect to 'Admin' page
+
+        }
+      } else {
+        // Login failed
+        console.error('Login failed');
+      }
+    } catch (error) {
+      // Handle any network or server errors
+      console.error('An error occurred:', error);
+    }
+  };
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+  };
+
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+  };
+
   const handleOnClick = () => {
     location.href = "/";
   }
+
+
   return (
     <>
       <body>
@@ -23,16 +84,28 @@ const Login = () => {
         <div className="head-content">
           <img src="/src/assets/anya.png" alt="" />
           <div className="content">
-            <div className="form-login">
+
+            <form className="form-login" onSubmit={handleLogin}>
               <h3 className="text-welcome">Welcome</h3>
               <div>
-                <label>Username</label>
-                <input type="text" name="txtUserName" />
+                <label>Email</label>
+                <input type="email"
+                  id="email"
+                  value={email}
+                  onChange={handleEmailChange}
+                  placeholder="Enter your email"
+                  required />
               </div>
 
               <div>
                 <label>Password</label>
-                <input type="password" name="txtPassword" />
+                <input type="password"
+                  id="password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  placeholder="Enter your password"
+                  required />
+
               </div>
               <a href="">Forgot password?</a>
               <input className="button-login" type="submit" name="btAction" value="Login" />
@@ -42,7 +115,7 @@ const Login = () => {
                   Register
                 </Link>
               </p>
-            </div>
+            </form>
 
           </div>
         </div>
