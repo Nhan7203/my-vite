@@ -4,7 +4,7 @@
   background-color: #f5f7fc;
 }
 
-.body-cart > div {
+.body-cart>div {
   width: 1180px;
   margin: 0 auto;
   display: grid;
@@ -13,6 +13,7 @@
   row-gap: 20px;
   align-items: baseline;
 }
+
 .box-left {
   height: 560px;
   background-color: white;
@@ -21,6 +22,7 @@
   grid-column: 1 / 9;
   overflow: auto;
 }
+
 .Cart-Summary {
   width: 780px;
   display: grid;
@@ -38,7 +40,7 @@
   grid-column: 6 / 12;
 }
 
-.Cart-Summary > h2 {
+.Cart-Summary>h2 {
   grid-column: 1 / 6;
   margin-left: 20px;
   color: #67686c;
@@ -71,21 +73,26 @@
 .img {
   grid-column: 1 /3;
 }
+
 .name {
   grid-column: 3/6;
   font-size: 14px;
 }
+
 .price-order {
   grid-column: 6/8;
   text-align: center;
 }
+
 .quantity-count {
   grid-column: 8/10;
 }
+
 .money {
   grid-column: 10/12;
   text-align: center;
 }
+
 .icon {
   grid-column: 12/13;
   margin-left: 10px;
@@ -101,10 +108,10 @@
 
 .adress {
   padding: 24px 20px 24px 20px;
-  
+
 }
 
-.h4{
+.h4 {
   font-size: 18px;
 }
 
@@ -115,18 +122,18 @@
   border-radius: 5px;
 }
 
-.box-adress > div {
+.box-adress>div {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 60px;
   cursor: pointer;
- background-color: azure;
- 
+  background-color: azure;
+
 }
 
-.adress > h4 {
-    margin-top: 0;
+.adress>h4 {
+  margin-top: 0;
 }
 
 .img {
@@ -134,50 +141,57 @@
   justify-content: center;
   align-items: center;
 }
-.ma{
-    height: 100px;
+
+.ma {
+  height: 100px;
 }
 
-.quantity-count{
+.quantity-count {
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
 }
-.decrease{
+
+.decrease {
   text-align: center;
   width: 30px;
-  border: solid 0.5px;
+  /* border: solid 0.5px; */
   cursor: pointer;
+  background-color: #E0E0E0;
+  font-weight: 500;
 }
-.number{
+
+.number {
   width: 30px;
   height: 25px;
   border: 0;
   padding: 1px 0 1px 0;
   text-align: center;
 }
-.increase{
+
+.increase {
   text-align: center;
   width: 30px;
-  border: solid 0.5px;
   cursor: pointer;
+  background-color: #E0E0E0;
+  font-weight: 500;
 
 }
 
-.voucher{
+.voucher {
   margin-top: 20px;
   background-color: white;
-  padding: 1px 20px 24px 20px; 
+  padding: 1px 20px 24px 20px;
   border-radius: 20px;
   height: 80px;
 }
 
-.voucher > h4 {
+.voucher>h4 {
   margin: 10px 0 15px 0;
 }
 
-.voucher > div {
+.voucher>div {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -186,40 +200,42 @@
   color: orange;
   font-size: 14px;
 }
+
 .box-voucher {
 
   border: 2px solid orange;
   border-radius: 10px;
- 
+
 }
 
-.bill{
+.bill {
   background-color: white;
   height: 200px;
   margin-top: 20px;
-  padding: 24px 20px 30px 20px; 
+  padding: 24px 20px 30px 20px;
   line-height: 1.8;
   font-size: 14px;
   color: #67686c;
   border-radius: 20px;
 }
 
-.money-voucher{
+.money-voucher {
   margin-bottom: 5px;
 
 }
-.total{
+
+.total {
   border-top: 1px solid #eaeaea;
   padding-top: 10px;
   font-size: 16px;
-  
+
 }
 
-.vat{
+.vat {
   text-align: end;
 }
 
-.box-continue{
+.box-continue {
   height: 44px;
   background-color: #eb569c;
   border-radius: 10px;
@@ -229,10 +245,10 @@
   justify-content: center;
   align-items: center;
   margin-top: 15px;
-  
+
 }
 
-.total-price{
+.total-price {
   text-align: right;
   font-size: 1.5em;
   font-weight: bold;

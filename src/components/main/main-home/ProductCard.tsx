@@ -1,7 +1,7 @@
 import { BsCart3 } from "react-icons/bs";
 import { Link } from "react-router-dom"
 import { useCart } from '../../../pages/Cart-page/CartContext';
-import { Product } from '../../../context/ShopContext';
+import { aProduct } from '../../../context/ShopContext';
 
 const getGridColumn = (index: number) => {
   const gridColumnMap = ["1 / 3", "4 / 6", "7 / 9", "10 / 12"];
@@ -9,7 +9,7 @@ const getGridColumn = (index: number) => {
 };
 
 const ProductCard = ({ product, index }: {
-  product: Product;
+  product: aProduct;
   index: number;
 }) => {
   const { addToCart } = useCart();

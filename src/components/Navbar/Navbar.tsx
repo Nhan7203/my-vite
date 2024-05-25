@@ -6,7 +6,6 @@ import { BsFillPeopleFill } from "react-icons/bs";
 import { GiPositionMarker } from "react-icons/gi";
 import { NavLink, Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { useCart } from "../../pages/Cart-page/CartContext";
@@ -24,7 +23,7 @@ const Navbar = () => {
 
   const handleLogo = () => {
     location.href = "/";
-
+  }
   const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState("");

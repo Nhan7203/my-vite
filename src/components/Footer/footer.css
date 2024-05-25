@@ -1,5 +1,6 @@
 footer {
     background-color: #EB569C;
+
 }
 
 footer>div {
@@ -82,7 +83,7 @@ footer>div>div:nth-child(3) {
 footer>div>div:nth-child(4) {
     width: 100%;
     height: 0.5px;
-    background-color: #4F4A4A;
+    background-color: #FFFFFF;
     margin-top: 20px;
 }
 
