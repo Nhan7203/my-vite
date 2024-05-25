@@ -17,7 +17,7 @@ const Navbar = () => {
   useEffect(() => {
     // Calculate the total quantity in stock
     const totalQuantityInStock = cart.reduce(
-      (total, product) => total + product.quantityInStock,
+      (total, product) => total + product.quantity,
       0
     );
     setCartCount(totalQuantityInStock);
