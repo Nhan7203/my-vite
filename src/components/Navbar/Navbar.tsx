@@ -6,25 +6,26 @@ import { BsFillPeopleFill } from "react-icons/bs";
 import { GiPositionMarker } from "react-icons/gi";
 import { NavLink, Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { useCart } from "../../pages/Cart-page/CartContext";
 
 const Navbar = () => {
-
   const [cartCount, setCartCount] = useState(0);
   const { cart } = useCart();
 
   useEffect(() => {
     // Calculate the total quantity in stock
-    const totalQuantityInStock = cart.reduce((total, product) => total + product.quantityInStock, 0);
+    const totalQuantityInStock = cart.reduce(
+      (total, product) => total + product.quantityInStock,
+      0
+    );
     setCartCount(totalQuantityInStock);
   }, [cart]);
 
   const handleLogo = () => {
     location.href = "/";
-
+  };
   const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -33,7 +34,6 @@ const Navbar = () => {
     event.preventDefault();
     console.log("this is product log: ", searchQuery);
     navigate("/product", { state: { query: searchQuery } });
-
   };
 
   return (

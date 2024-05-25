@@ -85,8 +85,16 @@ p {
   display: flex;
   justify-content: center;
 }
-
-.icon {
+.box-shopping{
+  border-radius: 50%;
+  background-color: #dddcdc;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.icon-shopping {
   cursor: pointer;
 }
 

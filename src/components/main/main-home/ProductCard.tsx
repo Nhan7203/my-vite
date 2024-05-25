@@ -1,7 +1,7 @@
 import { BsCart3 } from "react-icons/bs";
 import { Link } from "react-router-dom"
 import { useCart } from '../../../pages/Cart-page/CartContext';
-import { Product } from '../../../context/ShopContext';
+import { aProduct } from '../../../context/ShopContext';
 
 const getGridColumn = (index: number) => {
   const gridColumnMap = ["1 / 3", "4 / 6", "7 / 9", "10 / 12"];
@@ -9,7 +9,7 @@ const getGridColumn = (index: number) => {
 };
 
 const ProductCard = ({ product, index }: {
-  product: Product;
+  product: aProduct;
   index: number;
 }) => {
   const { addToCart } = useCart();
@@ -36,8 +36,10 @@ const ProductCard = ({ product, index }: {
         </div>
 
         <div className="footer-card">
-          <h2 className="price">{product.price}</h2>
-          <BsCart3 className="icon" fontSize="1.5em" onClick={() => addToCart(product)} />
+          <h2 className="price">${product.price.toLocaleString()}</h2>
+          <div className="box-shopping">
+          <BsCart3 className="icon-shopping" fontSize="1.5em" onClick={() => addToCart(product)} />
+          </div>
         </div>
       </div>
     </div>
