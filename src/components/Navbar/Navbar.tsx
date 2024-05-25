@@ -11,6 +11,7 @@ import "./Navbar.css";
 import { useCart } from "../../pages/Cart-page/CartContext";
 
 const Navbar = () => {
+
   const [cartCount, setCartCount] = useState(0);
   const { cart } = useCart();
 
@@ -32,8 +33,9 @@ const Navbar = () => {
 
   const handleSearch = (event: { preventDefault: () => void }) => {
     event.preventDefault();
-    console.log("this is product log: ", searchQuery);
+    
     navigate("/product", { state: { query: searchQuery } });
+    window.location.reload();
   };
 
   return (
@@ -41,7 +43,14 @@ const Navbar = () => {
       <div className="top-navbar">
         <ul className="top-navbar-list">
           <li>
-            <Link to="/shop">Location: Thu Duc - HCM - VN</Link>
+            <Link
+              to="/shop"
+              style={{
+                color: "#ff0000", // Mã màu đỏ
+              }}
+            >
+              Location: Thu Duc - HCM - VN
+            </Link>
           </li>
 
           <li>Tel: (+84) 3939393939</li>

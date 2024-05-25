@@ -14,6 +14,7 @@ import { useLocation } from "react-router-dom";
 import { aProduct } from "../../context/ShopContext";
 
 const Product = () => {
+  const location = useLocation();
   const [products, setProducts] = useState<aProduct[]>([]);
   const [categoryId, setCategoryId] = useState<number>(0);
   const [forAgeId, setForAgeId] = useState<number>(0);
@@ -22,50 +23,54 @@ const Product = () => {
   const [isCategoryChecked, setIsCategoryChecked] = useState(false);
   const [isForAgeChecked, setIsForAgeChecked] = useState(false);
   const [isBrandChecked, setIsBrandChecked] = useState(false);
-  const location = useLocation();
-  const [query, setQuery] = useState("");
-  const [isInitialLoad, setIsInitialLoad] = useState(false);
+  const [isSearchSuccess, setIsSearchSuccess] = useState(false);
+  const [query, setQuery] = useState(null);
 
   useEffect(() => {
     if (location.state && location.state.query) {
       setQuery(location.state.query);
     }
-    setIsInitialLoad(true);
   }, [location.state]);
 
   useEffect(() => {
-    if (isInitialLoad) {
-      const fetchProductsByFilter = async () => {
-        const queryParams = new URLSearchParams();
+    const fetchProductsByFilter = async () => {
+      const queryParams = new URLSearchParams();
 
-        if (isCategoryChecked && categoryId !== 0) {
-          queryParams.append("categoryId", categoryId.toString());
-        }
+      if (isCategoryChecked && categoryId !== 0) {
+        queryParams.append("categoryId", categoryId.toString());
+      }
 
-        if (isForAgeChecked && forAgeId !== 0) {
-          queryParams.append("forAgeId", forAgeId.toString());
-        }
+      if (isForAgeChecked && forAgeId !== 0) {
+        queryParams.append("forAgeId", forAgeId.toString());
+      }
 
-        if (isBrandChecked && brandId !== 0) {
-          queryParams.append("brandId", brandId.toString());
-        }
+      if (isBrandChecked && brandId !== 0) {
+        queryParams.append("brandId", brandId.toString());
+      }
 
-        if (orderBy === "price") {
-          queryParams.append("orderBy", "price");
-        } else if (orderBy === "priceDesc") {
-          queryParams.append("orderBy", "priceDesc");
-        }
+      if (orderBy === "price") {
+        queryParams.append("orderBy", "price");
+      } else if (orderBy === "priceDesc") {
+        queryParams.append("orderBy", "priceDesc");
+      }
 
-        let url = `https://localhost:7030/api/Products?${queryParams.toString()}`;
+      let url = `https://localhost:7030/api/Products?${queryParams.toString()}`;
 
-        if (query) {
-          url += `&search=${query}`;
-        }
+      if (query) {
+        console.log("Query1 : ", query);
+        url += `&search=${query}`;
+      }
 
-        const response = await axios.get(url);
-        setProducts(response.data);
-      };
+      const response = await axios.get(url);
+      setProducts(response.data);
+      setIsSearchSuccess(true);
+    };
 
+    fetchProductsByFilter();
+    if (query !== null && isSearchSuccess) {
+      //window.location.reload();
+      setQuery(null);
+      console.log("Query : ", query);
       fetchProductsByFilter();
     }
   }, [
@@ -77,8 +82,9 @@ const Product = () => {
     orderBy,
     brandId,
     query,
-    isInitialLoad,
+    isSearchSuccess,
   ]);
+
   console.log("this is product : ", products);
   const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -126,7 +132,7 @@ const Product = () => {
   return (
     <>
       <Navbar />
-      
+
       <div className="container">
         <div className="filter-product">
           <div className="space"></div>
@@ -139,6 +145,7 @@ const Product = () => {
                     <input
                       type="checkbox"
                       value={2}
+                      checked={categoryId === 2}
                       onChange={handleCategoryChange}
                     />
                   </li>
@@ -152,6 +159,7 @@ const Product = () => {
                     <input
                       type="checkbox"
                       value={1}
+                      checked={categoryId === 1}
                       onChange={handleCategoryChange}
                     />
                   </li>
@@ -165,6 +173,7 @@ const Product = () => {
                     <input
                       type="checkbox"
                       value={4}
+                      checked={categoryId === 4}
                       onChange={handleCategoryChange}
                     />
                   </li>
@@ -178,6 +187,7 @@ const Product = () => {
                     <input
                       type="checkbox"
                       value={3}
+                      checked={categoryId === 3}
                       onChange={handleCategoryChange}
                     />
                   </li>
@@ -205,7 +215,6 @@ const Product = () => {
               </div>
 
               <div>
-                
                 {products.map((product) => (
                   <div className="detail-order" key={product.productId}>
                     <div className="order-list">
@@ -235,6 +244,7 @@ const Product = () => {
                     <input
                       type="checkbox"
                       value={1}
+                      checked={forAgeId === 1}
                       onChange={handleAgeChange}
                     />
                   </li>
@@ -248,6 +258,7 @@ const Product = () => {
                     <input
                       type="checkbox"
                       value={2}
+                      checked={forAgeId === 2}
                       onChange={handleAgeChange}
                     />
                   </li>
@@ -261,6 +272,7 @@ const Product = () => {
                     <input
                       type="checkbox"
                       value={3}
+                      checked={forAgeId === 3}
                       onChange={handleAgeChange}
                     />
                   </li>
@@ -274,6 +286,7 @@ const Product = () => {
                     <input
                       type="checkbox"
                       value={4}
+                      checked={forAgeId === 4}
                       onChange={handleAgeChange}
                     />
                   </li>
@@ -287,6 +300,7 @@ const Product = () => {
                     <input
                       type="checkbox"
                       value={5}
+                      checked={forAgeId === 5}
                       onChange={handleAgeChange}
                     />
                   </li>
@@ -305,6 +319,7 @@ const Product = () => {
                     <input
                       type="checkbox"
                       value={5}
+                      checked={brandId === 5}
                       onChange={handleBrandChange}
                     />
                   </li>
@@ -318,6 +333,7 @@ const Product = () => {
                     <input
                       type="checkbox"
                       value={3}
+                      checked={brandId === 3}
                       onChange={handleBrandChange}
                     />
                   </li>
@@ -331,6 +347,7 @@ const Product = () => {
                     <input
                       type="checkbox"
                       value={7}
+                      checked={brandId === 7}
                       onChange={handleBrandChange}
                     />
                   </li>
@@ -344,6 +361,7 @@ const Product = () => {
                     <input
                       type="checkbox"
                       value={1}
+                      checked={brandId === 1}
                       onChange={handleBrandChange}
                     />
                   </li>
@@ -357,6 +375,7 @@ const Product = () => {
                     <input
                       type="checkbox"
                       value={6}
+                      checked={brandId === 6}
                       onChange={handleBrandChange}
                     />
                   </li>
@@ -370,6 +389,7 @@ const Product = () => {
                     <input
                       type="checkbox"
                       value={10}
+                      checked={brandId === 10}
                       onChange={handleBrandChange}
                     />
                   </li>
@@ -383,6 +403,7 @@ const Product = () => {
                     <input
                       type="checkbox"
                       value={4}
+                      checked={brandId === 4}
                       onChange={handleBrandChange}
                     />
                   </li>
@@ -396,6 +417,7 @@ const Product = () => {
                     <input
                       type="checkbox"
                       value={11}
+                      checked={brandId === 11}
                       onChange={handleBrandChange}
                     />
                   </li>
@@ -409,6 +431,7 @@ const Product = () => {
                     <input
                       type="checkbox"
                       value={2}
+                      checked={brandId === 2}
                       onChange={handleBrandChange}
                     />
                   </li>
@@ -422,6 +445,7 @@ const Product = () => {
                     <input
                       type="checkbox"
                       value={9}
+                      checked={brandId === 9}
                       onChange={handleBrandChange}
                     />
                   </li>
@@ -435,6 +459,7 @@ const Product = () => {
                     <input
                       type="checkbox"
                       value={8}
+                      checked={brandId === 8}
                       onChange={handleBrandChange}
                     />
                   </li>
@@ -453,3 +478,68 @@ const Product = () => {
 };
 
 export default Product;
+
+// useEffect(() => {
+//   if (location.state && location.state.query) {
+//     setQuery(location.state.query);
+//   }
+//   setIsInitialLoad(true);
+// }, [location.state]);
+
+// useEffect(() => {
+//   if (isInitialLoad) {
+//     const fetchProductsByFilter = async () => {
+//       const queryParams = new URLSearchParams();
+
+//       if (isCategoryChecked && categoryId !== 0) {
+//         queryParams.append("categoryId", categoryId.toString());
+//       }
+
+//       if (isForAgeChecked && forAgeId !== 0) {
+//         queryParams.append("forAgeId", forAgeId.toString());
+//       }
+
+//       if (isBrandChecked && brandId !== 0) {
+//         queryParams.append("brandId", brandId.toString());
+//       }
+
+//       if (orderBy === "price") {
+//         queryParams.append("orderBy", "price");
+//       } else if (orderBy === "priceDesc") {
+//         queryParams.append("orderBy", "priceDesc");
+//       }
+
+//       let url = `https://localhost:7030/api/Products?${queryParams.toString()}`;
+
+//       if (query) {
+//         url += `&search=${query}`;
+//       }
+
+//       const response = await axios.get(url);
+//       setProducts(response.data);
+//       setIsSearchSuccess(true);
+
+//     };
+
+//     fetchProductsByFilter();
+//     if (query !== null && isSearchSuccess) {
+//       window.location.reload();
+//       setQuery(null);
+//       console.log("Query : ", query);
+//       fetchProductsByFilter();
+
+//     }
+//   }
+
+// }, [
+//   isBrandChecked,
+//   isForAgeChecked,
+//   isCategoryChecked,
+//   categoryId,
+//   forAgeId,
+//   orderBy,
+//   brandId,
+//   query,
+//   isInitialLoad,
+//   isSearchSuccess,
+// ]);
