@@ -1,3 +1,4 @@
+import Footer from "../../components/Footer/footer";
 import Navbar from "../../components/Navbar/Navbar";
 import "./Cart.css";
 import { useCart } from "./CartContext";
@@ -33,7 +34,7 @@ const ShoppingCart = () => {
                       <img src={product.imageProducts[0].imageUrl} className="ma" alt="" />
                     </div>
                     <div className="name">{product.name}</div>
-                    <div className="price-order">{product.price}</div>
+                    <div className="price-order">${product.price.toLocaleString()}</div>
                     <div className="quantity-count">
                       <div className="decrease" onClick={() => decrementQuantity(product.productId)}>
                         -
@@ -72,14 +73,18 @@ const ShoppingCart = () => {
             <div className="bill">
               <div>Subtotal</div>
               <div className="money-voucher">Voucher</div>
-              <div className="total">Total</div>
+              <div className="total">
+                <p>Total</p>
               <div className="total-price">${totalAmount.toLocaleString()}</div>
+              </div>
+              
               <div className="vat">(Incl. VAT)</div>
               <div className="box-continue">Continue</div>
             </div>
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

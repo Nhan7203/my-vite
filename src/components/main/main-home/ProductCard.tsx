@@ -36,8 +36,10 @@ const ProductCard = ({ product, index }: {
         </div>
 
         <div className="footer-card">
-          <h2 className="price">{product.price}</h2>
-          <BsCart3 className="icon" fontSize="1.5em" onClick={() => addToCart(product)} />
+          <h2 className="price">${product.price.toLocaleString()}</h2>
+          <div className="box-shopping">
+          <BsCart3 className="icon-shopping" fontSize="1.5em" onClick={() => addToCart(product)} />
+          </div>
         </div>
       </div>
     </div>

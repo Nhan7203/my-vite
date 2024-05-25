@@ -17,22 +17,27 @@ const Navbar = () => {
 
   useEffect(() => {
     // Calculate the total quantity in stock
-    const totalQuantityInStock = cart.reduce((total, product) => total + product.quantityInStock, 0);
+    const totalQuantityInStock = cart.reduce(
+      (total, product) => total + product.quantityInStock,
+      0
+    );
     setCartCount(totalQuantityInStock);
   }, [cart]);
 
   const handleLogo = () => {
     location.href = "/";
-  }
+
+  };
+
   const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = (event: { preventDefault: () => void }) => {
     event.preventDefault();
-    console.log("this is product log: ", searchQuery);
+    
     navigate("/product", { state: { query: searchQuery } });
-
+    window.location.reload();
   };
 
   return (
@@ -40,7 +45,14 @@ const Navbar = () => {
       <div className="top-navbar">
         <ul className="top-navbar-list">
           <li>
-            <Link to="/shop">Location: Thu Duc - HCM - VN</Link>
+            <Link
+              to="/shop"
+              style={{
+                color: "#ff0000", // Mã màu đỏ
+              }}
+            >
+              Location: Thu Duc - HCM - VN
+            </Link>
           </li>
 
           <li>Tel: (+84) 3939393939</li>

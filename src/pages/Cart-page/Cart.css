@@ -1,6 +1,6 @@
 .body-cart {
   width: 100%;
-  height: 700px;
+  height: 580px;
   background-color: #f5f7fc;
 }
 
@@ -15,7 +15,7 @@
 }
 
 .box-left {
-  height: 560px;
+  height: 540px;
   background-color: white;
   border-radius: 20px;
   margin-top: 15px;
@@ -184,7 +184,7 @@
   background-color: white;
   padding: 1px 20px 24px 20px;
   border-radius: 20px;
-  height: 80px;
+  height: 100px;
 }
 
 .voucher>h4 {
@@ -210,7 +210,7 @@
 
 .bill {
   background-color: white;
-  height: 200px;
+  height: 235px;
   margin-top: 20px;
   padding: 24px 20px 30px 20px;
   line-height: 1.8;
@@ -228,6 +228,10 @@
   border-top: 1px solid #eaeaea;
   padding-top: 10px;
   font-size: 16px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
 }
 
@@ -250,6 +254,6 @@
 
 .total-price {
   text-align: right;
-  font-size: 1.5em;
+  font-size: 1.2em;
   font-weight: bold;
 }
