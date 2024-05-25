@@ -4,8 +4,40 @@ import Navbar from "../../components/Navbar/Navbar";
 import { useAllProduct } from "../../context/ShopContext";
 import { useParams } from "react-router-dom";
 
+import { useState, useEffect } from "react";
+import ProductCard from "../../components/main/main-home/ProductCard";
+import adv from "/src/assets/adv.png";
+import adv1 from "/src/assets/adv1.png";
+import adv2 from "/src/assets/adv2.png";
+
+
+
 const ProductDetail = () => {
+
+
   const { allProduct } = useAllProduct();
+  const [noOfElement, setNoOfElement] = useState(8);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const bannerImages = [adv, adv1, adv2];
+
+  const nextSlide = () => {
+    setCurrentSlide((prevSlide) => (prevSlide + 1) % bannerImages.length);
+  };
+
+  useEffect(() => {
+    const interval = setInterval(nextSlide, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const loadMore = () => {
+    setNoOfElement((prevNoOfElement) => prevNoOfElement + noOfElement);
+  };
+
+  const slice = allProduct.slice(0, noOfElement);
+
+
+  // const { allProduct } = useAllProduct();
   const { productId } = useParams<{ productId?: string }>();
 
   let product;
@@ -21,7 +53,7 @@ const ProductDetail = () => {
         <div className="body-detail">
           <div className="grid-12">
             <div className="big-image">
-              <img src={product.imageProducts[0].imageUrl} alt="" />
+              <img className="img-detail" src={product.imageProducts[0].imageUrl} alt="" />
             </div>
             <div className="content-product">
               <p className="name-pro">{product.name}</p>
@@ -47,12 +79,12 @@ const ProductDetail = () => {
                 <span>Quantity</span>
                 <div>
                   <div id="btMinus">
-                    <img src="./src/assets/minus.svg" alt="" />
+                    <img src="/src/assets/minus.svg" alt="" />
                   </div>
 
                   <span id="quantity">1</span>
                   <div id="btPlus">
-                    <img src="./src/assets/plus.svg" alt="" />
+                    <img src="/src/assets/plus.svg" alt="" />
                   </div>
                 </div>
               </div>
@@ -66,67 +98,32 @@ const ProductDetail = () => {
             <img className="img-1" src="" alt="" />
             <img className="img-2" src="" alt="" />
             <img className="img-3" src="" alt="" />
+
+
           </div>
 
-          <div className="reiew">
-            <p>Reviews</p>
-            <div className="uder-line"></div>
-            <div className="vote-star">
-              <div>
-                <div>
-                  <p>5.0</p>
-                  <p>
-                    <img className="star" src="" alt="" />
-                  </p>
-                  <p>Có 154 lượt đánh giá</p>
-                </div>
-
-                <div className="choose-vote">
-                  <div className="5-start">
-                    5
-                    <img src="" alt="" />
-                  </div>
-
-                  <div className="5-start">
-                    4
-                    <img src="" alt="" />
-                  </div>
-
-                  <div className="5-start">
-                    3
-                    <img src="" alt="" />
-                  </div>
-
-                  <div className="5-start">
-                    2
-                    <img src="" alt="" />
-                  </div>
-
-                  <div className="5-start">
-                    1
-                    <img src="" alt="" />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="comment">
-              <div className="person">
-                <div className="avatar">
-                  <img src=" " alt="" />
-                </div>
-                <p>Nhan</p>
-                <div>
-                  <img src=" " alt="" />
-                  <span>17/05/2024</span>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       ) : (
         <p>Loading...</p>
       )}
+
+
+
+      <div className="home-product">
+        <div>
+          <h4>
+            Similar Products
+          </h4>
+          {slice.map((product, index) => (
+            <ProductCard key={index} index={index} product={product} />
+          ))}
+        </div>
+      </div>
+
+      <div className="load-more">
+        <button onClick={loadMore}>Load more</button>
+      </div>
+
       <Footer />
     </>
   );
