@@ -78,7 +78,7 @@
   height: 40px;
   display: flex;
   align-items: center;
-  background: #eb569c;
+  background: #ff379b;
   border-radius: 10px;
   padding: 5px 0 5px 4px;
   margin-left: 80px;
@@ -95,7 +95,7 @@
 }
 .box-search button {
   border: none;
-  background-color: #eb569c;
+  background-color: #ff379b;
   padding: 0;
 }
 
@@ -141,7 +141,7 @@
 
 .bottom-navbar {
   height: 60px;
-  background-color: #eb569c;
+  background-color: #ff379b;
 }
 
 .bottom-navbar-list {
