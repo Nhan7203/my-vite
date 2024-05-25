@@ -26,7 +26,9 @@ const Navbar = () => {
 
   const handleLogo = () => {
     location.href = "/";
+
   };
+
   const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState("");
