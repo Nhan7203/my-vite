@@ -117,13 +117,10 @@ const Product = () => {
   const handleOrderChange = (value: string) => {
     if (value === "price") {
       setOrderBy("price");
-      setActiveOrder("price");
     } else if (value === "priceDesc") {
       setOrderBy("priceDesc");
-      setActiveOrder("priceDesc");
     } else {
       setOrderBy("");
-      setActiveOrder(null);
     }
   };
 
@@ -203,6 +200,7 @@ const Product = () => {
                       <input
                         type="checkbox"
                         value={1}
+                        checked={forAgeId === 1}
                         onChange={handleAgeChange}
                       />
                     </li>
@@ -216,6 +214,7 @@ const Product = () => {
                       <input
                         type="checkbox"
                         value={2}
+                        checked={forAgeId === 2}
                         onChange={handleAgeChange}
                       />
                     </li>
@@ -229,6 +228,7 @@ const Product = () => {
                       <input
                         type="checkbox"
                         value={3}
+                        checked={forAgeId === 3}
                         onChange={handleAgeChange}
                       />
                     </li>
@@ -242,6 +242,7 @@ const Product = () => {
                       <input
                         type="checkbox"
                         value={4}
+                        checked={forAgeId === 4}
                         onChange={handleAgeChange}
                       />
                     </li>
@@ -255,6 +256,7 @@ const Product = () => {
                       <input
                         type="checkbox"
                         value={5}
+                        checked={forAgeId === 5}
                         onChange={handleAgeChange}
                       />
                     </li>
@@ -264,7 +266,6 @@ const Product = () => {
                   </ul>
                 </div>
               </div>
-
               <div className="content-filter-brand">
                 <p className="text-brand">For brand</p>
                 <div className="content-cate">
@@ -273,6 +274,7 @@ const Product = () => {
                       <input
                         type="checkbox"
                         value={5}
+                        checked={brandId === 5}
                         onChange={handleBrandChange}
                       />
                     </li>
@@ -286,6 +288,7 @@ const Product = () => {
                       <input
                         type="checkbox"
                         value={3}
+                        checked={brandId === 3}
                         onChange={handleBrandChange}
                       />
                     </li>
@@ -299,6 +302,7 @@ const Product = () => {
                       <input
                         type="checkbox"
                         value={7}
+                        checked={brandId === 7}
                         onChange={handleBrandChange}
                       />
                     </li>
@@ -325,6 +329,7 @@ const Product = () => {
                       <input
                         type="checkbox"
                         value={6}
+                        checked={brandId === 6}
                         onChange={handleBrandChange}
                       />
                     </li>
@@ -338,6 +343,7 @@ const Product = () => {
                       <input
                         type="checkbox"
                         value={10}
+                        checked={brandId === 10}
                         onChange={handleBrandChange}
                       />
                     </li>
@@ -351,6 +357,7 @@ const Product = () => {
                       <input
                         type="checkbox"
                         value={4}
+                        checked={brandId === 4}
                         onChange={handleBrandChange}
                       />
                     </li>
@@ -364,6 +371,7 @@ const Product = () => {
                       <input
                         type="checkbox"
                         value={11}
+                        checked={brandId === 11}
                         onChange={handleBrandChange}
                       />
                     </li>
@@ -377,6 +385,7 @@ const Product = () => {
                       <input
                         type="checkbox"
                         value={2}
+                        checked={brandId === 2}
                         onChange={handleBrandChange}
                       />
                     </li>
@@ -390,6 +399,7 @@ const Product = () => {
                       <input
                         type="checkbox"
                         value={9}
+                        checked={brandId === 9}
                         onChange={handleBrandChange}
                       />
                     </li>
@@ -403,6 +413,7 @@ const Product = () => {
                       <input
                         type="checkbox"
                         value={8}
+                        checked={brandId === 8}
                         onChange={handleBrandChange}
                       />
                     </li>
@@ -411,143 +422,30 @@ const Product = () => {
                     </li>
                   </ul>
                 </div>
-
-
-              <div>
-                {products.map((product) => (
-                  <div className="detail-order" key={product.productId}>
-                    <div className="order-list">
-                      <div className="img">
-                        <img
-                          src={product.imageProducts[0].imageUrl}
-                          className="ma"
-                          alt=""
-                        />
-                      </div>
-                      <div className="name">{product.name}</div>
-                      <div className="price-order">{product.price}</div>
-                      <div className="quantity-count">
-                        <div className="decrease"></div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-
               </div>
 
-
-              <div className="filter-under-line">
-
-              </div>
-
+              <div className="filter-under-line"></div>
             </div>
-
-
-
-            <div className="content-filter-age">
-              <p className="text-fotage">For age</p>
-              <div className="content-cate">
-                <ul>
-                  <li>
-                    <input
-                      type="checkbox"
-                      value={1}
-                      checked={forAgeId === 1}
-                      onChange={handleAgeChange}
-                    />
-                  </li>
-                  <li>
-                    <span>0 - 6 Month</span>
-                  </li>
-                </ul>
-
-                <ul>
-                  <li>
-                    <input
-                      type="checkbox"
-                      value={2}
-                      checked={forAgeId === 2}
-                      onChange={handleAgeChange}
-                    />
-                  </li>
-                  <li>
-                    <span>6 - 12 Month</span>
-                  </li>
-                </ul>
-
-                <ul>
-                  <li>
-                    <input
-                      type="checkbox"
-                      value={3}
-                      checked={forAgeId === 3}
-                      onChange={handleAgeChange}
-                    />
-                  </li>
-                  <li>
-                    <span>0 - 1 Year</span>
-                  </li>
-                </ul>
-
-                <ul>
-                  <li>
-                    <input
-                      type="checkbox"
-                      value={4}
-                      checked={forAgeId === 4}
-                      onChange={handleAgeChange}
-                    />
-                  </li>
-                  <li>
-                    <span>1 - 2 year</span>
-                  </li>
-                </ul>
-
-                <ul>
-                  <li>
-                    <input
-                      type="checkbox"
-                      value={5}
-                      checked={forAgeId === 5}
-                      onChange={handleAgeChange}
-                    />
-                  </li>
-                  <li>
-                    <span>+2 year</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
 
             <div className="main-pro-list">
               <div className="head-sort">
                 <ul>
-
-                  <li className={activeOrder === "price" ? 'active' : ''} onClick={() => handleOrderChange("price")} >
-                    Price Low - High
-                                                                                    
                   <li>
-                    <input
-                      type="checkbox"
-                      value={5}
-                      checked={brandId === 5}
-                      onChange={handleBrandChange}
-                    />
-
+                    <button onClick={() => handleOrderChange("price")}>
+                      <p>Price Low - High</p>
+                    </button>
                   </li>
-                  <li className={activeOrder === "priceDesc" ? 'active' : ''} onClick={() => handleOrderChange("priceDesc")}>
-                    Price High - Low
+                  <li>
+                    <button onClick={() => handleOrderChange("priceDesc")}>
+                      Price High - Low
+                    </button>
                   </li>
                 </ul>
               </div>
 
-
               <div className="result-product">
-
                 {products.map((product) => (
                   <div className="element-product" key={product.productId}>
-
                     <div className="element-img">
                       <img
                         src={product.imageProducts[0].imageUrl}
@@ -558,170 +456,25 @@ const Product = () => {
                     <p className="element-name">{product.name}</p>
 
                     <div className="body-text">
-                      <span className="element-price">{product.price} </span>
-
-
-                      <BsCart3 id="icon-cart" className="icon" fontSize="1.5em" />
-
+                      <span className="element-price">
+                        ${product.price.toLocaleString()}{" "}
+                      </span>
+                      <div className="box-icon-product-page">
+                        <BsCart3
+                         
+                          className="icon-cart-product-page"
+                          fontSize="1.4em"
+                        />
+                      </div>
                     </div>
-
-
                   </div>
                 ))}
-
-
-
-                <ul>
-                  <li>
-                    <input
-                      type="checkbox"
-                      value={3}
-                      checked={brandId === 3}
-                      onChange={handleBrandChange}
-                    />
-                  </li>
-                  <li>
-                    <span>FrutoNyanya</span>
-                  </li>
-                </ul>
-
-                <ul>
-                  <li>
-                    <input
-                      type="checkbox"
-                      value={7}
-                      checked={brandId === 7}
-                      onChange={handleBrandChange}
-                    />
-                  </li>
-                  <li>
-                    <span>Hoff</span>
-                  </li>
-                </ul>
-
-                <ul>
-                  <li>
-                    <input
-                      type="checkbox"
-                      value={1}
-                      checked={brandId === 1}
-                      onChange={handleBrandChange}
-                    />
-                  </li>
-                  <li>
-                    <span>Meiji</span>
-                  </li>
-                </ul>
-
-                <ul>
-                  <li>
-                    <input
-                      type="checkbox"
-                      value={6}
-                      checked={brandId === 6}
-                      onChange={handleBrandChange}
-                    />
-                  </li>
-                  <li>
-                    <span>Nestle</span>
-                  </li>
-                </ul>
-
-                <ul>
-                  <li>
-                    <input
-                      type="checkbox"
-                      value={10}
-                      checked={brandId === 10}
-                      onChange={handleBrandChange}
-                    />
-                  </li>
-                  <li>
-                    <span>PediaSure</span>
-                  </li>
-                </ul>
-
-                <ul>
-                  <li>
-                    <input
-                      type="checkbox"
-                      value={4}
-                      checked={brandId === 4}
-                      onChange={handleBrandChange}
-                    />
-                  </li>
-                  <li>
-                    <span>Sahmyook</span>
-                  </li>
-                </ul>
-
-                <ul>
-                  <li>
-                    <input
-                      type="checkbox"
-                      value={11}
-                      checked={brandId === 11}
-                      onChange={handleBrandChange}
-                    />
-                  </li>
-                  <li>
-                    <span>Similac</span>
-                  </li>
-                </ul>
-
-                <ul>
-                  <li>
-                    <input
-                      type="checkbox"
-                      value={2}
-                      checked={brandId === 2}
-                      onChange={handleBrandChange}
-                    />
-                  </li>
-                  <li>
-                    <span>THtruemilk</span>
-                  </li>
-                </ul>
-
-                <ul>
-                  <li>
-                    <input
-                      type="checkbox"
-                      value={9}
-                      checked={brandId === 9}
-                      onChange={handleBrandChange}
-                    />
-                  </li>
-                  <li>
-                    <span>Vinamilk</span>
-                  </li>
-                </ul>
-
-                <ul>
-                  <li>
-                    <input
-                      type="checkbox"
-                      value={8}
-                      checked={brandId === 8}
-                      onChange={handleBrandChange}
-                    />
-                  </li>
-                  <li>
-                    <span>Yakult</span>
-                  </li>
-                </ul>
-
               </div>
             </div>
-
-
-
-
           </div>
         </div>
         <div className="under-line"></div>
-
-      </div >
+      </div>
       <Footer />
     </>
   );

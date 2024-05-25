@@ -7,7 +7,6 @@ import {
 import { CartProvider } from "./pages/Cart-page/CartContext";
 import { ToastContainer } from "react-toastify";
 import Navbar from "./components/Navbar/Navbar";
-import Shop from "./pages/Shop-page/Shop";
 import Login from "./pages/Login-page/Login";
 import Adress from "./pages/Adress-page/Adress";
 import Notification from "./pages/Notification-page/Notification";
@@ -37,7 +36,6 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
       <Route path="/" element={<Home />} />
-      <Route path="/shop" element={<Shop />} />
       <Route path="/adress" element={<Adress />} />
       <Route path="/login" element={<Login />} />
       <Route path="/cart" element={<Cart />} />
