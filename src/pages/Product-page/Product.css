@@ -135,26 +135,6 @@
   border-color: #fff;
 }
 
-.head-sort li:hover button {
-  background-color: #ff379b;
-  color: white;
-}
-.head-sort li button {
-  background-color: white;
-  color: black;
-  border: none;
-}
-
-.head-sort li button:hover {
-  background-color: #ff379b;
-  color: white;
-}
-
-.head-sort li button:active {
-  background-color: #ff379b;
-  color: white;
-}
-
 .head-sort > ul > li {
   padding: 10px 14px;
   height: 36px;

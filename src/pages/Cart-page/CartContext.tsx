@@ -1,17 +1,13 @@
 import { createContext, useState, useContext, useEffect } from 'react';
-import { ImageProduct,  aProduct } from '../../context/ShopContext';
+import { ImageProduct, aProduct } from '../../context/ShopContext';
 
 export interface iProduct {
-  quantityInStock: number;
   productId: number;
-  forAgeId: number;
-  categoryId: number;
-  brandId: number;
   name: string;
-  description: string;
-  price: number;
-  stock: number;
   imageProducts: ImageProduct[];
+  price: number;
+  quantity: number;
+  stock: number;
   isActive: boolean;
 }
 
@@ -48,11 +44,18 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
 
 
-  const addToCart = (product: aProduct) => {
-    const existingProduct = cart.find((item) => item.productId === product.productId);
+  const addToCart = (aProduct: aProduct) => {
+    const existingProduct = cart.find((item) => item.productId === aProduct.productId);
     if (!existingProduct) {
-
-      const updatedCart = ([...cart, { ...product, quantityInStock: 1 }]);
+      const updatedCart = ([...cart, {
+        productId: aProduct.productId,
+        name: aProduct.name,
+        imageProducts: aProduct.imageProducts,
+        price: aProduct.price,
+        quantity: 1,
+        stock: aProduct.stock,
+        isActive: aProduct.isActive
+      }]);
       setCart(updatedCart);
       localStorage.setItem('cart', JSON.stringify(updatedCart));
       setTotals(calculateTotals(updatedCart));
@@ -61,7 +64,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     } else {
       const updatedCart = cart.map((item) =>
 
-        item.productId === product.productId ? { ...item, quantityInStock: item.quantityInStock + 1 } : item
+        item.productId === aProduct.productId ? { ...item, quantity: item.quantity + 1 } : item
       );
       setCart(updatedCart);
       localStorage.setItem('cart', JSON.stringify(updatedCart));
@@ -72,7 +75,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const incrementQuantity = (productId: number) => {
 
     const updatedCart = cart.map((item) =>
-      item.productId === productId ? { ...item, quantityInStock: item.quantityInStock + 1 } : item
+      item.productId === productId ? { ...item, quantity: item.quantity + 1 } : item
     );
     setCart(updatedCart);
     localStorage.setItem('cart', JSON.stringify(updatedCart))
@@ -84,15 +87,15 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
     const updatedCart = cart.map((item) =>
 
-      item.productId === productId && item.quantityInStock > 1
-        ? { ...item, quantityInStock: item.quantityInStock - 1 }
+      item.productId === productId && item.quantity > 1
+        ? { ...item, quantity: item.quantity - 1 }
         : item
     )
     setCart(updatedCart);
     localStorage.setItem('cart', JSON.stringify(updatedCart))
 
     const existingProduct = cart.find((item) => item.productId === productId);
-    if (existingProduct && existingProduct.quantityInStock > 1) {
+    if (existingProduct && existingProduct.quantity > 1) {
       setTotals(calculateTotals(updatedCart));
     }
 
@@ -103,7 +106,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const calculateTotals = (cart: iProduct[]) => {
     const newTotals: { [productId: number]: number } = {};
     cart.forEach((item) => {
-      newTotals[item.productId] = (newTotals[item.productId] || 0) + item.price * item.quantityInStock;
+      newTotals[item.productId] = (newTotals[item.productId] || 0) + item.price * item.quantity;
     });
     return newTotals;
   };
