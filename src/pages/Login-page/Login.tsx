@@ -1,10 +1,17 @@
-import "./Login.css";
-import React, { useState } from "react";
-import { loginApi } from "./LoginServices";
-import { toast } from "react-toastify";
+
 import ReCAPTCHA from "react-google-recaptcha";
+import './Login.css';
+import React, { useState } from 'react';
+
+import { loginApi } from './LoginServices';
+import { toast } from 'react-toastify';
+import { jwtDecode } from 'jwt-decode';
 
 // import jwt, { JwtPayload } from 'jsonwebtoken';
+interface JwtPayload {
+  email: string,
+  roleId: number,
+}
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -34,17 +41,23 @@ const Login = () => {
         // Login successful
         //Lay-Luu token vao local storage
         const { token, user } = response.data;
-        localStorage.setItem("token", token);
+
+        const decodedToken = jwtDecode(token) as JwtPayload;
+        localStorage.setItem('token', token);
 
         // const decodedToken = jwt.decode(token) as JwtPayload;
 
-        if (user.roleId === 1) {
+        if (decodedToken.roleId == 1) {
           alert("Oke thg lon nay User ne");
           //Redirect to 'User' page
-        } else if (user.roleId === 2) {
+
+        }
+        else if (decodedToken.roleId == 2) {
           alert("Oke thg lon nay Staff ne");
           // Redirect to 'Staff' page
-        } else if (user.roleId === 3) {
+
+        } else if (decodedToken.roleId == 3) {
+
           alert("Oke thg lon nay Admin ne");
           // Redirect to 'Admin' page
         }
