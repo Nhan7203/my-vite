@@ -1,11 +1,11 @@
 import "./Product.css";
 import Footer from "../../components/Footer/footer";
-import axios from "axios";
 import Navbar from "../../components/Navbar/Navbar";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { aProduct } from "../../context/ShopContext";
 import { BsCart3 } from "react-icons/bs";
+import * as searchServices from "../../apiServices/searchServices";
 
 const Product = () => {
   const location = useLocation();
@@ -17,13 +17,15 @@ const Product = () => {
   const [isCategoryChecked, setIsCategoryChecked] = useState(false);
   const [isForAgeChecked, setIsForAgeChecked] = useState(false);
   const [isBrandChecked, setIsBrandChecked] = useState(false);
-
+  const [activeOrder, setActiveOrder] = useState("");
   const [isSearchSuccess, setIsSearchSuccess] = useState(false);
-  const [query, setQuery] = useState(null);
+  const [query, setQuery] = useState("");
+  const [isCheckedData, setIsCheckedData] = useState(false);
 
   useEffect(() => {
     if (location.state && location.state.query) {
       setQuery(location.state.query);
+      setIsSearchSuccess(true);
     }
   }, [location.state]);
 
@@ -33,41 +35,44 @@ const Product = () => {
 
       if (isCategoryChecked && categoryId !== 0) {
         queryParams.append("categoryId", categoryId.toString());
+        setIsCheckedData(true)
       }
 
       if (isForAgeChecked && forAgeId !== 0) {
         queryParams.append("forAgeId", forAgeId.toString());
+        setIsCheckedData(true)
       }
 
       if (isBrandChecked && brandId !== 0) {
         queryParams.append("brandId", brandId.toString());
+        setIsCheckedData(true)
       }
 
       if (orderBy === "price") {
         queryParams.append("orderBy", "price");
+        setIsCheckedData(true)
       } else if (orderBy === "priceDesc") {
         queryParams.append("orderBy", "priceDesc");
+        setIsCheckedData(true)
       }
-
-      let url = `https://localhost:7030/api/Products?${queryParams.toString()}`;
 
       if (query) {
-        console.log("Query1 : ", query);
-        url += `&search=${query}`;
+        queryParams.append("search", query);
+        console.log("query 1", query);
+        setIsSearchSuccess(false);
       }
 
-      const response = await axios.get(url);
-      setProducts(response.data);
-      setIsSearchSuccess(true);
+      const response = await searchServices.search(queryParams);
+      setProducts(response);
+      
     };
 
-    fetchProductsByFilter();
-    if (query !== null && isSearchSuccess) {
-      //window.location.reload();
-      setQuery(null);
-      console.log("Query : ", query);
-      fetchProductsByFilter();
+    if (query && !isSearchSuccess && isCheckedData) {
+      setQuery("");
+      console.log("query 2:", query);
+      setIsSearchSuccess(false);
     }
+    fetchProductsByFilter();
   }, [
     isBrandChecked,
     isForAgeChecked,
@@ -78,6 +83,7 @@ const Product = () => {
     brandId,
     query,
     isSearchSuccess,
+    isCheckedData
   ]);
 
   console.log("this is product : ", products);
@@ -117,10 +123,13 @@ const Product = () => {
   const handleOrderChange = (value: string) => {
     if (value === "price") {
       setOrderBy("price");
+      setActiveOrder("price");
     } else if (value === "priceDesc") {
       setOrderBy("priceDesc");
+      setActiveOrder("priceDesc");
     } else {
       setOrderBy("");
+      setActiveOrder("");
     }
   };
 
@@ -430,15 +439,17 @@ const Product = () => {
             <div className="main-pro-list">
               <div className="head-sort">
                 <ul>
-                  <li>
-                    <button onClick={() => handleOrderChange("price")}>
-                      <p>Price Low - High</p>
-                    </button>
+                  <li
+                    className={activeOrder === "price" ? "active" : ""}
+                    onClick={() => handleOrderChange("price")}
+                  >
+                    Price Low - High
                   </li>
-                  <li>
-                    <button onClick={() => handleOrderChange("priceDesc")}>
-                      Price High - Low
-                    </button>
+                  <li
+                    className={activeOrder === "priceDesc" ? "active" : ""}
+                    onClick={() => handleOrderChange("priceDesc")}
+                  >
+                    Price High - Low
                   </li>
                 </ul>
               </div>
@@ -461,7 +472,6 @@ const Product = () => {
                       </span>
                       <div className="box-icon-product-page">
                         <BsCart3
-                         
                           className="icon-cart-product-page"
                           fontSize="1.4em"
                         />
