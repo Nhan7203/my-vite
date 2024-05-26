@@ -3,7 +3,7 @@ import Footer from "../../components/Footer/footer";
 import Navbar from "../../components/Navbar/Navbar";
 import { useAllProduct } from "../../context/ShopContext";
 import { useParams } from "react-router-dom";
-
+import { useCart } from '../../pages/Cart-page/CartContext';
 import { useState, useEffect } from "react";
 import ProductCard from "../../components/main/main-home/ProductCard";
 import adv from "/src/assets/adv.png";
@@ -14,7 +14,7 @@ import adv2 from "/src/assets/adv2.png";
 
 const ProductDetail = () => {
 
-
+  const { addToCart } = useCart();
   const { allProduct } = useAllProduct();
   const [noOfElement, setNoOfElement] = useState(8);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -36,8 +36,6 @@ const ProductDetail = () => {
 
   const slice = allProduct.slice(0, noOfElement);
 
-
-  // const { allProduct } = useAllProduct();
   const { productId } = useParams<{ productId?: string }>();
 
   let product;
@@ -58,12 +56,12 @@ const ProductDetail = () => {
             <div className="content-product">
               <p className="name-pro">{product.name}</p>
               <div className="rating-sold">
-                <span className="sold">Available: 1</span>
+                <span className="sold">Available: {product.stock}</span>
               </div>
 
               <h3>
-                {product.price}
-                <span>$</span>
+                ${product.price.toLocaleString()}
+                
               </h3>
               <div className="trans-zalo">
                 <div className="img-zalo">
@@ -90,7 +88,7 @@ const ProductDetail = () => {
               </div>
 
               <div className="button-cart">
-                <span id="add-cart">Add to cart</span>
+                <span className="add-cart" onClick={() => addToCart(product)}>Add to cart</span>
                 <span className="buy-now">Buy now</span>
               </div>
             </div>
@@ -120,9 +118,11 @@ const ProductDetail = () => {
         </div>
       </div>
 
-      <div className="load-more">
-        <button onClick={loadMore}>Load more</button>
-      </div>
+      {slice.length < allProduct.length && (
+        <div className="load-more">
+          <button onClick={loadMore}>Load more</button>
+        </div>
+      )}
 
       <Footer />
     </>

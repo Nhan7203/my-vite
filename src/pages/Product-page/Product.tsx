@@ -22,71 +22,74 @@ const Product = () => {
   const [query, setQuery] = useState("");
   const [isCheckedData, setIsCheckedData] = useState(false);
 
-  useEffect(() => {
-    if (location.state && location.state.query) {
-      setQuery(location.state.query);
+useEffect(() => {
+  if (location.state && location.state.query) {
+    setQuery(location.state.query);
+  }
+}, [location.state]);
+
+useEffect(() => {
+  const fetchProductsByFilter = async () => {
+    const queryParams = new URLSearchParams();
+
+    if (isCategoryChecked && categoryId !== 0) {
+      queryParams.append("categoryId", categoryId.toString());
+      setIsCheckedData(true)
+    }
+
+    if (isForAgeChecked && forAgeId !== 0) {
+      queryParams.append("forAgeId", forAgeId.toString());
+      setIsCheckedData(true)
+    }
+
+    if (isBrandChecked && brandId !== 0) {
+      queryParams.append("brandId", brandId.toString());
+      setIsCheckedData(true)
+    }
+
+    if (orderBy === "price") {
+      queryParams.append("orderBy", "price");
+      setIsCheckedData(true)
+    } else if (orderBy === "priceDesc") {
+      queryParams.append("orderBy", "priceDesc");
+      setIsCheckedData(true)
+    }
+
+    if (query) {
+      queryParams.append("search", query);
+   
       setIsSearchSuccess(true);
     }
-  }, [location.state]);
-
-  useEffect(() => {
-    const fetchProductsByFilter = async () => {
-      const queryParams = new URLSearchParams();
-
-      if (isCategoryChecked && categoryId !== 0) {
-        queryParams.append("categoryId", categoryId.toString());
-        setIsCheckedData(true)
-      }
-
-      if (isForAgeChecked && forAgeId !== 0) {
-        queryParams.append("forAgeId", forAgeId.toString());
-        setIsCheckedData(true)
-      }
-
-      if (isBrandChecked && brandId !== 0) {
-        queryParams.append("brandId", brandId.toString());
-        setIsCheckedData(true)
-      }
-
-      if (orderBy === "price") {
-        queryParams.append("orderBy", "price");
-        setIsCheckedData(true)
-      } else if (orderBy === "priceDesc") {
-        queryParams.append("orderBy", "priceDesc");
-        setIsCheckedData(true)
-      }
-
-      if (query) {
-        queryParams.append("search", query);
-        console.log("query 1", query);
-        setIsSearchSuccess(false);
-      }
-
+    if(isSearchSuccess){
       const response = await searchServices.search(queryParams);
       setProducts(response);
-      
-    };
-
-    if (query && !isSearchSuccess && isCheckedData) {
-      setQuery("");
-      console.log("query 2:", query);
       setIsSearchSuccess(false);
     }
-    fetchProductsByFilter();
-  }, [
-    isBrandChecked,
-    isForAgeChecked,
-    isCategoryChecked,
-    categoryId,
-    forAgeId,
-    orderBy,
-    brandId,
-    query,
-    isSearchSuccess,
-    isCheckedData
-  ]);
+    else if(!isSearchSuccess){
+      const response = await searchServices.search(queryParams);
+      setProducts(response);
+    }
+    
+  };
 
-  console.log("this is product : ", products);
+  if (!isSearchSuccess && isCheckedData) {
+    setQuery("");
+    setIsSearchSuccess(false);
+      //setIsCheckedData(false)
+  }
+  fetchProductsByFilter();
+}, [
+  isBrandChecked,
+  isForAgeChecked,
+  isCategoryChecked,
+  categoryId,
+  forAgeId,
+  orderBy,
+  brandId,
+  query,
+  isSearchSuccess,
+  isCheckedData
+]);
   const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     if (e.target.checked) {
@@ -138,6 +141,7 @@ const Product = () => {
       <Navbar />
 
       <div className="container">
+       
         <div className="filter-product">
           <div className="space-white"></div>
           <div>
@@ -491,3 +495,7 @@ const Product = () => {
 };
 
 export default Product;
+
+
+
+

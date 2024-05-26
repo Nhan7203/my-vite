@@ -281,3 +281,8 @@ header>div>.logo-mandb {
     letter-spacing: 1.25px;
     margin: 20px 0;
 }
+
+.Recapcha {
+    display: flex;
+    justify-content: center;
+}
