@@ -1,33 +1,25 @@
 import { useEffect, useState } from 'react';
 import { useCart } from './CartContext';
-import { Product } from '../../context/ShopContext';
 
 const OrderForm = () => {
     const { cart } = useCart();
-    const [orderData, setOrderData] = useState<{ products: Product[]; token: string }>({
+    const [orderData, setOrderData] = useState<{ products: any; token: string }>({
         products: [],
         token: "authentication token"
     });
 
     useEffect(() => {
         const products = cart.map((product) => ({
-            brandId: product.brandId,
-            categoryId: product.categoryId,
-            description: product.description,
-            forAgeId: product.forAgeId,
-            imageProducts: product.imageProducts,
             isActive: product.isActive,
-            name: product.name,
-            price: product.price,
             productId: product.productId,
-            quantityInStock: product.quantityInStock,
-            stock: product.stock
+            quantity: product.quantity,
         }));
 
-        setOrderData((prevOrderData) => ({ ...prevOrderData, products }));
+        setOrderData((prevOrderData) => ({ ...prevOrderData, products}));
     }, [cart]);
 
     const handleSubmit = () => {
+        console.log(cart)
         fetch('<API endpoint URL>', {
             method: 'POST',
             headers: {
