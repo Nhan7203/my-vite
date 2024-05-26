@@ -7,7 +7,7 @@ import { FaRegTrashCan } from "react-icons/fa6";
 const ShoppingCart = () => {
   const { cart, decrementQuantity, incrementQuantity, removeItems } = useCart();
 
-  const totalAmount = cart.reduce((total, product) => total + (product.price * product.quantityInStock), 0);
+  const totalAmount = cart.reduce((total, product) => total + (product.price * product.quantity), 0);
 
   return (
     <div>
@@ -25,7 +25,7 @@ const ShoppingCart = () => {
               </ul>
             </div>
             {cart.map((product, index) => {
-              const totalAmount = product.price * product.quantityInStock;
+              const totalAmount = product.price * product.quantity;
               const formattedProductTotalAmount = totalAmount.toLocaleString();
               return (
                 <div className="detail-order" key={index}>
@@ -42,7 +42,7 @@ const ShoppingCart = () => {
                       <input
                         type="text"
                         className="number"
-                        placeholder={`${product.quantityInStock}`}
+                        placeholder={`${product.quantity}`}
                       />
                       <div className="increase" onClick={() => incrementQuantity(product.productId)}>
                         +
