@@ -17,12 +17,15 @@ interface CartContextType {
   cart: iProduct[];
   totals: { [productId: number]: number };
   addToCart: (product: aProduct) => void;
+  addToCart2: (productId: aProduct, quantity: number) => void;
   incrementQuantity: (productId: number) => void;
   decrementQuantity: (productId: number) => void;
   removeItems: (productId: number) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
+
+
 
 export const useCart = () => {
   const context = useContext(CartContext);
@@ -89,6 +92,52 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
+  const addToCart2 = (aProduct: aProduct, quantity: number) => {
+   
+    const existingProduct = cart.find(
+      (item) => item.productId === aProduct.productId
+    );
+    if (!existingProduct) {
+      const updatedCart = [
+        ...cart,
+        {
+          productId: aProduct.productId,
+          name: aProduct.name,
+          imageProducts: aProduct.imageProducts,
+          price: aProduct.price,
+          quantity: quantity,
+          stock: aProduct.stock,
+          isActive: aProduct.isActive,
+        },
+      ];
+
+      setCart(updatedCart);
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      setTotals(calculateTotals(updatedCart));
+    } else {
+      const updatedCart = cart.map((item) =>
+        item.productId === aProduct.productId
+          ? { ...item, quantity: item.quantity + quantity }
+          : item
+      );
+      setCart(updatedCart);
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      setTotals(calculateTotals(updatedCart));
+    }
+
+    toast.success(`Product đã được thêm vào giỏ hàng!`, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+  };
+
+
   const incrementQuantity = (productId: number) => {
     const updatedCart = cart.map((item) =>
       item.productId === productId
@@ -145,6 +194,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         totals,
         removeItems,
         addToCart,
+        addToCart2,
         incrementQuantity,
         decrementQuantity,
       }}

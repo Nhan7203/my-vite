@@ -18,6 +18,8 @@ import Voucher from "./pages/Voucher-page/Voucher";
 import Main from "./components/main/main-home/Main";
 import Register from "./pages/Register-page/Register";
 import Footer from "./components/Footer/footer";
+import Admin from "./pages/Adim-page/Admin";
+
 
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
@@ -36,8 +38,9 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
       <Route path="/" element={<Home />} />
-      <Route path="/adress" element={<Adress />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/admin" element={<Admin />} />
+      <Route path="/adress" element={<Adress />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/noti" element={<Notification />} />
       <Route path="/product" element={<Product />} />

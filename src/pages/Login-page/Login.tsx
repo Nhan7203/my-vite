@@ -2,7 +2,7 @@
 import ReCAPTCHA from "react-google-recaptcha";
 import './Login.css';
 import React, { useState } from 'react';
-
+import { useNavigate } from "react-router-dom";
 import { loginApi } from './LoginServices';
 import { toast } from 'react-toastify';
 import { jwtDecode } from 'jwt-decode';
@@ -17,7 +17,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [captchaValue, setCaptchaValue] = useState<string | null>(null);
-
+  const navigate = useNavigate();
  
 
 
@@ -59,7 +59,7 @@ const Login = () => {
         } else if (decodedToken.roleId == 3) {
 
           alert("Oke thg lon nay Admin ne");
-          // Redirect to 'Admin' page
+          navigate("/admin");
         }
       } else {
         // Login failed

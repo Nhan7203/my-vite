@@ -1,7 +1,7 @@
 import "./ProductDetail.css";
 import Footer from "../../components/Footer/footer";
 import Navbar from "../../components/Navbar/Navbar";
-import { useAllProduct } from "../../context/ShopContext";
+import { useAllProduct, aProduct  } from "../../context/ShopContext";
 import { useParams } from "react-router-dom";
 import { useCart } from '../../pages/Cart-page/CartContext';
 import { useState, useEffect } from "react";
@@ -11,10 +11,9 @@ import adv1 from "/src/assets/adv1.png";
 import adv2 from "/src/assets/adv2.png";
 
 
-
 const ProductDetail = () => {
 
-  const { addToCart } = useCart();
+  const { addToCart2 } = useCart();
   const { allProduct } = useAllProduct();
   const [noOfElement, setNoOfElement] = useState(8);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -38,11 +37,31 @@ const ProductDetail = () => {
 
   const { productId } = useParams<{ productId?: string }>();
 
+   
   let product;
   if (productId) {
     product = allProduct.find((e) => e.productId === parseInt(productId));
   }
 
+
+  const [quantity, setQuantity] = useState(1)
+
+  const handleDecrementQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
+
+  const handleIncrementQuantity = () => {
+    setQuantity(quantity + 1);
+  };
+
+  
+  const handleAddToCart = (product: aProduct) => {
+    
+      addToCart2(product, quantity);
+    
+  };
 
   return (
     <>
@@ -76,19 +95,19 @@ const ProductDetail = () => {
               <div className="quantity-content">
                 <span>Quantity</span>
                 <div>
-                  <div id="btMinus">
+                  <div id="btMinus" onClick={handleDecrementQuantity}>
                     <img src="/src/assets/minus.svg" alt="" />
                   </div>
 
-                  <span id="quantity">1</span>
-                  <div id="btPlus">
+                  <span id="quantity">{quantity}</span>
+                  <div id="btPlus"  onClick={handleIncrementQuantity}>
                     <img src="/src/assets/plus.svg" alt="" />
                   </div>
                 </div>
               </div>
 
               <div className="button-cart">
-                <span className="add-cart" onClick={() => addToCart(product)}>Add to cart</span>
+              <span className="add-cart" onClick={() => handleAddToCart(product)}>Add to cart</span>
                 <span className="buy-now">Buy now</span>
               </div>
             </div>

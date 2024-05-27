@@ -6,9 +6,12 @@ import { useLocation } from "react-router-dom";
 import { aProduct } from "../../context/ShopContext";
 import { BsCart3 } from "react-icons/bs";
 import * as searchServices from "../../apiServices/searchServices";
+import { useCart } from '../../pages/Cart-page/CartContext';
+import { Link } from "react-router-dom"
 
 const Product = () => {
   const location = useLocation();
+  const { addToCart } = useCart();
   const [products, setProducts] = useState<aProduct[]>([]);
   const [categoryId, setCategoryId] = useState<number>(0);
   const [forAgeId, setForAgeId] = useState<number>(0);
@@ -462,11 +465,11 @@ useEffect(() => {
                 {products.map((product) => (
                   <div className="element-product" key={product.productId}>
                     <div className="element-img">
-                      <img
+                    <Link to={`/productDetails/${product.productId}`}><img
                         src={product.imageProducts[0].imageUrl}
                         className="imgpng"
                         alt=""
-                      />
+                      /></Link>
                     </div>
                     <p className="element-name">{product.name}</p>
 
@@ -477,7 +480,7 @@ useEffect(() => {
                       <div className="box-icon-product-page">
                         <BsCart3
                           className="icon-cart-product-page"
-                          fontSize="1.4em"
+                          fontSize="1.4em" onClick={() => addToCart(product)}
                         />
                       </div>
                     </div>
