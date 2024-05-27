@@ -35,7 +35,7 @@ const Navbar = () => {
     event.preventDefault();
     if(searchQuery.length > 0){
     navigate("/product", { state: { query: searchQuery } });
-    window.location.reload();
+   
     }else{
       navigate("/product", { state: { query:""} });
     }

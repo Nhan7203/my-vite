@@ -6,8 +6,8 @@ import { useLocation } from "react-router-dom";
 import { aProduct } from "../../context/ShopContext";
 import { BsCart3 } from "react-icons/bs";
 import * as searchServices from "../../apiServices/searchServices";
-import { useCart } from '../../pages/Cart-page/CartContext';
-import { Link } from "react-router-dom"
+import { useCart } from "../../pages/Cart-page/CartContext";
+import { Link } from "react-router-dom";
 
 const Product = () => {
   const location = useLocation();
@@ -21,78 +21,48 @@ const Product = () => {
   const [isForAgeChecked, setIsForAgeChecked] = useState(false);
   const [isBrandChecked, setIsBrandChecked] = useState(false);
   const [activeOrder, setActiveOrder] = useState("");
-  const [isSearchSuccess, setIsSearchSuccess] = useState(false);
-  const [query, setQuery] = useState("");
-  const [isCheckedData, setIsCheckedData] = useState(false);
 
-useEffect(() => {
-  if (location.state && location.state.query) {
-    setQuery(location.state.query);
-  }
-}, [location.state]);
+  useEffect(() => {
+    const fetchProductsByFilter = async () => {
+      const queryParams = new URLSearchParams();
 
-useEffect(() => {
-  const fetchProductsByFilter = async () => {
-    const queryParams = new URLSearchParams();
+      if (isCategoryChecked && categoryId !== 0) {
+        queryParams.append("categoryId", categoryId.toString());
+      }
 
-    if (isCategoryChecked && categoryId !== 0) {
-      queryParams.append("categoryId", categoryId.toString());
-      setIsCheckedData(true)
-    }
+      if (isForAgeChecked && forAgeId !== 0) {
+        queryParams.append("forAgeId", forAgeId.toString());
+      }
 
-    if (isForAgeChecked && forAgeId !== 0) {
-      queryParams.append("forAgeId", forAgeId.toString());
-      setIsCheckedData(true)
-    }
+      if (isBrandChecked && brandId !== 0) {
+        queryParams.append("brandId", brandId.toString());
+      }
 
-    if (isBrandChecked && brandId !== 0) {
-      queryParams.append("brandId", brandId.toString());
-      setIsCheckedData(true)
-    }
+      if (orderBy === "price") {
+        queryParams.append("orderBy", "price");
+      } else if (orderBy === "priceDesc") {
+        queryParams.append("orderBy", "priceDesc");
+      }
 
-    if (orderBy === "price") {
-      queryParams.append("orderBy", "price");
-      setIsCheckedData(true)
-    } else if (orderBy === "priceDesc") {
-      queryParams.append("orderBy", "priceDesc");
-      setIsCheckedData(true)
-    }
+      if (location.state && location.state.query) {
+        queryParams.append("search", location.state.query);
+      }
 
-    if (query) {
-      queryParams.append("search", query);
-   
-      setIsSearchSuccess(true);
-    }
-    if(isSearchSuccess){
       const response = await searchServices.search(queryParams);
       setProducts(response);
-      setIsSearchSuccess(false);
-    }
-    else if(!isSearchSuccess){
-      const response = await searchServices.search(queryParams);
-      setProducts(response);
-    }
-    
-  };
+    };
+    fetchProductsByFilter();
+  }, [
+    isBrandChecked,
+    isForAgeChecked,
+    isCategoryChecked,
+    categoryId,
+    forAgeId,
+    orderBy,
+    brandId,
+    location.state,
+  ]);
 
-  if (!isSearchSuccess && isCheckedData) {
-    setQuery("");
-    setIsSearchSuccess(false);
-      //setIsCheckedData(false)
-  }
-  fetchProductsByFilter();
-}, [
-  isBrandChecked,
-  isForAgeChecked,
-  isCategoryChecked,
-  categoryId,
-  forAgeId,
-  orderBy,
-  brandId,
-  query,
-  isSearchSuccess,
-  isCheckedData
-]);
   const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     if (e.target.checked) {
@@ -144,7 +114,6 @@ useEffect(() => {
       <Navbar />
 
       <div className="container">
-       
         <div className="filter-product">
           <div className="space-white"></div>
           <div>
@@ -465,11 +434,13 @@ useEffect(() => {
                 {products.map((product) => (
                   <div className="element-product" key={product.productId}>
                     <div className="element-img">
-                    <Link to={`/productDetails/${product.productId}`}><img
-                        src={product.imageProducts[0].imageUrl}
-                        className="imgpng"
-                        alt=""
-                      /></Link>
+                      <Link to={`/productDetails/${product.productId}`}>
+                        <img
+                          src={product.imageProducts[0].imageUrl}
+                          className="imgpng"
+                          alt=""
+                        />
+                      </Link>
                     </div>
                     <p className="element-name">{product.name}</p>
 
@@ -480,7 +451,8 @@ useEffect(() => {
                       <div className="box-icon-product-page">
                         <BsCart3
                           className="icon-cart-product-page"
-                          fontSize="1.4em" onClick={() => addToCart(product)}
+                          fontSize="1.4em"
+                          onClick={() => addToCart(product)}
                         />
                       </div>
                     </div>
@@ -499,6 +471,55 @@ useEffect(() => {
 
 export default Product;
 
+// useEffect(() => {
+//   const fetchProductsByFilter = async () => {
+//     const queryParams = new URLSearchParams();
 
+//     if (isCategoryChecked && categoryId !== 0) {
+//       queryParams.append("categoryId", categoryId.toString());
+//       setIsCheckedData(true)
+//     }
 
+//     if (isForAgeChecked && forAgeId !== 0) {
+//       queryParams.append("forAgeId", forAgeId.toString());
+//       setIsCheckedData(true)
+//     }
 
+//     if (isBrandChecked && brandId !== 0) {
+//       queryParams.append("brandId", brandId.toString());
+//       setIsCheckedData(true)
+//     }
+
+//     if (orderBy === "price") {
+//       queryParams.append("orderBy", "price");
+//       setIsCheckedData(true)
+//     } else if (orderBy === "priceDesc") {
+//       queryParams.append("orderBy", "priceDesc");
+//       setIsCheckedData(true)
+//     }
+
+//     if (location.state && location.state.query) {
+//       queryParams.append("search", location.state.query);
+//       const response = await searchServices.search(queryParams);
+//       setProducts(response);
+//       setIsSearchSuccess(false);
+
+//     }
+//     else if(!isSearchSuccess){
+//       const response = await searchServices.search(queryParams);
+//       setProducts(response);
+//     }
+//   };
+//   fetchProductsByFilter();
+// }, [
+//   isBrandChecked,
+//   isForAgeChecked,
+//   isCategoryChecked,
+//   categoryId,
+//   forAgeId,
+//   orderBy,
+//   brandId,
+//   isSearchSuccess,
+//   isCheckedData,
+//   location.state
+// ]);
