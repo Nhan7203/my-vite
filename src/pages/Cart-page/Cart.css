@@ -15,12 +15,13 @@
 }
 
 .box-left {
-  height: 540px;
+  height: 545px;
   background-color: white;
   border-radius: 20px;
   margin-top: 15px;
   grid-column: 1 / 9;
   overflow: auto;
+  
 }
 
 .Cart-Summary {
@@ -59,6 +60,7 @@
 
 .detail-order {
   margin-top: 20px;
+  overflow: hidden;
 }
 
 .order-list {
@@ -108,7 +110,6 @@
 
 .adress {
   padding: 24px 20px 24px 20px;
-
 }
 
 .h4 {
@@ -185,6 +186,7 @@
   padding: 1px 20px 24px 20px;
   border-radius: 20px;
   height: 100px;
+  margin-top: 25px;
 }
 
 .voucher>h4 {
@@ -249,7 +251,7 @@
   justify-content: center;
   align-items: center;
   margin-top: 15px;
-
+  cursor: pointer;
 }
 
 .total-price {

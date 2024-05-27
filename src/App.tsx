@@ -19,15 +19,17 @@ import Main from "./components/main/main-home/Main";
 import Register from "./pages/Register-page/Register";
 import Footer from "./components/Footer/footer";
 import Admin from "./pages/Adim-page/Admin";
-
-
+import StickyBox from "react-sticky-box";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
+import Payment from "./pages/Payment-page/Payment";
 
 const Home = () => {
   return (
     <div>
-      <Navbar />    
+     <StickyBox offsetTop={0}>
+      <Navbar />
+    </StickyBox> 
       <Main />
       <Footer />
     </div>
@@ -40,6 +42,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/admin" element={<Admin />} />
+      <Route path="/payment" element={<Payment />} />
       <Route path="/adress" element={<Adress />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/noti" element={<Notification />} />

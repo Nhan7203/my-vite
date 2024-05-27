@@ -1,13 +1,11 @@
 import { Link } from "react-router-dom";
-import Footer from "../../components/Footer/footer";
 import Navbar from "../../components/Navbar/Navbar";
-import "./Cart.css";
-import { useCart } from "./CartContext";
-import { FaRegTrashCan } from "react-icons/fa6";
+import { useCart } from "../Cart-page/CartContext";
 import StickyBox from "react-sticky-box";
+import "./Payment.css";
 
-const ShoppingCart = () => {
-  const { cart, decrementQuantity, incrementQuantity, removeItems } = useCart();
+const Payment = () => {
+  const { cart } = useCart();
 
   const totalAmount = cart.reduce(
     (total, product) => total + product.price * product.quantity,
@@ -16,15 +14,14 @@ const ShoppingCart = () => {
 
   return (
     <div>
-      <StickyBox offsetTop={0}>
+     <StickyBox offsetTop={0}>
       <Navbar />
     </StickyBox> 
-
       <div className="body-cart">
         <div>
           <div className="box-left">
-            <div className="Cart-Summary"  >
-              <h2>Cart</h2>
+            <div className="Cart-Summary">
+              <h2>Product</h2>
               <ul>
                 <li>Price</li>
                 <li className="quantity">Quantity</li>
@@ -35,7 +32,7 @@ const ShoppingCart = () => {
               const totalAmount = product.price * product.quantity;
               const formattedProductTotalAmount = totalAmount.toLocaleString();
               return (
-                <div className="detail-order" key={index}  >
+                <div className="detail-order" key={index}>
                   <div className="order-list">
                     <div className="img">
                       <img
@@ -49,37 +46,17 @@ const ShoppingCart = () => {
                       ${product.price.toLocaleString()}
                     </div>
                     <div className="quantity-count">
-                      <div
-                        className="decrease"
-                        onClick={() => decrementQuantity(product.productId)}
-                      >
-                        -
-                      </div>
-                      <input
-                        type="text"
-                        className="number"
-                        placeholder={`${product.quantity}`}
-                        readOnly
-                      />
-                      <div
-                        className="increase"
-                        onClick={() => incrementQuantity(product.productId)}
-                      >
-                        +
-                      </div>
+                      
+                    {`${product.quantity}`}
                     </div>
                     <div className="money">${formattedProductTotalAmount}</div>
-                    <div
-                      className="icon"
-                      onClick={() => removeItems(product.productId)}
-                    >
-                      <FaRegTrashCan />
-                    </div>
+                    
                   </div>
                 </div>
               );
             })}
           </div>
+
           <div className="box-right">
             <div className="adress">
               <h4>Shipping Address</h4>
@@ -93,6 +70,12 @@ const ShoppingCart = () => {
                 <div>Promo Code</div>
               </div>
             </div>
+
+            <div className="payment-methods">
+              <h4>Payment methods</h4>
+              
+            </div>
+
             <div className="bill">
               <div>Subtotal</div>
               <div className="money-voucher">Voucher</div>
@@ -104,16 +87,15 @@ const ShoppingCart = () => {
               </div>
 
               <div className="vat">(Incl. VAT)</div>
-              <Link to="/payment" style={{ color: "white" }}>
-                <div className="box-continue">Payment</div>
+              <Link to="/order" style={{ color: "white" }}>
+                <div className="box-continue">Order</div>
               </Link>
             </div>
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };
 
-export default ShoppingCart;
+export default Payment;
