@@ -116,6 +116,7 @@
     display: flex;
     margin: 40px 0 40px 0;
     column-gap: 40px;
+    align-items: center;
 }
 
 .quantity-content>div {
@@ -128,7 +129,7 @@
 
 .quantity-content>span {
     font-family: 'Poppins';
-    font-size: 15px;
+    font-size: 20px;
     font-weight: 400;
     letter-spacing: 0.7px;
     color: #4F4A4A;
@@ -137,6 +138,7 @@
 .button-cart {
     display: flex;
     justify-content: start;
+    cursor: pointer;
 }
 
 .button-cart>span {
@@ -158,7 +160,7 @@
 
 }
 
-#add-cart {
+.add-cart {
     border: 1px solid #F04175;
     color: #F04175;
     background-color: #FFf;

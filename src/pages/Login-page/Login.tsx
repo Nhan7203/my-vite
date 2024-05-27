@@ -1,10 +1,12 @@
 
+import ReCAPTCHA from "react-google-recaptcha";
 import './Login.css';
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { loginApi } from './LoginServices';
 import { toast } from 'react-toastify';
 import { jwtDecode } from 'jwt-decode';
+
 // import jwt, { JwtPayload } from 'jsonwebtoken';
 interface JwtPayload {
   email: string,
@@ -12,12 +14,20 @@ interface JwtPayload {
 }
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [captchaValue, setCaptchaValue] = useState<string | null>(null);
+  const navigate = useNavigate();
+ 
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    if (!captchaValue) {
+      toast.error("Please complete the captcha.");
+      return;
+    }
 
     if (!email || !password) {
       toast.error("Missing Email or Password");
@@ -31,6 +41,7 @@ const Login = () => {
         // Login successful
         //Lay-Luu token vao local storage
         const { token, user } = response.data;
+
         const decodedToken = jwtDecode(token) as JwtPayload;
         localStorage.setItem('token', token);
 
@@ -39,23 +50,24 @@ const Login = () => {
         if (decodedToken.roleId == 1) {
           alert("Oke thg lon nay User ne");
           //Redirect to 'User' page
+
         }
         else if (decodedToken.roleId == 2) {
           alert("Oke thg lon nay Staff ne");
           // Redirect to 'Staff' page
 
         } else if (decodedToken.roleId == 3) {
-          alert("Oke thg lon nay Admin ne");
-          // Redirect to 'Admin' page
 
+          alert("Oke thg lon nay Admin ne");
+          navigate("/admin");
         }
       } else {
         // Login failed
-        console.error('Login failed');
+        console.error("Login failed");
       }
     } catch (error) {
       // Handle any network or server errors
-      console.error('An error occurred:', error);
+      console.error("An error occurred:", error);
     }
   };
 
@@ -69,10 +81,7 @@ const Login = () => {
 
   const handleOnClick = () => {
     location.href = "/";
-
-  }
-
-
+  };
 
   return (
     <>
@@ -93,44 +102,45 @@ const Login = () => {
         <div className="head-content">
           <img src="/src/assets/anya.png" alt="" />
           <div className="content">
-
             <form className="form-login" onSubmit={handleLogin}>
               <h3 className="text-welcome">Welcome</h3>
               <div>
                 <label>Email</label>
-                <input type="email"
+                <input
+                  type="email"
                   id="email"
                   value={email}
                   onChange={handleEmailChange}
                   placeholder="Enter your email"
-                  required />
+                  required
+                />
               </div>
 
               <div>
                 <label>Password</label>
-                <input type="password"
+                <input
+                  type="password"
                   id="password"
                   value={password}
                   onChange={handlePasswordChange}
                   placeholder="Enter your password"
-                  required />
-
+                  required
+                />
               </div>
-              <a href="">Forgot password?</a>
-              <input
-                className="button-login"
-                type="submit"
-                name="btAction"
-                value="Login"
-              />
-              <p>
-                You don’t have account ?{/* <a href="./Regi">Register</a> */}
-                <Link to="/register">Register</Link>
-              </p>
-
+              <div className="Recapcha">
+                <ReCAPTCHA sitekey="6LeOW-gpAAAAAIjpbDvMlkseUc96hpxAWvxDofYQ" 
+                onChange={(val) => setCaptchaValue(val)} />
+              </div>
+                <a href="">Forgot password?</a>
+                <input
+                  className="button-login"
+                  type="submit"
+                  name="btAction"
+                  value="Login"
+                />
+            
+              <p>Don't have an account? <a href="/register">Register</a></p>
             </form>
-
-
           </div>
         </div>
 

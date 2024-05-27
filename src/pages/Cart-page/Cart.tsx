@@ -1,3 +1,4 @@
+
 import Footer from "../../components/Footer/footer";
 import Navbar from "../../components/Navbar/Navbar";
 import "./Cart.css";
@@ -8,6 +9,8 @@ const ShoppingCart = () => {
   const { cart, decrementQuantity, incrementQuantity, removeItems } = useCart();
 
   const totalAmount = cart.reduce((total, product) => total + (product.price * product.quantity), 0);
+
+ 
 
   return (
     <div>
@@ -43,6 +46,7 @@ const ShoppingCart = () => {
                         type="text"
                         className="number"
                         placeholder={`${product.quantity}`}
+                        readOnly               
                       />
                       <div className="increase" onClick={() => incrementQuantity(product.productId)}>
                         +

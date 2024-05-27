@@ -6,7 +6,7 @@ const request = axios.create({
 
 export const get = async (path: string, options = {}) => {
     const response = await request.get(path, options);
-    console.log("check data axios: ", response.data);
+    //console.log("check data axios: ", response.data);
     return response.data;
 }
 

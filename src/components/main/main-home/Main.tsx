@@ -49,9 +49,11 @@ const Main = () => {
         </div>
       </div>
 
-      <div className="load-more">
-        <button onClick={loadMore}>Load more</button>
-      </div>
+      {slice.length < allProduct.length && (
+        <div className="load-more">
+          <button onClick={loadMore}>Load more</button>
+        </div>
+      )}
     </div>
   );
 };
