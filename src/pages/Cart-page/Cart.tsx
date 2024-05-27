@@ -14,16 +14,19 @@ const ShoppingCart = () => {
     0
   );
 
+  const isLoggedIn = localStorage.getItem("token");
+  //localStorage.setItem('hasAddress', true);
+  const hasAddress = localStorage.getItem("hasAddress");
   return (
     <div>
       <StickyBox offsetTop={0}>
-      <Navbar />
-    </StickyBox> 
+        <Navbar />
+      </StickyBox>
 
       <div className="body-cart">
         <div>
           <div className="box-left">
-            <div className="Cart-Summary"  >
+            <div className="Cart-Summary">
               <h2>Cart</h2>
               <ul>
                 <li>Price</li>
@@ -35,7 +38,7 @@ const ShoppingCart = () => {
               const totalAmount = product.price * product.quantity;
               const formattedProductTotalAmount = totalAmount.toLocaleString();
               return (
-                <div className="detail-order" key={index}  >
+                <div className="detail-order" key={index}>
                   <div className="order-list">
                     <div className="img">
                       <img
@@ -83,9 +86,27 @@ const ShoppingCart = () => {
           <div className="box-right">
             <div className="adress">
               <h4>Shipping Address</h4>
-              <div className="box-adress">
-                <div>Confirm Shipping Address</div>
-              </div>
+              {isLoggedIn ? (
+                <>
+                  {hasAddress ? (
+                    <div className="box-adress">
+                      <div>Has Address</div>
+                    </div>
+                  ) : (
+                    <Link to="/user" style={{ color: "white" }}>
+                      <div className="box-adress">
+                        <div>Confirm Shipping Address</div>
+                      </div>
+                    </Link>
+                  )}
+                </>
+              ) : (
+                <Link to="/login" style={{ color: "white" }}>
+                  <div className="box-adress">
+                    <div>Confirm Shipping Address</div>
+                  </div>
+                </Link>
+              )}
             </div>
             <div className="voucher">
               <h4>Voucher</h4>
@@ -104,9 +125,15 @@ const ShoppingCart = () => {
               </div>
 
               <div className="vat">(Incl. VAT)</div>
-              <Link to="/payment" style={{ color: "white" }}>
-                <div className="box-continue">Payment</div>
-              </Link>
+              {isLoggedIn ? (
+                <Link to="/payment" style={{ color: "white" }}>
+                  <div className="box-continue">Payment</div>
+                </Link>
+              ) : (
+                <Link to="/login" style={{ color: "white" }}>
+                  <div className="box-continue">Payment</div>
+                </Link>
+              )}
             </div>
           </div>
         </div>

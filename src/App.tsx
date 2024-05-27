@@ -23,6 +23,7 @@ import StickyBox from "react-sticky-box";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import Payment from "./pages/Payment-page/Payment";
+import User from "./pages/User-page/User";
 
 const Home = () => {
   return (
@@ -42,6 +43,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/admin" element={<Admin />} />
+      <Route path="/user" element={<User />} />
       <Route path="/payment" element={<Payment />} />
       <Route path="/adress" element={<Adress />} />
       <Route path="/cart" element={<Cart />} />
