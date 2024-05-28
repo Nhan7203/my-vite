@@ -6,19 +6,14 @@ import { useNavigate } from "react-router-dom";
 import { loginApi } from './LoginServices';
 import { toast } from 'react-toastify';
 import { jwtDecode } from 'jwt-decode';
-
-// import jwt, { JwtPayload } from 'jsonwebtoken';
-interface JwtPayload {
-  email: string,
-  roleId: number,
-}
+import { JwtPayload } from '../../context/ShopContext'
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [captchaValue, setCaptchaValue] = useState<string | null>(null);
   const navigate = useNavigate();
- 
+
 
 
   const handleLogin = async (event: React.FormEvent) => {
@@ -40,7 +35,7 @@ const Login = () => {
       if (response.status === 200) {
         // Login successful
         //Lay-Luu token vao local storage
-        const { token, user } = response.data;
+        const { token } = response.data;
 
         const decodedToken = jwtDecode(token) as JwtPayload;
         localStorage.setItem('token', token);
@@ -128,17 +123,17 @@ const Login = () => {
                 />
               </div>
               <div className="Recapcha">
-                <ReCAPTCHA sitekey="6LeOW-gpAAAAAIjpbDvMlkseUc96hpxAWvxDofYQ" 
-                onChange={(val) => setCaptchaValue(val)} />
+                <ReCAPTCHA sitekey="6LeOW-gpAAAAAIjpbDvMlkseUc96hpxAWvxDofYQ"
+                  onChange={(val) => setCaptchaValue(val)} />
               </div>
-                <a href="">Forgot password?</a>
-                <input
-                  className="button-login"
-                  type="submit"
-                  name="btAction"
-                  value="Login"
-                />
-            
+              <a href="">Forgot password?</a>
+              <input
+                className="button-login"
+                type="submit"
+                name="btAction"
+                value="Login"
+              />
+
               <p>Don't have an account? <a href="/register">Register</a></p>
             </form>
           </div>

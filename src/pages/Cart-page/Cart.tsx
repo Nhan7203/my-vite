@@ -34,10 +34,12 @@ const ShoppingCart = () => {
                 <li className="total-amount">Total amount</li>
               </ul>
             </div>
+            <div style={{ overflow: "auto", height: "450px" }}>
             {cart.map((product, index) => {
               const totalAmount = product.price * product.quantity;
               const formattedProductTotalAmount = totalAmount.toLocaleString();
               return (
+                
                 <div className="detail-order" key={index}>
                   <div className="order-list">
                     <div className="img">
@@ -82,6 +84,7 @@ const ShoppingCart = () => {
                 </div>
               );
             })}
+           </div>
           </div>
           <div className="box-right">
             <div className="adress">

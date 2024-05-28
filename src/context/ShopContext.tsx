@@ -23,7 +23,13 @@ export interface ImageProduct {
 
 interface ShopContextType {
   allProduct: aProduct[];
-  
+
+}
+
+export interface JwtPayload {
+  userId: string,
+  email: string;
+  roleId: number;
 }
 
 
@@ -51,7 +57,7 @@ const ShopContextProvider = ({ children }: { children: React.ReactNode }) => {
 
 
   return (
-    <ShopContext.Provider value={{allProduct}}>{children}</ShopContext.Provider>
+    <ShopContext.Provider value={{ allProduct }}>{children}</ShopContext.Provider>
   );
 };
 
