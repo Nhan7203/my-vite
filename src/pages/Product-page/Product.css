@@ -25,6 +25,7 @@
   display: grid;
   grid-template-columns: repeat(12, 80px);
   column-gap: 20px;
+ 
 }
 
 .text-cate {
@@ -113,6 +114,7 @@
 
 .main-pro-list {
   grid-column: 4/13;
+  
 }
 
 .head-sort {
@@ -181,12 +183,14 @@
   overflow: hidden;
   font-size: 14px;
   font-family: "Poppins";
+  transition: all 0.3s ease;
 }
 
 .result-product {
   display: grid;
   grid-template-columns: repeat(5, 4fr);
   gap: 20px;
+ 
 }
 
 .imgpng {
@@ -268,3 +272,12 @@
   height: 50px;
   width: auto;
 }
+
+.sticky-navbar {
+  
+  z-index: 1000; 
+}
+html {
+  scroll-behavior: smooth;
+}
+

@@ -17,7 +17,7 @@ interface CartContextType {
   cart: iProduct[];
   totals: { [productId: number]: number };
   addToCart: (product: aProduct) => void;
-  addToCart2: (productId: aProduct, quantity: number) => void;
+  addToCart2: (productId: aProduct, quantity: number, actionType: string) => void;
   incrementQuantity: (productId: number) => void;
   decrementQuantity: (productId: number) => void;
   removeItems: (productId: number) => void;
@@ -92,7 +92,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
-  const addToCart2 = (aProduct: aProduct, quantity: number) => {
+  const addToCart2 = (aProduct: aProduct, quantity: number, actionType: string) => {
    
     const existingProduct = cart.find(
       (item) => item.productId === aProduct.productId
@@ -124,7 +124,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       localStorage.setItem("cart", JSON.stringify(updatedCart));
       setTotals(calculateTotals(updatedCart));
     }
-
+    if( actionType == "add")
     toast.success(`Product đã được thêm vào giỏ hàng!`, {
       position: "top-right",
       autoClose: 3000,

@@ -8,6 +8,7 @@ import { BsCart3 } from "react-icons/bs";
 import * as searchServices from "../../apiServices/searchServices";
 import { useCart } from "../../pages/Cart-page/CartContext";
 import { Link } from "react-router-dom";
+import StickyBox from "react-sticky-box";
 
 const Product = () => {
   const location = useLocation();
@@ -110,11 +111,14 @@ const Product = () => {
   };
 
   return (
-    <>
+    <div >
+      
+     <StickyBox offsetTop={0} className="sticky-navbar">
       <Navbar />
-
-      <div className="container">
-        <div className="filter-product">
+      </StickyBox>
+    
+      <div className="container" >
+        <div className="filter-product" >
           <div className="space-white"></div>
           <div>
             <div className="content-filter-head">
@@ -430,9 +434,9 @@ const Product = () => {
                 </ul>
               </div>
 
-              <div className="result-product">
+              <div className="result-product" style={{overflow: "auto", height: "915px", zIndex: 0 }}>
                 {products.map((product) => (
-                  <div className="element-product" key={product.productId}>
+                  <div className="element-product" key={product.productId}  >
                     <div className="element-img">
                       <Link to={`/productDetails/${product.productId}`}>
                         <img
@@ -465,61 +469,12 @@ const Product = () => {
         <div className="under-line"></div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 };
 
 export default Product;
 
-// useEffect(() => {
-//   const fetchProductsByFilter = async () => {
-//     const queryParams = new URLSearchParams();
 
-//     if (isCategoryChecked && categoryId !== 0) {
-//       queryParams.append("categoryId", categoryId.toString());
-//       setIsCheckedData(true)
-//     }
 
-//     if (isForAgeChecked && forAgeId !== 0) {
-//       queryParams.append("forAgeId", forAgeId.toString());
-//       setIsCheckedData(true)
-//     }
 
-//     if (isBrandChecked && brandId !== 0) {
-//       queryParams.append("brandId", brandId.toString());
-//       setIsCheckedData(true)
-//     }
-
-//     if (orderBy === "price") {
-//       queryParams.append("orderBy", "price");
-//       setIsCheckedData(true)
-//     } else if (orderBy === "priceDesc") {
-//       queryParams.append("orderBy", "priceDesc");
-//       setIsCheckedData(true)
-//     }
-
-//     if (location.state && location.state.query) {
-//       queryParams.append("search", location.state.query);
-//       const response = await searchServices.search(queryParams);
-//       setProducts(response);
-//       setIsSearchSuccess(false);
-
-//     }
-//     else if(!isSearchSuccess){
-//       const response = await searchServices.search(queryParams);
-//       setProducts(response);
-//     }
-//   };
-//   fetchProductsByFilter();
-// }, [
-//   isBrandChecked,
-//   isForAgeChecked,
-//   isCategoryChecked,
-//   categoryId,
-//   forAgeId,
-//   orderBy,
-//   brandId,
-//   isSearchSuccess,
-//   isCheckedData,
-//   location.state
-// ]);

@@ -40,7 +40,7 @@ const Login = () => {
       if (response.status === 200) {
         // Login successful
         //Lay-Luu token vao local storage
-        const { token, user } = response.data;
+        const { token} = response.data;
 
         const decodedToken = jwtDecode(token) as JwtPayload;
         localStorage.setItem('token', token);

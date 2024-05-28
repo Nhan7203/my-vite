@@ -24,13 +24,21 @@ import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import Payment from "./pages/Payment-page/Payment";
 import User from "./pages/User-page/User";
-
+// const Home = () => {
+//   return (
+//     <div>
+//      <StickyBox offsetTop={0}>
+//       <Navbar />
+//     </StickyBox>
+//       <Main />
+//       <Footer />
+//     </div>
+//   );
+// };
 const Home = () => {
   return (
     <div>
-     <StickyBox offsetTop={0}>
       <Navbar />
-    </StickyBox> 
       <Main />
       <Footer />
     </div>
@@ -50,8 +58,8 @@ const router = createBrowserRouter(
       <Route path="/noti" element={<Notification />} />
       <Route path="/product" element={<Product />} />
       <Route path="/productDetails" element={<ProductDetails />}>
-        <Route path=":productId" element={<ProductDetails />}/>
-      </Route>  
+        <Route path=":productId" element={<ProductDetails />} />
+      </Route>
       <Route path="/blog" element={<Blog />} />
       <Route path="/voucher" element={<Voucher />} />
       <Route path="/register" element={<Register />} />

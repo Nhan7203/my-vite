@@ -2,7 +2,7 @@ import "./ProductDetail.css";
 import Footer from "../../components/Footer/footer";
 import Navbar from "../../components/Navbar/Navbar";
 import { useAllProduct, aProduct  } from "../../context/ShopContext";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useCart } from '../../pages/Cart-page/CartContext';
 import { useState, useEffect } from "react";
 import ProductCard from "../../components/main/main-home/ProductCard";
@@ -17,6 +17,7 @@ const ProductDetail = () => {
   const { allProduct } = useAllProduct();
   const [noOfElement, setNoOfElement] = useState(8);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const navigate = useNavigate();
 
   const bannerImages = [adv, adv1, adv2];
 
@@ -58,10 +59,13 @@ const ProductDetail = () => {
 
   
   const handleAddToCart = (product: aProduct) => {
-    
-      addToCart2(product, quantity);
-    
+      addToCart2(product, quantity, 'add');
   };
+
+  const handleBuyNow = (product: aProduct) => {
+    addToCart2(product, quantity, 'buy');
+    navigate("/cart");
+};
 
   return (
     <>
@@ -108,7 +112,7 @@ const ProductDetail = () => {
 
               <div className="button-cart">
               <span className="add-cart" onClick={() => handleAddToCart(product)}>Add to cart</span>
-                <span className="buy-now">Buy now</span>
+                <span className="buy-now" onClick={() => handleBuyNow(product)}>Buy now</span>
               </div>
             </div>
 

@@ -42,7 +42,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="header">
+    <nav className="header" >
       <div className="top-navbar">
         <ul className="top-navbar-list">
           <li>Location: Thu Duc - HCM - VN</li>
