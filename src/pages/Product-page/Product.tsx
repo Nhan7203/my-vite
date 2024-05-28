@@ -9,7 +9,6 @@ import StickyBox from "react-sticky-box";
 import Footer from "../../components/Footer/footer";
 import Navbar from "../../components/Navbar/Navbar";
 import "./Product.css";
-
 const Product = () => {
   const location = useLocation();
   const { addToCart } = useCart();
@@ -305,6 +304,7 @@ const Product = () => {
                       <input
                         type="checkbox"
                         value={1}
+                        checked={brandId === 1}
                         onChange={handleBrandChange}
                       />
                     </li>

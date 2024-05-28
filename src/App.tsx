@@ -28,19 +28,28 @@ import Customer from "./pages/Adim-page/Customer";
 import Account from "./pages/Adim-page/Account";
 import Order from "./pages/Adim-page/Order-admin";
 
+// const Home = () => {
+//   return (
+//     <div>
+//       <StickyBox offsetTop={0}>
+//         <Navbar />
+//       </StickyBox>
+//       <Main />
+//       <Footer />
+//     </div>
+//   );
+// };
 
 const Home = () => {
   return (
     <div>
-      <StickyBox offsetTop={0}>
-        <Navbar />
-      </StickyBox>
+      <Navbar />
+
       <Main />
       <Footer />
     </div>
   );
 };
-
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
@@ -64,7 +73,6 @@ const router = createBrowserRouter(
       <Route path="/blog" element={<Blog />} />
       <Route path="/voucher" element={<Voucher />} />
       <Route path="/register" element={<Register />} />
-
     </Route>
   )
 );
