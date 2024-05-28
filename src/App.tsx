@@ -24,13 +24,17 @@ import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import Payment from "./pages/Payment-page/Payment";
 import User from "./pages/User-page/User";
+import Customer from "./pages/Adim-page/Customer";
+import Account from "./pages/Adim-page/Account";
+import Order from "./pages/Adim-page/Order-admin";
+
 
 const Home = () => {
   return (
     <div>
-     <StickyBox offsetTop={0}>
-      <Navbar />
-    </StickyBox> 
+      <StickyBox offsetTop={0}>
+        <Navbar />
+      </StickyBox>
       <Main />
       <Footer />
     </div>
@@ -49,12 +53,18 @@ const router = createBrowserRouter(
       <Route path="/cart" element={<Cart />} />
       <Route path="/noti" element={<Notification />} />
       <Route path="/product" element={<Product />} />
+      <Route path="/admin" element={<Admin />} />
+      <Route path="/customer" element={<Customer />} />
+      <Route path="/account" element={<Account />} />
+      <Route path="/order" element={<Order />} />
+
       <Route path="/productDetails" element={<ProductDetails />}>
-        <Route path=":productId" element={<ProductDetails />}/>
-      </Route>  
+        <Route path=":productId" element={<ProductDetails />} />
+      </Route>
       <Route path="/blog" element={<Blog />} />
       <Route path="/voucher" element={<Voucher />} />
       <Route path="/register" element={<Register />} />
+
     </Route>
   )
 );
