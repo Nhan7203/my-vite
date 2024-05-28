@@ -3,6 +3,8 @@ import Navbar from "../../components/Navbar/Navbar";
 import { useCart } from "../Cart-page/CartContext";
 import StickyBox from "react-sticky-box";
 import "./Payment.css";
+import { jwtDecode } from 'jwt-decode';
+import { JwtPayload } from '../../context/ShopContext'
 
 const Payment = () => {
   const { cart } = useCart();
@@ -12,11 +14,71 @@ const Payment = () => {
     0
   );
 
+  const handleContinueClick = async () => {
+    try {
+
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+
+        console.error('Token not found');
+        return;
+      }
+
+      const decodedToken = jwtDecode(token) as JwtPayload;
+
+      const userId = decodedToken.userId;
+      const orderDate = new Date().toISOString();
+      const shippingMethodId = 1;          //From web
+      const paymentMethod = "123";          //From web 
+      const address = "456";                //From web
+
+      const products = cart.map((product) => ({
+        productId: product.productId,
+        quantity: product.quantity,
+        price: product.price,
+        total: product.quantity * product.price,
+      }))
+
+
+
+      const order = {
+        userId,
+        orderDate,
+        address,
+        paymentMethod,
+        shippingMethodId,
+        products
+      }
+
+      console.log(JSON.stringify(order))
+      const response = await fetch('https://localhost:7030/api/orders', { //API CALL
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // Authorization: `Bearer ${token}`, //do later
+        },
+        body: JSON.stringify(order),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to store cart data');
+      }
+
+      const data = await response.json();
+      console.log('Cart data stored:', data);
+
+
+    } catch (error) {
+      console.error('Error storing cart data:', error);
+    }
+  };
+
   return (
     <div>
-     <StickyBox offsetTop={0}>
-      <Navbar />
-    </StickyBox> 
+      <StickyBox offsetTop={0}>
+        <Navbar />
+      </StickyBox>
       <div className="body-cart">
         <div>
           <div className="box-left">
@@ -46,11 +108,11 @@ const Payment = () => {
                       ${product.price.toLocaleString()}
                     </div>
                     <div className="quantity-count">
-                      
-                    {`${product.quantity}`}
+
+                      {`${product.quantity}`}
                     </div>
                     <div className="money">${formattedProductTotalAmount}</div>
-                    
+
                   </div>
                 </div>
               );
@@ -73,7 +135,7 @@ const Payment = () => {
 
             <div className="payment-methods">
               <h4>Payment methods</h4>
-              
+
             </div>
 
             <div className="bill">
@@ -88,7 +150,7 @@ const Payment = () => {
 
               <div className="vat">(Incl. VAT)</div>
               <Link to="/order" style={{ color: "white" }}>
-                <div className="box-continue">Order</div>
+                <div className="box-continue" onClick={handleContinueClick}>Order</div>
               </Link>
             </div>
           </div>
