@@ -27,6 +27,8 @@ import User from "./pages/User-page/User";
 import Customer from "./pages/Adim-page/Customer";
 import Account from "./pages/Adim-page/Account";
 import Order from "./pages/Adim-page/Order-admin";
+import Profile from "./pages/Profile-page/Profile";
+
 
 
 const Home = () => {
@@ -57,6 +59,7 @@ const router = createBrowserRouter(
       <Route path="/customer" element={<Customer />} />
       <Route path="/account" element={<Account />} />
       <Route path="/order" element={<Order />} />
+      <Route path="/profile" element={<Profile />} />
 
       <Route path="/productDetails" element={<ProductDetails />}>
         <Route path=":productId" element={<ProductDetails />} />
