@@ -1,14 +1,14 @@
-import "./Product.css";
-import Footer from "../../components/Footer/footer";
-import Navbar from "../../components/Navbar/Navbar";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { aProduct } from "../../context/ShopContext";
 import { BsCart3 } from "react-icons/bs";
-import * as searchServices from "../../apiServices/searchServices";
 import { useCart } from "../../pages/Cart-page/CartContext";
 import { Link } from "react-router-dom";
+import * as searchServices from "../../apiServices/searchServices";
 import StickyBox from "react-sticky-box";
+import Footer from "../../components/Footer/footer";
+import Navbar from "../../components/Navbar/Navbar";
+import "./Product.css";
 
 const Product = () => {
   const location = useLocation();

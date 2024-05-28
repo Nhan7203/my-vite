@@ -20,7 +20,6 @@
 }
 
 .bottom-navbar .nav-link.active {
-  /* background-color: #b60052; */
   background-color: #b60052 !important;
 }
 
@@ -55,6 +54,7 @@
 }
 
 .navbar-search {
+  height: 100px;
   background-color: white;
   display: flex;
   align-items: center;
@@ -67,10 +67,6 @@
   overflow: hidden;
   margin-left: 20px;
   cursor: pointer;
-}
-
-.navbar-search {
-  height: 100px;
 }
 
 .box-search {
