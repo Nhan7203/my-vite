@@ -10,12 +10,12 @@ import Voucher from "../pages/Voucher-page/Voucher";
 import Main from "../components/main/main-home/Main";
 import Register from "../pages/Register-page/Register";
 import Footer from "../components/Footer/footer";
-import Admin from "../pages/Adim-page/Admin";
+import Admin from "../pages/Admin-page/Admin";
 import Payment from "../pages/Payment-page/Payment";
 import User from "../pages/User-page/User";
-import Customer from "../pages/Adim-page/Customer";
-import Account from "../pages/Adim-page/Account";
-import Order from "../pages/Adim-page/Order-admin";
+import Customer from "../pages/Admin-page/Customer";
+import Account from "../pages/Admin-page/Account";
+import Order from "../pages/Admin-page/Order-admin";
 
 export {
   Navbar,

@@ -1,9 +1,18 @@
-import { NavLink, Link, BsCart3, IoNotificationsOutline, FaSearch, BsFillPeopleFill, GiPositionMarker } from "../../import/import-libary";
+import {
+  NavLink,
+  Link,
+  BsCart3,
+  IoNotificationsOutline,
+  FaSearch,
+  BsFillPeopleFill,
+  GiPositionMarker,
+} from "../../import/import-libary";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../pages/Cart-page/CartContext";
 import logo from "../../assets/logo.png";
 import "./Navbar.css";
+import avatar from "../../assets/vu.jpg"
 
 const Navbar = () => {
   const [cartCount, setCartCount] = useState(0);
@@ -28,16 +37,24 @@ const Navbar = () => {
 
   const handleSearch = (event: { preventDefault: () => void }) => {
     event.preventDefault();
-    if(searchQuery.length > 0){
-    navigate("/product", { state: { query: searchQuery } });
-   
-    }else{
-      navigate("/product", { state: { query:""} });
+    if (searchQuery.length > 0) {
+      navigate("/product", { state: { query: searchQuery } });
+    } else {
+      navigate("/product", { state: { query: "" } });
     }
   };
 
+  //Get token login
+  const isLoggedIn = localStorage.getItem("token");
+
+  //Renove token logout
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+  };
+  
+
   return (
-    <nav className="header" >
+    <nav className="header">
       <div className="top-navbar">
         <ul className="top-navbar-list">
           <li>Location: Thu Duc - HCM - VN</li>
@@ -50,17 +67,29 @@ const Navbar = () => {
               Add address to purchase
             </Link>
           </li>
-
-          <li className="login">
-            <BsFillPeopleFill fontSize="1em" />
-            <Link to="/login">
-              <button>Login</button>
-            </Link>
-          </li>
+          {isLoggedIn ? (
+            <div className="user-menu">
+              <div className="avatar" >
+              <img src={avatar} alt="Avatar"></img>
+              </div>
+                <div className="menu-box">
+                  <a href="/user">View Profile</a>
+                  <a href="/login" onClick={handleLogout}>Logout</a>
+                </div>
+             
+            </div>
+          ) : (
+            <li className="login">
+              <BsFillPeopleFill fontSize="1em" />
+              <Link to="/login">
+                <button>Login</button>
+              </Link>
+            </li>
+          )}
         </ul>
       </div>
 
-      <div className="navbar-search">
+      <div className="navbar-search" >
         <div className="navbar-logo" onClick={() => handleLogo()}>
           <img src={logo} alt="M&B-logo" className="logo-img" />
         </div>

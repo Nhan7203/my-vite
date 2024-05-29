@@ -42,14 +42,13 @@ const Login = () => {
         if (decodedToken.roleId == 1) {
           alert("Oke thg lon nay User ne");
           //Redirect to 'User' page
-
+          navigate("/");
         }
         else if (decodedToken.roleId == 2) {
           alert("Oke thg lon nay Staff ne");
           // Redirect to 'Staff' page
-
+          
         } else if (decodedToken.roleId == 3) {
-
           alert("Oke thg lon nay Admin ne");
           navigate("/admin");
         }

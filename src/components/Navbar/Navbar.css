@@ -7,7 +7,6 @@
 .top-navbar {
   height: 40px;
   background: #fdf4fb;
-  overflow: hidden;
 }
 
 .bottom-navbar a {
@@ -98,7 +97,6 @@
 .icon-search {
   margin: 2px 0 0 10px;
   cursor: pointer;
-  
 }
 
 .cart-noti-icons {
@@ -158,4 +156,49 @@
 
 a.white {
   -webkit-text-fill-color: white;
+}
+
+.user-menu {
+  position: relative;
+  display: inline-block;
+  
+}
+
+.menu-box {
+  position: absolute;
+  width: 110px;
+  top: 100%;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: center;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-bottom: 2px solid #ccc;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 10px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.menu-box a {
+  display: block;
+  padding: 5px 0;
+  text-decoration: none;
+  color: #333;
+  border-bottom: 0.5px solid #ccc;
+}
+
+.user-menu:hover .menu-box {
+  opacity: 1;
+  visibility: visible;
+}
+
+.avatar > img {
+  width: auto;
+  height: 25px;
+  border-radius: 20px;
 }
