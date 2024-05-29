@@ -5,6 +5,7 @@ import "./Cart.css";
 import { useCart } from "./CartContext";
 import { FaRegTrashCan } from "react-icons/fa6";
 import StickyBox from "react-sticky-box";
+import Swal from 'sweetalert2';
 
 const ShoppingCart = () => {
   const { cart, decrementQuantity, incrementQuantity, removeItems } = useCart();
@@ -35,56 +36,56 @@ const ShoppingCart = () => {
               </ul>
             </div>
             <div style={{ overflow: "auto", height: "450px" }}>
-            {cart.map((product, index) => {
-              const totalAmount = product.price * product.quantity;
-              const formattedProductTotalAmount = totalAmount.toLocaleString();
-              return (
-                
-                <div className="detail-order" key={index}>
-                  <div className="order-list">
-                    <div className="img">
-                      <img
-                        src={product.imageProducts[0].imageUrl}
-                        className="ma"
-                        alt=""
-                      />
-                    </div>
-                    <div className="name">{product.name}</div>
-                    <div className="price-order">
-                      ${product.price.toLocaleString()}
-                    </div>
-                    <div className="quantity-count">
-                      <div
-                        className="decrease"
-                        onClick={() => decrementQuantity(product.productId)}
-                      >
-                        -
+              {cart.map((product, index) => {
+                const totalAmount = product.price * product.quantity;
+                const formattedProductTotalAmount = totalAmount.toLocaleString();
+                return (
+
+                  <div className="detail-order" key={index}>
+                    <div className="order-list">
+                      <div className="img">
+                        <img
+                          src={product.imageProducts[0].imageUrl}
+                          className="ma"
+                          alt=""
+                        />
                       </div>
-                      <input
-                        type="text"
-                        className="number"
-                        placeholder={`${product.quantity}`}
-                        readOnly
-                      />
-                      <div
-                        className="increase"
-                        onClick={() => incrementQuantity(product.productId)}
-                      >
-                        +
+                      <div className="name">{product.name}</div>
+                      <div className="price-order">
+                        ${product.price.toLocaleString()}
                       </div>
-                    </div>
-                    <div className="money">${formattedProductTotalAmount}</div>
-                    <div
-                      className="icon"
-                      onClick={() => removeItems(product.productId)}
-                    >
-                      <FaRegTrashCan />
+                      <div className="quantity-count">
+                        <div
+                          className="decrease"
+                          onClick={() => decrementQuantity(product.productId)}
+                        >
+                          -
+                        </div>
+                        <input
+                          type="text"
+                          className="number"
+                          placeholder={`${product.quantity}`}
+                          readOnly
+                        />
+                        <div
+                          className="increase"
+                          onClick={() => incrementQuantity(product.productId)}
+                        >
+                          +
+                        </div>
+                      </div>
+                      <div className="money">${formattedProductTotalAmount}</div>
+                      <div
+                        className="icon"
+                        onClick={() => removeItems(product.productId)}
+                      >
+                        <FaRegTrashCan />
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
-           </div>
+                );
+              })}
+            </div>
           </div>
           <div className="box-right">
             <div className="adress">
@@ -133,7 +134,13 @@ const ShoppingCart = () => {
                   <div className="box-continue">Payment</div>
                 </Link>
               ) : (
-                <Link to="/login" style={{ color: "white" }}>
+                <Link
+                  to="/login"
+                  style={{ color: "white" }}
+                  onClick={() =>
+                    Swal.fire("Opps!", "You haven't logged in yet! Redirecting to Login...", "error")
+                  }
+                >
                   <div className="box-continue">Payment</div>
                 </Link>
               )}

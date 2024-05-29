@@ -5,6 +5,7 @@ import StickyBox from "react-sticky-box";
 import "./Payment.css";
 import { jwtDecode } from 'jwt-decode';
 import { JwtPayload } from '../../context/ShopContext'
+import Paypal from "./Paypal";
 
 const Payment = () => {
   const { cart } = useCart();
@@ -29,9 +30,9 @@ const Payment = () => {
 
       const userId = decodedToken.userId;
       const orderDate = new Date().toISOString();
-      const shippingMethodId = 1;          //From web
-      const paymentMethod = "123";          //From web 
-      const address = "456";                //From web
+      const shippingMethodId = 1;               //From web
+      const paymentMethod = "By Cash";          //From web 
+      const address = "456";                    //From web
 
       const products = cart.map((product) => ({
         productId: product.productId,
@@ -135,6 +136,14 @@ const Payment = () => {
 
             <div className="payment-methods">
               <h4>Payment methods</h4>
+              <Paypal
+                payload={cart.map((product) => ({
+                  productId: product.productId,
+                  quantity: product.quantity,
+                  price: product.price,
+                  total: product.quantity * product.price,
+                }))}
+                amount={(totalAmount / 23500).toFixed(2)} />
 
             </div>
 
