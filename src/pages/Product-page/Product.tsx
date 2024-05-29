@@ -413,7 +413,7 @@ const Product = () => {
                 </div>
               </div>
 
-              <div className="filter-under-line"></div>
+              {/*<div className="filter-under-line"></div>*/}
             </div>
             </div>
             <div className="main-pro-list">
@@ -434,7 +434,7 @@ const Product = () => {
                 </ul>
               </div>
 
-              <div className="result-product" style={{overflow: "auto", height: "915px", zIndex: 0 }}>
+              <div className="result-product" style={{overflow: "auto", height: "410px", zIndex: 0 }}>
                 {products.map((product) => (
                   <div className="element-product" key={product.productId}  >
                     <div className="element-img">

@@ -3,13 +3,14 @@ import { useCart } from "../Cart-page/CartContext";
 import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { JwtPayload } from "../../context/ShopContext";
-import { GiPositionMarker, BsFillPeopleFill, StickyBox   } from "../../import/import-libary";
+import { GiPositionMarker} from "../../import/import-libary";
 import Footer from "../../components/Footer/footer";
+import avatar from "../../assets/vu.jpg";
+import Paypal from "./Paypal";
 import SEC from "../../assets/ship-economical.png";
 import SR from "../../assets/ship-regular.png";
 import SE from "../../assets/ship-Epress.png";
 import "./Payment.css";
-import Paypal from "./Paypal";
 
 const Payment = () => {
   const [activeOrderShip, setActiveOrderShip] = useState<number>(0);
@@ -35,9 +36,9 @@ const Payment = () => {
       const userId = decodedToken.userId;
       const orderDate = new Date().toISOString();
 
-      const shippingMethodId = 1;               //From web
-      const paymentMethod = "By Cash";          //From web 
-      const address = "456";                    //From web
+      const shippingMethodId = 1; //From web
+      const paymentMethod = "By Cash"; //From web
+      const address = "456"; //From web
 
       const products = cart.map((product) => ({
         productId: product.productId,
@@ -95,46 +96,55 @@ const Payment = () => {
     }
   };
 
+  //Renove token logout
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+  };
+
   return (
     <div>
-      <StickyBox offsetTop={0}>
-        <nav className="header-payment">
-          <div className="top-navbar">
-            <ul className="top-navbar-list">
-              <li>Location: Thu Duc - HCM - VN</li>
+      <div className="header-payment">
+        <div className="top-navbar">
+          <ul className="top-navbar-list">
+            <li>Location: Thu Duc - HCM - VN</li>
 
-              <li>Tel: (+84) 3939393939</li>
+            <li>Tel: (+84) 3939393939</li>
 
-              <li>
-                <Link to="/Adress">
-                  <GiPositionMarker />
-                  Add address to purchase
-                </Link>
-              </li>
+            <li>
+              <Link to="/Adress">
+                <GiPositionMarker />
+                Add address to purchase
+              </Link>
+            </li>
 
-              <li className="login">
-                <BsFillPeopleFill fontSize="1em" />
-                <Link to="/login">
-                  <button>Login</button>
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div className="navbar-name-web">
-            <div>
-              <div className="name-web" onClick={() => handleOnClick()}>
-                <h3>M</h3>
-                <h3 id="and">&</h3>
-                <h3>B.COM</h3>
+            <div className="user-menu">
+              <div className="avatar">
+                <img src={avatar} alt="Avatar"></img>
               </div>
-
-              <div className="line1"></div>
-              <div className="text-payment">Payment</div>
+              <div className="menu-box">
+                <a href="/user">View Profile</a>
+                <a href="/login" onClick={handleLogout}>
+                  Logout
+                </a>
+              </div>
             </div>
+          </ul>
+        </div>
+
+        <div className="navbar-name-web">
+          <div>
+            <div className="name-web" onClick={() => handleOnClick()}>
+              <h3>M</h3>
+              <h3 id="and">&</h3>
+              <h3>B.COM</h3>
+            </div>
+
+            <div className="line1"></div>
+            <div className="text-payment">Payment</div>
           </div>
-        </nav>
-      </StickyBox>
+        </div>
+      </div>
+
       <div className="body-payment">
         <div>
           <div className="box-top">
@@ -195,8 +205,8 @@ const Payment = () => {
                   price: product.price,
                   total: product.quantity * product.price,
                 }))}
-                amount={(totalAmount / 23500).toFixed(2)} />
-
+                amount={(totalAmount / 23500).toFixed(2)}
+              />
             </div>
 
             <div className="bill">
@@ -239,7 +249,7 @@ const Payment = () => {
                 <li className="total-amount">Total amount</li>
               </ul>
             </div>
-            <div style={{ overflow: "auto", height: "395px" }}>
+            <div style={{ overflow: "auto", height: "520px" }}>
               {cart.map((product, index) => {
                 const totalAmount = product.price * product.quantity;
                 const formattedProductTotalAmount =
