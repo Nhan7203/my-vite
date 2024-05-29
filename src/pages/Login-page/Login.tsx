@@ -1,20 +1,17 @@
-
-import ReCAPTCHA from "react-google-recaptcha";
-import './Login.css';
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import { JwtPayload } from '../../context/ShopContext'
+import { jwtDecode } from 'jwt-decode';
 import { loginApi } from './LoginServices';
 import { toast } from 'react-toastify';
-import { jwtDecode } from 'jwt-decode';
-import { JwtPayload } from '../../context/ShopContext'
+import ReCAPTCHA from "react-google-recaptcha";
+import './Login.css';
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [captchaValue, setCaptchaValue] = useState<string | null>(null);
   const navigate = useNavigate();
-
-
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -82,7 +79,7 @@ const Login = () => {
     <>
       <body>
         <header>
-          <div>
+          <div style={{height: "47px" }}>
             <div className="logo-mandb" onClick={() => handleOnClick()}>
               <h3>M</h3>
               <h3 id="and">&</h3>

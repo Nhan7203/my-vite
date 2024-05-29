@@ -1,32 +1,33 @@
 import {
+  Navbar,
+  Login,
+  Adress,
+  Notification,
+  Product,
+  ProductDetails,
+  Cart,
+  Payment,
+  User,
+  Customer,
+  Account,
+  Order,
+  Main,
+  Footer,
+  Admin,
+  Blog,
+  Voucher,
+  Register,
+} from "./import/import-router";
+import {
   createBrowserRouter,
   RouterProvider,
   createRoutesFromElements,
   Route,
 } from "react-router-dom";
 import { CartProvider } from "./pages/Cart-page/CartContext";
-import { ToastContainer } from "react-toastify";
-import Navbar from "./components/Navbar/Navbar";
-import Login from "./pages/Login-page/Login";
-import Adress from "./pages/Adress-page/Adress";
-import Notification from "./pages/Notification-page/Notification";
-import Cart from "./pages/Cart-page/Cart";
-import Product from "./pages/Product-page/Product";
-import ProductDetails from "./pages/ProductDetails-page/productDetails";
-import Blog from "./pages/Blog-page/Blog";
-import Voucher from "./pages/Voucher-page/Voucher";
-import Main from "./components/main/main-home/Main";
-import Register from "./pages/Register-page/Register";
-import Footer from "./components/Footer/footer";
-import Admin from "./pages/Adim-page/Admin";
-import StickyBox from "react-sticky-box";
+import { StickyBox, ToastContainer } from "./import/import-libary";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-import Payment from "./pages/Payment-page/Payment";
-import User from "./pages/User-page/User";
-import Customer from "./pages/Adim-page/Customer";
-import Account from "./pages/Adim-page/Account";
-import Order from "./pages/Adim-page/Order-admin";
 
 // const Home = () => {
 //   return (

@@ -1,10 +1,7 @@
-import { Link } from "react-router-dom";
-import Footer from "../../components/Footer/footer";
-import Navbar from "../../components/Navbar/Navbar";
-import "./Cart.css";
+import { StickyBox, Link, FaRegTrashCan } from "../../import/import-libary";
+import { Navbar, Footer } from "../../import/import-router";
 import { useCart } from "./CartContext";
-import { FaRegTrashCan } from "react-icons/fa6";
-import StickyBox from "react-sticky-box";
+import "./Cart.css";
 
 const ShoppingCart = () => {
   const { cart, decrementQuantity, incrementQuantity, removeItems } = useCart();

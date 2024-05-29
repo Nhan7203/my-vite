@@ -1,16 +1,14 @@
 import { Link } from "react-router-dom";
 import { useCart } from "../Cart-page/CartContext";
+import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { JwtPayload } from "../../context/ShopContext";
-import { GiPositionMarker } from "react-icons/gi";
-import { BsFillPeopleFill } from "react-icons/bs";
+import { GiPositionMarker, BsFillPeopleFill, StickyBox   } from "../../import/import-libary";
+import Footer from "../../components/Footer/footer";
 import SEC from "../../assets/ship-economical.png";
 import SR from "../../assets/ship-regular.png";
 import SE from "../../assets/ship-Epress.png";
-import StickyBox from "react-sticky-box";
 import "./Payment.css";
-import Footer from "../../components/Footer/footer";
-import { useState } from "react";
 
 const Payment = () => {
   const [activeOrderShip, setActiveOrderShip] = useState<number>(0);

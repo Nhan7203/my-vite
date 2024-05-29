@@ -1,9 +1,9 @@
-import './Register.css';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.css';
-import { toast } from 'react-toastify';
+import './Register.css';
 
 const Register = () => {
     const [username, setUsername] = useState('');
