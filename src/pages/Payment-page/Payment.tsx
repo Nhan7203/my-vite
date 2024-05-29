@@ -80,16 +80,17 @@ const Payment = () => {
   const handleOnClick = () => {
     location.href = "/";
   };
+
   //get money from box-ship
   const handleOrderShipChange = (value: number) => {
     if (value === 1) {
-      setSubtotal(30);
+      setSubtotal(30000);
       setActiveOrderShip(1);
     } else if (value === 2) {
-      setSubtotal(50);
+      setSubtotal(50000);
       setActiveOrderShip(2);
     } else {
-      setSubtotal(120);
+      setSubtotal(120000);
       setActiveOrderShip(3);
     }
   };
@@ -147,7 +148,7 @@ const Payment = () => {
                   onClick={() => handleOrderShipChange(1)}
                 >
                   <img src={SEC} alt="" className="logo-sec" />
-                  <div>Economical delivery $30</div>
+                  <div>Economical delivery $30,000</div>
                 </div>
               </div>
               <div className="regular">
@@ -156,7 +157,7 @@ const Payment = () => {
                   onClick={() => handleOrderShipChange(2)}
                 >
                   <img src={SR} alt="" className="logo-sr" />
-                  <div>Regular delivery $50</div>
+                  <div>Regular delivery $50,000</div>
                 </div>
               </div>
               <div className="express">
@@ -165,7 +166,7 @@ const Payment = () => {
                   onClick={() => handleOrderShipChange(3)}
                 >
                   <img src={SE} alt="" className="logo-se" />
-                  <div>Express delivery $120</div>
+                  <div>Express delivery $120,000</div>
                 </div>
               </div>
             </div>
@@ -192,22 +193,31 @@ const Payment = () => {
             <div className="bill">
               <div className="total-sub">
                 <p>Subtotal</p>
-                <div>{subtotal}</div>
+                <div>${subtotal.toLocaleString()}</div>
               </div>
               <div className="money-voucher">Voucher</div>
               <div className="total">
                 <p>Total</p>
                 <div className="total-price">
-                  ${totalAmount.toLocaleString() + subtotal}
+                  ${(totalAmount + subtotal).toLocaleString()}
                 </div>
               </div>
 
               <div className="vat">(Incl. VAT)</div>
-              <Link to="/order" style={{ color: "white" }}>
-                <div className="box-continue" onClick={handleContinueClick}>
+              {subtotal ? (
+                <Link to="/order" style={{ color: "white" }}>
+                  <div className="box-continue" onClick={handleContinueClick}>
+                    Order
+                  </div>
+                </Link>
+              ) : (
+                <div
+                  className="box-continue"
+                  style={{ color: "white", background: "#B4B4B4" }}
+                >
                   Order
                 </div>
-              </Link>
+              )}
             </div>
           </div>
 

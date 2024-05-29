@@ -260,3 +260,7 @@
   font-weight: bold;
 }
 
+.total-amount {
+  transform: translatex(-10px);
+}
+

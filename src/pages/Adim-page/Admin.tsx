@@ -2,7 +2,7 @@ import React from 'react'
 import './Admin.css'
 const Admin = () => {
   return (
-    <>
+    <div className='Admin-css'>
       <body>
 
         <input type="checkbox" id="nav-toggle" />
@@ -330,7 +330,7 @@ const Admin = () => {
 
 
 
-    </>
+    </div>
   )
 }
 
