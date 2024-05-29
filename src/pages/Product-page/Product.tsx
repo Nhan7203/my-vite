@@ -1,14 +1,12 @@
-import "./Product.css";
-import Footer from "../../components/Footer/footer";
-import Navbar from "../../components/Navbar/Navbar";
 import { useState, useEffect } from "react";
+import { StickyBox, Link} from "../../import/import-libary";
+import { Navbar, Footer } from "../../import/import-router";
 import { useLocation } from "react-router-dom";
 import { aProduct } from "../../context/ShopContext";
 import { BsCart3 } from "react-icons/bs";
-import * as searchServices from "../../apiServices/searchServices";
 import { useCart } from "../../pages/Cart-page/CartContext";
-import { Link } from "react-router-dom";
-import StickyBox from "react-sticky-box";
+import * as searchServices from "../../apiServices/searchServices";
+import "./Product.css";
 
 const Product = () => {
   const location = useLocation();
@@ -121,6 +119,7 @@ const Product = () => {
         <div className="filter-product" >
           <div className="space-white"></div>
           <div>
+            <div className="all-filter">
             <div className="content-filter-head">
               <p className="text-cate">Category</p>
               <div className="content-cate">
@@ -305,6 +304,7 @@ const Product = () => {
                       <input
                         type="checkbox"
                         value={1}
+                        checked={brandId === 1}
                         onChange={handleBrandChange}
                       />
                     </li>
@@ -415,7 +415,7 @@ const Product = () => {
 
               <div className="filter-under-line"></div>
             </div>
-
+            </div>
             <div className="main-pro-list">
               <div className="head-sort">
                 <ul>

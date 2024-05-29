@@ -1,15 +1,13 @@
-import "./ProductDetail.css";
-import Footer from "../../components/Footer/footer";
-import Navbar from "../../components/Navbar/Navbar";
 import { useAllProduct, aProduct  } from "../../context/ShopContext";
 import { useNavigate, useParams } from "react-router-dom";
-import { useCart } from '../../pages/Cart-page/CartContext';
 import { useState, useEffect } from "react";
+import { Navbar, Footer } from "../../import/import-router";
+import { useCart } from '../../pages/Cart-page/CartContext';
 import ProductCard from "../../components/main/main-home/ProductCard";
 import adv from "/src/assets/adv.png";
 import adv1 from "/src/assets/adv1.png";
 import adv2 from "/src/assets/adv2.png";
-
+import "./ProductDetail.css";
 
 const ProductDetail = () => {
 

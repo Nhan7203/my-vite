@@ -1,50 +1,56 @@
 import {
+  Navbar,
+  Login,
+  Adress,
+  Notification,
+  Product,
+  ProductDetails,
+  Cart,
+  Payment,
+  User,
+  Customer,
+  Account,
+  Order,
+  Main,
+  Footer,
+  Admin,
+  Blog,
+  Voucher,
+  Register,
+} from "./import/import-router";
+import {
   createBrowserRouter,
   RouterProvider,
   createRoutesFromElements,
   Route,
 } from "react-router-dom";
 import { CartProvider } from "./pages/Cart-page/CartContext";
-import { ToastContainer } from "react-toastify";
-import Navbar from "./components/Navbar/Navbar";
-import Login from "./pages/Login-page/Login";
-import Adress from "./pages/Adress-page/Adress";
-import Notification from "./pages/Notification-page/Notification";
-import Cart from "./pages/Cart-page/Cart";
-import Product from "./pages/Product-page/Product";
-import ProductDetails from "./pages/ProductDetails-page/productDetails";
-import Blog from "./pages/Blog-page/Blog";
-import Voucher from "./pages/Voucher-page/Voucher";
-import Main from "./components/main/main-home/Main";
-import Register from "./pages/Register-page/Register";
-import Footer from "./components/Footer/footer";
-import Admin from "./pages/Adim-page/Admin";
-import StickyBox from "react-sticky-box";
+import { StickyBox, ToastContainer } from "./import/import-libary";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-import Payment from "./pages/Payment-page/Payment";
-import User from "./pages/User-page/User";
+
 // const Home = () => {
 //   return (
 //     <div>
-//      <StickyBox offsetTop={0}>
-//       <Navbar />
-//     </StickyBox>
+//       <StickyBox offsetTop={0}>
+//         <Navbar />
+//       </StickyBox>
 //       <Main />
 //       <Footer />
 //     </div>
 //   );
 // };
+
 const Home = () => {
   return (
     <div>
       <Navbar />
+
       <Main />
       <Footer />
     </div>
   );
 };
-
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
@@ -57,6 +63,11 @@ const router = createBrowserRouter(
       <Route path="/cart" element={<Cart />} />
       <Route path="/noti" element={<Notification />} />
       <Route path="/product" element={<Product />} />
+      <Route path="/admin" element={<Admin />} />
+      <Route path="/customer" element={<Customer />} />
+      <Route path="/account" element={<Account />} />
+      <Route path="/order" element={<Order />} />
+
       <Route path="/productDetails" element={<ProductDetails />}>
         <Route path=":productId" element={<ProductDetails />} />
       </Route>

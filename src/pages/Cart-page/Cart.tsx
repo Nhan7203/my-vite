@@ -1,11 +1,8 @@
-import { Link } from "react-router-dom";
-import Footer from "../../components/Footer/footer";
-import Navbar from "../../components/Navbar/Navbar";
-import "./Cart.css";
+import { StickyBox, Link, FaRegTrashCan } from "../../import/import-libary";
+import { Navbar, Footer } from "../../import/import-router";
 import { useCart } from "./CartContext";
-import { FaRegTrashCan } from "react-icons/fa6";
-import StickyBox from "react-sticky-box";
 import Swal from 'sweetalert2';
+import "./Cart.css";
 
 const ShoppingCart = () => {
   const { cart, decrementQuantity, incrementQuantity, removeItems } = useCart();
@@ -40,7 +37,6 @@ const ShoppingCart = () => {
                 const totalAmount = product.price * product.quantity;
                 const formattedProductTotalAmount = totalAmount.toLocaleString();
                 return (
-
                   <div className="detail-order" key={index}>
                     <div className="order-list">
                       <div className="img">
@@ -129,20 +125,25 @@ const ShoppingCart = () => {
               </div>
 
               <div className="vat">(Incl. VAT)</div>
-              {isLoggedIn ? (
-                <Link to="/payment" style={{ color: "white" }}>
-                  <div className="box-continue">Payment</div>
-                </Link>
-              ) : (
-                <Link
-                  to="/login"
-                  style={{ color: "white" }}
-                  onClick={() =>
+              {totalAmount ? (
+                isLoggedIn ? (
+                  <Link to="/payment" style={{ color: "white" }}>
+                    <div className="box-continue">Payment</div>
+                  </Link>
+                ) : (
+                  <Link to="/login" style={{ color: "white" }}  onClick={() =>
                     Swal.fire("Opps!", "You haven't logged in yet! Redirecting to Login...", "error")
-                  }
+                  }>
+                    <div className="box-continue">Payment</div>
+                  </Link>
+                )
+              ) : (
+                <div
+                  className="box-continue"
+                  style={{ color: "white", background: "#B4B4B4" }}
                 >
-                  <div className="box-continue">Payment</div>
-                </Link>
+                  Payment
+                </div>
               )}
             </div>
           </div>

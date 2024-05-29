@@ -1,14 +1,9 @@
+import { NavLink, Link, BsCart3, IoNotificationsOutline, FaSearch, BsFillPeopleFill, GiPositionMarker } from "../../import/import-libary";
 import { useState, useEffect } from "react";
-import { BsCart3 } from "react-icons/bs";
-import { IoNotificationsOutline } from "react-icons/io5";
-import { FaSearch } from "react-icons/fa";
-import { BsFillPeopleFill } from "react-icons/bs";
-import { GiPositionMarker } from "react-icons/gi";
-import { NavLink, Link } from "react-router-dom";
-import logo from "../../assets/logo.png";
 import { useNavigate } from "react-router-dom";
-import "./Navbar.css";
 import { useCart } from "../../pages/Cart-page/CartContext";
+import logo from "../../assets/logo.png";
+import "./Navbar.css";
 
 const Navbar = () => {
   const [cartCount, setCartCount] = useState(0);

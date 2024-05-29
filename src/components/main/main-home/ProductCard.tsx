@@ -1,5 +1,4 @@
-import { BsCart3 } from "react-icons/bs";
-import { Link } from "react-router-dom"
+import { Link, BsCart3 } from "../../../import/import-libary";
 import { useCart } from '../../../pages/Cart-page/CartContext';
 import { aProduct } from '../../../context/ShopContext';
 
