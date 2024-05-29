@@ -1,45 +1,56 @@
-import './Admin.css'
+import "./Admin.css";
 const Admin = () => {
   return (
-    <div className='Admin-css'>
+    <div className="all-page">
       <body>
-
         <input type="checkbox" id="nav-toggle" />
         <div className="sidebar">
           <div className="sidebar-brand">
-            <h2><span className="lab la-accusoft"></span> <span>M&B</span>
+            <h2>
+              <span className="lab la-accusoft"></span> <span>M&B</span>
             </h2>
           </div>
 
           <div className="sidebar-menu">
             <ul>
               <li>
-                <a href="/admin" className="active"><span className="las la-igloo"></span>
-                  <span>Dashboard</span></a>
+                <a href="/admin" className="active">
+                  <span className="las la-igloo"></span>
+                  <span>Dashboard</span>
+                </a>
               </li>
               <li>
-                <a href="/customer"><span className="las la-users"></span>
-                  <span>Customers</span></a>
+                <a href="/customer">
+                  <span className="las la-users"></span>
+                  <span>Customers</span>
+                </a>
               </li>
               <li>
-                <a href="/product"><span className="las la-clipboard-list"></span>
-                  <span>Products</span></a>
+                <a href="/product">
+                  <span className="las la-clipboard-list"></span>
+                  <span>Products</span>
+                </a>
               </li>
               <li>
-                <a href="/order"><span className="las la-shopping-bag"></span>
-                  <span>Orders</span></a>
+                <a href="/order">
+                  <span className="las la-shopping-bag"></span>
+                  <span>Orders</span>
+                </a>
               </li>
 
               <li>
-                <a href="/account"><span className="las la-user-circle"></span>
-                  <span>Accounts</span></a>
+                <a href="/account">
+                  <span className="las la-user-circle"></span>
+                  <span>Accounts</span>
+                </a>
               </li>
               <li>
-                <a href=""><span className="las la-clipboard-list"></span>
-                  <span>Tasks</span></a>
+                <a href="">
+                  <span className="las la-clipboard-list"></span>
+                  <span>Tasks</span>
+                </a>
               </li>
             </ul>
-
           </div>
         </div>
 
@@ -58,7 +69,12 @@ const Admin = () => {
             </div>
 
             <div className="user-wrapper">
-              <img src="/src/assets/anya-cute.jpg" width="40px" height="40px" alt="" />
+              <img
+                src="/src/assets/anya-cute.jpg"
+                width="40px"
+                height="40px"
+                alt=""
+              />
               <div>
                 <h4>Datnt nt</h4>
                 <small>Super admin</small>
@@ -67,7 +83,6 @@ const Admin = () => {
           </div>
 
           <main>
-
             <div className="cards">
               <div className="card-single">
                 <div>
@@ -115,7 +130,9 @@ const Admin = () => {
                 <div className="card-product">
                   <div className="card-header">
                     <h3>Recent Products</h3>
-                    <button>See all <span className="las la-arrow-right"></span></button>
+                    <button>
+                      See all <span className="las la-arrow-right"></span>
+                    </button>
                   </div>
 
                   <div className="card-body">
@@ -133,8 +150,7 @@ const Admin = () => {
                             <td>Nestle S-26 ULTIMA Milk No. 3 750g</td>
                             <td>Ho CHi Minh city</td>
                             <td>
-                              <span className="status purple">
-                              </span>
+                              <span className="status purple"></span>
                               review
                             </td>
                           </tr>
@@ -160,8 +176,7 @@ const Admin = () => {
                             <td>Nestle S-26 ULTIMA Milk No. 3 750g</td>
                             <td>Ho CHi Minh city</td>
                             <td>
-                              <span className="status purple">
-                              </span>
+                              <span className="status purple"></span>
                               review
                             </td>
                           </tr>
@@ -187,8 +202,7 @@ const Admin = () => {
                             <td>Nestle S-26 ULTIMA Milk No. 3 750g</td>
                             <td>Ho CHi Minh city</td>
                             <td>
-                              <span className="status purple">
-                              </span>
+                              <span className="status purple"></span>
                               review
                             </td>
                           </tr>
@@ -209,7 +223,6 @@ const Admin = () => {
                               pending
                             </td>
                           </tr>
-
                         </tbody>
                       </table>
                     </div>
@@ -221,13 +234,20 @@ const Admin = () => {
                 <div className="card-product">
                   <div className="card-header">
                     <h3>New customer</h3>
-                    <button>See all <span className="las la-arrow-right"></span></button>
+                    <button>
+                      See all <span className="las la-arrow-right"></span>
+                    </button>
                   </div>
 
                   <div className="card-body">
                     <div className="customer">
                       <div className="info">
-                        <img src="/src/assets/anya-cute.jpg" width="40px" height="40px" alt="" />
+                        <img
+                          src="/src/assets/anya-cute.jpg"
+                          width="40px"
+                          height="40px"
+                          alt=""
+                        />
                         <div>
                           <h4>Anya Forger</h4>
                           <small>Staff</small>
@@ -242,7 +262,12 @@ const Admin = () => {
 
                     <div className="customer">
                       <div className="info">
-                        <img src="/src/assets/anya-cute.jpg" width="40px" height="40px" alt="" />
+                        <img
+                          src="/src/assets/anya-cute.jpg"
+                          width="40px"
+                          height="40px"
+                          alt=""
+                        />
                         <div>
                           <h4>Anya Forger</h4>
                           <small>Staff</small>
@@ -257,7 +282,12 @@ const Admin = () => {
 
                     <div className="customer">
                       <div className="info">
-                        <img src="/src/assets/anya-cute.jpg" width="40px" height="40px" alt="" />
+                        <img
+                          src="/src/assets/anya-cute.jpg"
+                          width="40px"
+                          height="40px"
+                          alt=""
+                        />
                         <div>
                           <h4>Anya Forger</h4>
                           <small>Staff</small>
@@ -272,7 +302,12 @@ const Admin = () => {
 
                     <div className="customer">
                       <div className="info">
-                        <img src="/src/assets/anya-cute.jpg" width="40px" height="40px" alt="" />
+                        <img
+                          src="/src/assets/anya-cute.jpg"
+                          width="40px"
+                          height="40px"
+                          alt=""
+                        />
                         <div>
                           <h4>Anya Forger</h4>
                           <small>Staff</small>
@@ -287,7 +322,12 @@ const Admin = () => {
 
                     <div className="customer">
                       <div className="info">
-                        <img src="/src/assets/anya-cute.jpg" width="40px" height="40px" alt="" />
+                        <img
+                          src="/src/assets/anya-cute.jpg"
+                          width="40px"
+                          height="40px"
+                          alt=""
+                        />
                         <div>
                           <h4>Anya Forger</h4>
                           <small>Staff</small>
@@ -302,7 +342,12 @@ const Admin = () => {
 
                     <div className="customer">
                       <div className="info">
-                        <img src="/src/assets/anya-cute.jpg" width="40px" height="40px" alt="" />
+                        <img
+                          src="/src/assets/anya-cute.jpg"
+                          width="40px"
+                          height="40px"
+                          alt=""
+                        />
                         <div>
                           <h4>Anya Forger</h4>
                           <small>Staff</small>
@@ -314,23 +359,15 @@ const Admin = () => {
                         <span className="las la-phone"></span>
                       </div>
                     </div>
-
                   </div>
-
                 </div>
               </div>
             </div>
-
           </main>
         </div>
-
       </body>
-
-
-
-
     </div>
-  )
-}
+  );
+};
 
-export default Admin
+export default Admin;
