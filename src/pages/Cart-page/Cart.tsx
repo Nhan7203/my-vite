@@ -1,6 +1,7 @@
 import { StickyBox, Link, FaRegTrashCan } from "../../import/import-libary";
 import { Navbar, Footer } from "../../import/import-router";
 import { useCart } from "./CartContext";
+import Swal from 'sweetalert2';
 import "./Cart.css";
 
 const ShoppingCart = () => {
@@ -34,8 +35,7 @@ const ShoppingCart = () => {
             <div style={{ overflow: "auto", height: "450px" }}>
               {cart.map((product, index) => {
                 const totalAmount = product.price * product.quantity;
-                const formattedProductTotalAmount =
-                  totalAmount.toLocaleString();
+                const formattedProductTotalAmount = totalAmount.toLocaleString();
                 return (
                   <div className="detail-order" key={index}>
                     <div className="order-list">
@@ -70,9 +70,7 @@ const ShoppingCart = () => {
                           +
                         </div>
                       </div>
-                      <div className="money">
-                        ${formattedProductTotalAmount}
-                      </div>
+                      <div className="money">${formattedProductTotalAmount}</div>
                       <div
                         className="icon"
                         onClick={() => removeItems(product.productId)}
@@ -133,7 +131,9 @@ const ShoppingCart = () => {
                     <div className="box-continue">Payment</div>
                   </Link>
                 ) : (
-                  <Link to="/login" style={{ color: "white" }}>
+                  <Link to="/login" style={{ color: "white" }}  onClick={() =>
+                    Swal.fire("Opps!", "You haven't logged in yet! Redirecting to Login...", "error")
+                  }>
                     <div className="box-continue">Payment</div>
                   </Link>
                 )

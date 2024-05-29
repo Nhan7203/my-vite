@@ -9,6 +9,7 @@ import SEC from "../../assets/ship-economical.png";
 import SR from "../../assets/ship-regular.png";
 import SE from "../../assets/ship-Epress.png";
 import "./Payment.css";
+import Paypal from "./Paypal";
 
 const Payment = () => {
   const [activeOrderShip, setActiveOrderShip] = useState<number>(0);
@@ -33,9 +34,10 @@ const Payment = () => {
 
       const userId = decodedToken.userId;
       const orderDate = new Date().toISOString();
-      const shippingMethodId = 1; //From web  1:
-      const paymentMethod = "123"; //From web
-      const address = "456"; //From web
+
+      const shippingMethodId = 1;               //From web
+      const paymentMethod = "By Cash";          //From web 
+      const address = "456";                    //From web
 
       const products = cart.map((product) => ({
         productId: product.productId,
@@ -186,6 +188,15 @@ const Payment = () => {
 
             <div className="payment-methods">
               <h4>Payment methods</h4>
+              <Paypal
+                payload={cart.map((product) => ({
+                  productId: product.productId,
+                  quantity: product.quantity,
+                  price: product.price,
+                  total: product.quantity * product.price,
+                }))}
+                amount={(totalAmount / 23500).toFixed(2)} />
+
             </div>
 
             <div className="bill">
