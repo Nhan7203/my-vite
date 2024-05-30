@@ -1,4 +1,5 @@
 import {
+  Forgetpassword,
   Navbar,
   Login,
   Adress,
@@ -17,6 +18,8 @@ import {
   Blog,
   Voucher,
   Register,
+  SecurityCode,
+  ChangePassword
 } from "./import/import-router";
 import {
   createBrowserRouter,
@@ -28,6 +31,8 @@ import { CartProvider } from "./pages/Cart-page/CartContext";
 import { StickyBox, ToastContainer } from "./import/import-libary";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
+
+
 
 // const Home = () => {
 //   return (
@@ -67,7 +72,9 @@ const router = createBrowserRouter(
       <Route path="/customer" element={<Customer />} />
       <Route path="/account" element={<Account />} />
       <Route path="/order" element={<Order />} />
-
+      <Route path="/forgetpassword" element={<Forgetpassword />} />
+      <Route path="/securitycode" element={<SecurityCode />} />
+      <Route path="/changepassword" element={<ChangePassword />} />
       <Route path="/productDetails" element={<ProductDetails />}>
         <Route path=":productId" element={<ProductDetails />} />
       </Route>

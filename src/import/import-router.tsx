@@ -16,7 +16,9 @@ import User from "../pages/User-page/User";
 import Customer from "../pages/Admin-page/Customer";
 import Account from "../pages/Admin-page/Account";
 import Order from "../pages/Admin-page/Order-admin";
-
+import Forgetpassword from "../pages/Forgetpassword-page/Forgetpassword";
+import SecurityCode from "../pages/SecurityCode-page/SecurityCode";
+import ChangePassword from "../pages/ChangePassword-page/ChangePassword";
 export {
   Navbar,
   Login,
@@ -36,4 +38,7 @@ export {
   Customer,
   Account,
   Order,
+  Forgetpassword,
+  SecurityCode,
+  ChangePassword
 };
