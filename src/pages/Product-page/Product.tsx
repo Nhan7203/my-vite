@@ -6,7 +6,7 @@ import { aProduct } from "../../context/ShopContext";
 import { BsCart3 } from "react-icons/bs";
 import { useCart } from "../../pages/Cart-page/CartContext";
 import * as searchServices from "../../apiServices/searchServices";
-import * as brand from "../../apiServices/brand";
+import * as brand from "../../apiServices/getBrand";
 import "./Product.css";
 
 export interface Brand {
@@ -69,12 +69,12 @@ const Product = () => {
     location.state,
   ]);
 
-  const [allBrand, setAllBrand] = useState<Brand[]>([]);
+  const [brandList, setBrandList] = useState<Brand[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const result = await brand.getBrand();
-      setAllBrand(result);
+      setBrandList(result);
     };
     fetchData();
   }, []);
@@ -114,7 +114,10 @@ const Product = () => {
   };
 
   const handleBrand = (value: number) => {
-    handleBrandChange({ target: { value: String(value), checked: value !== 0 } } as React.ChangeEvent<HTMLInputElement>);
+    setBrandId(brandId);
+    handleBrandChange({
+      target: { value: String(value), checked: value !== 0 },
+    } as React.ChangeEvent<HTMLInputElement>);
   };
 
   const handleAgeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -150,12 +153,12 @@ const Product = () => {
       <div className="container">
         <div className="filter-product">
           <div style={{ width: "1164px" }}>
-            {allBrand.map((brand, index) => (
+            {brandList.map((brand, index) => (
               <div
-                className=" element-brand"
+                className={`element-brand ${brandId === brand.brandId ? 'active' : ''}`} 
                 style={{
                   gridColumn: getGridColumn(index),
-                }}
+                } }
               >
                 <img
                   src={brand.imageBrandUrl}
@@ -321,159 +324,23 @@ const Product = () => {
                 <div className="content-filter-brand">
                   <p className="text-brand">For brand</p>
                   <div className="content-cate">
-                    <ul>
-                      <li>
-                        <input
-                          type="checkbox"
-                          value={5}
-                          checked={brandId === 5}
-                          onChange={handleBrandChange}
-                        />
-                      </li>
-                      <li>
-                        <span>137degree</span>
-                      </li>
-                    </ul>
+                    {brandList.map((brand) => (
+                      <ul key={brand.brandId}>
+                        <li>
+                          <input
+                            type="checkbox"
+                            value={brand.brandId}
+                            checked={brandId === brand.brandId}
+                            onChange={handleBrandChange}
+                          />
+                        </li>
+                        <li>
+                          <span>{brand.name}</span>
+                        </li>
+                      </ul>
+                    ))}
 
-                    <ul>
-                      <li>
-                        <input
-                          type="checkbox"
-                          value={3}
-                          checked={brandId === 3}
-                          onChange={handleBrandChange}
-                        />
-                      </li>
-                      <li>
-                        <span>FrutoNyanya</span>
-                      </li>
-                    </ul>
-
-                    <ul>
-                      <li>
-                        <input
-                          type="checkbox"
-                          value={7}
-                          checked={brandId === 7}
-                          onChange={handleBrandChange}
-                        />
-                      </li>
-                      <li>
-                        <span>Hoff</span>
-                      </li>
-                    </ul>
-
-                    <ul>
-                      <li>
-                        <input
-                          type="checkbox"
-                          value={1}
-                          checked={brandId === 1}
-                          onChange={handleBrandChange}
-                        />
-                      </li>
-                      <li>
-                        <span>Meiji</span>
-                      </li>
-                    </ul>
-
-                    <ul>
-                      <li>
-                        <input
-                          type="checkbox"
-                          value={6}
-                          checked={brandId === 6}
-                          onChange={handleBrandChange}
-                        />
-                      </li>
-                      <li>
-                        <span>Nestle</span>
-                      </li>
-                    </ul>
-
-                    <ul>
-                      <li>
-                        <input
-                          type="checkbox"
-                          value={10}
-                          checked={brandId === 10}
-                          onChange={handleBrandChange}
-                        />
-                      </li>
-                      <li>
-                        <span>PediaSure</span>
-                      </li>
-                    </ul>
-
-                    <ul>
-                      <li>
-                        <input
-                          type="checkbox"
-                          value={4}
-                          checked={brandId === 4}
-                          onChange={handleBrandChange}
-                        />
-                      </li>
-                      <li>
-                        <span>Sahmyook</span>
-                      </li>
-                    </ul>
-
-                    <ul>
-                      <li>
-                        <input
-                          type="checkbox"
-                          value={11}
-                          checked={brandId === 11}
-                          onChange={handleBrandChange}
-                        />
-                      </li>
-                      <li>
-                        <span>Similac</span>
-                      </li>
-                    </ul>
-
-                    <ul>
-                      <li>
-                        <input
-                          type="checkbox"
-                          value={2}
-                          checked={brandId === 2}
-                          onChange={handleBrandChange}
-                        />
-                      </li>
-                      <li>
-                        <span>THtruemilk</span>
-                      </li>
-                    </ul>
-
-                    <ul>
-                      <li>
-                        <input
-                          type="checkbox"
-                          value={9}
-                          checked={brandId === 9}
-                          onChange={handleBrandChange}
-                        />
-                      </li>
-                      <li>
-                        <span>Vinamilk</span>
-                      </li>
-                    </ul>
-
-                    <ul>
-                      <li>
-                        <input
-                          type="checkbox"
-                          value={8}
-                          checked={brandId === 8}
-                          onChange={handleBrandChange}
-                        />
-                      </li>
-                      <li>
-                        <span>Yakult</span>
-                      </li>
-                    </ul>
+                 
                   </div>
                 </div>
 

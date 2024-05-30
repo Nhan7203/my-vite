@@ -233,4 +233,12 @@
 
 .payment-methods{
   padding-bottom: 0;
+  font-size: 18px;
+  color: #67686c;
+  font-weight: bolder;
+}
+
+
+.payment-methods p{
+margin-bottom: 10px;
 }
