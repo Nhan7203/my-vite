@@ -27,7 +27,7 @@ header {
     width: 100%;
     font-family: 'Roboto Slab';
     letter-spacing: 1px;
-    margin-bottom: 10px;
+    margin-bottom: -25px;
 }
 
 header>div {
