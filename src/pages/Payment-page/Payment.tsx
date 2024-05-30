@@ -2,8 +2,7 @@ import { Link } from "react-router-dom";
 import { useCart } from "../Cart-page/CartContext";
 import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import { JwtPayload } from "../../context/ShopContext";
-import { GiPositionMarker} from "../../import/import-libary";
+import { GiPositionMarker } from "../../import/import-libary";
 import Footer from "../../components/Footer/footer";
 import avatar from "../../assets/vu.jpg";
 import Paypal from "./Paypal";
@@ -11,6 +10,7 @@ import SEC from "../../assets/ship-economical.png";
 import SR from "../../assets/ship-regular.png";
 import SE from "../../assets/ship-Epress.png";
 import "./Payment.css";
+import { refreshToken } from "../../apiServices/refreshTokenServices";
 
 const Payment = () => {
   const [activeOrderShip, setActiveOrderShip] = useState<number>(0);
@@ -31,9 +31,11 @@ const Payment = () => {
         return;
       }
 
-      const decodedToken = jwtDecode(token) as JwtPayload;
+      const decodedToken: any = jwtDecode(token)
 
-      const userId = decodedToken.userId;
+      const userIdIdentifier = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+
+      const userId = userIdIdentifier;
       const orderDate = new Date().toISOString();
 
       const shippingMethodId = 1; //From web
@@ -69,6 +71,10 @@ const Payment = () => {
 
       if (!response.ok) {
         throw new Error("Failed to store cart data");
+      }
+
+      if (response.status === 401) {
+        await refreshToken();
       }
 
       const data = await response.json();
