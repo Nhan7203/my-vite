@@ -28,7 +28,7 @@
   grid-template-columns: repeat(12, 60px);
   column-gap: 5px;
   row-gap: 20px;
-  border-bottom: 1px solid #eaeaea;
+ 
 }
 
 .Cart-Summary ul {
