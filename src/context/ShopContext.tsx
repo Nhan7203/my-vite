@@ -26,13 +26,6 @@ interface ShopContextType {
 
 }
 
-export interface JwtPayload {
-  userId: string,
-  email: string;
-  roleId: number;
-}
-
-
 export const ShopContext = createContext<ShopContextType | undefined>(undefined);
 
 export const useAllProduct = () => {

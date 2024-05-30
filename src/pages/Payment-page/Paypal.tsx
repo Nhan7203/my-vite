@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { jwtDecode } from 'jwt-decode';
-import { JwtPayload } from '../../context/ShopContext'
 import swal from "sweetalert";
 import {
     PayPalScriptProvider,
@@ -41,8 +40,12 @@ const ButtonWrapper = ({ currency, showSpinner, amount, payload }) => {
                     return;
                 }
 
-                const decodedToken = jwtDecode(token) as JwtPayload;
-                const userId = decodedToken.userId;
+                const decodedToken: any = jwtDecode(token)
+
+                const userIdIdentifier = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+
+
+                const userId = parseInt(userIdIdentifier);
                 const orderDate = new Date().toISOString();
                 const shippingMethodId = 1;         // From web
                 const paymentMethod = "By Paypal";  // From web
@@ -64,7 +67,7 @@ const ButtonWrapper = ({ currency, showSpinner, amount, payload }) => {
                     products
                 };
 
-                const apiResponse = await fetch('', {    //https://localhost:7030/api/orders
+                const apiResponse = await fetch('https://localhost:7030/api/orders', {    //https://localhost:7030/api/orders
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

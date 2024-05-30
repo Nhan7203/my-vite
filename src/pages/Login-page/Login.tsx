@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { JwtPayload } from '../../context/ShopContext'
 import { jwtDecode } from 'jwt-decode';
 import { loginApi } from './LoginServices';
 import { toast } from 'react-toastify';
@@ -33,22 +32,26 @@ const Login = () => {
         // Login successful
         //Lay-Luu token vao local storage
         const { token } = response.data;
+        console.log(token);
 
-        const decodedToken = jwtDecode(token) as JwtPayload;
+        const decodedToken: any = jwtDecode(token)
         localStorage.setItem('token', token);
+
+        const role = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
 
         // const decodedToken = jwt.decode(token) as JwtPayload;
 
-        if (decodedToken.roleId == 1) {
+        if (role === "User") {
           alert("Oke thg lon nay User ne");
           //Redirect to 'User' page
           navigate("/");
         }
-        else if (decodedToken.roleId == 2) {
+        else if (role === "Staff") {
           alert("Oke thg lon nay Staff ne");
           // Redirect to 'Staff' page
 
-        } else if (decodedToken.roleId == 3) {
+        } else if (role === "Admin") {
+
           alert("Oke thg lon nay Admin ne");
           navigate("/admin");
         }
@@ -78,7 +81,9 @@ const Login = () => {
     <>
       <body>
         <header>
-          <div >
+
+          <div style={{ height: "47px" }}>
+
             <div className="logo-mandb" onClick={() => handleOnClick()}>
               <h3>M</h3>
               <h3 id="and">&</h3>
