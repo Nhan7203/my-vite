@@ -82,7 +82,7 @@ const Login = () => {
       <body>
         <header>
 
-          <div style={{ height: "47px" }}>
+          <div >
 
             <div className="logo-mandb" onClick={() => handleOnClick()}>
               <h3>M</h3>

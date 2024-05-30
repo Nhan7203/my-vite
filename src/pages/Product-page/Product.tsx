@@ -80,7 +80,14 @@ const Product = () => {
   }, []);
 
   const getGridColumn = (index: number) => {
-    const gridColumnMap = ["1 / 3", "3 / 5", "5 / 7", "7 / 9", "9 / 11", "11 / 13"];
+    const gridColumnMap = [
+      "1 / 3",
+      "3 / 5",
+      "5 / 7",
+      "7 / 9",
+      "9 / 11",
+      "11 / 13",
+    ];
     return gridColumnMap[index % gridColumnMap.length];
   };
 
@@ -104,6 +111,10 @@ const Product = () => {
       setBrandId(0);
       setIsBrandChecked(false);
     }
+  };
+
+  const handleBrand = (value: number) => {
+    handleBrandChange({ target: { value: String(value), checked: value !== 0 } } as React.ChangeEvent<HTMLInputElement>);
   };
 
   const handleAgeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,25 +148,38 @@ const Product = () => {
       </StickyBox>
 
       <div className="container">
-        <div className="filter-product" >
-          <div style={{width: "1164px"}}>
+        <div className="filter-product">
+          <div style={{ width: "1164px" }}>
             {allBrand.map((brand, index) => (
-              <div className=" element-brand" style={{
-                gridColumn: getGridColumn(index),
-              }} >
-                
+              <div
+                className=" element-brand"
+                style={{
+                  gridColumn: getGridColumn(index),
+                }}
+              >
                 <img
                   src={brand.imageBrandUrl}
                   className="element-img-brand"
-                  alt="" 
+                  alt=""
+                  onClick={() => handleBrand(brand.brandId)}
                 />
-             
               </div>
             ))}
           </div>
-          <div className="box-white" style={{background: "#f5f7fc",position: "sticky", zIndex: 500, top: "200px" , height: "15px", marginTop: '5px'}}> </div>
-          <div style={{background: "#f5f7fc", marginTop: 0}}>
-            
+          <div
+            className="box-white"
+            style={{
+              background: "#f5f7fc",
+              position: "sticky",
+              zIndex: 500,
+              top: "200px",
+              height: "15px",
+              marginTop: "5px",
+            }}
+          >
+            {" "}
+          </div>
+          <div style={{ background: "#f5f7fc", marginTop: 0 }}>
             <div
               className="all-filter"
               style={{ position: "sticky", zIndex: 500, top: "215px" }}

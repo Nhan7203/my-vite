@@ -28,7 +28,7 @@ const Forgetpassword = () => {
                         </div>
 
                         <div className="line"></div>
-                        <h3 className="text-login">ForgetPassword</h3>
+                        <h3 className="text-forget-password">Forget Password</h3>
                     </div>
                 </header>
 
@@ -36,16 +36,16 @@ const Forgetpassword = () => {
                     <img src="/src/assets/anya.png" alt="" />
                     <div className="content">
                         <form className="form-forget" >
-                            <h3 className="text-enter-mail">Enter your email</h3>
+                            <h3 className="title-form-forget">Forget Password</h3>
                             <div>
-                                <label>Please enter your email</label>
+                                <label>Email</label>
                                 <input
                                     type="email"
                                     id="email"
-                                    placeholder="Email"
+                                    placeholder="Enter your email"
                                     required
                                 />
-                                <p className="text-msg">Email is invalid</p>
+                                {/*<p className="text-msg">Email is invalid</p>*/}
                             </div>
 
 
