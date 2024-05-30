@@ -47,7 +47,7 @@ const Login = () => {
         else if (decodedToken.roleId == 2) {
           alert("Oke thg lon nay Staff ne");
           // Redirect to 'Staff' page
-          
+
         } else if (decodedToken.roleId == 3) {
           alert("Oke thg lon nay Admin ne");
           navigate("/admin");
@@ -78,7 +78,7 @@ const Login = () => {
     <>
       <body>
         <header>
-          <div style={{height: "47px" }}>
+          <div >
             <div className="logo-mandb" onClick={() => handleOnClick()}>
               <h3>M</h3>
               <h3 id="and">&</h3>
@@ -122,7 +122,7 @@ const Login = () => {
                 <ReCAPTCHA sitekey="6LeOW-gpAAAAAIjpbDvMlkseUc96hpxAWvxDofYQ"
                   onChange={(val) => setCaptchaValue(val)} />
               </div>
-              <a href="">Forgot password?</a>
+              <a href="/forgetpassword">Forgot password?</a>
               <input
                 className="button-login"
                 type="submit"
