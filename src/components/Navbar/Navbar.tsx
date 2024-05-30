@@ -73,7 +73,7 @@ const Navbar = () => {
               <img src={avatar} alt="Avatar"></img>
               </div>
                 <div className="menu-box">
-                  <a href="/user">View Profile</a>
+                  <a href="/profile">View Profile</a>
                   <a href="/login" onClick={handleLogout}>Logout</a>
                 </div>
              
