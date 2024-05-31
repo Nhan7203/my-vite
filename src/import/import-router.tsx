@@ -21,6 +21,10 @@ import SecurityCode from "../pages/SecurityCode-page/SecurityCode";
 import ChangePassword from "../pages/ChangePassword-page/ChangePassword";
 import Profile from "../pages/Profile-page/Profile";
 
+import Complete from "../pages/User-page/Complete";
+import Cancelled from "../pages/User-page/Cancelled";
+import Giveback from "../pages/User-page/GiveBack";
+
 export {
   Navbar,
   Login,
@@ -43,6 +47,8 @@ export {
   Forgetpassword,
   SecurityCode,
   ChangePassword,
-  Profile
-
+  Profile,
+  Complete,
+  Cancelled,
+  Giveback,
 };

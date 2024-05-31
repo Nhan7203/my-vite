@@ -21,6 +21,9 @@ import {
   SecurityCode,
   ChangePassword,
   Profile,
+  Complete,
+  Cancelled,
+  Giveback
 
 } from "./import/import-router";
 import {
@@ -87,6 +90,10 @@ const router = createBrowserRouter(
       <Route path="/blog" element={<Blog />} />
       <Route path="/voucher" element={<Voucher />} />
       <Route path="/register" element={<Register />} />
+
+      <Route path="/complete" element={<Complete />} />
+      <Route path="/cancelled" element={<Cancelled />} />
+      <Route path="/giveback" element={<Giveback />} />
     </Route>
   )
 );

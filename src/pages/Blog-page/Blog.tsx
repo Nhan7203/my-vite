@@ -1,3 +1,14 @@
+import React from 'react'
+
+const Blog = () => {
+  return (
+    <div>Blog</div>
+  )
+}
+
+export default Blog
+
+
 // import { Navbar, Footer } from "../../import/import-router";
 // import { useState, useEffect  } from "react";
 // import "./Blog.css";

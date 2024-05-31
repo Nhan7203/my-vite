@@ -1,10 +1,9 @@
 import { Navbar, Footer } from "../../import/import-router";
 import { Link } from "../../import/import-libary";
 import BoxMenuUser from "./BoxMenuUser";
-//import BoxMenuUser from "../User-page/BoxMenuUser";
 import "./User.css";
 
-const User = () => {
+const Complete = () => {
   return (
     <div>
       <Navbar />
@@ -37,4 +36,4 @@ const User = () => {
   );
 };
 
-export default User;
+export default Complete;
