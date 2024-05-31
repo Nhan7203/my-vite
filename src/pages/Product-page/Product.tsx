@@ -7,6 +7,7 @@ import { BsCart3 } from "react-icons/bs";
 import { useCart } from "../../pages/Cart-page/CartContext";
 import * as searchServices from "../../apiServices/searchServices";
 import * as brand from "../../apiServices/getBrand";
+import by from "../../assets/search-empty.png"
 import "./Product.css";
 
 export interface Brand {
@@ -155,10 +156,12 @@ const Product = () => {
           <div style={{ width: "1164px" }}>
             {brandList.map((brand, index) => (
               <div
-                className={`element-brand ${brandId === brand.brandId ? 'active' : ''}`} 
+                className={`element-brand ${
+                  brandId === brand.brandId ? "active" : ""
+                }`}
                 style={{
                   gridColumn: getGridColumn(index),
-                } }
+                }}
               >
                 <img
                   src={brand.imageBrandUrl}
@@ -185,7 +188,7 @@ const Product = () => {
           <div style={{ background: "#f5f7fc", marginTop: 0 }}>
             <div
               className="all-filter"
-              style={{ position: "sticky", zIndex: 500, top: "215px" }}
+              
             >
               <div className="content-filter-head">
                 <p className="text-cate">Category</p>
@@ -339,8 +342,6 @@ const Product = () => {
                         </li>
                       </ul>
                     ))}
-
-                 
                   </div>
                 </div>
 
@@ -375,35 +376,42 @@ const Product = () => {
                   </ul>
                 </div>
               </div>
-              <div className="result-product">
-                {products.map((product) => (
-                  <div className="element-product" key={product.productId}>
-                    <div className="element-img">
-                      <Link to={`/productDetails/${product.productId}`}>
-                        <img
-                          src={product.imageProducts[0].imageUrl}
-                          className="imgpng"
-                          alt=""
-                        />
-                      </Link>
-                    </div>
-                    <p className="element-name">{product.name}</p>
+              {products.length > 0 ? (
+                <div className="result-product">
+                  {products.map((product) => (
+                    <div className="element-product" key={product.productId}>
+                      <div className="element-img">
+                        <Link to={`/productDetails/${product.productId}`}>
+                          <img
+                            src={product.imageProducts[0].imageUrl}
+                            className="imgpng"
+                            alt=""
+                          />
+                        </Link>
+                      </div>
+                      <p className="element-name">{product.name}</p>
 
-                    <div className="body-text">
-                      <span className="element-price">
-                        ${product.price.toLocaleString()}{" "}
-                      </span>
-                      <div className="box-icon-product-page">
-                        <BsCart3
-                          className="icon-cart-product-page"
-                          fontSize="1.4em"
-                          onClick={() => addToCart(product)}
-                        />
+                      <div className="body-text">
+                        <span className="element-price">
+                          ${product.price.toLocaleString()}{" "}
+                        </span>
+                        <div className="box-icon-product-page">
+                          <BsCart3
+                            className="icon-cart-product-page"
+                            fontSize="1.4em"
+                            onClick={() => addToCart(product)}
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="box-empty">
+                  <img src={by} className="ra-img" alt="" />
+                  <p>No matching results were found</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
