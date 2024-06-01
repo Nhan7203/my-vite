@@ -12,7 +12,7 @@ const StatusListOrder = () => {
         <Link to="/complete">Processed</Link>
       </div>
       <div>
-        <Link to="/complete">Complete</Link>
+        <Link to="/complete">Completed</Link>
       </div>
       <div>
         <Link to="/cancelled">Cancelled</Link>
