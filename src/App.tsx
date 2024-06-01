@@ -23,7 +23,9 @@ import {
   Profile,
   Complete,
   Cancelled,
-  Giveback
+  Giveback,
+  Processing,
+  Processed
 
 } from "./import/import-router";
 import {
@@ -92,6 +94,8 @@ const router = createBrowserRouter(
       <Route path="/register" element={<Register />} />
 
       <Route path="/complete" element={<Complete />} />
+      <Route path="/processing" element={<Processing />} />
+      <Route path="/processed" element={<Processed />} />
       <Route path="/cancelled" element={<Cancelled />} />
       <Route path="/giveback" element={<Giveback />} />
     </Route>

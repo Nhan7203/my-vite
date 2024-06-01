@@ -6,12 +6,27 @@ import 'react-toastify/dist/ReactToastify.css';
 import './Register.css';
 
 const Register = () => {
+    const [usermail, setUsermail] = useState('');
     const [username, setUsername] = useState('');
+    const [userphone, setUserphone] = useState('');
+    const [useradress, setUseradress] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
+    const handleUsermailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setUsermail(event.target.value);
+    };
+
     const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(event.target.value);
+    };
+    
+    const handleUserphoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setUserphone(event.target.value);
+    };
+
+    const handleUseradressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setUseradress(event.target.value);
     };
 
     const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,9 +38,11 @@ const Register = () => {
     };
 
     const handleRegistration = async () => {
-        if (!username || !password || !confirmPassword) {
+        if (!usermail || !username || !userphone || !useradress || !password || !confirmPassword) {
 
-            toast.error('Please fill in all the fields');
+            toast.error('Please fill in all the fields', {
+                autoClose: 500,
+              });
             return;
         }
 
@@ -38,7 +55,10 @@ const Register = () => {
         try {
 
             const response = await axios.post('https://localhost:7030/api/Account/Register', {
-                email: username,
+                email: usermail,
+                name: username,
+                phone: userphone,
+                adress: useradress,
                 password: password,
             });
 
@@ -75,11 +95,21 @@ const Register = () => {
 
                 <div className="head-content">
                     <img src="/src/assets/anya.png" alt="" />
-                    <div className="content">
+                    <span className="content">
                         <div className="form-login">
                             <h3 className="text-welcome">Register</h3>
+                            <div className='g'>
                             <div>
                                 <label>Email</label>
+                                <input
+                                    type="text"
+                                    name="txtUserMail"
+                                    value={usermail}
+                                    onChange={handleUsermailChange}
+                                />
+                            </div>
+                            <div>
+                                <label>Name</label>
                                 <input
                                     type="text"
                                     name="txtUserName"
@@ -87,7 +117,24 @@ const Register = () => {
                                     onChange={handleUsernameChange}
                                 />
                             </div>
-
+                            <div>
+                                <label>Phone</label>
+                                <input
+                                    type="password"
+                                    name="txtUserPhone"
+                                    value={userphone}
+                                    onChange={handleUserphoneChange}
+                                />
+                            </div>
+                            <div>
+                                <label>Adress</label>
+                                <input
+                                    type="password"
+                                    name="txtAdress"
+                                    value={useradress}
+                                    onChange={handleUseradressChange}
+                                />
+                            </div>
                             <div>
                                 <label>Password</label>
                                 <input
@@ -106,6 +153,7 @@ const Register = () => {
                                     onChange={handleConfirmPasswordChange}
                                 />
                             </div>
+                            </div>
                             <input
                                 className="button-register"
                                 type="submit"
@@ -119,7 +167,7 @@ const Register = () => {
                                 <Link to="/login">Login</Link>
                             </p>
                         </div>
-                    </div>
+                    </span>
                 </div>
 
                 <div className="footer-register">

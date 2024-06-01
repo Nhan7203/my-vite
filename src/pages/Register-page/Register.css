@@ -127,21 +127,31 @@ header>div>.logo-mandb {
     display: grid;
     margin-bottom: 10px;
     grid-column: 1 / 5;
+  
 }
 
-.form-login>div>input {
+.g {
+    position: relative;
+   overflow: auto;
+   height: 250px;
+  
+}
+
+.form-login>div>div >input {
     height: 45px;
     width: 314px;
     display: flex;
     outline: none;
+    margin-bottom: 10px;
     margin-left: 30px;
+    margin-top: 5px;
     box-sizing: border-box;
     border-radius: 10px;
     padding-left: 20px;
     border: 0.5px solid #a89c9c;
 }
 
-.form-login>div>label {
+.form-login>div>div>label {
     margin-left: 30px;
     font-size: 16px;
     letter-spacing: 0.64px;

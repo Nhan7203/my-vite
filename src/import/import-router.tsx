@@ -21,6 +21,8 @@ import SecurityCode from "../pages/SecurityCode-page/SecurityCode";
 import ChangePassword from "../pages/ChangePassword-page/ChangePassword";
 import Profile from "../pages/Profile-page/Profile";
 
+import Processing from "../pages/User-page/Processing";
+import Processed from "../pages/User-page/Processed";
 import Complete from "../pages/User-page/Complete";
 import Cancelled from "../pages/User-page/Cancelled";
 import Giveback from "../pages/User-page/GiveBack";
@@ -51,4 +53,6 @@ export {
   Complete,
   Cancelled,
   Giveback,
+  Processing,
+  Processed 
 };

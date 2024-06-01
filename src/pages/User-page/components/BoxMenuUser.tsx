@@ -1,12 +1,12 @@
-import vu from "../../assets/vu.jpg";
-import box from "../../assets/box.png";
-import adress from "../../assets/adress.png";
-import voucher from "../../assets/voucher.png";
-import { Link } from "../../import/import-libary";
-import comment from "../../assets/comment.png";
-import blog from "../../assets/blogging.png";
-import watched from "../../assets/watched.png";
-import "./User.css";
+import vu from "../../../assets/vu.jpg";
+import box from "../../../assets/box.png";
+import adress from "../../../assets/adress.png";
+import voucher from "../../../assets/voucher.png";
+import { Link } from "../../../import/import-libary";
+import comment from "../../../assets/comment.png";
+import blog from "../../../assets/blogging.png";
+import watched from "../../../assets/watched.png";
+import "../User.css";
 
 const BoxMenuUser = () => {
   return (
@@ -17,7 +17,9 @@ const BoxMenuUser = () => {
         </div>
         <div className="onlick-profile">
           <h5>Thanh Vu</h5>
-          <p><Link to="/profile">Profile user</Link></p>
+          <p>
+            <Link to="/profile">Profile user</Link>
+          </p>
         </div>
       </div>
       <div className="box-oder-adress-voucher">

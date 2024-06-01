@@ -46,11 +46,14 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       setCart(JSON.parse(storedCart));
     }
   }, []);
+  
+  const [isToastVisible, setIsToastVisible] = useState(false);
 
   const addToCart = (aProduct: aProduct) => {
     const existingProduct = cart.find(
       (item) => item.productId === aProduct.productId
     );
+
     if (!existingProduct) {
       const updatedCart = [
         ...cart,
@@ -68,6 +71,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       setCart(updatedCart);
       localStorage.setItem("cart", JSON.stringify(updatedCart));
       setTotals(calculateTotals(updatedCart));
+      showToast(aProduct.name);
     } else {
       const updatedCart = cart.map((item) =>
         item.productId === aProduct.productId
@@ -77,10 +81,17 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       setCart(updatedCart);
       localStorage.setItem("cart", JSON.stringify(updatedCart));
       setTotals(calculateTotals(updatedCart));
-    }
 
-    toast.success(`${aProduct.name} đã được thêm vào giỏ hàng!`, {
-      position: "top-right",
+      if (!isToastVisible) {
+        showToast(aProduct.name);
+      }
+    }
+  };
+
+  const showToast = (productName: string) => {
+    setIsToastVisible(true);
+    toast.success(`${productName} đã được thêm vào giỏ hàng!`, {
+      position: "top-left",
       autoClose: 3000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -88,7 +99,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       draggable: true,
       progress: undefined,
       theme: "colored",
-      
+      onClose: () => setIsToastVisible(false),
     });
   };
 
@@ -125,9 +136,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       setTotals(calculateTotals(updatedCart));
     }
     if( actionType == "add")
-    toast.success(`Product đã được thêm vào giỏ hàng!`, {
-      position: "top-right",
-      autoClose: 3000,
+    toast.success(`Sản phẩm đã được thêm vào giỏ hàng!`, {
+      position: "top-left",
+      autoClose: 500,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,

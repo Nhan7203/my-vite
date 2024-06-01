@@ -20,8 +20,8 @@ const SecurityCode = () => {
                 state: { email }
             });
         } else {
-            alert('fail');
-            isCodeValid = false;
+            setIsCodeValid(false);
+            return;
         }
     };
 
