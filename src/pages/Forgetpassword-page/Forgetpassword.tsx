@@ -2,10 +2,12 @@ import emailjs from 'emailjs-com';
 import './Forgetpassword.css';
 import { useState } from 'react';
 import swal from 'sweetalert';
+import { useNavigate } from 'react-router-dom';
 
 const Forgetpassword = () => {
 
     const [email, setEmail] = useState('');
+    const navigate = useNavigate();
 
     const handleBtContinue = (e) => {
         e.preventDefault();
@@ -54,7 +56,9 @@ const Forgetpassword = () => {
                                 .then((result) => {
                                     console.log(result.text);
 
-                                    window.location.href = `/securitycode?email=${encodeURIComponent(email)}&code=${code}`;
+                                    navigate('/securitycode', {
+                                        state: { email, code }
+                                    });
                                 })
                                 .catch((error) => {
                                     console.log(error);
