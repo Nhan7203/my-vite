@@ -1,13 +1,74 @@
-import React, { useState } from 'react';
-
+import emailjs from 'emailjs-com';
 import './Forgetpassword.css';
-
+import { useState } from 'react';
+import swal from 'sweetalert';
 
 const Forgetpassword = () => {
 
-    const handleBtContinue = () => {
-        location.href = "/securitycode";
-    }
+    const [email, setEmail] = useState('');
+
+    const handleBtContinue = (e) => {
+        e.preventDefault();
+
+        // Call your API to check if the email exists in the database
+        fetch(`https://localhost:7030/api/Account/resetPassword?email=${encodeURIComponent(email)}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+
+            .then((response) => {
+
+                swal({
+                    title: "Email Sent!",
+                    text: "We have sent you an Email if this Email was linked with your account!",
+                    icon: "success",
+                    buttons: {
+                        ok: {
+                            text: "OK",
+                            value: true,
+                            className: "swal-ok-button",
+                        }
+                    },
+                }).then((value) => {
+                    if (value) {
+                        if (response.ok) {
+                            const code = Math.floor(10000000 + Math.random() * 90000000);
+
+
+                            const templateParams = {
+                                from_name: 'MnB Shop <no-reply@mnbshop.com>',
+                                to_email: email, // Change the property name to 'to_email'
+                                subject: 'Reset Password',
+                                code: code,
+                            };
+
+                            emailjs
+                                .send(
+                                    'service_4j0f6f9', // Replace with your EmailJS service ID
+                                    'template_pyes21y', // Replace with your EmailJS template ID
+                                    templateParams,
+                                    'Fm8U5RN0vDmjsIl4S' // Replace with your EmailJS user ID
+                                )
+                                .then((result) => {
+                                    console.log(result.text);
+
+                                    window.location.href = `/securitycode?email=${encodeURIComponent(email)}&code=${code}`;
+                                })
+                                .catch((error) => {
+                                    console.log(error);
+
+                                });
+                        }
+                    }
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+                // Handle error
+            });
+    };
 
     const handleBtCancel = () => {
         location.href = "/login";
@@ -44,6 +105,8 @@ const Forgetpassword = () => {
                                     id="email"
                                     placeholder="Enter your email"
                                     required
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                 />
                                 {/*<p className="text-msg">Email is invalid</p>*/}
                             </div>
@@ -55,7 +118,7 @@ const Forgetpassword = () => {
                                     type="submit"
                                     name="btAction"
                                     value="Continue"
-                                    onClick={() => handleBtContinue()}
+                                    onClick={(e) => handleBtContinue(e)}
                                 />
 
                                 <input

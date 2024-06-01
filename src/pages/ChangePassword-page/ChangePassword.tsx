@@ -1,17 +1,58 @@
-import React, { useState } from 'react';
-
-
+import { useState } from 'react';
 import './ChangePassword.css';
+import swal from 'sweetalert';
 
 const ChangePassword = () => {
-
+    const urlParams = new URLSearchParams(window.location.search);
+    const email = urlParams.get('email');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [passwordMismatch, setPasswordMismatch] = useState(false);
 
     const handleOnClick = () => {
         location.href = "/";
     };
 
-    const handleOnContinue = () => {
-        location.href = "/login";
+    const handleOnContinue = async (e: { preventDefault: () => void; }) => {
+        e.preventDefault();
+
+        if (newPassword !== confirmPassword) {
+            setPasswordMismatch(true);
+            return;
+        }
+        console.log(JSON.stringify({ email, password: newPassword }));
+        try {
+            const endpoint = `https://localhost:7030/api/Account/changePassword?email=${email}&password=${newPassword}`;
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                swal({
+                    title: "Password Reset!",
+                    text: "Your password has been reset! Please login again!",
+                    icon: "success",
+                    buttons: {
+                        ok: {
+                            text: "OK",
+                            value: true,
+                            className: "swal-ok-button",
+                        }
+                    },
+                }).then((value) => {
+                    if (value) {
+                        location.href = "/login";
+                    }
+                });
+            } else {
+                throw new Error('Failed to change password');
+            }
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const handleBtCancel = () => {
@@ -23,7 +64,7 @@ const ChangePassword = () => {
             <body>
                 <header>
                     <div>
-                        <div className="logo-mandb">
+                        <div className="logo-mandb" onClick={() => handleOnClick()}>
                             <h3>M</h3>
                             <h3 id="and">&</h3>
                             <h3>B.COM</h3>
@@ -37,31 +78,30 @@ const ChangePassword = () => {
                 <div className="head-content">
                     <img src="/src/assets/anya.png" alt="" />
                     <div className="content">
-                        <form className="form-change">
+                        <form className="form-change" onSubmit={handleOnContinue}>
                             <h3 className="text-welcome">New Password</h3>
                             <div>
                                 <label>Please enter your  new password !</label>
                                 <input
                                     type="password"
-
-                                    value=""
-
+                                    value={newPassword}
+                                    onChange={(e) => setNewPassword(e.target.value)}
                                     placeholder="Enter your new password"
                                     required
                                 />
                             </div>
 
                             <div>
-                                <label>Re - Password</label>
+                                <label>Confirm Password</label>
                                 <input
                                     type="password"
                                     id="password"
-                                    value=""
-
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
                                     placeholder="Enter your password"
                                     required
                                 />
-                                <p className="text-msg">Password does not match</p>
+                                {passwordMismatch && <p className="text-msg">Password does not match</p>}
                             </div>
 
 
@@ -71,8 +111,9 @@ const ChangePassword = () => {
                                     type="submit"
                                     name="btAction"
                                     value="Continue"
-                                    onClick={() => handleOnContinue()}
+                                    onClick={() => handleOnContinue(e)}
                                 />
+
 
                                 <input
                                     className="button-cancel"
@@ -81,6 +122,7 @@ const ChangePassword = () => {
                                     value="Cancel"
                                     onClick={() => handleBtCancel()}
                                 />
+
 
                             </div>
 

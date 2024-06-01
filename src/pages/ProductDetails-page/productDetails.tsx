@@ -1,4 +1,4 @@
-import { useAllProduct, aProduct  } from "../../context/ShopContext";
+import { useAllProduct, aProduct } from "../../context/ShopContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Navbar, Footer } from "../../import/import-router";
@@ -36,8 +36,8 @@ const ProductDetail = () => {
 
   const { productId } = useParams<{ productId?: string }>();
 
-   
-  let product;
+
+  let product: any;
   if (productId) {
     product = allProduct.find((e) => e.productId === parseInt(productId));
   }
@@ -52,18 +52,19 @@ const ProductDetail = () => {
   };
 
   const handleIncrementQuantity = () => {
-    setQuantity(quantity + 1);
+    if (quantity < product.stock)
+      setQuantity(quantity + 1);
   };
 
-  
+
   const handleAddToCart = (product: aProduct) => {
-      addToCart2(product, quantity, 'add');
+    addToCart2(product, quantity, 'add');
   };
 
   const handleBuyNow = (product: aProduct) => {
     addToCart2(product, quantity, 'buy');
     navigate("/cart");
-};
+  };
 
   return (
     <>
@@ -82,7 +83,7 @@ const ProductDetail = () => {
 
               <h3>
                 ${product.price.toLocaleString()}
-                
+
               </h3>
               <div className="trans-zalo">
                 <div className="img-zalo">
@@ -102,14 +103,14 @@ const ProductDetail = () => {
                   </div>
 
                   <span id="quantity">{quantity}</span>
-                  <div id="btPlus"  onClick={handleIncrementQuantity}>
+                  <div id="btPlus" onClick={handleIncrementQuantity}>
                     <img src="/src/assets/plus.svg" alt="" />
                   </div>
                 </div>
               </div>
 
               <div className="button-cart">
-              <span className="add-cart" onClick={() => handleAddToCart(product)}>Add to cart</span>
+                <span className="add-cart" onClick={() => handleAddToCart(product)}>Add to cart</span>
                 <span className="buy-now" onClick={() => handleBuyNow(product)}>Buy now</span>
               </div>
             </div>
