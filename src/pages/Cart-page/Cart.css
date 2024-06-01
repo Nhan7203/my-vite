@@ -111,9 +111,13 @@
   padding: 24px 20px 24px 20px;
 }
 
-.h4 {
+.adress p {
   font-size: 18px;
+  color: #67686c;
+  font-weight: bolder;
 }
+
+
 
 .box-adress {
   border: 3px solid red;
@@ -180,34 +184,33 @@
 }
 
 .voucher {
-  margin-top: 20px;
   background-color: white;
   padding: 1px 20px 24px 20px;
   border-radius: 20px;
   height: 100px;
-  margin-top: 25px;
+  margin-top: 35px;
 }
 
-.voucher>h4 {
-  margin: 10px 0 15px 0;
+.voucher>p {
+  margin: 10px 0 10px 0;
+  font-size: 18px;
+  color: #67686c;
+  font-weight: bolder;
 }
 
 .voucher>div {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 30px;
+  height: 40px;
   cursor: pointer;
   color: orange;
   font-size: 14px;
-}
-
-.box-voucher {
-
   border: 2px solid orange;
   border-radius: 10px;
-
 }
+
+
 
 .bill {
   background-color: white;
@@ -261,5 +264,23 @@
 
 .total-amount {
   transform: translatex(-10px);
+  z-index: 0;
 }
 
+
+.No-product-cart{
+  height: 425px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column
+}
+.No-product-cart p {
+  margin-top: 20px;
+  font-style: italic;
+  
+}
+.ra-img {
+  width: 300px;
+  height: auto;
+}

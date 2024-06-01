@@ -74,7 +74,8 @@ const Navbar = () => {
               </div>
                 <div className="menu-box">
                   <a href="/profile">View Profile</a>
-                  <a href="/login" onClick={handleLogout}>Logout</a>
+                  <a href="/user" >Purchase order</a>
+                  <a href="/login" onClick={handleLogout} style={{border:"none"}}>Logout</a>
                 </div>
              
             </div>

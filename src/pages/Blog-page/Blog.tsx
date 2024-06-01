@@ -1,62 +1,72 @@
-import { Navbar, Footer } from "../../import/import-router";
+
+import React from 'react'
 
 const Blog = () => {
   return (
-    <>
-      <Navbar />
+    <div>Blog</div>
+  )
+}
 
-      <div className="big-container">
-        <div className="product-container">
-          <div className="image-container">
-            <img src="product1.jpg" alt="Product 1" />
-          </div>
-          <div className="details-container">
-            <div className="title">Product 1</div>
-            <div className="content">This is the description of Product 1.</div>
-            <div className="footer">
-              <span className="icon-like">Like</span>
-              <span className="icon-eye">Views</span>
-              <span className="date-created">Date Created</span>
-            </div>
-          </div>
-        </div>
+export default Blog
 
-        <div className="product-container">
-          <div className="image-container">
-            <img src="product2.jpg" alt="Product 2" />
-          </div>
-          <div className="details-container">
-            <div className="title">Product 2</div>
-            <div className="content">This is the description of Product 2.</div>
-            <div className="footer">
-              <span className="icon-like">Like</span>
-              <span className="icon-eye">Views</span>
-              <span className="date-created">Date Created</span>
-            </div>
-          </div>
-        </div>
 
-        <div className="product-container">
-          <div className="image-container">
-            <img src="product3.jpg" alt="Product 3" />
-          </div>
-          <div className="details-container">
-            <div className="title">Product 3</div>
-            <div className="content">This is the description of Product 3.</div>
-            <div className="footer">
-              <span className="icon-like">Like</span>
-              <span className="icon-eye">Views</span>
-              <span className="date-created">Date Created</span>
-            </div>
-          </div>
-        </div>
+// import { Navbar, Footer } from "../../import/import-router";
+// import { useState, useEffect  } from "react";
+// import "./Blog.css";
 
-        {/* Add more product containers as needed */}
-      </div>
 
-      <Footer />
-    </>
-  );
-};
+// export interface Blog {
+//   blogId: number;
+//   title: string;
+//   description: string;
+//   imageBlog: string;
+// }
 
-export default Blog;
+// const getGridColumn = (index: number) => {
+//   const gridColumnMap = ["1 / 4", "5 / 8", "9 / 12"];
+//   return gridColumnMap[index % gridColumnMap.length];
+// };
+
+// const Blog = () => {
+
+//   const [blogList, setBlogList] = useState<Blog[]>([]);
+
+// //Get API blog
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       const result = ;
+//       setBlogList(result);
+//     };
+//     fetchData();
+//   }, []);
+
+//   return (
+//     <div>
+//       <Navbar />
+
+//       <div className="body-blog">
+//         <div>
+//           {blogList.map((blog, index) => (
+//             <div
+//               className="box-blog"
+//               style={{
+//                 gridColumn: getGridColumn(index),
+//               }}
+//             >
+//               <div className="element-blog">
+//                 <img src={} className="img-card" alt="" />
+//                 <div>
+//                   <p>icon View</p>
+//                   <p>MM/DD/YY</p>
+//                 </div>
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+//       <Footer />
+//     </div>
+//   );
+// };
+
+// export default Blog;

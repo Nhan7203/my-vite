@@ -101,10 +101,20 @@ p {
   width: 240px;
   margin: 35px 0;
   border-radius: 5px;
-  border: 0.5px solid #ff469e;
+  border: 2px solid #ff469e;
   font-weight: 800;
   font-family: "Poppins";
   background-color: #ffffff;
-  /* color: #FFFFFF; */
+  cursor: pointer;
   color: #ff469e;
+  text-transform: uppercase;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition-duration: 500ms;
+
+  &:hover {
+    background-color: #ff469e;
+    color: #ffffff;
+    transform: translateY(-2px);
+  }
 }

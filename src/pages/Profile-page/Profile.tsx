@@ -1,10 +1,10 @@
 import { Navbar, Footer } from "../../import/import-router";
-import { useState } from "react";
-import { jwtDecode } from "jwt-decode";
-import './Profile.css'
-import swal from "sweetalert";
 import { refreshToken } from "../../apiServices/refreshTokenServices";
-
+import { jwtDecode } from "jwt-decode";
+import { useState } from "react";
+import swal from "sweetalert";
+import './Profile.css'
+import vu from '../../assets/vu.jpg'
 const Profile = () => {
 
     const token = localStorage.getItem("token");
@@ -102,7 +102,7 @@ const Profile = () => {
                     <div></div>
                     <ul className="nav-account">
                         <li className="active">
-                            <img src="/src/assets/user-account.svg" alt="" className="red" />
+                            <img src={vu} alt="" className="red" />
                             <a>My Account</a>
                         </li>
 

@@ -190,20 +190,20 @@ const Payment = () => {
 
           <div className="box-right">
             <div className="adress">
-              <h4>Shipping Address</h4>
+              <p>Shipping Address</p>
               <div className="box-adress">
                 <div>Confirm Shipping Address</div>
               </div>
             </div>
             <div className="voucher">
-              <h4>Voucher</h4>
+              <p>Voucher</p>
               <div className="box-voucher">
                 <div>Promo Code</div>
               </div>
             </div>
 
             <div className="payment-methods">
-              <h4>Payment methods</h4>
+              <p>Payment methods</p>
               <Paypal
                 payload={cart.map((product) => ({
                   productId: product.productId,

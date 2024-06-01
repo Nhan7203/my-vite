@@ -6,9 +6,11 @@ import { aProduct } from "../../context/ShopContext";
 import { BsCart3 } from "react-icons/bs";
 import { useCart } from "../../pages/Cart-page/CartContext";
 import * as searchServices from "../../apiServices/searchServices";
-import * as brand from "../../apiServices/brand";
+import * as brand from "../../apiServices/getBrand";
+import by from "../../assets/search-empty.png";
+import { MdNavigateBefore, MdNavigateNext } from "../../import/import-libary";
 import "./Product.css";
-
+import React, { useRef } from "react";
 export interface Brand {
   brandId: number;
   name: string;
@@ -69,28 +71,22 @@ const Product = () => {
     location.state,
   ]);
 
-  const [allBrand, setAllBrand] = useState<Brand[]>([]);
+  const [brandList, setBrandList] = useState<Brand[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const result = await brand.getBrand();
-      setAllBrand(result);
+      setBrandList(result);
     };
     fetchData();
   }, []);
 
   const getGridColumn = (index: number) => {
-    const gridColumnMap = [
-      "1 / 3",
-      "3 / 5",
-      "5 / 7",
-      "7 / 9",
-      "9 / 11",
-      "11 / 13",
-    ];
-    return gridColumnMap[index % gridColumnMap.length];
+    const columns = 15;
+    const start = 1 + (index % columns) * 2;
+    const end = start + 1;
+    return `${start} / ${end}`;
   };
-
   const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     if (e.target.checked) {
@@ -114,7 +110,10 @@ const Product = () => {
   };
 
   const handleBrand = (value: number) => {
-    handleBrandChange({ target: { value: String(value), checked: value !== 0 } } as React.ChangeEvent<HTMLInputElement>);
+    setBrandId(brandId);
+    handleBrandChange({
+      target: { value: String(value), checked: value !== 0 },
+    } as React.ChangeEvent<HTMLInputElement>);
   };
 
   const handleAgeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -140,7 +139,19 @@ const Product = () => {
       setActiveOrder("");
     }
   };
+  const containerRef = useRef<HTMLDivElement>(null);
 
+  const scrollLeft = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollLeft -= 1200;
+    }
+  };
+
+  const scrollRight = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollLeft += 1200;
+    }
+  };
   return (
     <div>
       <StickyBox offsetTop={0} className="sticky-navbar">
@@ -149,12 +160,24 @@ const Product = () => {
 
       <div className="container">
         <div className="filter-product">
-          <div style={{ width: "1164px" }}>
-            {allBrand.map((brand, index) => (
+          <button className="scroll-left" onClick={scrollLeft}>
+            <MdNavigateBefore />
+          </button>
+          <div
+            ref={containerRef}
+            style={{
+              overflow: "auto",
+              zIndex: "0"
+            }}
+          >
+            {brandList.map((brand, index) => (
               <div
-                className=" element-brand"
+                className={`element-brand ${
+                  brandId === brand.brandId ? "active" : ""
+                }`}
                 style={{
                   gridColumn: getGridColumn(index),
+                  zIndex: "0",
                 }}
               >
                 <img
@@ -166,6 +189,9 @@ const Product = () => {
               </div>
             ))}
           </div>
+          <button className="scroll-right" onClick={scrollRight}>
+            <MdNavigateNext />
+          </button>
           <div
             className="box-white"
             style={{
@@ -180,10 +206,7 @@ const Product = () => {
             {" "}
           </div>
           <div style={{ background: "#f5f7fc", marginTop: 0 }}>
-            <div
-              className="all-filter"
-              style={{ position: "sticky", zIndex: 500, top: "215px" }}
-            >
+            <div className="all-filter">
               <div className="content-filter-head">
                 <p className="text-cate">Category</p>
                 <div className="content-cate">
@@ -321,159 +344,21 @@ const Product = () => {
                 <div className="content-filter-brand">
                   <p className="text-brand">For brand</p>
                   <div className="content-cate">
-                    <ul>
-                      <li>
-                        <input
-                          type="checkbox"
-                          value={5}
-                          checked={brandId === 5}
-                          onChange={handleBrandChange}
-                        />
-                      </li>
-                      <li>
-                        <span>137degree</span>
-                      </li>
-                    </ul>
-
-                    <ul>
-                      <li>
-                        <input
-                          type="checkbox"
-                          value={3}
-                          checked={brandId === 3}
-                          onChange={handleBrandChange}
-                        />
-                      </li>
-                      <li>
-                        <span>FrutoNyanya</span>
-                      </li>
-                    </ul>
-
-                    <ul>
-                      <li>
-                        <input
-                          type="checkbox"
-                          value={7}
-                          checked={brandId === 7}
-                          onChange={handleBrandChange}
-                        />
-                      </li>
-                      <li>
-                        <span>Hoff</span>
-                      </li>
-                    </ul>
-
-                    <ul>
-                      <li>
-                        <input
-                          type="checkbox"
-                          value={1}
-                          checked={brandId === 1}
-                          onChange={handleBrandChange}
-                        />
-                      </li>
-                      <li>
-                        <span>Meiji</span>
-                      </li>
-                    </ul>
-
-                    <ul>
-                      <li>
-                        <input
-                          type="checkbox"
-                          value={6}
-                          checked={brandId === 6}
-                          onChange={handleBrandChange}
-                        />
-                      </li>
-                      <li>
-                        <span>Nestle</span>
-                      </li>
-                    </ul>
-
-                    <ul>
-                      <li>
-                        <input
-                          type="checkbox"
-                          value={10}
-                          checked={brandId === 10}
-                          onChange={handleBrandChange}
-                        />
-                      </li>
-                      <li>
-                        <span>PediaSure</span>
-                      </li>
-                    </ul>
-
-                    <ul>
-                      <li>
-                        <input
-                          type="checkbox"
-                          value={4}
-                          checked={brandId === 4}
-                          onChange={handleBrandChange}
-                        />
-                      </li>
-                      <li>
-                        <span>Sahmyook</span>
-                      </li>
-                    </ul>
-
-                    <ul>
-                      <li>
-                        <input
-                          type="checkbox"
-                          value={11}
-                          checked={brandId === 11}
-                          onChange={handleBrandChange}
-                        />
-                      </li>
-                      <li>
-                        <span>Similac</span>
-                      </li>
-                    </ul>
-
-                    <ul>
-                      <li>
-                        <input
-                          type="checkbox"
-                          value={2}
-                          checked={brandId === 2}
-                          onChange={handleBrandChange}
-                        />
-                      </li>
-                      <li>
-                        <span>THtruemilk</span>
-                      </li>
-                    </ul>
-
-                    <ul>
-                      <li>
-                        <input
-                          type="checkbox"
-                          value={9}
-                          checked={brandId === 9}
-                          onChange={handleBrandChange}
-                        />
-                      </li>
-                      <li>
-                        <span>Vinamilk</span>
-                      </li>
-                    </ul>
-
-                    <ul>
-                      <li>
-                        <input
-                          type="checkbox"
-                          value={8}
-                          checked={brandId === 8}
-                          onChange={handleBrandChange}
-                        />
-                      </li>
-                      <li>
-                        <span>Yakult</span>
-                      </li>
-                    </ul>
+                    {brandList.map((brand) => (
+                      <ul key={brand.brandId}>
+                        <li>
+                          <input
+                            type="checkbox"
+                            value={brand.brandId}
+                            checked={brandId === brand.brandId}
+                            onChange={handleBrandChange}
+                          />
+                        </li>
+                        <li>
+                          <span>{brand.name}</span>
+                        </li>
+                      </ul>
+                    ))}
                   </div>
                 </div>
 
@@ -508,35 +393,42 @@ const Product = () => {
                   </ul>
                 </div>
               </div>
-              <div className="result-product">
-                {products.map((product) => (
-                  <div className="element-product" key={product.productId}>
-                    <div className="element-img">
-                      <Link to={`/productDetails/${product.productId}`}>
-                        <img
-                          src={product.imageProducts[0].imageUrl}
-                          className="imgpng"
-                          alt=""
-                        />
-                      </Link>
-                    </div>
-                    <p className="element-name">{product.name}</p>
+              {products.length > 0 ? (
+                <div className="result-product">
+                  {products.map((product) => (
+                    <div className="element-product" key={product.productId}>
+                      <div className="element-img">
+                        <Link to={`/productDetails/${product.productId}`}>
+                          <img
+                            src={product.imageProducts[0].imageUrl}
+                            className="imgpng"
+                            alt=""
+                          />
+                        </Link>
+                      </div>
+                      <p className="element-name">{product.name}</p>
 
-                    <div className="body-text">
-                      <span className="element-price">
-                        ${product.price.toLocaleString()}{" "}
-                      </span>
-                      <div className="box-icon-product-page">
-                        <BsCart3
-                          className="icon-cart-product-page"
-                          fontSize="1.4em"
-                          onClick={() => addToCart(product)}
-                        />
+                      <div className="body-text">
+                        <span className="element-price">
+                          ${product.price.toLocaleString()}{" "}
+                        </span>
+                        <div className="box-icon-product-page">
+                          <BsCart3
+                            className="icon-cart-product-page"
+                            fontSize="1.4em"
+                            onClick={() => addToCart(product)}
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="box-empty">
+                  <img src={by} className="ra-img" alt="" />
+                  <p>No matching results were found</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
