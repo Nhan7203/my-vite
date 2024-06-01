@@ -2,8 +2,7 @@ import { Navbar, Footer } from "../../import/import-router";
 import StatusListOrder from "./components/StatusListOrder";
 import BoxMenuUser from "./components/BoxMenuUser";
 import "./User.css";
-
-const User = () => {
+const Processing = () => {
   return (
     <div>
       <Navbar />
@@ -11,7 +10,7 @@ const User = () => {
         <div>
           <BoxMenuUser />
           <div className="box-menu-order">
-            <StatusListOrder/>
+            <StatusListOrder />
             <div className="order-show">
               <div></div>
             </div>
@@ -23,4 +22,4 @@ const User = () => {
   );
 };
 
-export default User;
+export default Processing;

@@ -145,13 +145,17 @@ const ShoppingCart = () => {
                   <Link
                     to="/login"
                     style={{ color: "white" }}
-                    onClick={() =>
-                      Swal.fire(
-                        "Opps!",
-                        "You haven't logged in yet! Redirecting to Login...",
-                        "error"
-                      )
-                    }
+                    onClick={(e) => {
+                      e.preventDefault(); // Prevent the default link behavior
+                      Swal.fire({
+                        title: "Oops!",
+                        text: "You haven't logged in yet! Redirecting to Login...",
+                        icon: "error",
+                      }).then(() => {
+                        // Redirect to the login page after the Swal.fire is closed
+                        window.location.href = "/login";
+                      });
+                    }}
                   >
                     <div className="box-continue">Payment</div>
                   </Link>

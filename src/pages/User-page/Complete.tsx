@@ -1,7 +1,7 @@
 import { Navbar, Footer } from "../../import/import-router";
-import { Link } from "../../import/import-libary";
-import BoxMenuUser from "./BoxMenuUser";
+import BoxMenuUser from "./components/BoxMenuUser";
 import "./User.css";
+import StatusListOrder from "./components/StatusListOrder";
 
 const Complete = () => {
   return (
@@ -11,20 +11,7 @@ const Complete = () => {
         <div>
           <BoxMenuUser />
           <div className="box-menu-order">
-            <div className="status-list-order">
-              <div>
-                <Link to="/user">All</Link>
-              </div>
-              <div>
-                <Link to="/complete">Complete</Link>
-              </div>
-              <div>
-                <Link to="/cancelled">Cancelled</Link>
-              </div>
-              <div>
-                <Link to="/giveback">Give back</Link>
-              </div>
-            </div>
+            <StatusListOrder />
             <div className="order-show">
               <div></div>
             </div>
