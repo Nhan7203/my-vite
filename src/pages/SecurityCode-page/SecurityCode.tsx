@@ -17,6 +17,7 @@ const SecurityCode = () => {
             navigate(`/changepassword?email=${email}&code=${code}`);
         } else {
             setIsCodeValid(false);
+            return;
         }
     };
 
