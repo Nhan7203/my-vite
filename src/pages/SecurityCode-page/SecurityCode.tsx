@@ -1,11 +1,25 @@
-
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './SecurityCode.css';
 
-
 const SecurityCode = () => {
+    const [otp, setOtp] = useState('');
+    const [isCodeValid, setIsCodeValid] = useState(true);
+    const navigate = useNavigate();
+
     const handleOnContinue = () => {
-        location.href = "/changepassword"
-    }
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email');
+        const code = urlParams.get('code');
+
+        if (otp === code) {
+            alert("oke");
+            navigate(`/changepassword?email=${email}&code=${code}`);
+        } else {
+            setIsCodeValid(false);
+        }
+    };
+
     const handleBtCancel = () => {
         location.href = "/forgetpassword";
     }
@@ -42,8 +56,10 @@ const SecurityCode = () => {
                                     id=" "
                                     placeholder="Insert your code here!"
                                     required
+                                    value={otp}
+                                    onChange={(e) => setOtp(e.target.value)}
                                 />
-                                <p className="text-msg">Your code not valid!</p>
+                                {!isCodeValid && <p className="text-msg">Your code is not valid!</p>}
                             </div>
 
 
