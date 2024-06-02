@@ -7,8 +7,43 @@ import comment from "../../../assets/comment.png";
 import blog from "../../../assets/blogging.png";
 import watched from "../../../assets/watched.png";
 import "../User.css";
-
+import { jwtDecode } from "jwt-decode";
+import swal from "sweetalert";
 const BoxMenuUser = () => {
+
+
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    swal({
+      title: "Oops!",
+      text: "You haven't logged in yet! Redirecting to Login Page...",
+      icon: "warning",
+      buttons: {
+        ok: {
+          text: "OK",
+          value: true,
+          className: "swal-ok-button",
+        },
+      },
+    }).then((value) => {
+      if (value) {
+        window.location.href = "/login";
+      }
+    });
+
+    return;
+  }
+
+  const decodedToken: any = jwtDecode(token);
+
+
+  const userName =
+    decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
+  
+  const userToken = {
+    Name: userName,
+  };
   return (
     <div className="box-menu-user">
       <div className="box-profile-avatar">
@@ -16,7 +51,7 @@ const BoxMenuUser = () => {
           <img src={vu} alt="" />
         </div>
         <div className="onlick-profile">
-          <h5>Thanh Vu</h5>
+          <h5>{userToken.Name}</h5>
           <p>
             <Link to="/profile">Profile user</Link>
           </p>
