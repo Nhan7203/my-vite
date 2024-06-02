@@ -37,11 +37,11 @@ const Payment = () => {
 
       const userIdIdentifier =
         decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
         ];
       const userAddress =
         decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/streetaddress"
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/streetaddress"
         ];
       const userId = userIdIdentifier;
       const orderDate = new Date().toISOString();
@@ -167,9 +167,8 @@ const Payment = () => {
             <div className="ship-method-list">
               <div className="economical">
                 <div
-                  className={`box-sec ${
-                    shippingMethodId === 1 ? "active" : ""
-                  }`}
+                  className={`box-sec ${shippingMethodId === 1 ? "active" : ""
+                    }`}
                   onClick={() => handleOrderShipChange(1)}
                 >
                   <img src={SEC} alt="" className="logo-sec" />
@@ -255,7 +254,7 @@ const Payment = () => {
                         },
                       },
                     }).then(() => {
-                      window.location.href = "/";
+                      window.location.href = "/user";
                     });
                   }}
                 >
