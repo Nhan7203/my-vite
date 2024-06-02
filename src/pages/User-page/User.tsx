@@ -5,6 +5,7 @@ import swal from "sweetalert";
 import StatusListOrder from "./components/StatusListOrder";
 import BoxMenuUser from "./components/BoxMenuUser";
 import "./User.css";
+import "../Admin-page//Admin.css"
 
 interface Order {
   orderId: number;
@@ -62,6 +63,8 @@ const User = () => {
           const data = await response.json();
 
           const updatedOrderData = data.map((order: Order) => {
+            console.error(" found", order.address);
+       
             const total = order.orderDetails.reduce(
               (acc, detail) => acc + detail.total,
               0
@@ -99,10 +102,10 @@ const User = () => {
               <div className="limiter">
                 <div className="container-table100">
                   <div className="wrap-table100">
-                    <div className="table100">
-                      <table>
+                    <div className="table100" >
+                      <table style={{width: "980px"}}>
                         <thead>
-                          <tr className="table100-head">
+                          <tr className="table100-head" >
                             <th className="column1">Date</th>
                             <th className="column2">Order ID</th>
                             <th className="column3">Address</th>
@@ -126,9 +129,21 @@ const User = () => {
                               <td className="column2 dynamic-content">{order.orderId}</td>
                               <td className="column3 dynamic-content">{order.address}</td>
                               <td className="column4 dynamic-content">{order.paymentMethod}</td>
-                              <td className="column5 dynamic-content">{order.shippingMethodId}</td>
-                              <td className="column6 dynamic-content">${order.total}</td>
-                              <td className="column7 dynamic-content">{order.orderStatus}</td>
+                              <td className="column5 dynamic-content">
+                               {['Economical delivery', 'Regular delivery', 'Express delivery'][order.shippingMethodId - 1]}
+                              </td>
+                              <td className="column6 dynamic-content">${order.total.toLocaleString()}</td>
+                              <td className="column7 dynamic-content">
+                                <span
+                                  className={`status ${
+                                    order.orderStatus === 'Pending' ? 'yellow' :
+                                    order.orderStatus === 'cancel' ? 'red' :
+                                    order.orderStatus === 'submitted' ? 'orange' :
+                                    order.orderStatus === 'completed' ? 'green' : ''
+                                  }`}
+                                />
+                               {order.orderStatus}
+                              </td>
                             </tr>
                           ))}
                         </tbody>

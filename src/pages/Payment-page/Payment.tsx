@@ -3,6 +3,7 @@ import { useCart } from "../Cart-page/CartContext";
 import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { GiPositionMarker } from "../../import/import-libary";
+import swal from "sweetalert";
 import Footer from "../../components/Footer/footer";
 import avatar from "../../assets/vu.jpg";
 import Paypal from "./Paypal";
@@ -13,7 +14,8 @@ import "./Payment.css";
 import { refreshToken } from "../../apiServices/refreshTokenServices";
 
 const Payment = () => {
-  const [activeOrderShip, setActiveOrderShip] = useState<number>(0);
+  const [shippingMethodId, setShippingMethodId] = useState<number>(0);
+
   const [subtotal, setSubtotal] = useState<number>(0);
   const { cart } = useCart();
 
@@ -31,17 +33,22 @@ const Payment = () => {
         return;
       }
 
-      const decodedToken: any = jwtDecode(token)
+      const decodedToken: any = jwtDecode(token);
 
-      const userIdIdentifier = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
-
+      const userIdIdentifier =
+        decodedToken[
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        ];
+      const userAddress =
+        decodedToken[
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/streetaddress"
+        ];
       const userId = userIdIdentifier;
       const orderDate = new Date().toISOString();
 
-      const shippingMethodId = 1; //From web
       const paymentMethod = "By Cash"; //From web
-      const address = "456"; //From web
-
+      const address = userAddress; //From web
+      //console.error("Token not found", address);
       const products = cart.map((product) => ({
         productId: product.productId,
         quantity: product.quantity,
@@ -92,13 +99,13 @@ const Payment = () => {
   const handleOrderShipChange = (value: number) => {
     if (value === 1) {
       setSubtotal(30000);
-      setActiveOrderShip(1);
+      setShippingMethodId(1);
     } else if (value === 2) {
       setSubtotal(50000);
-      setActiveOrderShip(2);
+      setShippingMethodId(2);
     } else {
       setSubtotal(120000);
-      setActiveOrderShip(3);
+      setShippingMethodId(3);
     }
   };
 
@@ -160,7 +167,9 @@ const Payment = () => {
             <div className="ship-method-list">
               <div className="economical">
                 <div
-                  className={`box-sec ${activeOrderShip === 1 ? "active" : ""}`}
+                  className={`box-sec ${
+                    shippingMethodId === 1 ? "active" : ""
+                  }`}
                   onClick={() => handleOrderShipChange(1)}
                 >
                   <img src={SEC} alt="" className="logo-sec" />
@@ -169,7 +178,7 @@ const Payment = () => {
               </div>
               <div className="regular">
                 <div
-                  className={`box-sr ${activeOrderShip === 2 ? "active" : ""}`}
+                  className={`box-sr ${shippingMethodId === 2 ? "active" : ""}`}
                   onClick={() => handleOrderShipChange(2)}
                 >
                   <img src={SR} alt="" className="logo-sr" />
@@ -178,7 +187,7 @@ const Payment = () => {
               </div>
               <div className="express">
                 <div
-                  className={`box-se ${activeOrderShip === 3 ? "active" : ""}`}
+                  className={`box-se ${shippingMethodId === 3 ? "active" : ""}`}
                   onClick={() => handleOrderShipChange(3)}
                 >
                   <img src={SE} alt="" className="logo-se" />
@@ -230,11 +239,28 @@ const Payment = () => {
 
               <div className="vat">(Incl. VAT)</div>
               {subtotal ? (
-                <Link to="/order" style={{ color: "white" }}>
-                  <div className="box-continue" onClick={handleContinueClick}>
-                    Order
-                  </div>
-                </Link>
+                <div
+                  className="box-continue"
+                  onClick={() => {
+                    handleContinueClick();
+                    swal({
+                      title: "Order Placed Successfully!",
+                      text: "Thank you for your purchase. Please check your purchase order for order details.",
+                      icon: "success",
+                      buttons: {
+                        ok: {
+                          text: "OK",
+                          value: true,
+                          className: "swal-ok-button",
+                        },
+                      },
+                    }).then(() => {
+                      window.location.href = "/";
+                    });
+                  }}
+                >
+                  Order
+                </div>
               ) : (
                 <div
                   className="box-continue"
