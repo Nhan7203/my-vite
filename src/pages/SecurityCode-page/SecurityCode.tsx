@@ -4,11 +4,12 @@ import './SecurityCode.css';
 
 const SecurityCode = () => {
     const [otp, setOtp] = useState('');
-    let isCodeValid = true;
+    const [isCodeValid, setIsCodeValid] = useState(true);
     const navigate = useNavigate();
     const location = useLocation();
 
-    const handleOnContinue = () => {
+    const handleOnContinue = (e) => {
+        e.preventDefault();
 
         const { email, code } = location.state;
 
@@ -21,7 +22,6 @@ const SecurityCode = () => {
             });
         } else {
             setIsCodeValid(false);
-            return;
         }
     };
 
@@ -57,7 +57,7 @@ const SecurityCode = () => {
                 <div className="head-content">
                     <img src="/src/assets/anya.png" alt="" />
                     <div className="content">
-                        <form className="form-security" >
+                        <form className="form-security" onSubmit={handleOnContinue}>
                             <h3 className="text-code">Enter the security code</h3>
                             <div>
                                 <label>Please check your email for a message with the code. Your code has 8 characters</label>
@@ -75,13 +75,8 @@ const SecurityCode = () => {
 
 
                             <div className="two-button">
-                                <input
-                                    className="button-continue"
-                                    type="submit"
-                                    name="btAction"
-                                    value="Continue"
-                                    onClick={() => handleOnContinue()}
-                                />
+                                <button className="button-continue" type="submit">Continue</button>
+
 
                                 <input
                                     className="button-cancel"
