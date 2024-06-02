@@ -15,7 +15,6 @@ import { refreshToken } from "../../apiServices/refreshTokenServices";
 
 const Payment = () => {
   const [shippingMethodId, setShippingMethodId] = useState<number>(0);
-
   const [subtotal, setSubtotal] = useState<number>(0);
   const { cart } = useCart();
 
@@ -108,6 +107,8 @@ const Payment = () => {
       setShippingMethodId(3);
     }
   };
+
+ 
 
   //Renove token logout
   const handleLogout = () => {
@@ -213,15 +214,26 @@ const Payment = () => {
 
             <div className="payment-methods">
               <p>Payment methods</p>
-              <Paypal
-                payload={cart.map((product) => ({
-                  productId: product.productId,
-                  quantity: product.quantity,
-                  price: product.price,
-                  total: product.quantity * product.price,
-                }))}
-                amount={(totalAmount / 23500).toFixed(2)}
-              />
+              {subtotal ? (
+                <Paypal
+                  payload={cart.map((product) => ({
+                    productId: product.productId,
+                    quantity: product.quantity,
+                    price: product.price,
+                    total: product.quantity * product.price,
+                  }))}
+                  amount={(totalAmount / 23500).toFixed(2)}
+                  shippingMethod={shippingMethodId}
+                />
+              ) : (
+                
+                  <Paypal
+                    payload={[]}
+                    amount="0.00"
+                    shippingMethod={shippingMethodId}
+                  />
+              
+              )}
             </div>
 
             <div className="bill">
@@ -255,7 +267,7 @@ const Payment = () => {
                         },
                       },
                     }).then(() => {
-                      window.location.href = "/";
+                      window.location.href = "/user";
                     });
                   }}
                 >
