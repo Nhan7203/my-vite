@@ -146,7 +146,7 @@ const Navbar = () => {
       <div className="bottom-navbar">
         <ul className="bottom-navbar-list">
           <li>
-            <NavLink to="/" className="nav-link">
+            <NavLink to="/" className="nav-link" onClick={handleLogo}>
               Home
             </NavLink>
           </li>
