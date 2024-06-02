@@ -1,72 +1,71 @@
+import { Navbar, Footer } from "../../import/import-router";
+import { useState, useEffect } from "react";
+import axios from 'axios';
+import "./Blog.css";
 
-import React from 'react'
 
-const Blog = () => {
-  return (
-    <div>Blog</div>
-  )
+export interface Blog {
+  title: string;
+  content: string;
+  author: string;
+  productId: number;
+  uploadDate: Date;
+  updateDate: Date;
+  view: number;
+  like: number;
+  imageUrl: string;
 }
 
-export default Blog
+const getGridColumn = (index: number) => {
+  const gridColumnMap = ["1 / 4", "5 / 8", "9 / 12"];
+  return gridColumnMap[index % gridColumnMap.length];
+};
 
+const Blog = () => {
 
-// import { Navbar, Footer } from "../../import/import-router";
-// import { useState, useEffect  } from "react";
-// import "./Blog.css";
+  const [blogList, setBlogList] = useState<Blog[]>([]);
 
+  //Get API blog
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('https://localhost:7030/api/Blog/getAllBlogs');
+        setBlogList(response.data);
+      } catch (error) {
+        console.error('Error fetching blogs:', error);
+      }
+    };
+    fetchData();
+  }, []);
 
-// export interface Blog {
-//   blogId: number;
-//   title: string;
-//   description: string;
-//   imageBlog: string;
-// }
+  return (
+    <div>
+      <Navbar />
 
-// const getGridColumn = (index: number) => {
-//   const gridColumnMap = ["1 / 4", "5 / 8", "9 / 12"];
-//   return gridColumnMap[index % gridColumnMap.length];
-// };
+      <div className="body-blog">
+        <div>
+          {blogList.map((blog, index) => (
+            <div
+              className="box-blog"
+              style={{
+                gridColumn: getGridColumn(index),
+              }}
+            >
+              <div className="element-blog">
+                <img src={blog.imageUrl} className="img-card" alt="" />
+                <div>{blog.title}</div>
+                <div>
+                  <p>icon View</p>
+                  <p>MM/DD/YY</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <Footer />
+    </div>
+  );
+};
 
-// const Blog = () => {
-
-//   const [blogList, setBlogList] = useState<Blog[]>([]);
-
-// //Get API blog
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       const result = ;
-//       setBlogList(result);
-//     };
-//     fetchData();
-//   }, []);
-
-//   return (
-//     <div>
-//       <Navbar />
-
-//       <div className="body-blog">
-//         <div>
-//           {blogList.map((blog, index) => (
-//             <div
-//               className="box-blog"
-//               style={{
-//                 gridColumn: getGridColumn(index),
-//               }}
-//             >
-//               <div className="element-blog">
-//                 <img src={} className="img-card" alt="" />
-//                 <div>
-//                   <p>icon View</p>
-//                   <p>MM/DD/YY</p>
-//                 </div>
-//               </div>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//       <Footer />
-//     </div>
-//   );
-// };
-
-// export default Blog;
+export default Blog;

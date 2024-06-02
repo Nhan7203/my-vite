@@ -122,7 +122,7 @@ const ShoppingCart = () => {
                       <div>Has Address</div>
                     </div>
                   ) : (
-                    <Link to="/user" style={{ color: "white" }}>
+                    <Link to="/profile" style={{ color: "white" }}>
                       <div className="box-adress">
                         <div>Confirm Shipping Address</div>
                       </div>
