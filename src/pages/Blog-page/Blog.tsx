@@ -1,8 +1,9 @@
 import { Navbar, Footer } from "../../import/import-router";
 import { useState, useEffect } from "react";
-import axios from 'axios';
+import axios from "axios";
+import view from "../../assets/view.png";
+import { CiHeart } from "react-icons/ci";
 import "./Blog.css";
-
 
 export interface Blog {
   title: string;
@@ -22,17 +23,18 @@ const getGridColumn = (index: number) => {
 };
 
 const Blog = () => {
-
   const [blogList, setBlogList] = useState<Blog[]>([]);
 
   //Get API blog
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://localhost:7030/api/Blog/getAllBlogs');
+        const response = await axios.get(
+          "https://localhost:7030/api/Blog/getAllBlogs"
+        );
         setBlogList(response.data);
       } catch (error) {
-        console.error('Error fetching blogs:', error);
+        console.error("Error fetching blogs:", error);
       }
     };
     fetchData();
@@ -52,12 +54,22 @@ const Blog = () => {
               }}
             >
               <div className="element-blog">
-                <img src={blog.imageUrl} className="img-card" alt="" />
-                <div>{blog.title}</div>
-                <div>
-                  <p>icon View</p>
-                  <p>MM/DD/YY</p>
+                <div className="box-img-blog">
+                  <img src={blog.imageUrl} className="img-blog" alt="" />
                 </div>
+                <div className="box-title">{blog.title}</div>
+                <div className="box-content">{blog.content}</div>
+                <div className="box-footer-blog">
+                  <div className="icon-blog">
+                    
+                      <img src={view} className="view" alt="view" />
+                      <div>0</div>
+                    
+                    <CiHeart fontSize="1.5em" style={{cursor: "pointer"}}/>
+                  </div>
+                  <div className="date-blog">{blog.uploadDate}</div>
+                </div>
+                <div></div>
               </div>
             </div>
           ))}
