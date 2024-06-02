@@ -5,7 +5,7 @@ import swal from "sweetalert";
 import StatusListOrder from "./components/StatusListOrder";
 import BoxMenuUser from "./components/BoxMenuUser";
 import "./User.css";
-import "../Admin-page//Admin.css"
+import "../Admin-page//Admin.css";
 
 interface Order {
   orderId: number;
@@ -30,7 +30,7 @@ const User = () => {
   useEffect(() => {
     const fetchOrderData = async () => {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem("token");
 
         if (!token) {
           swal({
@@ -42,29 +42,35 @@ const User = () => {
                 text: "OK",
                 value: true,
                 className: "swal-ok-button",
-              }
+              },
             },
           }).then((value) => {
             if (value) {
-              window.location.href = '/login';
+              window.location.href = "/login";
             }
           });
 
           return;
         }
 
-
         const decodedToken: any = jwtDecode(token);
-        const userIdIdentifier = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+        const userIdIdentifier =
+          decodedToken[
+            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+          ];
 
-        const response = await fetch(`https://localhost:7030/api/User/getOrderList?userId=${parseInt(userIdIdentifier)}`);
+        const response = await fetch(
+          `https://localhost:7030/api/User/getOrderList?userId=${parseInt(
+            userIdIdentifier
+          )}`
+        );
 
         if (response.ok) {
           const data = await response.json();
 
           const updatedOrderData = data.map((order: Order) => {
-            console.error(" found", order.address);
-       
+            console.error(" found", order.orderId);
+
             const total = order.orderDetails.reduce(
               (acc, detail) => acc + detail.total,
               0
@@ -102,10 +108,10 @@ const User = () => {
               <div className="limiter">
                 <div className="container-table100">
                   <div className="wrap-table100">
-                    <div className="table100" >
-                      <table style={{width: "980px"}}>
+                    <div className="table100">
+                      <table style={{ width: "980px" }}>
                         <thead>
-                          <tr className="table100-head" >
+                          <tr className="table100-head">
                             <th className="column1">Date</th>
                             <th className="column2">Order ID</th>
                             <th className="column3">Address</th>
@@ -125,24 +131,45 @@ const User = () => {
                                   : ""
                               }
                             >
-                              <td className="column1 dynamic-content">{order.orderDate}</td>
-                              <td className="column2 dynamic-content">{order.orderId}</td>
-                              <td className="column3 dynamic-content">{order.address}</td>
-                              <td className="column4 dynamic-content">{order.paymentMethod}</td>
-                              <td className="column5 dynamic-content">
-                               {['Economical delivery', 'Regular delivery', 'Express delivery'][order.shippingMethodId - 1]}
+                              <td className="column1 dynamic-content">
+                                {order.orderDate}
                               </td>
-                              <td className="column6 dynamic-content">${order.total.toLocaleString()}</td>
+                              <td className="column2 dynamic-content">
+                                {order.orderId}
+                              </td>
+                              <td className="column3 dynamic-content">
+                                {order.address}
+                              </td>
+                              <td className="column4 dynamic-content">
+                                {order.paymentMethod}
+                              </td>
+                              <td className="column5 dynamic-content">
+                                {
+                                  [
+                                    "Economical delivery",
+                                    "Regular delivery",
+                                    "Express delivery",
+                                  ][order.shippingMethodId - 1]
+                                }
+                              </td>
+                              <td className="column6 dynamic-content">
+                                ${order.total.toLocaleString()}
+                              </td>
                               <td className="column7 dynamic-content">
                                 <span
                                   className={`status ${
-                                    order.orderStatus === 'Pending' ? 'yellow' :
-                                    order.orderStatus === 'cancel' ? 'red' :
-                                    order.orderStatus === 'submitted' ? 'orange' :
-                                    order.orderStatus === 'completed' ? 'green' : ''
+                                    order.orderStatus === "Pending"
+                                      ? "yellow"
+                                      : order.orderStatus === "cancel"
+                                      ? "red"
+                                      : order.orderStatus === "submitted"
+                                      ? "orange"
+                                      : order.orderStatus === "completed"
+                                      ? "green"
+                                      : ""
                                   }`}
                                 />
-                               {order.orderStatus}
+                                {order.orderStatus}
                               </td>
                             </tr>
                           ))}
