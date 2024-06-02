@@ -27,7 +27,16 @@ const Navbar = () => {
     setCartCount(totalQuantityInStock);
   }, [cart]);
 
+  useEffect(() => {
+    const storedSearchQuery = localStorage.getItem("searchQuery");
+    if (storedSearchQuery) {
+      setSearchQuery(storedSearchQuery);
+    }
+  }, []);
+
   const handleLogo = () => {
+    setSearchQuery("");
+    localStorage.removeItem("searchQuery");
     location.href = "/";
   };
 
@@ -35,7 +44,7 @@ const Navbar = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
 
-  const handleSearch = (event: { preventDefault: () => void }) => {
+  const handleSearch = (event: { preventDefault: () => void; }) => {
     event.preventDefault();
     if (searchQuery.length > 0) {
       navigate("/product", { state: { query: searchQuery } });
@@ -44,6 +53,10 @@ const Navbar = () => {
     }
   };
 
+  useEffect(() => {
+    localStorage.setItem("searchQuery", searchQuery);
+  }, [searchQuery]);
+
   //Get token login
   const isLoggedIn = localStorage.getItem("token");
 
@@ -51,7 +64,7 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
   };
-  
+
 
   return (
     <nav className="header">
@@ -70,14 +83,14 @@ const Navbar = () => {
           {isLoggedIn ? (
             <div className="user-menu">
               <div className="avatar" >
-              <img src={avatar} alt="Avatar"></img>
+                <img src={avatar} alt="Avatar"></img>
               </div>
-                <div className="menu-box">
-                  <a href="/profile">View Profile</a>
-                  <a href="/user" >Purchase order</a>
-                  <a href="/login" onClick={handleLogout} style={{border:"none"}}>Logout</a>
-                </div>
-             
+              <div className="menu-box">
+                <a href="/profile">View Profile</a>
+                <a href="/user" >Purchase order</a>
+                <a href="/login" onClick={handleLogout} style={{ border: "none" }}>Logout</a>
+              </div>
+
             </div>
           ) : (
             <li className="login">
