@@ -196,9 +196,11 @@ a.white {
   opacity: 1;
   visibility: visible;
 }
-
+.avatar {
+  display: flex;
+}
 .avatar > img {
-  width: auto;
-  height: 25px;
-  border-radius: 20px;
+  width: 30px;
+  height: 30px;
+  border-radius: 100px;
 }

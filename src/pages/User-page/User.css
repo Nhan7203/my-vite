@@ -1,4 +1,7 @@
 .body-user {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   background-color: #f5f7fc;
 }
@@ -101,7 +104,7 @@
 
 .box-menu-order {
   grid-column: 3 / 13;
-  background-color: white;
+
   border-radius: 10px;
   height: 435px;
   margin-top: 15px;
@@ -118,4 +121,61 @@
   border-radius: 10px;
   height: 50px;
   border-bottom: 0.5px solid #eaeaea;
+  margin-bottom: 15px;
+}
+tbody > tr {
+  background-color: #fce4ec;
+}
+.order-show {
+  padding: 0px;
+}
+
+.table100-head th {
+  color: #ffffff;
+  background-color: grey;
+}
+
+.table-row-separator {
+  border-bottom: 1px solid black;
+}
+
+.wrap-table100 {
+  flex: 1;
+}
+
+.dynamic-content {
+  text-align: center;
+}
+
+.container-table100 {
+  width: 100%;
+  max-width: 1200px;
+}
+
+.wrap-table100 {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.table100 {
+  table-layout: fixed;
+}
+
+.table100-head {
+  max-width: max-content;
+  width: 100%;
+}
+
+.body-user > div {
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(12, 80px);
+  column-gap: 20px;
+  row-gap: 20px;
+}
+
+.table100 {
+  /* ... */
+  overflow: auto;
+  height: 370px; /* Đặt chiều cao cố định cho tbody */
 }

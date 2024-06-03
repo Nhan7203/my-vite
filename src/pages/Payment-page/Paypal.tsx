@@ -13,7 +13,7 @@ const style = { "layout": "vertical" };
 
 
 // Layout Loading Screen Paypal
-const ButtonWrapper = ({ currency, showSpinner, amount, payload }) => {
+const ButtonWrapper = ({ currency, showSpinner, amount, payload, shippingMethodIdPay }) => {
     const [{ isPending, options }, dispatch] = usePayPalScriptReducer();
 
     useEffect(() => {
@@ -43,13 +43,13 @@ const ButtonWrapper = ({ currency, showSpinner, amount, payload }) => {
                 const decodedToken: any = jwtDecode(token)
 
                 const userIdIdentifier = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
-
+                const userAddress =decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/streetaddress"];
 
                 const userId = parseInt(userIdIdentifier);
                 const orderDate = new Date().toISOString();
-                const shippingMethodId = 1;         // From web
+                const shippingMethodId =  shippingMethodIdPay;         // From web
                 const paymentMethod = "By Paypal";  // From web
-                const address = "456";              // From web
+                const address = userAddress;              // From web
 
                 const products = payload.map((product) => ({
                     productId: product.productId,
@@ -82,7 +82,7 @@ const ButtonWrapper = ({ currency, showSpinner, amount, payload }) => {
 
                 localStorage.removeItem("cart");
                 swal("Congrat!", "Order was created!", "success");
-                //window.location.href = '/OrderDetailPage';
+                window.location.href = '/user';
             }
         } catch (error) {
             console.error('Error storing cart data:', error);
@@ -114,11 +114,11 @@ const ButtonWrapper = ({ currency, showSpinner, amount, payload }) => {
     );
 };
 
-export default function Paypal({ amount, payload }) {
+export default function Paypal({ amount, payload, shippingMethod }) {
     return (
         <div style={{ maxWidth: "750px", minHeight: "156px" }}>
             <PayPalScriptProvider options={{ clientId: "test", components: "buttons", currency: "USD" }}>
-                <ButtonWrapper payload={payload} currency={'USD'} amount={amount} showSpinner={false} />
+                <ButtonWrapper payload={payload} currency={'USD'} amount={amount} showSpinner={false} shippingMethodIdPay={shippingMethod} />
             </PayPalScriptProvider>
         </div>
     );

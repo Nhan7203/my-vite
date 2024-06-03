@@ -13,6 +13,18 @@ const ShoppingCart = () => {
     0
   );
 
+  const handleIncrement = (productId: number, quantity: number, stock: number) => {
+    if (quantity < stock) {
+      incrementQuantity(productId);
+    } else {
+      Swal.fire({
+        title: "Oops!",
+        text: "Cannot increase quantity beyond available stock!",
+        icon: "error",
+      });
+    }
+  };
+
   const isLoggedIn = localStorage.getItem("token");
   //localStorage.setItem('hasAddress', true);
   const hasAddress = localStorage.getItem("hasAddress");
@@ -68,7 +80,13 @@ const ShoppingCart = () => {
                           />
                           <div
                             className="increase"
-                            onClick={() => incrementQuantity(product.productId)}
+                            onClick={() =>
+                              handleIncrement(
+                                product.productId,
+                                product.quantity,
+                                product.stock
+                              )
+                            }
                           >
                             +
                           </div>
@@ -104,7 +122,7 @@ const ShoppingCart = () => {
                       <div>Has Address</div>
                     </div>
                   ) : (
-                    <Link to="/user" style={{ color: "white" }}>
+                    <Link to="/profile" style={{ color: "white" }}>
                       <div className="box-adress">
                         <div>Confirm Shipping Address</div>
                       </div>

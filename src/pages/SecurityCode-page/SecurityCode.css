@@ -128,11 +128,16 @@
     display: flex;
     justify-content: center;
     padding-left: 0px;
+    justify-content: center;
+    padding-left: 0px;
     font-size: 18px;
     font-weight: 500;
     font-family: 'Poppins';
     border: 0.5px solid;
     cursor: pointer;
-    color: #FFFFFF;
-    background: #F54282;
+    color: #F54282;
+    background: #FFFFFF;
+    margin-left: 27px;
+    border-radius: 10px;
+    align-items: center;
 }

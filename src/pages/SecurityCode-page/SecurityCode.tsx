@@ -1,31 +1,41 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './SecurityCode.css';
 
 const SecurityCode = () => {
     const [otp, setOtp] = useState('');
     const [isCodeValid, setIsCodeValid] = useState(true);
     const navigate = useNavigate();
+    const location = useLocation();
 
-    const handleOnContinue = () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const email = urlParams.get('email');
-        const code = urlParams.get('code');
+    const handleOnContinue = (e) => {
+        e.preventDefault();
 
-        if (otp === code) {
+        const { email, code } = location.state;
+
+        console.log(email, code);
+
+        if (otp == code) {
             alert("oke");
-            navigate(`/changepassword?email=${email}&code=${code}`);
+            navigate('/changepassword', {
+                state: { email }
+            });
         } else {
             setIsCodeValid(false);
         }
     };
 
     const handleBtCancel = () => {
-        location.href = "/forgetpassword";
+        navigate("/forgetpassword");
     }
 
     const handleOnClick = () => {
-        location.href = "/";
+        navigate("/");
+    };
+
+    const handleInputChange = (e: { target: { value: string; }; }) => {
+        const value = e.target.value.replace(/\D/g, '');
+        setOtp(value);
     };
 
     return (
@@ -47,30 +57,26 @@ const SecurityCode = () => {
                 <div className="head-content">
                     <img src="/src/assets/anya.png" alt="" />
                     <div className="content">
-                        <form className="form-security" >
+                        <form className="form-security" onSubmit={handleOnContinue}>
                             <h3 className="text-code">Enter the security code</h3>
                             <div>
                                 <label>Please check your email for a message with the code. Your code has 8 characters</label>
                                 <input
                                     type="text"
-                                    id=" "
+                                    id="otp"
                                     placeholder="Insert your code here!"
                                     required
+                                    inputMode="numeric"
                                     value={otp}
-                                    onChange={(e) => setOtp(e.target.value)}
+                                    onChange={handleInputChange}
                                 />
                                 {!isCodeValid && <p className="text-msg">Your code is not valid!</p>}
                             </div>
 
 
                             <div className="two-button">
-                                <input
-                                    className="button-continue"
-                                    type="submit"
-                                    name="btAction"
-                                    value="Continue"
-                                    onClick={() => handleOnContinue()}
-                                />
+                                <button className="button-continue" type="submit">Continue</button>
+
 
                                 <input
                                     className="button-cancel"

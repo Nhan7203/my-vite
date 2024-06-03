@@ -1,16 +1,20 @@
 import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './ChangePassword.css';
 import swal from 'sweetalert';
 
 const ChangePassword = () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const email = urlParams.get('email');
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const email = location.state?.email;
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordMismatch, setPasswordMismatch] = useState(false);
 
+
     const handleOnClick = () => {
-        location.href = "/";
+        navigate("/");
     };
 
     const handleOnContinue = async (e: { preventDefault: () => void; }) => {
@@ -20,6 +24,7 @@ const ChangePassword = () => {
             setPasswordMismatch(true);
             return;
         }
+        //check data
         console.log(JSON.stringify({ email, password: newPassword }));
         try {
             const endpoint = `https://localhost:7030/api/Account/changePassword?email=${email}&password=${newPassword}`;
@@ -44,7 +49,7 @@ const ChangePassword = () => {
                     },
                 }).then((value) => {
                     if (value) {
-                        location.href = "/login";
+                        navigate("/login");
                     }
                 });
             } else {
@@ -56,7 +61,7 @@ const ChangePassword = () => {
     };
 
     const handleBtCancel = () => {
-        location.href = "/securitycode";
+        navigate("/securitycode");
     };
 
     return (
@@ -111,7 +116,7 @@ const ChangePassword = () => {
                                     type="submit"
                                     name="btAction"
                                     value="Continue"
-                                    onClick={() => handleOnContinue(e)}
+                                    onClick={(e) => handleOnContinue(e)}
                                 />
 
 
