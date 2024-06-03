@@ -11,9 +11,6 @@ const SecurityCodeRegister = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { registerValues, code: initialCode } = location.state || {};
-    console.log(initialCode)
-    console.log(registerValues)
-    console.log(otp)
 
     useEffect(() => {
         if (!registerValues || !initialCode) {
@@ -24,8 +21,6 @@ const SecurityCodeRegister = () => {
 
     const handleOnContinue = async (event: any) => {
         event.preventDefault();
-        // const urlParams = new URLSearchParams(window.location.search);
-        // const code = urlParams.get('code');
 
         if (otp == initialCode) {
             try {

@@ -36,7 +36,7 @@ const Register = () => {
     useEffect(() => {
         if (Object.keys(errors).length > 0) {
             if (errors.check) {
-                toast.error('pls fill all input', { autoClose: 500 });
+                toast.error('pls check your input', { autoClose: 500 });
             } else if (registerValues.password !== confirmPassword) {
                 toast.error('Password and confirm password do not match', { autoClose: 500 });
             } else {
