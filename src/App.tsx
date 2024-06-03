@@ -25,7 +25,8 @@ import {
   Cancelled,
   Giveback,
   Processing,
-  Processed
+  Processed,
+  SecurityCodeRegister
 
 } from "./import/import-router";
 import {
@@ -35,7 +36,7 @@ import {
   Route,
 } from "react-router-dom";
 import { CartProvider } from "./pages/Cart-page/CartContext";
-import { StickyBox, ToastContainer } from "./import/import-libary";
+import { ToastContainer } from "./import/import-libary";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
@@ -92,6 +93,7 @@ const router = createBrowserRouter(
       <Route path="/blog" element={<Blog />} />
       <Route path="/voucher" element={<Voucher />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/securityCodeRegister" element={<SecurityCodeRegister />} />
 
       <Route path="/complete" element={<Complete />} />
       <Route path="/processing" element={<Processing />} />
