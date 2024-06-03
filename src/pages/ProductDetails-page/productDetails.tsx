@@ -1,5 +1,5 @@
 import { useAllProduct, aProduct } from "../../context/ShopContext";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Navbar, Footer } from "../../import/import-router";
 import { useCart } from '../../pages/Cart-page/CartContext';
@@ -124,7 +124,7 @@ const ProductDetail = () => {
 
         </div>
       ) : (
-        <p>Loading...</p>
+        <Link to="/product"></Link>
       )}
 
 

@@ -4,7 +4,7 @@
     display: grid;
     grid-template-columns: repeat(12, 80px);
     column-gap: 20px;
-
+    
 }
 
 .container-profile .user-profile-nav {
@@ -116,11 +116,13 @@ a {
 
 .container-profile .account.active {
     display: block;
+    margin-top: 15px;
 }
 
 .container-profile .account {
-    grid-column: 4/13;
+    grid-column: 3  /13;
     background-color: #FFFFFF;
+    border-radius: 10px;
 }
 
 .container-profile .account>.main-profile {
@@ -158,19 +160,20 @@ a {
 }
 
 .container-profile .account>.main-profile>form {
-    grid-column-start: 3;
-    grid-column-end: 8;
+    grid-column-start: 1;
+    grid-column-end: 6;
 }
 
 .container-profile .account>.main-profile>form>table {
     width: 100%;
-    margin-top: 50px;
+    margin-top: 30px;
     font-family: 'Roboto Slab';
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
     line-height: 18px;
     color: #4F4A4A;
+    margin-left: 30px;
 }
 
 .container-profile .account>.main-profile>form>table tr {
@@ -202,3 +205,5 @@ a {
     color: #FFFFFF;
     cursor: pointer;
 }
+
+

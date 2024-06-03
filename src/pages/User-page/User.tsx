@@ -6,6 +6,7 @@ import StatusListOrder from "./components/StatusListOrder";
 import BoxMenuUser from "./components/BoxMenuUser";
 import "./User.css";
 import "../Admin-page//Admin.css";
+import { Link } from "../../import/import-libary";
 
 interface Order {
   orderId: number;
@@ -132,7 +133,7 @@ const User = () => {
                               }
                             >
                               <td className="column1 dynamic-content">
-                                {order.orderDate}
+                                <Link to={`/orderdetails/${order.orderId}`}>{order.orderDate}</Link>
                               </td>
                               <td className="column2 dynamic-content">
                                 {order.orderId}
@@ -160,11 +161,11 @@ const User = () => {
                                   className={`status ${
                                     order.orderStatus === "Pending"
                                       ? "yellow"
-                                      : order.orderStatus === "cancel"
+                                      : order.orderStatus === "Cancel"
                                       ? "red"
-                                      : order.orderStatus === "submitted"
+                                      : order.orderStatus === "Submitted"
                                       ? "orange"
-                                      : order.orderStatus === "completed"
+                                      : order.orderStatus === "Completed"
                                       ? "green"
                                       : ""
                                   }`}

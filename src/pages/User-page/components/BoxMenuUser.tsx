@@ -60,7 +60,7 @@ const BoxMenuUser = () => {
       <div className="box-oder-adress-voucher">
         <div className="purchased-order">
           <img src={box} alt="" />
-          <p>Purchase order</p>
+          <Link to="/user" style={{color: "#404040"}}><p>Purchase order</p></Link>
         </div>
         <div className="my-adress">
           <img src={adress} alt="" />

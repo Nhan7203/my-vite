@@ -21,15 +21,14 @@ import {
   SecurityCode,
   ChangePassword,
   Profile,
+  BlogDetails,
   Complete,
   Cancelled,
   Giveback,
   Processing,
   Processed,
-
-  SecurityCodeRegister
-
-
+  OrderDetails,
+  SecurityCodeRegister,
 } from "./import/import-router";
 import {
   createBrowserRouter,
@@ -41,8 +40,6 @@ import { CartProvider } from "./pages/Cart-page/CartContext";
 import { ToastContainer } from "./import/import-libary";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-
-
 
 // const Home = () => {
 //   return (
@@ -82,6 +79,9 @@ const router = createBrowserRouter(
       <Route path="/customer" element={<Customer />} />
       <Route path="/account" element={<Account />} />
       <Route path="/order" element={<Order />} />
+      <Route path="/orderdetails" element={<OrderDetails />}>
+        <Route path=":orderId" element={<OrderDetails />} />
+      </Route>
 
       <Route path="/forgetpassword" element={<Forgetpassword />} />
       <Route path="/securitycode" element={<SecurityCode />} />
@@ -93,6 +93,8 @@ const router = createBrowserRouter(
         <Route path=":productId" element={<ProductDetails />} />
       </Route>
       <Route path="/blog" element={<Blog />} />
+      <Route path="/blogDetails" element={<BlogDetails />} />
+
       <Route path="/voucher" element={<Voucher />} />
       <Route path="/register" element={<Register />} />
       <Route path="/securityCodeRegister" element={<SecurityCodeRegister />} />

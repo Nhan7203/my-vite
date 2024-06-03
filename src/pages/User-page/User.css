@@ -104,7 +104,6 @@
 
 .box-menu-order {
   grid-column: 3 / 13;
-
   border-radius: 10px;
   height: 435px;
   margin-top: 15px;
@@ -125,6 +124,14 @@
 }
 tbody > tr {
   background-color: #fce4ec;
+ 
+  
+}
+
+tbody > tr > td {
+  vertical-align: middle;
+  padding: 10px;
+  margin: 0 auto;
 }
 .order-show {
   padding: 0px;
@@ -178,4 +185,12 @@ tbody > tr {
   /* ... */
   overflow: auto;
   height: 370px; /* Đặt chiều cao cố định cho tbody */
+}
+
+.box-orderdeatail {
+  grid-column: 3 / 13;
+  border-radius: 10px;
+  height: 435px;
+  margin-top: 15px;
+  background-color: white;
 }
