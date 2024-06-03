@@ -26,6 +26,7 @@ import Processed from "../pages/User-page/Processed";
 import Complete from "../pages/User-page/Complete";
 import Cancelled from "../pages/User-page/Cancelled";
 import Giveback from "../pages/User-page/GiveBack";
+import SecurityCodeRegister from "../pages/Register-page/SecurityCodeRegister";
 
 
 export {
@@ -56,5 +57,8 @@ export {
   Giveback,
   Processing,
   Processed,
+
+  SecurityCodeRegister
+
 
 };

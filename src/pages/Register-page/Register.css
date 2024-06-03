@@ -151,6 +151,12 @@ header>div>.logo-mandb {
     border: 0.5px solid #a89c9c;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .form-login>div>div>label {
     margin-left: 30px;
     font-size: 16px;
