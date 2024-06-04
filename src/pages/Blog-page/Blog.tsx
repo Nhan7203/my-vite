@@ -4,8 +4,10 @@ import axios from "axios";
 import view from "../../assets/view.png";
 import { CiHeart } from "react-icons/ci";
 import "./Blog.css";
+import { Link } from "../../import/import-libary";
 
 export interface Blog {
+  blogId: number;
   title: string;
   content: string;
   author: string;
@@ -30,7 +32,7 @@ const Blog = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "https://localhost:7030/api/Blog/getAllBlogs"
+          `https://localhost:7030/api/Blog/getAllBlogs`
         );
         setBlogList(response.data);
       } catch (error) {
@@ -46,7 +48,7 @@ const Blog = () => {
 
       <div className="body-blog">
         <div>
-          {blogList.map((blog, index) => (
+          {blogList.map((blogs, index) => (
             <div
               className="box-blog"
               style={{
@@ -54,11 +56,13 @@ const Blog = () => {
               }}
             >
               <div className="element-blog">
+                <Link to={`/blogdetails/${blogs.blogId}`}>
                 <div className="box-img-blog">
-                  <img src={blog.imageUrl} className="img-blog" alt="" />
+                  <img src={blogs.imageUrl} className="img-blog" alt="" />
                 </div>
-                <div className="box-title">{blog.title}</div>
-                <div className="box-content">{blog.content}</div>
+                <div className="box-title">{blogs.title}</div>
+                <div className="box-content">{blogs.content}</div>
+                </Link>
                 <div className="box-footer-blog">
                   <div className="icon-blog">
                     
@@ -67,7 +71,7 @@ const Blog = () => {
                     
                     <CiHeart fontSize="1.5em" style={{cursor: "pointer"}}/>
                   </div>
-                  <div className="date-blog">{blog.uploadDate}</div>
+                  <div className="date-blog">{blogs.uploadDate}</div>
                 </div>
                 <div></div>
               </div>

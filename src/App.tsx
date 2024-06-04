@@ -93,7 +93,9 @@ const router = createBrowserRouter(
         <Route path=":productId" element={<ProductDetails />} />
       </Route>
       <Route path="/blog" element={<Blog />} />
-      <Route path="/blogDetails" element={<BlogDetails />} />
+      <Route path="/blogdetails" element={<BlogDetails />}>
+        <Route path=":blogId" element={<BlogDetails />} />
+      </Route>
 
       <Route path="/voucher" element={<Voucher />} />
       <Route path="/register" element={<Register />} />

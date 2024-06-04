@@ -70,7 +70,6 @@ const User = () => {
           const data = await response.json();
 
           const updatedOrderData = data.map((order: Order) => {
-            console.error(" found", order.orderId);
 
             const total = order.orderDetails.reduce(
               (acc, detail) => acc + detail.total,
