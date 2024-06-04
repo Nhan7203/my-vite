@@ -213,18 +213,6 @@ const User = () => {
 
   };
 
-  // const handleReorderOrder = (orderId: number) => {
-  //   const updatedOrderData = orderData.map((order) => {
-  //     if (order.orderId === orderId) {
-  //       return { ...order, orderStatus: "Received" };
-  //     }
-  //     return order;
-  //   });
-  //   setOrderData(updatedOrderData);
-  // };
-
-
-
   return (
     <div>
       <Navbar />
@@ -297,7 +285,7 @@ const User = () => {
                                 <span
                                   className={`status ${order.orderStatus === "Pending"
                                     ? "yellow"
-                                    : order.orderStatus === "Cancel"
+                                    : order.orderStatus === "Canceled"
                                       ? "red"
                                       : order.orderStatus === "Submitted"
                                         ? "orange"
@@ -335,7 +323,11 @@ const User = () => {
                                     >
                                       <button
                                         className="reorder-button"
+<<<<<<< nhanh-30
+                                    
+=======
 
+>>>>>>> master
                                       >
                                         Reorder
                                       </button>

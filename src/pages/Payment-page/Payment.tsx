@@ -114,6 +114,7 @@ const Payment = () => {
   //Renove token logout
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("cart");
   };
 
   return (
