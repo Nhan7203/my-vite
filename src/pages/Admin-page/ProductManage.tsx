@@ -153,7 +153,7 @@ const ProductManage = () => {
                                         </td>
 
                                         <td>
-                                            <button className="Delete"
+                                            <button className=""
 
                                             >Delete</button>
                                         </td>

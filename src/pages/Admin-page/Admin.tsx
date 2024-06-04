@@ -156,7 +156,7 @@ const Admin = () => {
 
               <div className="card-single">
                 <div>
-                  <h1>${totalProfit}</h1>
+                  <h1>${totalProfit?.toLocaleString()}</h1>
                   <span>Income</span>
                 </div>
                 <div>
@@ -179,7 +179,7 @@ const Admin = () => {
                     <div className="table-responsive">
                       <table width="100%">
                         <thead>
-                          <tr>
+                          <tr >
                             <td>Product Name</td>
                             <td style={{ transform: "translateX(-23px)" }}>
                               Quantity
@@ -191,7 +191,7 @@ const Admin = () => {
                           {allProduct
                             .slice(0, 9)
                             .map((product, index: number) => (
-                              <tr key={index}>
+                              <tr key={index} style={{backgroundColor: "white"}}>
                                 <td>{product.name}</td>
                                 <td>{product.stock}</td>
                                 <td>
