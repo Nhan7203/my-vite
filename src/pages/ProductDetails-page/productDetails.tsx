@@ -2,7 +2,7 @@ import { useAllProduct, aProduct } from "../../context/ShopContext";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Navbar, Footer } from "../../import/import-router";
-import { useCart } from '../../pages/Cart-page/CartContext';
+import { useCart } from "../../pages/Cart-page/CartContext";
 import ProductCard from "../../components/main/main-home/ProductCard";
 import adv from "/src/assets/adv.png";
 import adv1 from "/src/assets/adv1.png";
@@ -10,7 +10,6 @@ import adv2 from "/src/assets/adv2.png";
 import "./ProductDetail.css";
 
 const ProductDetail = () => {
-
   const { addToCart2 } = useCart();
   const { allProduct } = useAllProduct();
   const [noOfElement, setNoOfElement] = useState(8);
@@ -36,14 +35,12 @@ const ProductDetail = () => {
 
   const { productId } = useParams<{ productId?: string }>();
 
-
   let product: any;
   if (productId) {
     product = allProduct.find((e) => e.productId === parseInt(productId));
   }
 
-
-  const [quantity, setQuantity] = useState(1)
+  const [quantity, setQuantity] = useState(1);
 
   const handleDecrementQuantity = () => {
     if (quantity > 1) {
@@ -52,17 +49,15 @@ const ProductDetail = () => {
   };
 
   const handleIncrementQuantity = () => {
-    if (quantity < product.stock)
-      setQuantity(quantity + 1);
+    if (quantity < product.stock) setQuantity(quantity + 1);
   };
 
-
   const handleAddToCart = (product: aProduct) => {
-    addToCart2(product, quantity, 'add');
+    addToCart2(product, quantity, "add");
   };
 
   const handleBuyNow = (product: aProduct) => {
-    addToCart2(product, quantity, 'buy');
+    addToCart2(product, quantity, "buy");
     navigate("/cart");
   };
 
@@ -73,7 +68,11 @@ const ProductDetail = () => {
         <div className="body-detail">
           <div className="grid-12">
             <div className="big-image">
-              <img className="img-detail" src={product.imageProducts[0].imageUrl} alt="" />
+              <img
+                className="img-detail"
+                src={product.imageProducts[0].imageUrl}
+                alt=""
+              />
             </div>
             <div className="content-product">
               <p className="name-pro">{product.name}</p>
@@ -81,10 +80,7 @@ const ProductDetail = () => {
                 <span className="sold">Available: {product.stock}</span>
               </div>
 
-              <h3>
-                ${product.price.toLocaleString()}
-
-              </h3>
+              <h3>${product.price.toLocaleString()}</h3>
               <div className="trans-zalo">
                 <div className="img-zalo">
                   <img src="" alt="" />
@@ -110,30 +106,30 @@ const ProductDetail = () => {
               </div>
 
               <div className="button-cart">
-                <span className="add-cart" onClick={() => handleAddToCart(product)}>Add to cart</span>
-                <span className="buy-now" onClick={() => handleBuyNow(product)}>Buy now</span>
+                <span
+                  className="add-cart"
+                  onClick={() => handleAddToCart(product)}
+                >
+                  Add to cart
+                </span>
+                <span className="buy-now" onClick={() => handleBuyNow(product)}>
+                  Buy now
+                </span>
               </div>
             </div>
 
             <img className="img-1" src="" alt="" />
             <img className="img-2" src="" alt="" />
             <img className="img-3" src="" alt="" />
-
-
           </div>
-
         </div>
       ) : (
         <Link to="/product"></Link>
       )}
 
-
-
       <div className="home-product">
         <div>
-          <h4>
-            Similar Products
-          </h4>
+          <h4>Similar Products</h4>
           {slice.map((product, index) => (
             <ProductCard key={index} index={index} product={product} />
           ))}
