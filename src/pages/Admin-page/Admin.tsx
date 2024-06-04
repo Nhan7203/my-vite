@@ -66,7 +66,7 @@ const Admin = () => {
                 </a>
               </li>
               <li>
-                <a href="/product">
+                <a href="/manage-product">
                   <span className="las la-clipboard-list"></span>
                   <span>Products</span>
                 </a>
@@ -196,9 +196,8 @@ const Admin = () => {
                                 <td>{product.stock}</td>
                                 <td>
                                   <span
-                                    className={`status ${
-                                      product.isActive ? "green" : "purple"
-                                    }`}
+                                    className={`status ${product.isActive ? "green" : "purple"
+                                      }`}
                                   />
                                   {product.isActive ? "in progress" : "pending"}
                                 </td>

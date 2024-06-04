@@ -26,7 +26,10 @@ import {
   Giveback,
   Processing,
   Processed,
- 
+  ProductManage,
+  AddProduct,
+  UpdateProduct
+
 
 } from "./import/import-router";
 import {
@@ -80,12 +83,13 @@ const router = createBrowserRouter(
       <Route path="/customer" element={<Customer />} />
       <Route path="/account" element={<Account />} />
       <Route path="/order" element={<Order />} />
-
+      <Route path="/manage-product" element={<ProductManage />} />
       <Route path="/forgetpassword" element={<Forgetpassword />} />
       <Route path="/securitycode" element={<SecurityCode />} />
       <Route path="/changepassword" element={<ChangePassword />} />
-
+      <Route path="/addproduct" element={<AddProduct />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/updateproduct" element={<UpdateProduct />} />
 
       <Route path="/productDetails" element={<ProductDetails />}>
         <Route path=":productId" element={<ProductDetails />} />

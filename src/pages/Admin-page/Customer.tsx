@@ -1,6 +1,99 @@
 
+import { toast } from "react-toastify";
 import './Admin.css'
+import { useState, useEffect } from "react";
+import * as tu from "../../apiServices/getTotalUser";
+import * as au from "../../apiServices/GetAllUsers";
+import "./Admin.css";
+export interface AllUsers {
+    userId: number;
+    roleId: number;
+    email: string;
+    phoneNumber: number;
+    address: string;
+    isActive: boolean;
+    password: string;
+    name: string;
+}
+
+
 const Customer = () => {
+
+
+
+
+
+    // console.log('check empty: ', isEmptyObj);
+    const handleDelete = (user: AllUsers) => {
+        console.log('check user ', user);
+        let currentUser = allUsers;
+        currentUser = allUsers.filter(users => users.userId !== user.userId);
+        setAllUsers(currentUser);
+        toast.success(`Delete Success!`, {
+            position: "top-left",
+            autoClose: 500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
+
+    }
+    const [totalUser, setTotalUser] = useState<number>();
+    const [allUsers, setAllUsers] = useState<AllUsers[]>([]);
+    const [editUser, seteditUser] = useState<AllUsers | undefined>();
+    const handleEdit = (user: AllUsers) => {
+        let isEmptyObj = !editUser || Object.keys(editUser).length === 0;
+
+
+        //save
+        if (isEmptyObj === false && editUser?.userId === user.userId) {
+            let allUsersCopy = [...allUsers];
+            let objIndex = allUsersCopy.findIndex((item => item.userId === user.userId));
+            allUsersCopy[objIndex].address = editUser.address;
+            setAllUsers(allUsersCopy);
+            seteditUser(undefined);
+
+            toast.success(`Update Success!`, {
+                position: "top-left",
+                autoClose: 600,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+
+            return;
+        }
+        seteditUser(user);
+
+    }
+
+    let isEmptyObj = !editUser || Object.keys(editUser).length === 0;
+    console.log('check empty: ', isEmptyObj);
+    useEffect(() => {
+        const fetchData = async () => {
+            const result = await tu.getTotalUser();
+            setTotalUser(result);
+            const result2 = await au.GetAllUsers();
+            setAllUsers(result2);
+
+        };
+        fetchData();
+    }, []);
+
+    const handleOnChangeEdit = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+        if (!editUser) return;
+        const editUserCopy = { ...editUser };
+        editUserCopy.address = e.target.value;
+        seteditUser(editUserCopy);
+    }
+
     return (
         <>
             <body>
@@ -23,7 +116,7 @@ const Customer = () => {
                                     <span>Customers</span></a>
                             </li>
                             <li>
-                                <a href="/product"><span className="las la-clipboard-list"></span>
+                                <a href="/manage-product"><span className="las la-clipboard-list"></span>
                                     <span>Products</span></a>
                             </li>
                             <li>
@@ -68,12 +161,98 @@ const Customer = () => {
                     </div>
 
                     <main>
+                        <div>
+                            <table className="table-custome">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>UserID</th>
+                                        <th>FUll Name</th>
+                                        <th>RoleID</th>
+                                        <th>Password</th>
+                                        <th>Update</th>
+                                        <th>Delete</th>
+                                    </tr>
 
+                                </thead>
+                                <tbody>
+
+                                    {allUsers.map((user, index) => (
+
+                                        <tr key={user.userId}>
+                                            <td>{index + 1}</td>
+                                            <td>
+                                                <span>{user.userId}</span>
+                                            </td>
+                                            <td>
+
+                                                {isEmptyObj === true ?
+                                                    <span>{user.address}</span>
+                                                    :
+                                                    <>
+                                                        {editUser?.userId === user.userId ?
+                                                            <input type="text" name="fullName" value={editUser.address}
+                                                                onChange={handleOnChangeEdit}
+                                                            />
+                                                            :
+                                                            <span>{user.address}</span>
+                                                        }
+                                                    </>
+                                                }
+
+                                            </td>
+                                            <td>
+
+                                                {isEmptyObj === true ?
+                                                    <span>{user.roleId}</span> :
+
+                                                    <>
+                                                        {editUser?.userId === user.userId ?
+                                                            <input type="text" name="roleID" value={editUser.roleId} />
+                                                            :
+                                                            <span>{user.roleId}</span>
+                                                        }
+                                                    </>
+
+                                                }
+
+                                            </td>
+
+
+                                            <td>
+                                                <span>{user.password}</span>
+                                            </td>
+                                            <td>
+                                                <button className="Edit"
+                                                    onClick={() => handleEdit(user)}
+
+
+                                                >
+                                                    {isEmptyObj === false && editUser?.userId === user.userId
+                                                        ? 'Save' : 'Edit'
+                                                    }
+                                                </button>
+                                            </td>
+
+                                            <td>
+                                                <button className="Delete"
+                                                    onClick={() => handleDelete(user)}
+                                                >Delete</button>
+                                            </td>
+                                        </tr>
+                                    ))}
+
+
+
+                                </tbody>
+
+                            </table>
+                        </div>
 
                     </main>
-                </div>
+                </div >
 
-            </body>
+            </body >
 
 
 

@@ -23,7 +23,6 @@ export interface ImageProduct {
 
 interface ShopContextType {
   allProduct: aProduct[];
-
 }
 
 export const ShopContext = createContext<ShopContextType | undefined>(undefined);

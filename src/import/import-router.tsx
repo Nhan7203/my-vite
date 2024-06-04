@@ -20,14 +20,14 @@ import Forgetpassword from "../pages/Forgetpassword-page/Forgetpassword";
 import SecurityCode from "../pages/SecurityCode-page/SecurityCode";
 import ChangePassword from "../pages/ChangePassword-page/ChangePassword";
 import Profile from "../pages/User-page/Profile-page/Profile";
-
+import ProductManage from "../pages/Admin-page/ProductManage";
 import Processing from "../pages/User-page/Processing";
 import Processed from "../pages/User-page/Processed";
 import Complete from "../pages/User-page/Complete";
 import Cancelled from "../pages/User-page/Cancelled";
 import Giveback from "../pages/User-page/GiveBack";
-
-
+import AddProduct from "../pages/Admin-page/AddProduct";
+import UpdateProduct from "../pages/Admin-page/UpdateProduct";
 export {
   Navbar,
   Login,
@@ -56,5 +56,7 @@ export {
   Giveback,
   Processing,
   Processed,
-
+  ProductManage,
+  AddProduct,
+  UpdateProduct
 };
