@@ -28,8 +28,7 @@ const OrderDetails = () => {
   const location = useLocation();
   const { orderStatus } = location.state;
 
-  const location = useLocation();
-  const { orderStatus } = location.state;
+
 
   useEffect(() => {
     const fetchData = async () => {
