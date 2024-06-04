@@ -3,8 +3,10 @@ import view from "../../assets/view.png";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import * as searchBlogDetails from "../../apiServices/getBlogId";
+import * as searchProduct from "../../apiServices/getProductId";
 import "./Blog.css";
 import { Blog } from "./Blog";
+<<<<<<< nhanh-30
 import { useAllProduct } from "../../context/ShopContext";
 import { BsCart3 } from "../../import/import-libary";
 import { useCart } from "../Cart-page/CartContext";
@@ -13,6 +15,15 @@ const BlogDetails = () => {
   const { blogId } = useParams<{ blogId?: string }>();
   const [blogDetails, setBlogDetails] = useState<Blog | null>(null);
   const { addToCart } = useCart();
+=======
+import { aProduct } from "../../context/ShopContext";
+
+const BlogDetails = () => {
+  const { blogId } = useParams<{ blogId?: string }>();
+  console.error("blogIddddd:", blogId);
+  const [blogDetails, setBlogDetails] = useState<Blog>({});
+  const [products, setProducts] = useState<aProduct[]>([]);
+>>>>>>> master
   const navigate = useNavigate();
   const { allProduct } = useAllProduct();
 
@@ -29,7 +40,23 @@ const BlogDetails = () => {
     fetchProducts();
   }, [blogDetails, blogId, navigate]);
 
+<<<<<<< nhanh-30
   const product = blogDetails?.productId ? allProduct.find((e) => e.productId === blogDetails.productId) : null;
+=======
+  // useEffect(() => {
+  //   const fetchProducts = async () => {
+  //     const queryParams = new URLSearchParams();
+
+  //     if (blogDetails.productId != null) {
+  //       queryParams.append("", blogDetails.productId.toString());
+  //     }
+  //     const result = await searchProduct.getProductId(queryParams);
+  //     setProducts(result);
+  //     console.error("cc", result);
+  //   };
+  //   fetchProducts();
+  // }, [blogDetails]);
+>>>>>>> master
 
   return (
     <div>
@@ -55,6 +82,7 @@ const BlogDetails = () => {
             </div>
             )}
           </div>
+<<<<<<< nhanh-30
           {product ? (
             <div className="box-right-blogdetails">
               <div key={product.productId} className="product-card">
@@ -87,6 +115,18 @@ const BlogDetails = () => {
           ) : (
             <Link to="/blog"></Link>
           )}
+=======
+          {/* <div className="box-right-blogdetails">
+            {products.map((product) => (
+              <div key={product.productId} className="product-card">
+                <img src={product.imageProducts[0]} alt={product.name} />
+                <h3>{product.name}</h3>
+                <p>{product.description}</p>
+                <p>Giá: {product.price}</p>
+              </div>
+            ))}
+          </div> */}
+>>>>>>> master
         </div>
       </div>
       <Footer />

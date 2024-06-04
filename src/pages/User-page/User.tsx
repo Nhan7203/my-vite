@@ -95,6 +95,7 @@ const User = () => {
 
   const handleCancelOrder = (orderId: number) => {
     // Ví dụ, gọi API để hủy đơn hàng và cập nhật lại danh sách đơn hàng
+
     try {
 
       if (!token) {
@@ -141,10 +142,20 @@ const User = () => {
     } catch (error) {
       console.error("Error canceling order:", error);
     }
+
+    const updatedOrderData = orderData.map((order) => {
+      if (order.orderId === orderId) {
+        return { ...order, orderStatus: "Cancel" };
+      }
+      return order;
+    });
+    setOrderData(updatedOrderData);
+
   };
 
 
   const handleOrderReceived = (orderId: number) => {
+
     try {
 
       if (!token) {
@@ -191,6 +202,15 @@ const User = () => {
     } catch (error) {
       console.error("Error canceling order:", error);
     }
+
+    const updatedOrderData = orderData.map((order) => {
+      if (order.orderId === orderId) {
+        return { ...order, orderStatus: "Completed" };
+      }
+      return order;
+    });
+    setOrderData(updatedOrderData);
+
   };
 
   return (
@@ -234,7 +254,9 @@ const User = () => {
                             >
                               <td className="column1 dynamic-content">
                                 <Link to={`/orderdetails/${order.orderId}`}
+
                                   state={{ orderStatus: order.orderStatus }}>
+
                                   {order.orderDate}
                                 </Link>
                               </td>
@@ -301,7 +323,11 @@ const User = () => {
                                     >
                                       <button
                                         className="reorder-button"
+<<<<<<< nhanh-30
                                     
+=======
+
+>>>>>>> master
                                       >
                                         Reorder
                                       </button>
