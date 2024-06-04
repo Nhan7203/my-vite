@@ -9,6 +9,7 @@ import { aProduct } from "../../context/ShopContext";
 import { useCart } from "../Cart-page/CartContext";
 import swal from "sweetalert";
 
+
 export interface OrderDetail {
   productId: number;
   quantity: number;
@@ -23,6 +24,9 @@ const OrderDetails = () => {
   const [products, setProducts] = useState<aProduct[]>([]);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+
+  const location = useLocation();
+  const { orderStatus } = location.state;
 
   const location = useLocation();
   const { orderStatus } = location.state;
@@ -61,6 +65,7 @@ const OrderDetails = () => {
   const handleAddToCart = (product: aProduct, quantity: number) => {
     addToCart2(product, quantity, "add");
   };
+
 
   const handleCancelOrder = async () => {
     try {
@@ -168,6 +173,7 @@ const OrderDetails = () => {
 
 
 
+
   return (
     <div>
       <Navbar />
@@ -182,6 +188,16 @@ const OrderDetails = () => {
                 <li className="quantity">Quantity</li>
                 <li className="total-amount">Total amount</li>
               </ul>
+              {orderStatus === "Pending" && (
+                <div className="add-product">
+                  <button>Cancel</button>
+                </div>
+              )}
+              {orderStatus === "Submitted" && (
+                <div className="add-product">
+                  <button>Received</button>
+                </div>
+              )}
             </div>
             <div
               style={{

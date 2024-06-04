@@ -216,10 +216,12 @@ tbody > tr > td {
     color: #ffffff;
     transform: translateY(-2px);
   }
+
   
   .add-product{
     display: flex;
     justify-content: flex-end;
   }
   
+
 }
