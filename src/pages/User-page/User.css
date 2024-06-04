@@ -194,3 +194,26 @@ tbody > tr > td {
   margin-top: 15px;
   background-color: white;
 }
+
+.add-product > button {
+  height: 35px;
+  width: 100px;
+  margin: 35px 0;
+  border-radius: 5px;
+  border: 2px solid #ff469e;
+  font-weight: 800;
+  font-family: "Poppins";
+  background-color: #ffffff;
+  cursor: pointer;
+  color: #ff469e;
+  text-transform: uppercase;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition-duration: 500ms;
+  margin-left: 20px;
+  &:hover {
+    background-color: #ff469e;
+    color: #ffffff;
+    transform: translateY(-2px);
+  }
+}

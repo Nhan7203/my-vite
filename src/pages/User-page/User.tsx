@@ -70,7 +70,6 @@ const User = () => {
           const data = await response.json();
 
           const updatedOrderData = data.map((order: Order) => {
-
             const total = order.orderDetails.reduce(
               (acc, detail) => acc + detail.total,
               0
@@ -92,6 +91,40 @@ const User = () => {
 
     fetchOrderData();
   }, []);
+
+  const handleCancelOrder = (orderId: number) => {
+    // Ví dụ, gọi API để hủy đơn hàng và cập nhật lại danh sách đơn hàng
+    const updatedOrderData = orderData.map((order) => {
+      if (order.orderId === orderId) {
+        return { ...order, orderStatus: "Cancel" };
+      }
+      return order;
+    });
+    setOrderData(updatedOrderData);
+  };
+
+
+  const handleOrderReceived = (orderId: number) => {
+    const updatedOrderData = orderData.map((order) => {
+      if (order.orderId === orderId) {
+        return { ...order, orderStatus: "Completed" };
+      }
+      return order;
+    });
+    setOrderData(updatedOrderData);
+  };
+
+  // const handleReorderOrder = (orderId: number) => {
+  //   const updatedOrderData = orderData.map((order) => {
+  //     if (order.orderId === orderId) {
+  //       return { ...order, orderStatus: "Received" };
+  //     }
+  //     return order;
+  //   });
+  //   setOrderData(updatedOrderData);
+  // };
+
+  
 
   return (
     <div>
@@ -119,6 +152,7 @@ const User = () => {
                             <th className="column5">Shipping Method</th>
                             <th className="column6">Total</th>
                             <th className="column7">Status</th>
+                            <th className="column8">Actions</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -132,7 +166,10 @@ const User = () => {
                               }
                             >
                               <td className="column1 dynamic-content">
-                                <Link to={`/orderdetails/${order.orderId}`}>{order.orderDate}</Link>
+                                <Link to={`/orderdetails/${order.orderId}`}
+                                 state={{ orderStatus: order.orderStatus }}>
+                                  {order.orderDate}
+                                </Link>
                               </td>
                               <td className="column2 dynamic-content">
                                 {order.orderId}
@@ -170,6 +207,43 @@ const User = () => {
                                   }`}
                                 />
                                 {order.orderStatus}
+                              </td>
+                              <td className="column8 dynamic-content">
+                                {order.orderStatus === "Pending" && (
+                                  <button
+                                    className="cancel-button"
+                                    onClick={() =>
+                                      handleCancelOrder(order.orderId)
+                                    }
+                                  >
+                                    Cancel
+                                  </button>
+                                )}
+                                {order.orderStatus === "Submitted" && (
+                                  <>
+                                    <button
+                                      className="received-button"
+                                      onClick={() =>
+                                        handleOrderReceived(order.orderId)
+                                      }
+                                    >
+                                      Received
+                                    </button>
+                                    <Link
+                                      to={`/orderdetails/${order.orderId}`}
+                                      state={{ orderStatus: order.orderStatus }}
+                                    >
+                                      <button
+                                        className="reorder-button"
+                                        // onClick={() =>
+                                        //   handleReorderOrder(order.orderId)
+                                        // }
+                                      >
+                                        Reorder
+                                      </button>
+                                    </Link>
+                                  </>
+                                )}
                               </td>
                             </tr>
                           ))}

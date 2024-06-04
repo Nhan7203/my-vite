@@ -177,7 +177,7 @@ const Admin = () => {
 
                   <div className="card-body">
                     <div className="table-responsive">
-                      <table width="100%">
+                      <table width="100%" >
                         <thead>
                           <tr>
                             <td>Product Name</td>
@@ -187,11 +187,11 @@ const Admin = () => {
                             <td style={{ transform: "translateX(30px)" }}>Status</td>
                           </tr>
                         </thead>
-                        <tbody>
+                        <tbody >
                           {allProduct
                             .slice(0, 9)
                             .map((product, index: number) => (
-                              <tr key={index}>
+                              <tr key={index} style={{backgroundColor: "white"}}>
                                 <td>{product.name}</td>
                                 <td>{product.stock}</td>
                                 <td>

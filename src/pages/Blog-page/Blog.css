@@ -95,12 +95,13 @@
 
 .body-blogdetails {
   width: 100%;
-  height: 750px;
+  height: 880px;
   background-color: #f5f7fc;
 }
 
 .body-blogdetails > div {
   width: 1180px;
+  height: 100%;
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(12, 80px);
@@ -109,7 +110,7 @@
 }
 
 .box-left-blogdetails {
-  height: 750px;
+  height: 100%;
   background-color: white;
   border-radius: 20px;
   margin-top: 30px;
@@ -153,6 +154,16 @@
 }
 .img-blogdetails > img {
   border-radius: 20px;
+  height: 300px;
 }
 
 
+.box-right-blogdetails {
+  height: 250px;
+  background-color: white;
+  border-radius: 20px;
+  margin-top: 30px;
+  grid-column: 11 / 13;
+  padding: 10px ;
+  font-family: "Arial";
+}

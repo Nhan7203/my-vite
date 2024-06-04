@@ -1,10 +1,11 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Navbar, Footer } from "../../import/import-router";
 import BoxMenuUser from "./components/BoxMenuUser";
 import { useEffect, useState } from "react";
 import * as searchOrderDetails from "../../apiServices/getOrderDetails";
 import * as searchProduct from "../../apiServices/getProductId";
 import { aProduct } from "../../context/ShopContext";
+import { useCart } from "../Cart-page/CartContext";
 export interface OrderDetail {
   productId: number;
   quantity: number;
@@ -17,6 +18,9 @@ const OrderDetails = () => {
   const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([]);
   const [products, setProducts] = useState<aProduct[]>([]);
   const navigate = useNavigate();
+
+  const location = useLocation();
+  const { orderStatus } = location.state;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,6 +53,12 @@ const OrderDetails = () => {
     fetchProducts();
   }, [orderDetails]);
 
+  const { addToCart2 } = useCart();
+
+  const handleAddToCart = (product: aProduct, quantity: number) => {
+    addToCart2(product, quantity, "add");
+  };
+
   return (
     <div>
       <Navbar />
@@ -63,8 +73,24 @@ const OrderDetails = () => {
                 <li className="quantity">Quantity</li>
                 <li className="total-amount">Total amount</li>
               </ul>
+              {orderStatus === "Pending" && (
+                <div className="add-product">
+                  <button>Cancel</button>
+                </div>
+              )}
+              {orderStatus === "Submitted" && (
+                <div className="add-product">
+                  <button>Received</button>
+                </div>
+              )}
             </div>
-            <div style={{ overflow: "auto", height: "355px", borderTop: "1px solid #eaeaea" }}>
+            <div
+              style={{
+                overflow: "auto",
+                height: "355px",
+                borderTop: "1px solid #eaeaea",
+              }}
+            >
               {orderDetails.map((orderDetail) => {
                 const product = products.find(
                   (p) => p.productId === orderDetail.productId
@@ -88,6 +114,19 @@ const OrderDetails = () => {
                         {`${orderDetail.quantity}`}
                       </div>
                       <div className="money">${orderDetail.total}</div>
+                      {orderStatus === "Submitted" && (
+                        <div className="add-product">
+                          {product && (
+                            <button
+                              onClick={() =>
+                                handleAddToCart(product, orderDetail.quantity)
+                              }
+                            >
+                              add
+                            </button>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                 );
