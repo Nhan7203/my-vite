@@ -27,6 +27,7 @@ interface Order {
 
 const User = () => {
   const [orderData, setOrderData] = useState<Order[]>([]);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const fetchOrderData = async () => {
@@ -57,7 +58,7 @@ const User = () => {
         const decodedToken: any = jwtDecode(token);
         const userIdIdentifier =
           decodedToken[
-            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
           ];
 
         const response = await fetch(
@@ -94,6 +95,54 @@ const User = () => {
 
   const handleCancelOrder = (orderId: number) => {
     // Ví dụ, gọi API để hủy đơn hàng và cập nhật lại danh sách đơn hàng
+
+    try {
+
+      if (!token) {
+        console.error("Token not found");
+        return;
+      }
+
+      const decodedToken: any = jwtDecode(token);
+
+      const userIdIdentifier =
+        decodedToken[
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        ];
+
+      const userId = userIdIdentifier;
+
+      swal({
+        title: "This can not be undo!",
+        text: "You are about to cancel the order!",
+        icon: "warning",
+        buttons: ["Cancel", "Confirm"],
+        dangerMode: true,
+      }).then(async (confirmDelete) => {
+        if (confirmDelete) {
+          const response = await fetch(
+            `https://localhost:7030/api/User/cancelOrder?userId=${userId}&orderId=${orderId}`,
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (response.ok) {
+            swal("Success!", "Order was canceled!", "success");
+            const data = await response.json();
+            setOrderData(data);
+          } else {
+            throw new Error("Failed to cancel order");
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Error canceling order:", error);
+    }
+
     const updatedOrderData = orderData.map((order) => {
       if (order.orderId === orderId) {
         return { ...order, orderStatus: "Cancel" };
@@ -101,10 +150,59 @@ const User = () => {
       return order;
     });
     setOrderData(updatedOrderData);
+
   };
 
 
   const handleOrderReceived = (orderId: number) => {
+
+    try {
+
+      if (!token) {
+        console.error("Token not found");
+        return;
+      }
+
+      const decodedToken: any = jwtDecode(token);
+
+      const userIdIdentifier =
+        decodedToken[
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        ];
+
+      const userId = userIdIdentifier;
+
+      swal({
+        title: "Recieved The Order!",
+        text: `Confirm payment of $${orderData.find((order) => order.orderId === orderId)?.total.toLocaleString()} to the seller`,
+        icon: "warning",
+        buttons: ["Cancel", "Confirm"],
+        dangerMode: true,
+      }).then(async (confirmDelete) => {
+        if (confirmDelete) {
+          const response = await fetch(
+            `https://localhost:7030/api/User/completeOrder?userId=${userId}&orderId=${orderId}`,
+            {
+              method: "PUT",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (response.ok) {
+            swal("Success!", "Thanks for shopping at M&B", "success");
+            const data = await response.json();
+            setOrderData(data);
+          } else {
+            throw new Error("Failed to cancel order");
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Error canceling order:", error);
+    }
+
     const updatedOrderData = orderData.map((order) => {
       if (order.orderId === orderId) {
         return { ...order, orderStatus: "Completed" };
@@ -112,6 +210,7 @@ const User = () => {
       return order;
     });
     setOrderData(updatedOrderData);
+
   };
 
   // const handleReorderOrder = (orderId: number) => {
@@ -124,7 +223,7 @@ const User = () => {
   //   setOrderData(updatedOrderData);
   // };
 
-  
+
 
   return (
     <div>
@@ -167,7 +266,9 @@ const User = () => {
                             >
                               <td className="column1 dynamic-content">
                                 <Link to={`/orderdetails/${order.orderId}`}
-                                 state={{ orderStatus: order.orderStatus }}>
+
+                                  state={{ orderStatus: order.orderStatus }}>
+
                                   {order.orderDate}
                                 </Link>
                               </td>
@@ -194,17 +295,16 @@ const User = () => {
                               </td>
                               <td className="column7 dynamic-content">
                                 <span
-                                  className={`status ${
-                                    order.orderStatus === "Pending"
-                                      ? "yellow"
-                                      : order.orderStatus === "Cancel"
+                                  className={`status ${order.orderStatus === "Pending"
+                                    ? "yellow"
+                                    : order.orderStatus === "Cancel"
                                       ? "red"
                                       : order.orderStatus === "Submitted"
-                                      ? "orange"
-                                      : order.orderStatus === "Completed"
-                                      ? "green"
-                                      : ""
-                                  }`}
+                                        ? "orange"
+                                        : order.orderStatus === "Completed"
+                                          ? "green"
+                                          : ""
+                                    }`}
                                 />
                                 {order.orderStatus}
                               </td>
@@ -235,9 +335,7 @@ const User = () => {
                                     >
                                       <button
                                         className="reorder-button"
-                                        // onClick={() =>
-                                        //   handleReorderOrder(order.orderId)
-                                        // }
+
                                       >
                                         Reorder
                                       </button>

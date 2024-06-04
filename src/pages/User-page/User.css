@@ -196,9 +196,9 @@ tbody > tr > td {
 }
 
 .add-product > button {
-  height: 35px;
+  margin: 20px;
+  height: 45px;
   width: 100px;
-  margin: 35px 0;
   border-radius: 5px;
   border: 2px solid #ff469e;
   font-weight: 800;
@@ -216,4 +216,12 @@ tbody > tr > td {
     color: #ffffff;
     transform: translateY(-2px);
   }
+
+  
+  .add-product{
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+
 }
