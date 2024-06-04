@@ -1,10 +1,13 @@
 import { Navbar, Footer } from "../../import/import-router";
 import { useState, useEffect } from "react";
-import axios from 'axios';
+import axios from "axios";
+import view from "../../assets/view.png";
+import { CiHeart } from "react-icons/ci";
 import "./Blog.css";
-
+import { Link } from "../../import/import-libary";
 
 export interface Blog {
+  blogId: number;
   title: string;
   content: string;
   author: string;
@@ -22,17 +25,18 @@ const getGridColumn = (index: number) => {
 };
 
 const Blog = () => {
-
   const [blogList, setBlogList] = useState<Blog[]>([]);
 
   //Get API blog
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://localhost:7030/api/Blog/getAllBlogs');
+        const response = await axios.get(
+          `https://localhost:7030/api/Blog/getAllBlogs`
+        );
         setBlogList(response.data);
       } catch (error) {
-        console.error('Error fetching blogs:', error);
+        console.error("Error fetching blogs:", error);
       }
     };
     fetchData();
@@ -44,7 +48,7 @@ const Blog = () => {
 
       <div className="body-blog">
         <div>
-          {blogList.map((blog, index) => (
+          {blogList.map((blogs, index) => (
             <div
               className="box-blog"
               style={{
@@ -52,12 +56,24 @@ const Blog = () => {
               }}
             >
               <div className="element-blog">
-                <img src={blog.imageUrl} className="img-card" alt="" />
-                <div>{blog.title}</div>
-                <div>
-                  <p>icon View</p>
-                  <p>MM/DD/YY</p>
+                <Link to={`/blogdetails/${blogs.blogId}`}>
+                <div className="box-img-blog">
+                  <img src={blogs.imageUrl} className="img-blog" alt="" />
                 </div>
+                <div className="box-title">{blogs.title}</div>
+                <div className="box-content">{blogs.content}</div>
+                </Link>
+                <div className="box-footer-blog">
+                  <div className="icon-blog">
+                    
+                      <img src={view} className="view" alt="view" />
+                      <div>0</div>
+                    
+                    <CiHeart fontSize="1.5em" style={{cursor: "pointer"}}/>
+                  </div>
+                  <div className="date-blog">{blogs.uploadDate}</div>
+                </div>
+                <div></div>
               </div>
             </div>
           ))}

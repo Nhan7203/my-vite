@@ -11,6 +11,7 @@ import by from "../../assets/search-empty.png";
 import { MdNavigateBefore, MdNavigateNext } from "../../import/import-libary";
 import "./Product.css";
 import React, { useRef } from "react";
+
 export interface Brand {
   brandId: number;
   name: string;

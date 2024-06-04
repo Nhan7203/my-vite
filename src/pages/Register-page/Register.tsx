@@ -1,75 +1,117 @@
-import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import './Register.css';
+import RegisterVallidation, { IRegisterValues } from './RegisterVallidation';
+import { useEffect, useState } from 'react';
+import swal from 'sweetalert';
+import emailjs from 'emailjs-com';
 
 const Register = () => {
-    const [usermail, setUsermail] = useState('');
-    const [username, setUsername] = useState('');
-    const [userphone, setUserphone] = useState('');
-    const [useradress, setUseradress] = useState('');
-    const [password, setPassword] = useState('');
+    const [registerValues, setRegisterValue] = useState({
+        email: "",
+        password: "",
+        name: "",
+        phoneNumber: "",
+        address: ""
+    })
+    const [errors, setErrors] = useState({} as IRegisterValues)
     const [confirmPassword, setConfirmPassword] = useState('');
-
-    const handleUsermailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setUsermail(event.target.value);
-    };
-
-    const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setUsername(event.target.value);
-    };
-    
-    const handleUserphoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setUserphone(event.target.value);
-    };
-
-    const handleUseradressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setUseradress(event.target.value);
-    };
-
-    const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setPassword(event.target.value);
-    };
+    const navigate = useNavigate();
 
     const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setConfirmPassword(event.target.value);
     };
 
-    const handleRegistration = async () => {
-        if (!usermail || !username || !userphone || !useradress || !password || !confirmPassword) {
+    function handleInput(event: any) {
+        const newObj = { ...registerValues, [event.target.name]: event.target.value }
+        setRegisterValue(newObj)
+    }
 
-            toast.error('Please fill in all the fields', {
-                autoClose: 500,
-              });
-            return;
-        }
+    const handleRegistration = async (event: any) => {
+        event.preventDefault();
+        setErrors(RegisterVallidation(registerValues))
+    };
 
-        if (password !== confirmPassword) {
-
-            toast.error('Password and confirm password do not match');
-            return;
-        }
-
-        try {
-
-            const response = await axios.post('https://localhost:7030/api/Account/Register', {
-                email: usermail,
-                name: username,
-                phone: userphone,
-                adress: useradress,
-                password: password,
-            });
-
-            if (response.status === 200) {
-                toast.done('Registration successful');
-                window.location.href = '/login';
+    useEffect(() => {
+        if (Object.keys(errors).length > 0) {
+            if (errors.check) {
+                toast.error('pls check your input', { autoClose: 500 });
+            } else if (registerValues.password !== confirmPassword) {
+                toast.error('Password and confirm password do not match', { autoClose: 500 });
+            } else {
+                registerUser();
             }
+        }
+    }, [errors]);
 
+    const registerUser = async () => {
+        try {
+            fetch(`https://localhost:7030/api/Account/checkMail?email=${encodeURIComponent(registerValues.email)}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }).then((response) => {
+                if (response.ok) {
+                    swal({
+                        title: "Email Sent!",
+                        text: "We have sent you an Email if this Email was linked with your account!",
+                        icon: "success",
+                        buttons: {
+                            ok: {
+                                text: "OK",
+                                value: true,
+                                className: "swal-ok-button",
+                            }
+                        },
+                    }).then((value) => {
+                        if (value) {
+                            if (response.ok) {
+                                const code = Math.floor(10000000 + Math.random() * 90000000);
+    
+    
+                                const templateParams = {
+                                    from_name: 'MnB Shop <no-reply@mnbshop.com>',
+                                    to_email: registerValues.email, // Change the property name to 'to_email'
+                                    subject: 'Send mail',
+                                    code: code,
+                                };
+    
+                                emailjs
+                                    .send(
+                                        'service_4j0f6f9', // Replace with your EmailJS service ID
+                                        'template_pyes21y', // Replace with your EmailJS template ID
+                                        templateParams,
+                                        'Fm8U5RN0vDmjsIl4S' // Replace with your EmailJS user ID
+                                    )
+                                    .then(() => {
+                                        navigate('/securityCodeRegister', { state: { registerValues, code } });
+                                    })
+                                    .catch((error) => {
+                                        console.log(error);
+    
+                                    });
+                            }
+                        }
+                    });
+                } else {
+                    swal({
+                        title: "registered email!!!",
+                        text: "Email has been registered, you can log in",
+                        icon: "error",
+                        buttons: {
+                            ok: {
+                                text: "OK",
+                                value: true,
+                                className: "swal-ok-button",
+                            }
+                        },
+                    })
+                }
+            })
         } catch (error) {
-
-            toast.error('Registration failed');
+            toast.error('some request fail');
             console.error(error);
         }
     };
@@ -99,60 +141,65 @@ const Register = () => {
                         <div className="form-login">
                             <h3 className="text-welcome">Register</h3>
                             <div className='g'>
-                            <div>
-                                <label>Email</label>
-                                <input
-                                    type="text"
-                                    name="txtUserMail"
-                                    value={usermail}
-                                    onChange={handleUsermailChange}
-                                />
-                            </div>
-                            <div>
-                                <label>Name</label>
-                                <input
-                                    type="text"
-                                    name="txtUserName"
-                                    value={username}
-                                    onChange={handleUsernameChange}
-                                />
-                            </div>
-                            <div>
-                                <label>Phone</label>
-                                <input
-                                    type="password"
-                                    name="txtUserPhone"
-                                    value={userphone}
-                                    onChange={handleUserphoneChange}
-                                />
-                            </div>
-                            <div>
-                                <label>Adress</label>
-                                <input
-                                    type="password"
-                                    name="txtAdress"
-                                    value={useradress}
-                                    onChange={handleUseradressChange}
-                                />
-                            </div>
-                            <div>
-                                <label>Password</label>
-                                <input
-                                    type="password"
-                                    name="txtPassword"
-                                    value={password}
-                                    onChange={handlePasswordChange}
-                                />
-                            </div>
-                            <div>
-                                <label>Confirm Password</label>
-                                <input
-                                    type="password"
-                                    name="txtConfirmPassword"
-                                    value={confirmPassword}
-                                    onChange={handleConfirmPasswordChange}
-                                />
-                            </div>
+                                <div>
+                                    <label>Email</label>
+                                    <input
+                                        type="text"
+                                        name="email"
+                                        value={registerValues.email}
+                                        onChange={handleInput}
+                                    />
+                                    {errors.email && <p style={{ color: "red", marginLeft: "30px" }}>{errors.email}</p>}
+                                </div>
+                                <div>
+                                    <label>Name</label>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        value={registerValues.name}
+                                        onChange={handleInput}
+                                    />
+                                    {errors.name && <p style={{ color: "red", marginLeft: "30px" }}>{errors.name}</p>}
+                                </div>
+                                <div>
+                                    <label>Phone</label>
+                                    <input
+                                        type="number"
+                                        name="phoneNumber"
+                                        value={registerValues.phoneNumber}
+                                        onChange={handleInput}
+                                    />
+                                    {errors.phoneNumber && <p style={{ color: "red", marginLeft: "30px" }}>{errors.phoneNumber}</p>}
+                                </div>
+                                <div>
+                                    <label>Adress</label>
+                                    <input
+                                        type="text"
+                                        name="address"
+                                        value={registerValues.address}
+                                        onChange={handleInput}
+                                    />
+                                    {errors.address && <p style={{ color: "red", marginLeft: "30px" }}>{errors.address}</p>}
+                                </div>
+                                <div>
+                                    <label>Password</label>
+                                    <input
+                                        type="password"
+                                        name="password"
+                                        value={registerValues.password}
+                                        onChange={handleInput}
+                                    />
+                                    {errors.password && <p style={{ color: "red", marginLeft: "30px" }}>{errors.password}</p>}
+                                </div>
+                                <div>
+                                    <label>Confirm Password</label>
+                                    <input
+                                        type="password"
+                                        name="confirmPassword"
+                                        value={confirmPassword}
+                                        onChange={handleConfirmPasswordChange}
+                                    />
+                                </div>
                             </div>
                             <input
                                 className="button-register"

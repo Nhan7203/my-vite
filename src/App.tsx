@@ -21,6 +21,7 @@ import {
   SecurityCode,
   ChangePassword,
   Profile,
+  BlogDetails,
   Complete,
   Cancelled,
   Giveback,
@@ -28,8 +29,9 @@ import {
   Processed,
   ProductManage,
   AddProduct,
-  UpdateProduct
-
+  UpdateProduct,
+  OrderDetails,
+  SecurityCodeRegister,
 
 } from "./import/import-router";
 import {
@@ -39,11 +41,9 @@ import {
   Route,
 } from "react-router-dom";
 import { CartProvider } from "./pages/Cart-page/CartContext";
-import { StickyBox, ToastContainer } from "./import/import-libary";
+import { ToastContainer } from "./import/import-libary";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-
-
 
 // const Home = () => {
 //   return (
@@ -83,7 +83,13 @@ const router = createBrowserRouter(
       <Route path="/customer" element={<Customer />} />
       <Route path="/account" element={<Account />} />
       <Route path="/order" element={<Order />} />
+
       <Route path="/manage-product" element={<ProductManage />} />
+
+      <Route path="/orderdetails" element={<OrderDetails />}>
+        <Route path=":orderId" element={<OrderDetails />} />
+      </Route>
+
       <Route path="/forgetpassword" element={<Forgetpassword />} />
       <Route path="/securitycode" element={<SecurityCode />} />
       <Route path="/changepassword" element={<ChangePassword />} />
@@ -95,8 +101,13 @@ const router = createBrowserRouter(
         <Route path=":productId" element={<ProductDetails />} />
       </Route>
       <Route path="/blog" element={<Blog />} />
+      <Route path="/blogdetails" element={<BlogDetails />}>
+        <Route path=":blogId" element={<BlogDetails />} />
+      </Route>
+
       <Route path="/voucher" element={<Voucher />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/securityCodeRegister" element={<SecurityCodeRegister />} />
 
       <Route path="/complete" element={<Complete />} />
       <Route path="/processing" element={<Processing />} />

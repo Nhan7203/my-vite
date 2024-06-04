@@ -131,14 +131,14 @@ const Profile = () => {
             <p>Manage profile information for account security</p>
             <div></div>
             <form onSubmit={handleSubmit}>
-              <table>
-                <tbody>
-                  <tr>
+              <table >
+                <tbody >
+                  <tr style={{background: "white"}}>
                     <td>Email</td>
                     <td>{userToken.Email}</td>
                   </tr>
 
-                  <tr>
+                  <tr style={{background: "white"}}>
                     <td>Full name</td>
                     <td>
                       <input
@@ -150,7 +150,7 @@ const Profile = () => {
                     </td>
                   </tr>
 
-                  <tr>
+                  <tr style={{background: "white"}}>
                     <td>Phone number</td>
                     <td>
                       <input
@@ -162,7 +162,7 @@ const Profile = () => {
                     </td>
                   </tr>
 
-                  <tr>
+                  <tr style={{background: "white"}}>
                     <td>Address</td>
                     <td>
                       <input
@@ -174,7 +174,7 @@ const Profile = () => {
                     </td>
                   </tr>
 
-                  <tr>
+                  <tr style={{background: "white"}}>
                     <td></td>
                     <td>
                       <input type="submit" name="btAction" value="Save" />

@@ -16,11 +16,13 @@ import User from "../pages/User-page/User";
 import Customer from "../pages/Admin-page/Customer";
 import Account from "../pages/Admin-page/Account";
 import Order from "../pages/Admin-page/Order-admin";
+import OrderDetails from "../pages/User-page/OrderDetails";
 import Forgetpassword from "../pages/Forgetpassword-page/Forgetpassword";
 import SecurityCode from "../pages/SecurityCode-page/SecurityCode";
 import ChangePassword from "../pages/ChangePassword-page/ChangePassword";
 import Profile from "../pages/User-page/Profile-page/Profile";
 import ProductManage from "../pages/Admin-page/ProductManage";
+import BlogDetails from "../pages/Blog-page/BlogDetails";
 import Processing from "../pages/User-page/Processing";
 import Processed from "../pages/User-page/Processed";
 import Complete from "../pages/User-page/Complete";
@@ -28,6 +30,7 @@ import Cancelled from "../pages/User-page/Cancelled";
 import Giveback from "../pages/User-page/GiveBack";
 import AddProduct from "../pages/Admin-page/AddProduct";
 import UpdateProduct from "../pages/Admin-page/UpdateProduct";
+import SecurityCodeRegister from "../pages/Register-page/SecurityCodeRegister";
 export {
   Navbar,
   Login,
@@ -58,5 +61,8 @@ export {
   Processed,
   ProductManage,
   AddProduct,
-  UpdateProduct
+  UpdateProduct,
+  OrderDetails,
+  SecurityCodeRegister,
+  BlogDetails
 };
