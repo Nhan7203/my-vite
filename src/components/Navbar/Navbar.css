@@ -272,3 +272,12 @@ a.white {
   margin-right: 10px;
   cursor: pointer;
 }
+
+.unread {
+  background-color: pink;
+}
+
+.unread:hover {
+  background-color: white;
+  cursor: pointer;
+}
