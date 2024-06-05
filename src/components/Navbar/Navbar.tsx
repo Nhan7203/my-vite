@@ -32,33 +32,33 @@ const Navbar = () => {
   const [cartCount, setCartCount] = useState(0);
   const { cart } = useCart();
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [showNotification, setShowNotification] = useState(false);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-
     if (token) {
       const decodedToken: any = jwtDecode(token);
 
       const userIdIdentifier =
         decodedToken[
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
         ];
 
       const userId = userIdIdentifier;
       const apiUrl = `https://localhost:7030/api/Notification/getAllNotisByUser?userId=${userId}`;
 
       fetch(apiUrl)
-        .then(response => {
+        .then((response) => {
           if (response.ok) {
             return response.json();
           } else {
             throw new Error("Error retrieving notifications");
           }
         })
-        .then(data => {
+        .then((data) => {
           setNotifications(data);
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error retrieving notifications:", error);
         });
     }
@@ -66,37 +66,46 @@ const Navbar = () => {
 
   const deleteNotification = async (notificationId: number) => {
     try {
-      await fetch(`https://localhost:7030/api/Notification/deleteOneNotification?notificationId=${notificationId}`, {
-        method: 'DELETE'
-      });
+      await fetch(
+        `https://localhost:7030/api/Notification/deleteOneNotification?notificationId=${notificationId}`,
+        {
+          method: "DELETE",
+        }
+      );
 
-      setNotifications(notifications.filter(notification => notification.notificationId !== notificationId));
+      setNotifications(
+        notifications.filter(
+          (notification) => notification.notificationId !== notificationId
+        )
+      );
     } catch (error) {
-      console.error('Error deleting notification:', error);
+      console.error("Error deleting notification:", error);
     }
   };
 
   const deleteAllNotifications = async () => {
-
     try {
       if (token) {
         const decodedToken: any = jwtDecode(token);
 
         const userIdIdentifier =
           decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
           ];
 
         const userId = userIdIdentifier;
 
-        await fetch(`https://localhost:7030/api/Notification/deleteAllNotificationsByUser?userId=${userId}`, {
-          method: 'DELETE'
-        });
+        await fetch(
+          `https://localhost:7030/api/Notification/deleteAllNotificationsByUser?userId=${userId}`,
+          {
+            method: "DELETE",
+          }
+        );
 
         setNotifications([]);
       }
     } catch (error) {
-      console.error('Error deleting notifications:', error);
+      console.error("Error deleting notifications:", error);
     }
   };
 
@@ -129,8 +138,6 @@ const Navbar = () => {
       }
     }
   };
-
-
 
   useEffect(() => {
     // Calculate the total quantity in stock
@@ -177,6 +184,14 @@ const Navbar = () => {
   //Renove token logout
   const handleLogout = () => {
     localStorage.removeItem("token");
+  };
+
+  const toggleNotification = () => {
+    setShowNotification(!showNotification);
+  };
+
+  const handleMouseLeave = () => {
+    setShowNotification(false);
   };
 
   return (
@@ -253,36 +268,52 @@ const Navbar = () => {
           </div>
 
           <div className="icon-noti">
-            <IoNotificationsOutline fontSize="2.0em" className="icon-noti" />
-            <div className="cart-count">{notifications.filter(notification => !notification.isRead).length}</div>
-            <div className="noti-box">
-              {notifications.map(notification => (
+            <IoNotificationsOutline
+              fontSize="2.0em"
+              className="icon-noti "
+              onClick={toggleNotification}
+            />
+            <div className="cart-count">
+              {
+                notifications.filter((notification) => !notification.isRead)
+                  .length
+              }
+            </div>
+            <div className={`noti-box ${showNotification ? "active" : ""}`}  onMouseLeave={handleMouseLeave}>
+              {notifications.map((notification) => (
                 <div
-                  className={`element-noti ${notification.isRead ? "" : "unread"}`}
+                  className={`element-noti ${
+                    notification.isRead ? "" : "unread"
+                  }`}
                   key={notification.notificationId}
-                  onClick={() => handleNotificationClick(notification)}>
-
+                  onClick={() => handleNotificationClick(notification)}
+                >
                   <div className="img-noti">
                     <img src={noti} alt="" />
                   </div>
                   <div className="text-noti">
                     <div className="header-noti">{notification.header}</div>
                     <div className="content-noti">{notification.content}</div>
-                    <div className="date-noti">{
-                      new Date(notification.createdDate).toLocaleString("en-GB", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
+                    <div className="date-noti">
+                      {new Date(notification.createdDate).toLocaleString(
+                        "en-GB",
+                        {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        }
+                      )}
                     </div>
                   </div>
                   <div className="status-noti">
                     <FaRegTrashCan
                       fontSize="1.5em"
                       style={{ cursor: "pointer" }}
-                      onClick={() => deleteNotification(notification.notificationId)}
+                      onClick={() =>
+                        deleteNotification(notification.notificationId)
+                      }
                     />
                   </div>
                 </div>

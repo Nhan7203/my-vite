@@ -114,6 +114,7 @@
   display: flex;
   color: black;
   position: relative;
+  cursor: pointer;
 }
 
 .cart-icon {
@@ -223,11 +224,19 @@ a.white {
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s, visibility 0.3s;
+  cursor: pointer;
 }
 
-.icon-noti:hover .noti-box {
+
+.icon-noti .active {
   opacity: 1;
   visibility: visible;
+}
+
+.noti-box.hide {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
 }
 
 .element-noti {
