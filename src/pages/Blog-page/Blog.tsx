@@ -71,7 +71,7 @@ const Blog = () => {
                     
                     <CiHeart fontSize="1.5em" style={{cursor: "pointer"}}/>
                   </div>
-                  <div className="date-blog">{blogs.uploadDate}</div>
+                  <div className="date-blog">{new Date(blogs.uploadDate).toLocaleDateString()}</div>
                 </div>
                 <div></div>
               </div>

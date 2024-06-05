@@ -79,7 +79,7 @@
 }
 
 .date-blog {
-  font-size: 12px;
+  font-size: 15px;
 }
 
 .icon-blog {
@@ -95,12 +95,13 @@
 
 .body-blogdetails {
   width: 100%;
-  height: 750px;
+  height: 880px;
   background-color: #f5f7fc;
 }
 
 .body-blogdetails > div {
   width: 1180px;
+  height: 100%;
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(12, 80px);
@@ -109,7 +110,7 @@
 }
 
 .box-left-blogdetails {
-  height: 750px;
+  height: 100%;
   background-color: white;
   border-radius: 20px;
   margin-top: 30px;
@@ -153,6 +154,59 @@
 }
 .img-blogdetails > img {
   border-radius: 20px;
+  height: 300px;
 }
 
 
+.box-right-blogdetails {
+  height: 300px;
+  background-color: white;
+  border-radius: 20px;
+  margin-top: 30px;
+  grid-column: 11 / 13;
+  padding: 10px ;
+  font-family: "Arial";
+  position: sticky;
+  top: 20px
+}
+
+.img-product-blog{
+  display: flex;
+ 
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.img-product-blog > img {
+  width: 150px;
+}
+
+
+.name-product-blog {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 10px;
+ display: flex;
+
+}
+
+
+.price-product-blog {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 15px;
+}
+
+.product-card > div {
+  display: flex;
+  justify-content: space-around;
+}
+
+.icon-product-blog {
+  border-radius: 50%;
+  background-color: #dddcdc;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}

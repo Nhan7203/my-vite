@@ -27,6 +27,7 @@ interface Order {
 
 const User = () => {
   const [orderData, setOrderData] = useState<Order[]>([]);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const fetchOrderData = async () => {
@@ -57,7 +58,7 @@ const User = () => {
         const decodedToken: any = jwtDecode(token);
         const userIdIdentifier =
           decodedToken[
-            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
           ];
 
         const response = await fetch(
@@ -70,7 +71,6 @@ const User = () => {
           const data = await response.json();
 
           const updatedOrderData = data.map((order: Order) => {
-
             const total = order.orderDetails.reduce(
               (acc, detail) => acc + detail.total,
               0
@@ -92,6 +92,106 @@ const User = () => {
 
     fetchOrderData();
   }, []);
+
+  const handleCancelOrder = (orderId: number) => {
+    // Ví dụ, gọi API để hủy đơn hàng và cập nhật lại danh sách đơn hàng
+    try {
+
+      if (!token) {
+        console.error("Token not found");
+        return;
+      }
+
+      const decodedToken: any = jwtDecode(token);
+
+      const userIdIdentifier =
+        decodedToken[
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        ];
+
+      const userId = userIdIdentifier;
+
+      swal({
+        title: "This can not be undo!",
+        text: "You are about to cancel the order!",
+        icon: "warning",
+        buttons: ["Cancel", "Confirm"],
+        dangerMode: true,
+      }).then(async (confirmDelete) => {
+        if (confirmDelete) {
+          const response = await fetch(
+            `https://localhost:7030/api/User/cancelOrder?userId=${userId}&orderId=${orderId}`,
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (response.ok) {
+            swal("Success!", "Order was canceled!", "success");
+            const data = await response.json();
+            setOrderData(data);
+          } else {
+            throw new Error("Failed to cancel order");
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Error canceling order:", error);
+    }
+  };
+
+
+  const handleOrderReceived = (orderId: number) => {
+    try {
+
+      if (!token) {
+        console.error("Token not found");
+        return;
+      }
+
+      const decodedToken: any = jwtDecode(token);
+
+      const userIdIdentifier =
+        decodedToken[
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        ];
+
+      const userId = userIdIdentifier;
+
+      swal({
+        title: "Recieved The Order!",
+        text: `Confirm payment of $${orderData.find((order) => order.orderId === orderId)?.total.toLocaleString()} to the seller`,
+        icon: "warning",
+        buttons: ["Cancel", "Confirm"],
+        dangerMode: true,
+      }).then(async (confirmDelete) => {
+        if (confirmDelete) {
+          const response = await fetch(
+            `https://localhost:7030/api/User/completeOrder?userId=${userId}&orderId=${orderId}`,
+            {
+              method: "PUT",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (response.ok) {
+            swal("Success!", "Thanks for shopping at M&B", "success");
+            const data = await response.json();
+            setOrderData(data);
+          } else {
+            throw new Error("Failed to cancel order");
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Error canceling order:", error);
+    }
+  };
 
   return (
     <div>
@@ -119,6 +219,7 @@ const User = () => {
                             <th className="column5">Shipping Method</th>
                             <th className="column6">Total</th>
                             <th className="column7">Status</th>
+                            <th className="column8">Actions</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -132,7 +233,10 @@ const User = () => {
                               }
                             >
                               <td className="column1 dynamic-content">
-                                <Link to={`/orderdetails/${order.orderId}`}>{order.orderDate}</Link>
+                                <Link to={`/orderdetails/${order.orderId}`}
+                                  state={{ orderStatus: order.orderStatus }}>
+                                  {order.orderDate}
+                                </Link>
                               </td>
                               <td className="column2 dynamic-content">
                                 {order.orderId}
@@ -157,19 +261,53 @@ const User = () => {
                               </td>
                               <td className="column7 dynamic-content">
                                 <span
-                                  className={`status ${
-                                    order.orderStatus === "Pending"
-                                      ? "yellow"
-                                      : order.orderStatus === "Cancel"
+                                  className={`status ${order.orderStatus === "Pending"
+                                    ? "yellow"
+                                    : order.orderStatus === "Canceled"
                                       ? "red"
                                       : order.orderStatus === "Submitted"
-                                      ? "orange"
-                                      : order.orderStatus === "Completed"
-                                      ? "green"
-                                      : ""
-                                  }`}
+                                        ? "orange"
+                                        : order.orderStatus === "Completed"
+                                          ? "green"
+                                          : ""
+                                    }`}
                                 />
                                 {order.orderStatus}
+                              </td>
+                              <td className="column8 dynamic-content">
+                                {order.orderStatus === "Pending" && (
+                                  <button
+                                    className="cancel-button"
+                                    onClick={() =>
+                                      handleCancelOrder(order.orderId)
+                                    }
+                                  >
+                                    Cancel
+                                  </button>
+                                )}
+                                {order.orderStatus === "Submitted" && (
+                                  <>
+                                    <button
+                                      className="received-button"
+                                      onClick={() =>
+                                        handleOrderReceived(order.orderId)
+                                      }
+                                    >
+                                      Received
+                                    </button>
+                                    <Link
+                                      to={`/orderdetails/${order.orderId}`}
+                                      state={{ orderStatus: order.orderStatus }}
+                                    >
+                                      <button
+                                        className="reorder-button"
+                                    
+                                      >
+                                        Reorder
+                                      </button>
+                                    </Link>
+                                  </>
+                                )}
                               </td>
                             </tr>
                           ))}
