@@ -16,11 +16,121 @@ import "./Navbar.css";
 import avatar from "../../assets/vu.jpg";
 import noti from "../../assets/notification.png";
 import trash from "../../assets/trash-can.png";
+import { jwtDecode } from "jwt-decode";
 
+export interface Notification {
+  notificationId: number;
+  userId: number;
+  header: string;
+  content: string;
+  isRead: boolean;
+  isRemoved: boolean;
+  createdDate: Date;
+}
 
 const Navbar = () => {
   const [cartCount, setCartCount] = useState(0);
   const { cart } = useCart();
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+
+    if (token) {
+      const decodedToken: any = jwtDecode(token);
+
+      const userIdIdentifier =
+        decodedToken[
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        ];
+
+      const userId = userIdIdentifier;
+      const apiUrl = `https://localhost:7030/api/Notification/getAllNotisByUser?userId=${userId}`;
+
+      fetch(apiUrl)
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error("Error retrieving notifications");
+          }
+        })
+        .then(data => {
+          setNotifications(data);
+        })
+        .catch(error => {
+          console.error("Error retrieving notifications:", error);
+        });
+    }
+  }, []);
+
+  const deleteNotification = async (notificationId: number) => {
+    try {
+      await fetch(`https://localhost:7030/api/Notification/deleteOneNotification?notificationId=${notificationId}`, {
+        method: 'DELETE'
+      });
+
+      setNotifications(notifications.filter(notification => notification.notificationId !== notificationId));
+    } catch (error) {
+      console.error('Error deleting notification:', error);
+    }
+  };
+
+  const deleteAllNotifications = async () => {
+
+    try {
+      if (token) {
+        const decodedToken: any = jwtDecode(token);
+
+        const userIdIdentifier =
+          decodedToken[
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+          ];
+
+        const userId = userIdIdentifier;
+
+        await fetch(`https://localhost:7030/api/Notification/deleteAllNotificationsByUser?userId=${userId}`, {
+          method: 'DELETE'
+        });
+
+        setNotifications([]);
+      }
+    } catch (error) {
+      console.error('Error deleting notifications:', error);
+    }
+  };
+
+  const handleNotificationClick = async (notification: Notification) => {
+    if (!notification.isRead) {
+      const updatedNotifications = notifications.map((n) =>
+        n.notificationId === notification.notificationId
+          ? { ...n, isRead: true }
+          : n
+      );
+      setNotifications(updatedNotifications);
+
+      try {
+        const response = await fetch(
+          `https://localhost:7030/api/Notification/updateNotificationReadStatus?notificationId=${notification.notificationId}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ isRead: true }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Error updating notification status");
+        }
+      } catch (error) {
+        console.error("Error updating notification status:", error);
+      }
+    }
+  };
+
+
 
   useEffect(() => {
     // Calculate the total quantity in stock
@@ -144,30 +254,42 @@ const Navbar = () => {
 
           <div className="icon-noti">
             <IoNotificationsOutline fontSize="2.0em" className="icon-noti" />
-            <div className="cart-count">0</div>
+            <div className="cart-count">{notifications.filter(notification => !notification.isRead).length}</div>
             <div className="noti-box">
-              <div className=" element-noti">
-                <div className="img-noti">
-                  <img src={noti} alt=""></img>
+              {notifications.map(notification => (
+                <div
+                  className={`element-noti ${notification.isRead ? "" : "unread"}`}
+                  key={notification.notificationId}
+                  onClick={() => handleNotificationClick(notification)}>
+
+                  <div className="img-noti">
+                    <img src={noti} alt="" />
+                  </div>
+                  <div className="text-noti">
+                    <div className="header-noti">{notification.header}</div>
+                    <div className="content-noti">{notification.content}</div>
+                    <div className="date-noti">{
+                      new Date(notification.createdDate).toLocaleString("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </div>
+                  </div>
+                  <div className="status-noti">
+                    <FaRegTrashCan
+                      fontSize="1.5em"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => deleteNotification(notification.notificationId)}
+                    />
+                  </div>
                 </div>
-                <div className="text-noti">
-                  <div className="header-noti">haahahaha hahahaaaaaaaaaaaa</div>
-                  <div className="content-noti">hihiii hihiiiii</div>
-                  <div className="date-noti">14/06/2024</div>
-                </div>
-                <div className="status-noti">
-                  <input
-                    type="checkbox"
-                    value={5}
-                    // checked={forAgeId === 5}
-                    // onChange={handleAgeChange}
-                  />
-                  <FaRegTrashCan fontSize="1.5em" style={{cursor: "pointer"}}/>
-                </div>
-              </div>
-              <div className="icon-trash-all">
-              <img src={trash} alt=""></img>
-              Delete all
+              ))}
+              <div className="icon-trash-all" onClick={deleteAllNotifications}>
+                <img src={trash} alt=""></img>
+                Delete all
               </div>
             </div>
           </div>

@@ -162,6 +162,7 @@ a.white {
 .user-menu {
   position: relative;
   display: inline-block;
+  z-index: 50;
 }
 
 .menu-box {
@@ -269,5 +270,14 @@ a.white {
   width: 40px;
   height: 40px;
   margin-right: 10px;
+  cursor: pointer;
+}
+
+.unread {
+  background-color: pink;
+}
+
+.unread:hover {
+  background-color: white;
   cursor: pointer;
 }
