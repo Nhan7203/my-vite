@@ -36,11 +36,11 @@ const Payment = () => {
 
       const userIdIdentifier =
         decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
         ];
       const userAddress =
         decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/streetaddress"
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/streetaddress"
         ];
       const userId = userIdIdentifier;
       const orderDate = new Date().toISOString();
@@ -84,6 +84,7 @@ const Payment = () => {
       }
 
       const data = await response.json();
+      localStorage.removeItem("cart");
       console.log("Cart data stored:", data);
     } catch (error) {
       console.error("Error storing cart data:", error);
@@ -108,11 +109,12 @@ const Payment = () => {
     }
   };
 
- 
+
 
   //Renove token logout
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("cart");
   };
 
   return (
@@ -168,9 +170,8 @@ const Payment = () => {
             <div className="ship-method-list">
               <div className="economical">
                 <div
-                  className={`box-sec ${
-                    shippingMethodId === 1 ? "active" : ""
-                  }`}
+                  className={`box-sec ${shippingMethodId === 1 ? "active" : ""
+                    }`}
                   onClick={() => handleOrderShipChange(1)}
                 >
                   <img src={SEC} alt="" className="logo-sec" />
@@ -226,13 +227,13 @@ const Payment = () => {
                   shippingMethod={shippingMethodId}
                 />
               ) : (
-                
-                  <Paypal
-                    payload={[]}
-                    amount="0.00"
-                    shippingMethod={shippingMethodId}
-                  />
-              
+
+                <Paypal
+                  payload={[]}
+                  amount="0.00"
+                  shippingMethod={shippingMethodId}
+                />
+
               )}
             </div>
 
