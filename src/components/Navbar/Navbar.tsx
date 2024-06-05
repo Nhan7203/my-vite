@@ -6,13 +6,17 @@ import {
   FaSearch,
   BsFillPeopleFill,
   GiPositionMarker,
+  FaRegTrashCan,
 } from "../../import/import-libary";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../pages/Cart-page/CartContext";
 import logo from "../../assets/logo.png";
 import "./Navbar.css";
-import avatar from "../../assets/vu.jpg"
+import avatar from "../../assets/vu.jpg";
+import noti from "../../assets/notification.png";
+import trash from "../../assets/trash-can.png";
+
 
 const Navbar = () => {
   const [cartCount, setCartCount] = useState(0);
@@ -44,7 +48,7 @@ const Navbar = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
 
-  const handleSearch = (event: { preventDefault: () => void; }) => {
+  const handleSearch = (event: { preventDefault: () => void }) => {
     event.preventDefault();
     if (searchQuery.length > 0) {
       navigate("/product", { state: { query: searchQuery } });
@@ -62,9 +66,8 @@ const Navbar = () => {
 
   //Renove token logout
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
   };
-
 
   return (
     <nav className="header">
@@ -82,15 +85,20 @@ const Navbar = () => {
           </li>
           {isLoggedIn ? (
             <div className="user-menu">
-              <div className="avatar" >
+              <div className="avatar">
                 <img src={avatar} alt="Avatar"></img>
               </div>
               <div className="menu-box">
                 <a href="/profile">View Profile</a>
-                <a href="/user" >Purchase order</a>
-                <a href="/login" onClick={handleLogout} style={{ border: "none" }}>Logout</a>
+                <a href="/user">Purchase order</a>
+                <a
+                  href="/login"
+                  onClick={handleLogout}
+                  style={{ border: "none" }}
+                >
+                  Logout
+                </a>
               </div>
-
             </div>
           ) : (
             <li className="login">
@@ -103,7 +111,7 @@ const Navbar = () => {
         </ul>
       </div>
 
-      <div className="navbar-search" >
+      <div className="navbar-search">
         <div className="navbar-logo" onClick={() => handleLogo()}>
           <img src={logo} alt="M&B-logo" className="logo-img" />
         </div>
@@ -135,10 +143,33 @@ const Navbar = () => {
           </div>
 
           <div className="icon-noti">
-            <Link to="/noti">
-              <IoNotificationsOutline fontSize="2.0em" className="icon-noti" />
-            </Link>
+            <IoNotificationsOutline fontSize="2.0em" className="icon-noti" />
             <div className="cart-count">0</div>
+            <div className="noti-box">
+              <div className=" element-noti">
+                <div className="img-noti">
+                  <img src={noti} alt=""></img>
+                </div>
+                <div className="text-noti">
+                  <div className="header-noti">haahahaha hahahaaaaaaaaaaaa</div>
+                  <div className="content-noti">hihiii hihiiiii</div>
+                  <div className="date-noti">14/06/2024</div>
+                </div>
+                <div className="status-noti">
+                  <input
+                    type="checkbox"
+                    value={5}
+                    // checked={forAgeId === 5}
+                    // onChange={handleAgeChange}
+                  />
+                  <FaRegTrashCan fontSize="1.5em" style={{cursor: "pointer"}}/>
+                </div>
+              </div>
+              <div className="icon-trash-all">
+              <img src={trash} alt=""></img>
+              Delete all
+              </div>
+            </div>
           </div>
         </div>
       </div>

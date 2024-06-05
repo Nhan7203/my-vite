@@ -124,8 +124,6 @@
 }
 tbody > tr {
   background-color: #fce4ec;
- 
-  
 }
 
 tbody > tr > td {
@@ -154,6 +152,9 @@ tbody > tr > td {
   text-align: center;
 }
 
+.column65 {
+  padding: 0;
+}
 .container-table100 {
   width: 100%;
   max-width: 1200px;
@@ -216,10 +217,9 @@ tbody > tr > td {
     color: #ffffff;
     transform: translateY(-2px);
   }
-  
-  .add-product{
+
+  .add-product {
     display: flex;
     justify-content: flex-end;
   }
-  
 }

@@ -218,6 +218,7 @@ const User = () => {
                             <th className="column4">Payment Method</th>
                             <th className="column5">Shipping Method</th>
                             <th className="column6">Total</th>
+                            <th className="column65"></th>
                             <th className="column7">Status</th>
                             <th className="column8">Actions</th>
                           </tr>
@@ -259,8 +260,9 @@ const User = () => {
                               <td className="column6 dynamic-content">
                                 ${order.total.toLocaleString()}
                               </td>
-                              <td className="column7 dynamic-content">
-                                <span
+                              <td className="column65 dynamic-content" >
+                              <span
+                              style={{margin: "0 0 0 15px"}}
                                   className={`status ${order.orderStatus === "Pending"
                                     ? "yellow"
                                     : order.orderStatus === "Canceled"
@@ -272,6 +274,21 @@ const User = () => {
                                           : ""
                                     }`}
                                 />
+                              </td>
+
+                              <td className="column7 dynamic-content">
+                                {/* <span
+                                  className={`status ${order.orderStatus === "Pending"
+                                    ? "yellow"
+                                    : order.orderStatus === "Canceled"
+                                      ? "red"
+                                      : order.orderStatus === "Submitted"
+                                        ? "orange"
+                                        : order.orderStatus === "Completed"
+                                          ? "green"
+                                          : ""
+                                    }`}
+                                /> */}
                                 {order.orderStatus}
                               </td>
                               <td className="column8 dynamic-content">
