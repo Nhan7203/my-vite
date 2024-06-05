@@ -58,7 +58,7 @@ const User = () => {
         const decodedToken: any = jwtDecode(token);
         const userIdIdentifier =
           decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
           ];
 
         const response = await fetch(
@@ -93,10 +93,9 @@ const User = () => {
     fetchOrderData();
   }, []);
 
+  
   const handleCancelOrder = (orderId: number) => {
-    // Ví dụ, gọi API để hủy đơn hàng và cập nhật lại danh sách đơn hàng
     try {
-
       if (!token) {
         console.error("Token not found");
         return;
@@ -106,7 +105,7 @@ const User = () => {
 
       const userIdIdentifier =
         decodedToken[
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
         ];
 
       const userId = userIdIdentifier;
@@ -128,14 +127,16 @@ const User = () => {
               },
             }
           );
-
+          window.location.reload();
           if (response.ok) {
             swal("Success!", "Order was canceled!", "success");
             const data = await response.json();
             setOrderData(data);
+            
           } else {
             throw new Error("Failed to cancel order");
           }
+          
         }
       });
     } catch (error) {
@@ -143,10 +144,8 @@ const User = () => {
     }
   };
 
-
   const handleOrderReceived = (orderId: number) => {
     try {
-
       if (!token) {
         console.error("Token not found");
         return;
@@ -156,14 +155,16 @@ const User = () => {
 
       const userIdIdentifier =
         decodedToken[
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
         ];
 
       const userId = userIdIdentifier;
 
       swal({
         title: "Recieved The Order!",
-        text: `Confirm payment of $${orderData.find((order) => order.orderId === orderId)?.total.toLocaleString()} to the seller`,
+        text: `Confirm payment of $${orderData
+          .find((order) => order.orderId === orderId)
+          ?.total.toLocaleString()} to the seller`,
         icon: "warning",
         buttons: ["Cancel", "Confirm"],
         dangerMode: true,
@@ -178,14 +179,18 @@ const User = () => {
               },
             }
           );
+          
+          window.location.reload();
 
           if (response.ok) {
             swal("Success!", "Thanks for shopping at M&B", "success");
             const data = await response.json();
             setOrderData(data);
+           
           } else {
             throw new Error("Failed to cancel order");
           }
+          window.location.reload();
         }
       });
     } catch (error) {
@@ -234,8 +239,10 @@ const User = () => {
                               }
                             >
                               <td className="column1 dynamic-content">
-                                <Link to={`/orderdetails/${order.orderId}`}
-                                  state={{ orderStatus: order.orderStatus }}>
+                                <Link
+                                  to={`/orderdetails/${order.orderId}`}
+                                  state={{ orderStatus: order.orderStatus }}
+                                >
                                   {order.orderDate}
                                 </Link>
                               </td>
@@ -260,19 +267,20 @@ const User = () => {
                               <td className="column6 dynamic-content">
                                 ${order.total.toLocaleString()}
                               </td>
-                              <td className="column65 dynamic-content" >
-                              <span
-                              style={{margin: "0 0 0 15px"}}
-                                  className={`status ${order.orderStatus === "Pending"
-                                    ? "yellow"
-                                    : order.orderStatus === "Canceled"
+                              <td className="column65 dynamic-content">
+                                <span
+                                  style={{ margin: "0 0 0 15px" }}
+                                  className={`status ${
+                                    order.orderStatus === "Pending"
+                                      ? "yellow"
+                                      : order.orderStatus === "Canceled"
                                       ? "red"
                                       : order.orderStatus === "Submitted"
-                                        ? "orange"
-                                        : order.orderStatus === "Completed"
-                                          ? "green"
-                                          : ""
-                                    }`}
+                                      ? "orange"
+                                      : order.orderStatus === "Completed"
+                                      ? "green"
+                                      : ""
+                                  }`}
                                 />
                               </td>
 
@@ -312,18 +320,17 @@ const User = () => {
                                     >
                                       Received
                                     </button>
-                                    <Link
-                                      to={`/orderdetails/${order.orderId}`}
-                                      state={{ orderStatus: order.orderStatus }}
-                                    >
-                                      <button
-                                        className="reorder-button"
-                                    
-                                      >
-                                        Reorder
-                                      </button>
-                                    </Link>
                                   </>
+                                )}
+                                {order.orderStatus === "Completed" && (
+                                  <Link
+                                    to={`/orderdetails/${order.orderId}`}
+                                    state={{ orderStatus: order.orderStatus }}
+                                  >
+                                    <button className="reorder-button">
+                                      Reorder
+                                    </button>
+                                  </Link>
                                 )}
                               </td>
                             </tr>

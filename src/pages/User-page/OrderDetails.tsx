@@ -23,7 +23,7 @@ const OrderDetails = () => {
   const [products, setProducts] = useState<aProduct[]>([]);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-
+  const [currentOrderStatus, setCurrentOrderStatus] = useState<string>("");
   const location = useLocation();
   const { orderStatus } = location.state;
 
@@ -64,7 +64,6 @@ const OrderDetails = () => {
 
   const handleCancelOrder = async () => {
     try {
-
       if (!token) {
         console.error("Token not found");
         return;
@@ -74,7 +73,7 @@ const OrderDetails = () => {
 
       const userIdIdentifier =
         decodedToken[
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
         ];
 
       const userId = userIdIdentifier;
@@ -113,7 +112,6 @@ const OrderDetails = () => {
 
   const handleCompleteOrder = async () => {
     try {
-
       if (!token) {
         console.error("Token not found");
         return;
@@ -123,7 +121,7 @@ const OrderDetails = () => {
 
       const userIdIdentifier =
         decodedToken[
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
         ];
 
       const userId = userIdIdentifier;
@@ -135,7 +133,7 @@ const OrderDetails = () => {
 
       swal({
         title: "Recieved The Order!",
-        text: `Confirm payment of $${totalPrice} to the seller`,
+        text: `Confirm payment of $${totalPrice.toLocaleString()} to the seller`,
         icon: "warning",
         buttons: ["Cancel", "Confirm"],
         dangerMode: true,
@@ -150,23 +148,23 @@ const OrderDetails = () => {
               },
             }
           );
-
+          setCurrentOrderStatus("Completed");
+       
           if (response.ok) {
             swal("Success!", "Thanks for shopping at M&B", "success");
             const data = await response.json();
             setCancelOrderResponse(data);
+            
           } else {
             throw new Error("Failed to cancel order");
           }
+          
         }
       });
     } catch (error) {
       console.error("Error canceling order:", error);
     }
   };
-
-
-
 
   return (
     <div>
@@ -212,8 +210,11 @@ const OrderDetails = () => {
                       <div className="quantity-count">
                         {`${orderDetail.quantity}`}
                       </div>
-                      <div className="money">${orderDetail.total}</div>
-                      {orderStatus === "Submitted" && (
+                      <div className="money">
+                        ${orderDetail.total.toLocaleString()}
+                      </div>
+                      {(orderStatus === "Completed" ||
+                        currentOrderStatus === "Completed") && (
                         <div className="add-product">
                           {product && (
                             <button
@@ -232,12 +233,18 @@ const OrderDetails = () => {
               })}
             </div>
             {orderStatus === "Pending" && (
-              <div className="add-product">
+              <div
+                className="add-product"
+                style={{ display: "flex", flexDirection: "row-reverse" }}
+              >
                 <button onClick={handleCancelOrder}>Cancel Order</button>
               </div>
             )}
-            {orderStatus === "Submitted" && (
-              <div className="add-product">
+            {orderStatus === "Submitted" && currentOrderStatus === "" && (
+              <div
+                className="add-product"
+                style={{ display: "flex", flexDirection: "row-reverse" }}
+              >
                 <button onClick={handleCompleteOrder}>Received</button>
               </div>
             )}

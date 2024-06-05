@@ -162,6 +162,7 @@ a.white {
 .user-menu {
   position: relative;
   display: inline-block;
+  z-index: 50;
 }
 
 .menu-box {
