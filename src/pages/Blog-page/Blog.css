@@ -159,16 +159,13 @@
 
 
 .box-right-blogdetails {
-
   height: 300px;
-
   background-color: white;
   border-radius: 20px;
   margin-top: 30px;
   grid-column: 11 / 13;
   padding: 10px ;
   font-family: "Arial";
-
   position: sticky;
   top: 20px
 }
@@ -212,5 +209,4 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-
 }

@@ -3,14 +3,16 @@ import view from "../../assets/view.png";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import * as searchBlogDetails from "../../apiServices/getBlogId";
-import * as searchProduct from "../../apiServices/getProductId";
 import "./Blog.css";
 import { Blog } from "./Blog";
+import { useAllProduct } from "../../context/ShopContext";
+import { BsCart3 } from "../../import/import-libary";
+import { useCart } from "../Cart-page/CartContext";
 
 const BlogDetails = () => {
   const { blogId } = useParams<{ blogId?: string }>();
-  console.error("blogIddddd:", blogId);
-  const [blogDetails, setBlogDetails] = useState<Blog>({});
+  const [blogDetails, setBlogDetails] = useState<Blog | null>(null);
+  const { addToCart } = useCart();
   const navigate = useNavigate();
   const { allProduct } = useAllProduct();
 
@@ -26,6 +28,8 @@ const BlogDetails = () => {
     };
     fetchProducts();
   }, [blogDetails, blogId, navigate]);
+
+  const product = blogDetails?.productId ? allProduct.find((e) => e.productId === blogDetails.productId) : null;
 
   return (
     <div>
@@ -51,6 +55,38 @@ const BlogDetails = () => {
             </div>
             )}
           </div>
+          {product ? (
+            <div className="box-right-blogdetails">
+              <div key={product.productId} className="product-card">
+                <Link to={`/productDetails/${product.productId}`}>
+                  <div className="img-product-blog">
+                    <img
+                      src={product.imageProducts[0].imageUrl}
+                      alt={product.name}
+                    />
+                  </div>
+                </Link>
+                <div className="name-product-blog">
+                  <p>{product.name}</p>
+                </div>
+
+                <div className="price-product-blog">
+                  <p>${product.price.toLocaleString()}</p>
+                </div>
+                <div>
+                  <div className="icon-product-blog">
+                    <BsCart3
+                      className="icon-shopping"
+                      fontSize="1.5em"
+                      onClick={() => addToCart(product)}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <Link to="/blog"></Link>
+          )}
         </div>
       </div>
       <Footer />
