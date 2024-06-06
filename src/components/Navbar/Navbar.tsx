@@ -16,6 +16,7 @@ import "./Navbar.css";
 import avatar from "../../assets/vu.jpg";
 import noti from "../../assets/notification.png";
 import trash from "../../assets/trash-can.png";
+import empty from "../../assets/folder.png";
 import { jwtDecode } from "jwt-decode";
 
 export interface Notification {
@@ -249,7 +250,6 @@ const Navbar = () => {
           />
 
           <button type="submit">
-            {" "}
             <FaSearch
               color="white"
               fontSize="1.8em"
@@ -279,49 +279,73 @@ const Navbar = () => {
                   .length
               }
             </div>
-            <div className={`noti-box ${showNotification ? "active" : ""}`}  onMouseLeave={handleMouseLeave}>
-              {notifications.map((notification) => (
-                <div
-                  className={`element-noti ${
-                    notification.isRead ? "" : "unread"
-                  }`}
-                  key={notification.notificationId}
-                  onClick={() => handleNotificationClick(notification)}
-                >
-                  <div className="img-noti">
-                    <img src={noti} alt="" />
+            <div
+              className={`noti-box ${showNotification ? "active" : ""}`}
+              onMouseLeave={handleMouseLeave}
+            >
+              {notifications && notifications.length > 0 ? (
+                <>
+                  <div
+                    style={{
+                      overflow: "auto",
+                      height: "400px",
+                      width: "499px",
+                    }}
+                  >
+                    {notifications.map((notification) => (
+                      <div
+                        className={`element-noti ${
+                          notification.isRead ? "" : "unread"
+                        }`}
+                        key={notification.notificationId}
+                        onClick={() => handleNotificationClick(notification)}
+                      >
+                        <div className="img-noti">
+                          <img src={noti} alt="" />
+                        </div>
+                        <div className="text-noti">
+                          <div className="header-noti">
+                            {notification.header}
+                          </div>
+                          <div className="content-noti">
+                            {notification.content}
+                          </div>
+                          <div className="date-noti">
+                            {new Date(notification.createdDate).toLocaleString(
+                              "en-GB",
+                              {
+                                day: "2-digit",
+                                month: "2-digit",
+                                year: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              }
+                            )}
+                          </div>
+                        </div>
+                        <div className="status-noti">
+                          <FaRegTrashCan
+                            fontSize="1.5em"
+                            style={{ cursor: "pointer" }}
+                            onClick={() =>
+                              deleteNotification(notification.notificationId)
+                            }
+                          />
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <div className="text-noti">
-                    <div className="header-noti">{notification.header}</div>
-                    <div className="content-noti">{notification.content}</div>
-                    <div className="date-noti">
-                      {new Date(notification.createdDate).toLocaleString(
-                        "en-GB",
-                        {
-                          day: "2-digit",
-                          month: "2-digit",
-                          year: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        }
-                      )}
-                    </div>
+                  <div
+                    className="icon-trash-all"
+                    onClick={deleteAllNotifications}
+                  >
+                    <img src={trash} alt=""></img>
+                    Delete all
                   </div>
-                  <div className="status-noti">
-                    <FaRegTrashCan
-                      fontSize="1.5em"
-                      style={{ cursor: "pointer" }}
-                      onClick={() =>
-                        deleteNotification(notification.notificationId)
-                      }
-                    />
-                  </div>
-                </div>
-              ))}
-              <div className="icon-trash-all" onClick={deleteAllNotifications}>
-                <img src={trash} alt=""></img>
-                Delete all
-              </div>
+                </>
+              ) : (
+                <img src={empty} alt="" style={{ width: "50px" }} />
+              )}
             </div>
           </div>
         </div>

@@ -37,22 +37,22 @@ const BlogDetails = () => {
       <div className="body-blogdetails">
         <div>
           <div className="box-left-blogdetails">
-          {blogDetails && (
-            <div key={blogDetails.blogId}>
-              <div className="box-title-blogdetails">{blogDetails.title}</div>
-              <div className="box-time-view">
-              <div>{new Date(blogDetails.uploadDate).toLocaleDateString()}</div>
-                <div className="icon-blog">
-                  <img src={view} className="view" alt="view" />
-                  <div style={{ transform: "translateY(3px)" }}>0</div>
+            {blogDetails && (
+              <div key={blogDetails.blogId}>
+                <div className="box-title-blogdetails">{blogDetails.title}</div>
+                <div className="box-time-view">
+                  <div>{new Date(blogDetails.uploadDate).toLocaleDateString()}</div>
+                  <div className="icon-blog">
+                    <img src={view} className="view" alt="view" />
+                    <div style={{ transform: "translateY(3px)" }}>{blogDetails.view}</div>
+                  </div>
+                </div>
+                <div className="content-blogdeatails">{blogDetails.content}</div>
+                <div className="author">{blogDetails.author}</div>
+                <div className="img-blogdetails">
+                  <img src={blogDetails.imageUrl} alt="Mô tả ảnh" />
                 </div>
               </div>
-              <div className="content-blogdeatails">{blogDetails.content}</div>
-              <div className="author">{blogDetails.author}</div>
-              <div className="img-blogdetails">
-                <img src={blogDetails.imageUrl} alt="Mô tả ảnh" />
-              </div>
-            </div>
             )}
           </div>
           {product ? (

@@ -7,6 +7,7 @@ import BoxMenuUser from "./components/BoxMenuUser";
 import "./User.css";
 import "../Admin-page//Admin.css";
 import { Link } from "../../import/import-libary";
+import { useNavigate } from 'react-router-dom';
 
 interface Order {
   orderId: number;
@@ -28,6 +29,18 @@ interface Order {
 const User = () => {
   const [orderData, setOrderData] = useState<Order[]>([]);
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+  const [isGlowing, setIsGlowing] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsGlowing((prevIsGlowing) => !prevIsGlowing);
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchOrderData = async () => {
@@ -58,7 +71,7 @@ const User = () => {
         const decodedToken: any = jwtDecode(token);
         const userIdIdentifier =
           decodedToken[
-            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
           ];
 
         const response = await fetch(
@@ -93,7 +106,6 @@ const User = () => {
     fetchOrderData();
   }, []);
 
-  
   const handleCancelOrder = (orderId: number) => {
     try {
       if (!token) {
@@ -105,7 +117,7 @@ const User = () => {
 
       const userIdIdentifier =
         decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
         ];
 
       const userId = userIdIdentifier;
@@ -127,16 +139,14 @@ const User = () => {
               },
             }
           );
-          window.location.reload();
           if (response.ok) {
             swal("Success!", "Order was canceled!", "success");
             const data = await response.json();
             setOrderData(data);
-            
+            navigate("/user");
           } else {
             throw new Error("Failed to cancel order");
           }
-          
         }
       });
     } catch (error) {
@@ -155,7 +165,7 @@ const User = () => {
 
       const userIdIdentifier =
         decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
         ];
 
       const userId = userIdIdentifier;
@@ -179,18 +189,15 @@ const User = () => {
               },
             }
           );
-          
-          window.location.reload();
-
           if (response.ok) {
             swal("Success!", "Thanks for shopping at M&B", "success");
             const data = await response.json();
             setOrderData(data);
-           
+            navigate("/user");
           } else {
             throw new Error("Failed to cancel order");
           }
-          window.location.reload();
+
         }
       });
     } catch (error) {
@@ -267,25 +274,10 @@ const User = () => {
                               <td className="column6 dynamic-content">
                                 ${order.total.toLocaleString()}
                               </td>
+
                               <td className="column65 dynamic-content">
                                 <span
                                   style={{ margin: "0 0 0 15px" }}
-                                  className={`status ${
-                                    order.orderStatus === "Pending"
-                                      ? "yellow"
-                                      : order.orderStatus === "Canceled"
-                                      ? "red"
-                                      : order.orderStatus === "Submitted"
-                                      ? "orange"
-                                      : order.orderStatus === "Completed"
-                                      ? "green"
-                                      : ""
-                                  }`}
-                                />
-                              </td>
-
-                              <td className="column7 dynamic-content">
-                                {/* <span
                                   className={`status ${order.orderStatus === "Pending"
                                     ? "yellow"
                                     : order.orderStatus === "Canceled"
@@ -295,8 +287,11 @@ const User = () => {
                                         : order.orderStatus === "Completed"
                                           ? "green"
                                           : ""
-                                    }`}
-                                /> */}
+                                    } ${isGlowing ? "glow" : ""}`}
+                                />
+                              </td>
+
+                              <td className="column7 dynamic-content">
                                 {order.orderStatus}
                               </td>
                               <td className="column8 dynamic-content">

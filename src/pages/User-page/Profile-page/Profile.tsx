@@ -115,16 +115,6 @@ const Profile = () => {
       <div className="container-profile">
       <BoxMenuUser  /> 
 
-        {/* <div className="content" id="content">
-          <div className="head-content">
-            <ul>
-              <li>
-                <a>COMPLETE</a>
-              </li>
-            </ul>
-          </div>
-        </div> */}
-
         <div className="account active" id="account">
           <div className="main-profile">
             <h1>My profile</h1>
@@ -146,7 +136,7 @@ const Profile = () => {
                         name="txtName"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                      />{" "}
+                      />
                     </td>
                   </tr>
 
