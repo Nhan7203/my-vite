@@ -33,31 +33,35 @@ const Profile = () => {
 
   const userIdIdentifier =
     decodedToken[
-      "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
     ];
   const userName =
     decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
   const userMail =
     decodedToken[
-      "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
+    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
     ];
   const phone =
     decodedToken[
-      "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone"
+    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone"
     ];
   const userAddress =
     decodedToken[
-      "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/streetaddress"
+    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/streetaddress"
     ];
   const role =
     decodedToken[
-      "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+    "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
     ];
 
   const [name, setName] = useState(userName);
   const [phoneNumber, setPhoneNumber] = useState(phone);
   const [address, setAddress] = useState(userAddress);
-
+  const [errors, setErrors] = useState({
+    name: '',
+    phoneNumber: '',
+    address: ''
+  })
   const userToken = {
     UserId: userIdIdentifier,
     Name: userName,
@@ -69,6 +73,43 @@ const Profile = () => {
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
+    //check valid
+    let error = {
+      name: '',
+      phoneNumber: '',
+      address: '',
+      check: false
+    };
+    const name_parttern = /^[^\d!@#$%^&*(),.?":{}|<>]+$/u
+
+    if (name === "") {
+      error.name = "Name is Required!"
+      error.check = true
+    } else if (!name_parttern.test(name.trim())) {
+      error.name = "The name should not have special characters"
+      error.check = true
+    }
+
+    if (phoneNumber === "") {
+      error.phoneNumber = "phoneNumber is Required!"
+      error.check = true
+    } else if (!(phoneNumber.charAt(0) == "0") || !(phoneNumber.length == 10)) {
+      error.phoneNumber = "PhoneNumber is wrong"
+      error.check = true
+    }
+
+    if (address === "") {
+      error.address = "address is Required!"
+      error.check = true
+    } else if (address.length < 3) {
+      error.address = "Address must be at least 3 characters"
+      error.check = true
+    }
+
+    setErrors(error)
+    if (error.check) {
+      return
+    }
 
     const payload = {
       name: name,
@@ -77,11 +118,11 @@ const Profile = () => {
       address: address,
     };
 
+    console.log(payload)
+
     try {
       const response = await fetch(
-        `https://localhost:7030/api/User/Update?id=${parseInt(
-          userIdIdentifier
-        )}`,
+        `https://localhost:7030/api/User/Update?id=${parseInt(userIdIdentifier)}`,
         {
           method: "PUT",
           headers: {
@@ -113,17 +154,7 @@ const Profile = () => {
     <>
       <Navbar />
       <div className="container-profile">
-      <BoxMenuUser  /> 
-
-        {/* <div className="content" id="content">
-          <div className="head-content">
-            <ul>
-              <li>
-                <a>COMPLETE</a>
-              </li>
-            </ul>
-          </div>
-        </div> */}
+        <BoxMenuUser />
 
         <div className="account active" id="account">
           <div className="main-profile">
@@ -133,12 +164,12 @@ const Profile = () => {
             <form onSubmit={handleSubmit}>
               <table >
                 <tbody >
-                  <tr style={{background: "white"}}>
+                  <tr style={{ background: "white" }}>
                     <td>Email</td>
                     <td>{userToken.Email}</td>
                   </tr>
 
-                  <tr style={{background: "white"}}>
+                  <tr style={{ background: "white" }}>
                     <td>Full name</td>
                     <td>
                       <input
@@ -146,23 +177,25 @@ const Profile = () => {
                         name="txtName"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                      />{" "}
+                      />
+                      {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
                     </td>
                   </tr>
 
-                  <tr style={{background: "white"}}>
+                  <tr style={{ background: "white" }}>
                     <td>Phone number</td>
                     <td>
                       <input
-                        type="text"
-                        name="txtAddress"
-                        value={[phone]}
+                        type="number"
+                        name="txtPhone"
+                        value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
                       />
+                      {errors.phoneNumber && <p style={{ color: "red" }}>{errors.phoneNumber}</p>}
                     </td>
                   </tr>
 
-                  <tr style={{background: "white"}}>
+                  <tr style={{ background: "white" }}>
                     <td>Address</td>
                     <td>
                       <input
@@ -171,10 +204,11 @@ const Profile = () => {
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                       />
+                      {errors.address && <p style={{ color: "red" }}>{errors.address}</p>}
                     </td>
                   </tr>
 
-                  <tr style={{background: "white"}}>
+                  <tr style={{ background: "white" }}>
                     <td></td>
                     <td>
                       <input type="submit" name="btAction" value="Save" />
