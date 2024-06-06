@@ -183,7 +183,7 @@ a.white {
   border-radius: 10px;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s, visibility 0.3s;
+  transition: opacity 0.1s, visibility 0.1s;
 }
 
 .menu-box a {
