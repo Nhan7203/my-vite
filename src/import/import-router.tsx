@@ -1,7 +1,6 @@
 import Navbar from "../components/Navbar/Navbar";
 import Login from "../pages/Login-page/Login";
 import Adress from "../pages/Adress-page/Adress";
-import Notification from "../pages/Notification-page/Notification";
 import Cart from "../pages/Cart-page/Cart";
 import Product from "../pages/Product-page/Product";
 import ProductDetails from "../pages/ProductDetails-page/productDetails";
@@ -35,7 +34,6 @@ export {
   Navbar,
   Login,
   Adress,
-  Notification,
   Product,
   ProductDetails,
   Cart,

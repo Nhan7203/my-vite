@@ -3,7 +3,6 @@ import {
   Navbar,
   Login,
   Adress,
-  Notification,
   Product,
   ProductDetails,
   Cart,
@@ -61,7 +60,6 @@ const Home = () => {
   return (
     <div>
       <Navbar />
-
       <Main />
       <Footer />
     </div>
@@ -77,7 +75,6 @@ const router = createBrowserRouter(
       <Route path="/payment" element={<Payment />} />
       <Route path="/adress" element={<Adress />} />
       <Route path="/cart" element={<Cart />} />
-      <Route path="/noti" element={<Notification />} />
       <Route path="/product" element={<Product />} />
       <Route path="/admin" element={<Admin />} />
       <Route path="/customer" element={<Customer />} />
