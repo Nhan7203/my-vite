@@ -1,13 +1,24 @@
 import { Navbar, Footer } from "../../../import/import-router";
 import { refreshToken } from "../../../apiServices/refreshTokenServices";
 import { jwtDecode } from "jwt-decode";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import swal from "sweetalert";
 import "./Profile.css";
 import BoxMenuUser from "../components/BoxMenuUser";
+import axios from "axios";
+
+export interface IUser {
+  userId: number;
+  roleId: number;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  address: string;
+  isActive: boolean;
+}
+
 const Profile = () => {
   const token = localStorage.getItem("token");
-
   if (!token) {
     swal({
       title: "Oops!",
@@ -29,46 +40,47 @@ const Profile = () => {
     return;
   }
 
-  const decodedToken: any = jwtDecode(token);
-
-  const userIdIdentifier =
-    decodedToken[
-    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-    ];
-  const userName =
-    decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
-  const userMail =
-    decodedToken[
-    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
-    ];
-  const phone =
-    decodedToken[
-    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone"
-    ];
-  const userAddress =
-    decodedToken[
-    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/streetaddress"
-    ];
-  const role =
-    decodedToken[
-    "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
-    ];
-
-  const [name, setName] = useState(userName);
-  const [phoneNumber, setPhoneNumber] = useState(phone);
-  const [address, setAddress] = useState(userAddress);
+  const [user, setUser] = useState({} as IUser);
+  const [name, setName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [address, setAddress] = useState("");
   const [errors, setErrors] = useState({
     name: '',
     phoneNumber: '',
     address: ''
-  })
-  const userToken = {
-    UserId: userIdIdentifier,
-    Name: userName,
-    Email: userMail,
-    PhoneNumber: phone,
-    Role: role,
-    Address: userAddress,
+  });
+  const decodedToken: any = jwtDecode(token);
+  const userIdIdentifier = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userData = await getUser(userIdIdentifier);
+        setUser(userData);
+      } catch (error) {
+        throw new Error('User not found');
+      }
+    };
+
+    fetchUser();
+  }, [userIdIdentifier]);
+
+  useEffect(() => {
+    if (user) {
+      setName(user.name);
+      setPhoneNumber(user.phoneNumber);
+      setAddress(user.address);
+    }
+  }, [user]);
+
+  const getUser = async (id: any) => {
+    try {
+      const response = await axios.get(`https://localhost:7030/api/User/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching user', error);
+      throw error;
+    }
   };
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
@@ -113,7 +125,7 @@ const Profile = () => {
 
     const payload = {
       name: name,
-      email: userMail,
+      email: user.email,
       phoneNumber: phoneNumber,
       address: address,
     };
@@ -133,8 +145,9 @@ const Profile = () => {
       );
 
       if (response.status === 200) {
+        const updatedUser = await response.json(); // Chuyển đổi response thành JSON
         swal("Success", "User information updated successfully!", "success");
-        // window.location.reload();
+        setUser(updatedUser); // Cập nhật state user với dữ liệu mới
       } else if (response.status === 401) {
         await refreshToken();
       } else {
@@ -166,7 +179,7 @@ const Profile = () => {
                 <tbody >
                   <tr style={{ background: "white" }}>
                     <td>Email</td>
-                    <td>{userToken.Email}</td>
+                    <td>{user.email}</td>
                   </tr>
 
                   <tr style={{ background: "white" }}>
@@ -175,7 +188,7 @@ const Profile = () => {
                       <input
                         type="text"
                         name="txtName"
-                        value={name}
+                        value={name || ""}
                         onChange={(e) => setName(e.target.value)}
                       />
                       {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
@@ -188,7 +201,7 @@ const Profile = () => {
                       <input
                         type="number"
                         name="txtPhone"
-                        value={phoneNumber}
+                        value={phoneNumber || ""}
                         onChange={(e) => setPhoneNumber(e.target.value)}
                       />
                       {errors.phoneNumber && <p style={{ color: "red" }}>{errors.phoneNumber}</p>}
@@ -201,7 +214,7 @@ const Profile = () => {
                       <input
                         type="text"
                         name="txtAddress"
-                        value={address}
+                        value={address || ""}
                         onChange={(e) => setAddress(e.target.value)}
                       />
                       {errors.address && <p style={{ color: "red" }}>{errors.address}</p>}
