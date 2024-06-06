@@ -106,7 +106,6 @@ const User = () => {
     fetchOrderData();
   }, []);
 
-
   const handleCancelOrder = (orderId: number) => {
     try {
       if (!token) {
@@ -148,7 +147,6 @@ const User = () => {
           } else {
             throw new Error("Failed to cancel order");
           }
-
         }
       });
     } catch (error) {
@@ -191,7 +189,6 @@ const User = () => {
               },
             }
           );
-
           if (response.ok) {
             swal("Success!", "Thanks for shopping at M&B", "success");
             const data = await response.json();
@@ -295,18 +292,6 @@ const User = () => {
                               </td>
 
                               <td className="column7 dynamic-content">
-                                {/* <span
-                                  className={`status ${order.orderStatus === "Pending"
-                                    ? "yellow"
-                                    : order.orderStatus === "Canceled"
-                                      ? "red"
-                                      : order.orderStatus === "Submitted"
-                                        ? "orange"
-                                        : order.orderStatus === "Completed"
-                                          ? "green"
-                                          : ""
-                                    }`}
-                                /> */}
                                 {order.orderStatus}
                               </td>
                               <td className="column8 dynamic-content">
