@@ -2,10 +2,10 @@ import { Navbar, Footer } from "../../import/import-router";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import view from "../../assets/view.png";
-import { CiHeart } from "react-icons/ci";
 import "./Blog.css";
 import { Link } from "../../import/import-libary";
 import { jwtDecode } from "jwt-decode";
+import { FaHeart } from "react-icons/fa";
 
 export interface Blog {
   blogId: number;
@@ -28,14 +28,65 @@ const getGridColumn = (index: number) => {
 const Blog = () => {
   const [blogList, setBlogList] = useState<Blog[]>([]);
 
-  //Get API blog
+  const handleLikeClick = async (blogId: number) => {
+    const likedBlog = blogList.find((blog) => blog.blogId === blogId);
+
+    if (!likedBlog) {
+      console.error("Blog not found");
+      return;
+    }
+
+    const liked = likedBlog.like;
+
+    try {
+      if (!liked) {
+        const response = await axios.post(
+          `https://localhost:7030/api/Blog/IncreaseLike?userId=${parseInt(
+            userId
+          )}&blogId=${blogId}`
+        );
+        if (response.status === 200) {
+          setBlogList((prevBlogList) =>
+            prevBlogList.map((blog) =>
+              blog.blogId === blogId
+                ? { ...blog, like: blog.like + 1, liked: true }
+                : blog
+            )
+          );
+        }
+      } else {
+        const response = await axios.post(
+          `https://localhost:7030/api/Blog/CancelLike?userId=${parseInt(
+            userId
+          )}&blogId=${blogId}`
+        );
+        if (response.status === 200) {
+          setBlogList((prevBlogList) =>
+            prevBlogList.map((blog) =>
+              blog.blogId === blogId
+                ? { ...blog, like: blog.like - 1, liked: false }
+                : blog
+            )
+          );
+        }
+      }
+    } catch (error) {
+      console.error("Error updating like status:", error);
+    }
+  };
+
+  // Get API blog
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
           `https://localhost:7030/api/Blog/getAllBlogs`
         );
-        setBlogList(response.data);
+        const updatedBlogList = response.data.map((blog: Blog) => ({
+          ...blog,
+          liked: false,
+        }));
+        setBlogList(updatedBlogList);
       } catch (error) {
         console.error("Error fetching blogs:", error);
       }
@@ -46,7 +97,9 @@ const Blog = () => {
   const increaseViewCount = async (userId: string, blogId: number) => {
     try {
       await fetch(
-        `https://localhost:7030/api/Blog/IncreaseView?userId=${parseInt(userId)}&blogId=${blogId}`,
+        `https://localhost:7030/api/Blog/IncreaseView?userId=${parseInt(
+          userId
+        )}&blogId=${blogId}`,
         {
           method: "POST",
         }
@@ -56,12 +109,12 @@ const Blog = () => {
     }
   };
 
-  //Get the userId from the token
+  // Get the userId from the token
   const token = localStorage.getItem("token");
 
   if (!token) {
     console.error("Token not found");
-    return;
+    return null;
   }
 
   const decodedToken: any = jwtDecode(token);
@@ -73,38 +126,48 @@ const Blog = () => {
 
   const userId = userIdIdentifier;
 
-
   return (
     <div>
       <Navbar />
 
       <div className="body-blog">
         <div>
-          {blogList.map((blogs, index) => (
+          {blogList.map((blog, index) => (
             <div
+              key={blog.blogId}
               className="box-blog"
               style={{
                 gridColumn: getGridColumn(index),
               }}
             >
               <div className="element-blog">
-                <Link to={`/blogdetails/${blogs.blogId}`} onClick={() => increaseViewCount(userId, blogs.blogId)}>
+                <Link
+                  to={`/blogdetails/${blog.blogId}`}
+                  onClick={() => increaseViewCount(userId, blog.blogId)}
+                >
                   <div className="box-img-blog">
-                    <img src={blogs.imageUrl} className="img-blog" alt="" />
+                    <img src={blog.imageUrl} className="img-blog" alt="" />
                   </div>
-                  <div className="box-title">{blogs.title}</div>
-                  <div className="box-content">{blogs.content}</div>
+                  <div className="box-title">{blog.title}</div>
+                  <div className="box-content">{blog.content}</div>
                 </Link>
                 <div className="box-footer-blog">
                   <div className="icon-blog">
-
                     <img src={view} className="view" alt="view" />
-                    <div>{blogs.view}</div>
-
-                    <CiHeart fontSize="1.5em" style={{ cursor: "pointer" }} />
-
+                    <div>{blog.view}</div>
+                    <FaHeart
+                      size={24}
+                      style={{
+                        cursor: "pointer",
+                        color: blog.like ? "pink" : "inherit",
+                      }}
+                      onClick={() => handleLikeClick(blog.blogId)}
+                    />
+                    <div>{blog.like}</div>
                   </div>
-                  <div className="date-blog">{new Date(blogs.uploadDate).toLocaleDateString()}</div>
+                  <div className="date-blog">
+                    {new Date(blog.uploadDate).toLocaleDateString()}
+                  </div>
                 </div>
                 <div></div>
               </div>
