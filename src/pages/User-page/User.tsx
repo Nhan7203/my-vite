@@ -7,6 +7,7 @@ import BoxMenuUser from "./components/BoxMenuUser";
 import "./User.css";
 import "../Admin-page//Admin.css";
 import { Link } from "../../import/import-libary";
+import { useNavigate } from 'react-router-dom';
 
 interface Order {
   orderId: number;
@@ -28,6 +29,18 @@ interface Order {
 const User = () => {
   const [orderData, setOrderData] = useState<Order[]>([]);
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+  const [isGlowing, setIsGlowing] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsGlowing((prevIsGlowing) => !prevIsGlowing);
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchOrderData = async () => {
@@ -94,9 +107,7 @@ const User = () => {
   }, []);
 
   const handleCancelOrder = (orderId: number) => {
-    // Ví dụ, gọi API để hủy đơn hàng và cập nhật lại danh sách đơn hàng
     try {
-
       if (!token) {
         console.error("Token not found");
         return;
@@ -128,11 +139,11 @@ const User = () => {
               },
             }
           );
-
           if (response.ok) {
             swal("Success!", "Order was canceled!", "success");
             const data = await response.json();
             setOrderData(data);
+            navigate("/user");
           } else {
             throw new Error("Failed to cancel order");
           }
@@ -143,10 +154,8 @@ const User = () => {
     }
   };
 
-
   const handleOrderReceived = (orderId: number) => {
     try {
-
       if (!token) {
         console.error("Token not found");
         return;
@@ -163,7 +172,9 @@ const User = () => {
 
       swal({
         title: "Recieved The Order!",
-        text: `Confirm payment of $${orderData.find((order) => order.orderId === orderId)?.total.toLocaleString()} to the seller`,
+        text: `Confirm payment of $${orderData
+          .find((order) => order.orderId === orderId)
+          ?.total.toLocaleString()} to the seller`,
         icon: "warning",
         buttons: ["Cancel", "Confirm"],
         dangerMode: true,
@@ -178,14 +189,15 @@ const User = () => {
               },
             }
           );
-
           if (response.ok) {
             swal("Success!", "Thanks for shopping at M&B", "success");
             const data = await response.json();
             setOrderData(data);
+            navigate("/user");
           } else {
             throw new Error("Failed to cancel order");
           }
+
         }
       });
     } catch (error) {
@@ -218,6 +230,7 @@ const User = () => {
                             <th className="column4">Payment Method</th>
                             <th className="column5">Shipping Method</th>
                             <th className="column6">Total</th>
+                            <th className="column65"></th>
                             <th className="column7">Status</th>
                             <th className="column8">Actions</th>
                           </tr>
@@ -233,8 +246,10 @@ const User = () => {
                               }
                             >
                               <td className="column1 dynamic-content">
-                                <Link to={`/orderdetails/${order.orderId}`}
-                                  state={{ orderStatus: order.orderStatus }}>
+                                <Link
+                                  to={`/orderdetails/${order.orderId}`}
+                                  state={{ orderStatus: order.orderStatus }}
+                                >
                                   {order.orderDate}
                                 </Link>
                               </td>
@@ -259,8 +274,10 @@ const User = () => {
                               <td className="column6 dynamic-content">
                                 ${order.total.toLocaleString()}
                               </td>
-                              <td className="column7 dynamic-content">
+
+                              <td className="column65 dynamic-content">
                                 <span
+                                  style={{ margin: "0 0 0 15px" }}
                                   className={`status ${order.orderStatus === "Pending"
                                     ? "yellow"
                                     : order.orderStatus === "Canceled"
@@ -270,8 +287,11 @@ const User = () => {
                                         : order.orderStatus === "Completed"
                                           ? "green"
                                           : ""
-                                    }`}
+                                    } ${isGlowing ? "glow" : ""}`}
                                 />
+                              </td>
+
+                              <td className="column7 dynamic-content">
                                 {order.orderStatus}
                               </td>
                               <td className="column8 dynamic-content">
@@ -295,18 +315,17 @@ const User = () => {
                                     >
                                       Received
                                     </button>
-                                    <Link
-                                      to={`/orderdetails/${order.orderId}`}
-                                      state={{ orderStatus: order.orderStatus }}
-                                    >
-                                      <button
-                                        className="reorder-button"
-                                    
-                                      >
-                                        Reorder
-                                      </button>
-                                    </Link>
                                   </>
+                                )}
+                                {order.orderStatus === "Completed" && (
+                                  <Link
+                                    to={`/orderdetails/${order.orderId}`}
+                                    state={{ orderStatus: order.orderStatus }}
+                                  >
+                                    <button className="reorder-button">
+                                      Reorder
+                                    </button>
+                                  </Link>
                                 )}
                               </td>
                             </tr>

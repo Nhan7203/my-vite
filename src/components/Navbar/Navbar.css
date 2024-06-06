@@ -113,6 +113,8 @@
   margin-left: 40px;
   display: flex;
   color: black;
+  position: relative;
+  cursor: pointer;
 }
 
 .cart-icon {
@@ -161,7 +163,7 @@ a.white {
 .user-menu {
   position: relative;
   display: inline-block;
-  
+  z-index: 50;
 }
 
 .menu-box {
@@ -181,7 +183,7 @@ a.white {
   border-radius: 10px;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s, visibility 0.3s;
+  transition: opacity 0.1s, visibility 0.1s;
 }
 
 .menu-box a {
@@ -203,4 +205,89 @@ a.white {
   width: 30px;
   height: 30px;
   border-radius: 100px;
+}
+
+.noti-box {
+  position: absolute;
+  width: 500px;
+  top: 100%;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-bottom: 2px solid #ccc;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 10px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  cursor: pointer;
+  z-index: 50;
+}
+
+
+.icon-noti .active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.noti-box.hide {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.element-noti {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border-bottom: 0.5px solid #ccc;
+}
+
+.text-noti {
+  width: 400px;
+  margin-left: 20px;
+}
+
+.status-noti {
+  margin-left: 20px;
+}
+
+.status-noti input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  margin-bottom: 20px;
+  transform: translateX(2px);
+}
+
+.img-noti > img {
+  width: 45px;
+  height: 45px;
+  
+}
+
+.icon-trash-all {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.icon-trash-all > img {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.unread {
+  background-color: antiquewhite;
+}
+
+.unread:hover {
+  background-color: white;
+  cursor: pointer;
 }
