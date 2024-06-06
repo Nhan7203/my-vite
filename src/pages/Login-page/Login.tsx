@@ -31,28 +31,28 @@ const Login = () => {
       if (response.status === 200) {
         // Login successful
         //Lay-Luu token vao local storage
-        const { token } = response.data;
-        console.log(token);
+        const { token, refreshToken} = response.data;
 
         const decodedToken: any = jwtDecode(token)
         localStorage.setItem('token', token);
+        localStorage.setItem('refreshToken', refreshToken);
 
         const role = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
 
         // const decodedToken = jwt.decode(token) as JwtPayload;
 
         if (role === "User") {
-          alert("Oke thg lon nay User ne");
+          alert("Oke bạn nay User ne");
           //Redirect to 'User' page
           navigate("/");
         }
         else if (role === "Staff") {
-          alert("Oke thg lon nay Staff ne");
+          alert("Oke bạn nay Staff ne");
           // Redirect to 'Staff' page
 
         } else if (role === "Admin") {
 
-          alert("Oke thg lon nay Admin ne");
+          alert("Oke bạn nay Admin ne");
           navigate("/admin");
         }
       } else {
