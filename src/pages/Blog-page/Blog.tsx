@@ -5,6 +5,7 @@ import view from "../../assets/view.png";
 import { CiHeart } from "react-icons/ci";
 import "./Blog.css";
 import { Link } from "../../import/import-libary";
+import { jwtDecode } from "jwt-decode";
 
 export interface Blog {
   blogId: number;
@@ -42,6 +43,37 @@ const Blog = () => {
     fetchData();
   }, []);
 
+  const increaseViewCount = async (userId: string, blogId: number) => {
+    try {
+      await fetch(
+        `https://localhost:7030/api/Blog/IncreaseView?userId=${parseInt(userId)}&blogId=${blogId}`,
+        {
+          method: "POST",
+        }
+      );
+    } catch (error) {
+      console.error("Error increasing view count:", error);
+    }
+  };
+
+  //Get the userId from the token
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    console.error("Token not found");
+    return;
+  }
+
+  const decodedToken: any = jwtDecode(token);
+
+  const userIdIdentifier =
+    decodedToken[
+    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+    ];
+
+  const userId = userIdIdentifier;
+
+
   return (
     <div>
       <Navbar />
@@ -56,20 +88,21 @@ const Blog = () => {
               }}
             >
               <div className="element-blog">
-                <Link to={`/blogdetails/${blogs.blogId}`}>
-                <div className="box-img-blog">
-                  <img src={blogs.imageUrl} className="img-blog" alt="" />
-                </div>
-                <div className="box-title">{blogs.title}</div>
-                <div className="box-content">{blogs.content}</div>
+                <Link to={`/blogdetails/${blogs.blogId}`} onClick={() => increaseViewCount(userId, blogs.blogId)}>
+                  <div className="box-img-blog">
+                    <img src={blogs.imageUrl} className="img-blog" alt="" />
+                  </div>
+                  <div className="box-title">{blogs.title}</div>
+                  <div className="box-content">{blogs.content}</div>
                 </Link>
                 <div className="box-footer-blog">
                   <div className="icon-blog">
-                    
-                      <img src={view} className="view" alt="view" />
-                      <div>0</div>
-                    
-                    <CiHeart fontSize="1.5em" style={{cursor: "pointer"}}/>
+
+                    <img src={view} className="view" alt="view" />
+                    <div>{blogs.view}</div>
+
+                    <CiHeart fontSize="1.5em" style={{ cursor: "pointer" }} />
+
                   </div>
                   <div className="date-blog">{new Date(blogs.uploadDate).toLocaleDateString()}</div>
                 </div>
