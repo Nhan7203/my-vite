@@ -118,9 +118,9 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            <img className="img-1" src={product.imageProducts[1].imageUrl} alt="" />
-            <img className="img-2" src={product.imageProducts[2].imageUrl} alt="" />
-            <img className="img-3" src={product.imageProducts[3].imageUrl} alt="" />
+            <div className="box-img-1"><img className="img-1" src={product.imageProducts[1].imageUrl} alt="" /></div>
+            <div className="box-img-2"><img className="img-2" src={product.imageProducts[2].imageUrl} alt="" /></div>
+            <div className="box-img-3"><img className="img-3" src={product.imageProducts[3].imageUrl} alt="" /></div>
           </div>
         </div>
       ) : (
