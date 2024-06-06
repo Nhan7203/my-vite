@@ -58,10 +58,10 @@ const BoxMenuUser = () => {
         </div>
       </div>
       <div className="box-oder-adress-voucher">
-        <div className="purchased-order">
+        <Link to="/user" className="purchased-order">
           <img src={box} alt="" />
-          <Link to="/user" style={{color: "#404040"}}><p>Purchase order</p></Link>
-        </div>
+         <p>Purchase order</p>
+        </Link>
         <div className="my-adress">
           <img src={adress} alt="" />
           <p>Address</p>
