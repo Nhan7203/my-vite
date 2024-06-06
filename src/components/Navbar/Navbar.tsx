@@ -184,7 +184,9 @@ const Navbar = () => {
 
   //Renove token logout
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('cart');
   };
 
   const toggleNotification = () => {
