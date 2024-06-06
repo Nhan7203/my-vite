@@ -1,27 +1,38 @@
 //import { toast } from "react-toastify";
 import "./Admin.css";
-//import { useState, useEffect } from "react";
-import * as tu from "../../apiServices/getTotalUser";
-import * as au from "../../apiServices/GetAllUsers";
+import { useState, useEffect } from "react";
 import "./Admin.css";
 import { useAllProduct } from "../../context/ShopContext";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 // import { aProduct } from "../../context/ShopContext";
 
 const UpdateProduct = () => {
+  const navigate = useNavigate();
   const { allProduct } = useAllProduct();
+  const { state } = useLocation();
+  const { productId } = state;
+  const [name, setName] = useState("");
+  const [brandId, setBrandId] = useState<number>(0);
+  const [ageId, setAgeId] = useState<number>(0);
+  const [description, setDescription] = useState("");
 
-  const { productId } = useParams<{ productId?: string }>();
+ 
 
-  let product: any;
-  if (productId) {
-    product = allProduct.find((e) => e.productId === parseInt(productId));
-  }
+  const product = allProduct.find((e) => e.productId === parseInt(productId));
+  
+  useEffect(() => {
+    if (product) {
+      setName(product.name);
+      setBrandId(product.brandId);
+      setAgeId(product.forAgeId);
+      setDescription(product.description);
+    }
+  }, [product]);
 
   const handleUpdate = () => {};
 
   const handleCancel = () => {
-    location.href = "/manage-product";
+    navigate("/manage-product");
   };
   return (
     <>
@@ -104,27 +115,41 @@ const UpdateProduct = () => {
               </div>
             </div>
           </div>
-
-          <main>
-            {product ? (
+         
+            <main>
               <div id="boder-form">
-                <form className="form-add">
+                <form  className="form-add ">
                   <div>
                     <h4>Image</h4>
                     <input type="file" />
                     <h4>For Age</h4>
                     <input
-                        type="text"
-                        name="txtForAge"
-                        value={product}
-                        // onChange={(e) => setPhoneNumber(e.target.value)}
-                      />
+                      type="number"
+                      name="txtForAge"
+                      value={ageId}
+                      onChange={(e) => setAgeId(Number(e.target.value))}
+                    />
                     <h4>Brand</h4>
-                    <input type="text" />
+                    <input
+                      type="number"
+                      name="txtBrand"
+                      value={brandId}
+                      onChange={(e) => setBrandId(Number(e.target.value))}
+                    />
                     <h4>Name</h4>
-                    <input type="text" />
+                    <input
+                      type="text"
+                      name="txtName"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
                     <h4>Description</h4>
-                    <input type="text" />
+                    <input
+                      type="text"
+                      name="txtDescription"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                    />
                   </div>
                 </form>
                 <div className="both-button">
@@ -136,10 +161,7 @@ const UpdateProduct = () => {
                   </button>
                 </div>
               </div>
-            ) : (
-              <Link to="/product"></Link>
-            )}
-          </main>
+            </main>
         </div>
       </body>
     </>
