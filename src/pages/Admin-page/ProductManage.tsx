@@ -1,11 +1,8 @@
-import { toast } from "react-toastify";
-import { useState, useEffect } from "react";
-import * as productitems from "../../apiServices/productItems";
+import { useEffect, useState } from "react";
+//import * as productitems from "../../apiServices/productItems";
 import { aProduct } from "../../context/ShopContext";
 import { useNavigate } from "react-router-dom";
 import { useAllProduct } from "../../context/ShopContext";
-import * as tu from "../../apiServices/getTotalUser";
-import * as tp from "../../apiServices/getTotalProduct";
 
 import "./Admin.css";
 
@@ -16,16 +13,40 @@ export interface ImageProduct {
 }
 
 const ProductManage = () => {
-    
-  const navigate = useNavigate();
   const { allProduct } = useAllProduct();
-  const handleClickAdd = () => {
-    location.href = "/addproduct";
+  const [products, setProducts] = useState<aProduct[]>(allProduct);
+  const navigate = useNavigate();
+  console.log(allProduct);
+
+  useEffect(() => {
+    setProducts(allProduct);
+  }, [allProduct]);
+
+  const handleClickAdd = (products: aProduct[]) => {
+    navigate("/addproduct", { state: { productList: products } });
   };
+
   const handleUpdate = (product: aProduct) => {
     navigate("/updateproduct", { state: { productId: product.productId } });
   };
-  const handleDelete = () => {};
+
+  const deleteProduct = async (productId: number) => {
+    console.log(productId);
+    try {
+      await fetch(
+        `https://localhost:7030/api/Products/Delete?id=${productId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      setProducts(
+        products.filter((product) => product.productId !== productId)
+      );
+    } catch (error) {
+      console.error("Error deleting notification:", error);
+    }
+  };
 
   return (
     <>
@@ -114,7 +135,7 @@ const ProductManage = () => {
               <div className="head-table">
                 <ul>
                   <li className="view-product">View Product</li>
-                  <li className="add-product" onClick={() => handleClickAdd()}>
+                  <li className="add-product" onClick={() => handleClickAdd(products)}>
                     Add Product
                   </li>
                 </ul>
@@ -135,7 +156,7 @@ const ProductManage = () => {
                 </thead>
 
                 <tbody>
-                  {allProduct.map((product, index: number) => (
+                  {products.map((product, index: number) => (
                     <tr key={index}>
                       <td>{index + 1}</td>
                       <td>
@@ -154,13 +175,21 @@ const ProductManage = () => {
                       <td>{product.description}</td>
 
                       <td>
-                        <button className="Edit" onClick={() => handleUpdate(product)}>
+                        <button
+                          className="Edit"
+                          onClick={() => handleUpdate(product)}
+                        >
                           Update
                         </button>
                       </td>
 
                       <td>
-                        <button className="Delete-product">Delete</button>
+                        <button
+                          className="Delete-product"
+                          onClick={() => deleteProduct(product.productId)}
+                        >
+                          Delete
+                        </button>
                       </td>
                     </tr>
                   ))}
