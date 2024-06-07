@@ -23,7 +23,7 @@
 .img-card {
   width: 240px;
   height: auto;
-  margin-bottom: 25px;
+  margin-bottom: 5px;
 }
 
 .home-product {
@@ -61,14 +61,18 @@
 
 .body-card {
   height: 50px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
+  font-size: 17px;
+  font-family: Helvetica;
+  font-weight: bold;
+  color: #6d6568;
 }
 
 .footer-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0px;
+  
 }
 
 .price {
@@ -117,4 +121,17 @@ p {
     color: #ffffff;
     transform: translateY(-2px);
   }
+}
+
+.rate-star {
+  width: 120px;
+  margin-right: 10px;
+}
+
+.rate-sold {
+  display: flex;
+  font-family: Helvetica;
+  align-items: flex-start;
+  margin-bottom: 1px;
+  font-style: italic;
 }

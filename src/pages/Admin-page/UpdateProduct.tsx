@@ -124,6 +124,7 @@ const UpdateProduct = () => {
 
       if (response.status === 200) {
         swal("Success", "Product information updated successfully!", "success");
+        console.log(payload);
         // window.location.reload();
       } else {
         swal("Error", "Failed to update product information.", "error");

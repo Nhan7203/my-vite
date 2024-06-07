@@ -1,10 +1,14 @@
 import "./Admin.css";
 import { useState, useEffect } from "react";
 import "./Admin.css";
-import { useNavigate} from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import * as brandd from "../../apiServices/getBrand";
-//import { aProduct } from "../../context/ShopContext";
-import { refreshToken } from "../../apiServices/refreshTokenServices";
+import {
+  ImageProduct,
+  aProduct,
+  useAllProduct,
+} from "../../context/ShopContext";
+
 export interface Brand {
   brandId: number;
   name: string;
@@ -13,20 +17,31 @@ export interface Brand {
 
 const AddProduct = () => {
   const navigate = useNavigate();
-  //const { productList} = state;
+  const { allProduct } = useAllProduct();
+  const { state } = useLocation();
+  const { productList } = state;
   const [name, setName] = useState("");
-  const [brandId, setBrandId] = useState<number>(0);
-  const [categoryId, setCategoryId] = useState<number>(0);
-  const [ageId, setAgeId] = useState<number>(0);
+  const [brandId, setBrandId] = useState<number>(1);
+  const [categoryId, setCategoryId] = useState<number>(1);
+  const [ageId, setAgeId] = useState<number>(1);
   const [description, setDescription] = useState("");
-  const [price, setPrice] = useState<number>(0);
-  const [stock, setStock] = useState<number>(0);
-//   const [imageProducts, setImageProducts] = useState<ImageProduct[]>([]);
-//   const [imageUrls, setImageUrls] = useState<{ [key: number]: string }>({});
+  const [price, setPrice] = useState<number>();
+  const [stock, setStock] = useState<number>();
+  const [imageProducts, setImageProducts] = useState<ImageProduct[]>([]);
+  const [imageUrls, setImageUrls] = useState<{ [key: number]: string }>({});
   const [brandList, setBrandList] = useState<Brand[]>([]);
-  const [productId, setProductId] = useState<number>();
-  //const [products, setProducts] = useState<aProduct[]>(productList);
+  const [products] = useState<aProduct[]>(productList);
 
+  const maxProductId = Math.max(
+    ...products.map((product) => product.productId)
+  );
+  const product = allProduct.find((e) => e.productId === maxProductId);
+  let maxImageId: number | undefined;
+  if (product) {
+    maxImageId = Math.max(...product.imageProducts.map((i) => i.imageId));
+    // Tiếp tục sử dụng maxImageId
+  }
+  console.log(maxImageId);
   useEffect(() => {
     const fetchData = async () => {
       const result = await brandd.getBrand();
@@ -48,15 +63,22 @@ const AddProduct = () => {
     { id: 2, name: "Nut milk" },
     { id: 3, name: "Nutritional drinks" },
     { id: 4, name: "Fresh milk, Yogurt" },
- 
   ];
 
+  const handleImageUrlChange = (
+    imageId: number,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setImageUrls((prevImageUrls) => ({
+      ...prevImageUrls,
+      [imageId]: event.target.value,
+    }));
+  };
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
 
     const payload = {
-      productId: productId,
       name: name,
       description: description,
       forAgeId: ageId,
@@ -86,21 +108,18 @@ const AddProduct = () => {
         throw new Error("Failed to store cart data");
       }
 
-      if (response.status === 401) {
-        await refreshToken();
-      }
-
       const data = await response.json();
-      
-      console.log("Cart data stored:", data);
+
+      console.log("Product data stored:", data);
     } catch (error) {
-      console.error("Error storing cart data:", error);
+      console.error("Error storing product data:", error);
     }
   };
 
   const handleCancel = () => {
     navigate("/manage-product");
   };
+
   return (
     <>
       <body>
@@ -187,13 +206,48 @@ const AddProduct = () => {
             <form onSubmit={handleSubmit} id="boder-form">
               <form className="form-add ">
                 <div>
-                <h4>ProductId</h4>
-                  <input
-                    type="number"
-                    name="txtproductId"
-                    value={productId}
-                    onChange={(e) => setProductId(Number(e.target.value))}
-                  />
+                  <h4>ProductId: {products.length + 1}</h4>
+
+                  {/* <h4>Image</h4>
+                  {products.map((product) => {
+                    return (
+                      <div key={products.length}>
+                        {product.imageProducts.map((image) => (
+                          <div key={product.imageProducts.length}>
+                            <label>
+                              Image ID: {product.imageProducts.length}
+                            </label>
+                            <input
+                              type="text"
+                              value={imageUrls[product.imageProducts.length]}
+                              onChange={(event) =>
+                                handleImageUrlChange(image.imageId, event)
+                              }
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  })} */}
+
+                  <h4>Image</h4>
+                  {product?.imageProducts.map((image, index) => (
+                    <div key={index}>
+                      <label>
+                        Image ID: {maxImageId ? maxImageId + index + 1 : 0}
+                      </label>
+                      <input
+                        type="text"
+                        value={imageUrls[maxImageId ? maxImageId + index + 1 : 0]}
+                        onChange={(event) =>
+                          handleImageUrlChange(
+                            maxImageId ? maxImageId + index + 1 : 0,
+                            event
+                          )
+                        }
+                      />
+                    </div>
+                  ))}
 
                   <h4>For age</h4>
                   <select
@@ -220,13 +274,13 @@ const AddProduct = () => {
                       <option
                         key={option.id}
                         value={option.id}
-                        // selected={option.id === categoryId}
+                        selected={option.id === categoryId}
                       >
                         {option.name}
                       </option>
                     ))}
                   </select>
-                  
+
                   <h4>Brand</h4>
                   <select
                     value={brandId}
@@ -242,7 +296,7 @@ const AddProduct = () => {
                       </option>
                     ))}
                   </select>
-                  
+
                   <h4>price</h4>
                   <input
                     type="number"

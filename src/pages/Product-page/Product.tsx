@@ -11,6 +11,7 @@ import by from "../../assets/search-empty.png";
 import { MdNavigateBefore, MdNavigateNext } from "../../import/import-libary";
 import "./Product.css";
 import React, { useRef } from "react";
+import rate from "../../assets/rating.png";
 
 export interface Brand {
   brandId: number;
@@ -168,7 +169,7 @@ const Product = () => {
             ref={containerRef}
             style={{
               overflow: "auto",
-              zIndex: "0"
+              zIndex: "0",
             }}
           >
             {brandList.map((brand, index) => (
@@ -408,7 +409,10 @@ const Product = () => {
                         </Link>
                       </div>
                       <p className="element-name">{product.name}</p>
-
+                      <div className="rate-sold-2">
+                        <img src={rate} className="rate-star" alt="" />
+                        <p>Sold: 50k</p>
+                      </div>
                       <div className="body-text">
                         <span className="element-price">
                           ${product.price.toLocaleString()}{" "}

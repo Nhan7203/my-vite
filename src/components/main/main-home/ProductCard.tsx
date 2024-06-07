@@ -1,7 +1,7 @@
 import { Link, BsCart3 } from "../../../import/import-libary";
 import { useCart } from '../../../pages/Cart-page/CartContext';
 import { aProduct } from '../../../context/ShopContext';
-
+import rate from "../../../assets/rating.png"
 const getGridColumn = (index: number) => {
   const gridColumnMap = ["1 / 3", "4 / 6", "7 / 9", "10 / 12"];
   return gridColumnMap[index % gridColumnMap.length];
@@ -32,9 +32,14 @@ const ProductCard = ({ product, index }: {
 
         <div className="body-card">
           <p>{product.name}</p>
+        
         </div>
-
+        <div className="rate-sold">
+        <img src={rate} className="rate-star" alt="" />
+        <p>Sold: 50k</p>
+        </div>
         <div className="footer-card">
+       
           <h2 className="price">${product.price.toLocaleString()}</h2>
           <div className="box-shopping">
           <BsCart3 className="icon-shopping" fontSize="1.5em" onClick={() => addToCart(product)} />

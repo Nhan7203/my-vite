@@ -149,16 +149,14 @@ const OrderDetails = () => {
             }
           );
           setCurrentOrderStatus("Completed");
-       
+
           if (response.ok) {
             swal("Success!", "Thanks for shopping at M&B", "success");
             const data = await response.json();
             setCancelOrderResponse(data);
-            
           } else {
             throw new Error("Failed to cancel order");
           }
-          
         }
       });
     } catch (error) {
@@ -215,15 +213,18 @@ const OrderDetails = () => {
                       </div>
                       {(orderStatus === "Completed" ||
                         currentOrderStatus === "Completed") && (
-                        <div className="add-product">
+                        <div className="">
                           {product && (
-                            <button
-                              onClick={() =>
-                                handleAddToCart(product, orderDetail.quantity)
-                              }
-                            >
-                              add
-                            </button>
+                            <div className="add-product" style={{width: "280px"}}>
+                              <button
+                                onClick={() =>
+                                  handleAddToCart(product, orderDetail.quantity)
+                                }
+                              >
+                                add
+                              </button>
+                              <button>Rate</button>
+                            </div>
                           )}
                         </div>
                       )}

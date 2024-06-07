@@ -223,6 +223,7 @@ tbody > tr > td {
   .add-product {
     display: flex;
     justify-content: flex-end;
+    width: 400px;
   }
 }
 

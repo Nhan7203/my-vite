@@ -7,6 +7,7 @@ import ProductCard from "../../components/main/main-home/ProductCard";
 import adv from "/src/assets/adv.png";
 import adv1 from "/src/assets/adv1.png";
 import adv2 from "/src/assets/adv2.png";
+import rate from "../../assets/rating.png";
 import "./ProductDetail.css";
 
 const ProductDetail = () => {
@@ -79,7 +80,10 @@ const ProductDetail = () => {
               <div className="rating-sold">
                 <span className="sold">Available: {product.stock}</span>
               </div>
-
+              <div className="rate-sold" >
+                <img src={rate} className="rate-star" alt="" />
+                <p>Sold: 50k</p>
+              </div>
               <h3>${product.price.toLocaleString()}</h3>
               <div className="trans-zalo">
                 <div className="img-zalo">
@@ -118,9 +122,27 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            <div className="box-img-1"><img className="img-1" src={product.imageProducts[1].imageUrl} alt="" /></div>
-            <div className="box-img-2"><img className="img-2" src={product.imageProducts[2].imageUrl} alt="" /></div>
-            <div className="box-img-3"><img className="img-3" src={product.imageProducts[3].imageUrl} alt="" /></div>
+            <div className="box-img-1">
+              <img
+                className="img-1"
+                src={product.imageProducts[1].imageUrl}
+                alt=""
+              />
+            </div>
+            <div className="box-img-2">
+              <img
+                className="img-2"
+                src={product.imageProducts[2].imageUrl}
+                alt=""
+              />
+            </div>
+            <div className="box-img-3">
+              <img
+                className="img-3"
+                src={product.imageProducts[3].imageUrl}
+                alt=""
+              />
+            </div>
           </div>
         </div>
       ) : (
