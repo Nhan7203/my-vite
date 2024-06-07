@@ -409,7 +409,7 @@ const Product = () => {
                         </Link>
                       </div>
                       <p className="element-name">{product.name}</p>
-                      <div className="rate-sold-2">
+                      <div className="rate-sold">
                         <img src={rate} className="rate-star" alt="" />
                         <p>Sold: 50k</p>
                       </div>

@@ -28,8 +28,15 @@ const UpdateProduct = () => {
   const [stock, setStock] = useState<number>(0);
   const [imageProducts, setImageProducts] = useState<ImageProduct[]>([]);
   const [imageUrls, setImageUrls] = useState<{ [key: number]: string }>({});
-
   const [brandList, setBrandList] = useState<Brand[]>([]);
+  const [errors, setErrors] = useState({
+    name: '',
+    description: '',
+    stock: '',
+    price: '',
+    
+  });
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -77,18 +84,76 @@ const UpdateProduct = () => {
     }
   }, [product]);
 
-  const handleImageUrlChange = (
-    imageId: number,
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setImageUrls((prevImageUrls) => ({
-      ...prevImageUrls,
-      [imageId]: event.target.value,
-    }));
+
+  const handleImageUpload = (imageId: number, event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const imageUrl = `/images/products/${file.name}`;
+      setImageUrls((prevImageUrls) => ({
+        ...prevImageUrls,
+        [imageId]: imageUrl,
+      }));
+  
+    }
   };
+  // const handleImageUpload = (imageId: number, event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0];
+  //   if (file) {
+  //     const formData = new FormData();
+  //     formData.append('file', file);
+  
+  //     fetch(`/images/products/${file.name}`, {
+  //       method: 'POST',
+  //       body: formData,
+  //     })
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         setImageUrls((prevImageUrls) => ({
+  //           ...prevImageUrls,
+  //           [imageId]: data.imageUrl,
+  //         }));
+  //       })
+  //       .catch((error) => {
+  //         console.error('Error uploading image:', error);
+  //       });
+  //   }
+  // };
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
+
+    const error = {
+      name: '',
+      description: '',
+      stock: '',
+      price: '',
+      check: false
+    };
+
+    if (name === "") {
+      error.name = "Name is Required!"
+      error.check = true
+    
+     }
+     if (description === "") {
+      error.description = "Description is Required!"
+      error.check = true
+     }
+
+     if (stock === 0) {
+      error.stock = "Stock != 0 "
+      error.check = true
+    }
+
+    if (price === 0) {
+      error.price = "Price != 0 "
+      error.check = true
+    }
+    
+    setErrors(error)
+    if (error.check) {
+      return
+    }
 
     const payload = {
       productId: productId,
@@ -235,12 +300,19 @@ const UpdateProduct = () => {
                     <div key={image.imageId}>
                       <label>Image ID: {image.imageId}</label>
                       <input
-                        type="text"
-                        value={imageUrls[image.imageId]}
+                        type="file"
+                        
                         onChange={(event) =>
-                          handleImageUrlChange(image.imageId, event)
+                          handleImageUpload(image.imageId, event)
                         }
                       />
+                      {imageUrls && (
+                      <img
+                        src={imageUrls[image.imageId]}
+                        alt={`Image ${image.imageId }`}
+                        style={{ maxWidth: '200px' }}
+                      />
+                    )}
                     </div>
                   ))}
                   <h4>For age</h4>
@@ -298,6 +370,8 @@ const UpdateProduct = () => {
                     value={price}
                     onChange={(e) => setPrice(Number(e.target.value))}
                   />
+                  {errors.price && <p style={{ color: "red" }}>{errors.price}</p>}
+
                   <h4>stock</h4>
                   <input
                     type="number"
@@ -305,6 +379,8 @@ const UpdateProduct = () => {
                     value={stock}
                     onChange={(e) => setStock(Number(e.target.value))}
                   />
+                  {errors.stock && <p style={{ color: "red" }}>{errors.stock}</p>}    
+
                   <h4>Name</h4>
                   <input
                     type="text"
@@ -312,6 +388,8 @@ const UpdateProduct = () => {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
+                  {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
+
                   <h4>Description</h4>
                   <input
                     type="text"
@@ -319,6 +397,7 @@ const UpdateProduct = () => {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                   />
+                  {errors.description && <p style={{ color: "red" }}>{errors.description}</p>}
                 </div>
               </form>
               <div className="both-button">
