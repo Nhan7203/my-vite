@@ -45,7 +45,6 @@ const AddProduct = () => {
     price: '',
     imageUrls: '',
   });
-  // console.log(imageUrls)
   const maxProductId = Math.max(
     ...products.map((product) => product.productId)
   );
@@ -76,22 +75,18 @@ const AddProduct = () => {
     { id: 4, name: "Fresh milk, Yogurt" },
   ];
 
-  
-
   const handleImageUpload = (productId: number, imageIndex: number,  event: React.ChangeEvent<HTMLInputElement>) => {
 
     const file = event.target.files?.[0];
     
     if (file) {
       const imageUrl = `/images/products/${file.name}`;
-      console.log(imageUrl)
       setImageUrls((prevImageUrls) => ({
         ...prevImageUrls,
         [imageIndex]: imageUrl
         ,
       }));
       console.log("maaa",imageIndex)
-      console.log(imageUrls)
       setImageProducts((prevImageProducts) => [
           ...prevImageProducts,
           {
@@ -99,21 +94,10 @@ const AddProduct = () => {
             imageUrl:  imageUrl ,
           },          
         ]);
-        console.log(imageProducts)
+    
     } 
   }
-  // const handleAddImageProduct = (imageId: number, imageUrl:  string ) => {
-  //   setImageProducts((prevImageProducts) => [
-  //     ...prevImageProducts,
-  //     {
-  //       imageId,
-  //       productId: maxProductId + 1,
-  //       imageUrl: imageUrl ,
-  //     },
-      
-  //   ]);
-  //   console.log(imageUrl)
-  // };
+
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
     const error = {
@@ -124,14 +108,11 @@ const AddProduct = () => {
       imageUrls: '',
       check: false
     };
-    // const name_parttern = /^[^\d!@#$%^&*(),.?":{}|<>]+$/u
 
     if (name === "") {
       error.name = "Name is Required!"
       error.check = true
-    // } else if (!name_parttern.test(name.trim())) {
-    //   error.name = "The name should not have special characters"
-    //   error.check = true
+   
      }
      if (description === "") {
       error.description = "Description is Required!"
@@ -148,15 +129,15 @@ const AddProduct = () => {
       error.check = true
     }
 
-    if (imageUrls ) {
+    if (!imageUrls || Object.keys(imageUrls).length === 0) {
       error.imageUrls = "imageUrl is Required!"
       error.check = true
      }
-    
-    // setErrors(error)
-    // if (error.check) {
-    //   return
-    // }
+ 
+    setErrors(error)
+    if (error.check) {
+      return
+    }
     const payload = {
       name: name,
       description: description,
@@ -189,16 +170,9 @@ const AddProduct = () => {
         throw new Error("Failed to store cart data");
         
       }
-      if (response.status === 200) {
-        swal("Success", "Product information created successfully!", "success");
-        console.log(payload);    
-        
-      } else {
-        swal("Error", "Failed to create product information.", "error");
-        
-      }
+     
       const data = await response.json();
-
+      swal("Success", "Product information created successfully!", "success");
       console.log("Product data stored:", data);
     } catch (error) {
       console.error("Error storing product data:", error);
@@ -303,17 +277,7 @@ const AddProduct = () => {
                   <h4>ProductId: {products.length + 1}</h4>
 
                   <h4>Image</h4>
-                  {/* {product?.imageProducts.map((image, index) => (
-                    <div key={index}>
-                      <label>Image ID: {maxImageId ? maxImageId + index + 1 : 0}</label>
-                      <input
-                        type="text"
-                        value={imageUrls }
-                        onChange={(event) => handleAddImageProduct(maxImageId ? maxImageId + index + 1 : 0, event.target.value)}
-                      />
-                    </div>
-                  ))} */}
-
+                 
                 {product?.imageProducts.map((image, index) => (
                   <div key={index}>
                     <label>Image {index + 1}: </label>

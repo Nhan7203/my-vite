@@ -86,7 +86,7 @@ const Profile = () => {
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
     //check valid
-    let error = {
+    const error = {
       name: '',
       phoneNumber: '',
       address: '',

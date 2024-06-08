@@ -96,28 +96,7 @@ const UpdateProduct = () => {
   
     }
   };
-  // const handleImageUpload = (imageId: number, event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = event.target.files?.[0];
-  //   if (file) {
-  //     const formData = new FormData();
-  //     formData.append('file', file);
-  
-  //     fetch(`/images/products/${file.name}`, {
-  //       method: 'POST',
-  //       body: formData,
-  //     })
-  //       .then((response) => response.json())
-  //       .then((data) => {
-  //         setImageUrls((prevImageUrls) => ({
-  //           ...prevImageUrls,
-  //           [imageId]: data.imageUrl,
-  //         }));
-  //       })
-  //       .catch((error) => {
-  //         console.error('Error uploading image:', error);
-  //       });
-  //   }
-  // };
+ 
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
