@@ -11,7 +11,9 @@ import by from "../../assets/search-empty.png";
 import { MdNavigateBefore, MdNavigateNext } from "../../import/import-libary";
 import "./Product.css";
 import React, { useRef } from "react";
-import rate from "../../assets/rating.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar as solidStar, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons";
+import { faStar as regularStarOutline } from "@fortawesome/free-regular-svg-icons";
 
 export interface Brand {
   brandId: number;
@@ -31,6 +33,14 @@ const Product = () => {
   const [isForAgeChecked, setIsForAgeChecked] = useState(false);
   const [isBrandChecked, setIsBrandChecked] = useState(false);
   const [activeOrder, setActiveOrder] = useState("");
+
+  const [ratingInfo, setRatingInfo] = useState({
+    averageRating: 0,
+    totalRating: 0,
+    reviewCount: 0
+  });
+
+
 
   useEffect(() => {
     const fetchProductsByFilter = async () => {
@@ -154,6 +164,66 @@ const Product = () => {
       containerRef.current.scrollLeft += 1200;
     }
   };
+
+  useEffect(() => {
+    const fetchRatings = async () => {
+      try {
+        const response = await fetch('https://localhost:7030/api/Review/GetAllRating');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const allRatings = await response.json();
+        const productIds = products.map((product) => product.productId);
+
+        for (const productId of productIds) {
+          const productRatings = allRatings.filter(rating => String(rating.productId) === String(productId));
+
+          if (productRatings.length > 0) {
+            const response = await fetch(`https://localhost:7030/api/Review/GetProductRating?productId=${productId}`, {
+              method: 'POST',
+            });
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const productRatingDetails = await response.json();
+            console.log(productRatingDetails);
+            setRatingInfo({
+              averageRating: productRatingDetails.averageRating,
+              totalRating: productRatingDetails.totalRating,
+              reviewCount: productRatingDetails.reviewCount
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching ratings:', error);
+      }
+    };
+
+    fetchRatings();
+  }, [products]);
+
+  const renderStars = () => {
+    const stars = [];
+    const fullStars = Math.floor(ratingInfo.averageRating);
+    const halfStar = ratingInfo.averageRating % 1 >= 0.5;
+
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(<FontAwesomeIcon key={i} icon={solidStar} style={{ color: 'yellow' }} />);
+    }
+
+    if (halfStar) {
+      stars.push(<FontAwesomeIcon key="half" icon={faStarHalfAlt} style={{ color: 'yellow' }} />);
+    }
+
+    const emptyStars = 5 - stars.length;
+    for (let i = 0; i < emptyStars; i++) {
+      stars.push(<FontAwesomeIcon key={`empty-${i}`} icon={regularStarOutline} style={{ color: 'grey' }} />);
+    }
+
+    return stars;
+  };
+
+
   return (
     <div>
       <StickyBox offsetTop={0} className="sticky-navbar">
@@ -174,9 +244,8 @@ const Product = () => {
           >
             {brandList.map((brand, index) => (
               <div
-                className={`element-brand ${
-                  brandId === brand.brandId ? "active" : ""
-                }`}
+                className={`element-brand ${brandId === brand.brandId ? "active" : ""
+                  }`}
                 style={{
                   gridColumn: getGridColumn(index),
                   zIndex: "0",
@@ -398,6 +467,7 @@ const Product = () => {
               {products.length > 0 ? (
                 <div className="result-product">
                   {products.map((product) => (
+
                     <div className="element-product" key={product.productId}>
                       <div className="element-img">
                         <Link to={`/productDetails/${product.productId}`}>
@@ -410,8 +480,10 @@ const Product = () => {
                       </div>
                       <p className="element-name">{product.name}</p>
                       <div className="rate-sold-2">
-                        <img src={rate} className="rate-star" alt="" />
-                        <p>Sold: 50k</p>
+                        <div className="rating-stars">
+                          {renderStars()}
+                        </div>
+                        {/* <p>Total Rating: {ratingInfo.reviewCount}</p> */}
                       </div>
                       <div className="body-text">
                         <span className="element-price">

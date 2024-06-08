@@ -8,12 +8,16 @@ import { jwtDecode } from "jwt-decode";
 import { aProduct } from "../../context/ShopContext";
 import { useCart } from "../Cart-page/CartContext";
 import swal from "sweetalert";
+import './OrderDetails.css';
 
 export interface OrderDetail {
   productId: number;
   quantity: number;
   price: number;
   total: number;
+}
+interface Product {
+  productId: number;
 }
 
 const OrderDetails = () => {
@@ -26,6 +30,13 @@ const OrderDetails = () => {
   const [currentOrderStatus, setCurrentOrderStatus] = useState<string>("");
   const location = useLocation();
   const { orderStatus } = location.state;
+
+  const [showRatingBox, setShowRatingBox] = useState<boolean>(false);
+  const [selectedStars, setSelectedStars] = useState<number>(0);
+  const [comment, setComment] = useState<string>("");
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedOrderDetail, setSelectedOrderDetail] = useState(null);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,7 +84,7 @@ const OrderDetails = () => {
 
       const userIdIdentifier =
         decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
         ];
 
       const userId = userIdIdentifier;
@@ -121,7 +132,7 @@ const OrderDetails = () => {
 
       const userIdIdentifier =
         decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
         ];
 
       const userId = userIdIdentifier;
@@ -161,6 +172,71 @@ const OrderDetails = () => {
       });
     } catch (error) {
       console.error("Error canceling order:", error);
+    }
+  };
+
+  const handleRate = (product: Product, orderDetail: OrderDetail) => {
+    setSelectedProduct(product);
+    setSelectedOrderDetail(orderDetail);
+    setShowRatingBox(true);
+  };
+
+  const handleStarClick = (star: number) => {
+    setSelectedStars(star);
+  };
+
+  const handleRatingCancel = () => {
+    setShowRatingBox(false);
+    setSelectedStars(0);
+    setComment("");
+  };
+
+  const handleRatingSubmit = async () => {
+    if (!selectedProduct || !selectedOrderDetail) return;
+
+    const decodedToken: any = jwtDecode(token);
+
+    const userIdIdentifier =
+      decodedToken[
+      "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+      ];
+
+    const userId = userIdIdentifier;
+
+    const rating = selectedStars || 1;
+
+    const reviewData = {
+      userId,
+      orderDetailId: 1,
+      productId: selectedProduct.productId,
+      date: new Date().toISOString(),
+      rating,
+      comment: comment || '',
+    };
+
+    console.log(reviewData);
+
+    try {
+      const response = await fetch('https://localhost:7030/api/Review', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(reviewData),
+      });
+
+      if (response.ok) {
+        swal('Success!', 'Your review has been submitted.', 'success');
+        setShowRatingBox(false);
+        setSelectedStars(0);
+        setComment('');
+      } else {
+        throw new Error('Failed to submit review');
+      }
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      swal('Error', 'Failed to submit your review. Please try again.', 'error');
     }
   };
 
@@ -213,21 +289,20 @@ const OrderDetails = () => {
                       </div>
                       {(orderStatus === "Completed" ||
                         currentOrderStatus === "Completed") && (
-                        <div className="">
-                          {product && (
-                            <div className="add-product" style={{width: "280px"}}>
-                              <button
-                                onClick={() =>
-                                  handleAddToCart(product, orderDetail.quantity)
-                                }
-                              >
-                                add
-                              </button>
-                              <button>Rate</button>
-                            </div>
-                          )}
-                        </div>
-                      )}
+                          <div className="">
+                            {product && (
+                              <div className="add-product" style={{ width: "280px" }}>
+                                <button
+                                  onClick={() =>
+                                    handleAddToCart(product, orderDetail.quantity)
+                                  }
+                                >
+                                  add
+                                </button>
+                                <button onClick={() => handleRate(product, orderDetail)}>Rate</button>                              </div>
+                            )}
+                          </div>
+                        )}
                     </div>
                   </div>
                 );
@@ -252,6 +327,34 @@ const OrderDetails = () => {
           </div>
         </div>
       </div>
+      <Footer />
+      {showRatingBox && (
+        <div className="rating-box-overlay">
+          <div className="rating-box">
+            <h3>Rate the Product</h3>
+            <div className="stars">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <span
+                  key={star}
+                  className={`star ${selectedStars >= star ? 'filled' : ''}`}
+                  onClick={() => handleStarClick(star)}
+                >
+                  &#9733;
+                </span>
+              ))}
+            </div>
+            <textarea
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              placeholder="Leave a comment (optional)"
+            />
+            <div className="rating-buttons">
+              <button onClick={handleRatingSubmit}>Submit</button>
+              <button onClick={handleRatingCancel}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
       <Footer />
     </div>
   );

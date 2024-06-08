@@ -7,8 +7,10 @@ import ProductCard from "../../components/main/main-home/ProductCard";
 import adv from "/src/assets/adv.png";
 import adv1 from "/src/assets/adv1.png";
 import adv2 from "/src/assets/adv2.png";
-import rate from "../../assets/rating.png";
 import "./ProductDetail.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar as solidStar, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons";
+import { faStar as regularStarOutline } from "@fortawesome/free-regular-svg-icons";
 
 const ProductDetail = () => {
   const { addToCart2 } = useCart();
@@ -22,6 +24,12 @@ const ProductDetail = () => {
   const nextSlide = () => {
     setCurrentSlide((prevSlide) => (prevSlide + 1) % bannerImages.length);
   };
+
+  const [ratingInfo, setRatingInfo] = useState({
+    averageRating: 0,
+    totalRating: 0,
+    reviewCount: 0
+  });
 
   useEffect(() => {
     const interval = setInterval(nextSlide, 5000);
@@ -62,6 +70,61 @@ const ProductDetail = () => {
     navigate("/cart");
   };
 
+  useEffect(() => {
+    const fetchRatings = async () => {
+      try {
+        const response = await fetch('https://localhost:7030/api/Review/GetAllRating');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const allRatings = await response.json();
+
+
+        const productRatings = allRatings.filter(rating => String(rating.productId) === String(product.productId));
+
+        if (productRatings.length > 0) {
+          const response = await fetch(`https://localhost:7030/api/Review/GetProductRating?productId=${product.productId}`, {
+            method: 'POST',
+          });
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const productRatingDetails = await response.json();
+          setRatingInfo({
+            averageRating: productRatingDetails.averageRating,
+            totalRating: productRatingDetails.totalRating,
+            reviewCount: productRatingDetails.reviewCount
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching ratings:', error);
+      }
+    };
+
+    fetchRatings();
+  }, [product.productId]);
+
+  const renderStars = () => {
+    const stars = [];
+    const fullStars = Math.floor(ratingInfo.averageRating);
+    const halfStar = ratingInfo.averageRating % 1 >= 0.5;
+
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(<FontAwesomeIcon key={i} icon={solidStar} style={{ color: 'yellow' }} />);
+    }
+
+    if (halfStar) {
+      stars.push(<FontAwesomeIcon key="half" icon={faStarHalfAlt} style={{ color: 'yellow' }} />);
+    }
+
+    const emptyStars = 5 - stars.length;
+    for (let i = 0; i < emptyStars; i++) {
+      stars.push(<FontAwesomeIcon key={`empty-${i}`} icon={regularStarOutline} style={{ color: 'grey' }} />);
+    }
+
+    return stars;
+  };
+
   return (
     <>
       <Navbar />
@@ -81,8 +144,10 @@ const ProductDetail = () => {
                 <span className="sold">Available: {product.stock}</span>
               </div>
               <div className="rate-sold" >
-                <img src={rate} className="rate-star" alt="" />
-                <p>Sold: 50k</p>
+                <div className="rating-stars">
+                  {renderStars()}
+                </div>
+                <p>Total Rating: {ratingInfo.reviewCount}</p>
               </div>
               <h3>${product.price.toLocaleString()}</h3>
               <div className="trans-zalo">
