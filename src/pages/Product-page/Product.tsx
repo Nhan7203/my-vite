@@ -34,11 +34,7 @@ const Product = () => {
   const [isBrandChecked, setIsBrandChecked] = useState(false);
   const [activeOrder, setActiveOrder] = useState("");
 
-  const [ratingInfo, setRatingInfo] = useState({
-    averageRating: 0,
-    totalRating: 0,
-    reviewCount: 0
-  });
+  const [ratings, setRatings] = useState({});
 
 
 
@@ -165,47 +161,52 @@ const Product = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchRatings = async () => {
-      try {
-        const response = await fetch('https://localhost:7030/api/Review/GetAllRating');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const allRatings = await response.json();
-        const productIds = products.map((product) => product.productId);
-
-        for (const productId of productIds) {
-          const productRatings = allRatings.filter(rating => String(rating.productId) === String(productId));
-
-          if (productRatings.length > 0) {
-            const response = await fetch(`https://localhost:7030/api/Review/GetProductRating?productId=${productId}`, {
-              method: 'POST',
-            });
-            if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const productRatingDetails = await response.json();
-            console.log(productRatingDetails);
-            setRatingInfo({
-              averageRating: productRatingDetails.averageRating,
-              totalRating: productRatingDetails.totalRating,
-              reviewCount: productRatingDetails.reviewCount
-            });
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching ratings:', error);
+  const fetchRatings = async () => {
+    try {
+      const response = await fetch('https://localhost:7030/api/Review/GetAllRating');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    };
+      const allRatings = await response.json();
 
-    fetchRatings();
-  }, [products]);
+      const ratingsMap = {};
 
-  const renderStars = () => {
+      for (const product of products) {
+        const productId = product.productId;
+        const productRatings = allRatings.filter(rating => String(rating.productId) === String(productId));
+
+        if (productRatings.length > 0) {
+          const response = await fetch(`https://localhost:7030/api/Review/GetProductRating?productId=${productId}`, {
+            method: 'POST',
+          });
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const productRatingDetails = await response.json();
+          ratingsMap[productId] = {
+            averageRating: productRatingDetails.averageRating,
+            totalRating: productRatingDetails.totalRating,
+            reviewCount: productRatingDetails.reviewCount,
+          };
+        } else {
+          ratingsMap[productId] = {
+            averageRating: 0,
+            totalRating: 0,
+            reviewCount: 0,
+          };
+        }
+      }
+
+      setRatings(ratingsMap);
+    } catch (error) {
+      console.error('Error fetching ratings:', error);
+    }
+  };
+
+  const renderStars = (averageRating: number) => {
     const stars = [];
-    const fullStars = Math.floor(ratingInfo.averageRating);
-    const halfStar = ratingInfo.averageRating % 1 >= 0.5;
+    const fullStars = Math.floor(averageRating);
+    const halfStar = averageRating % 1 >= 0.5;
 
     for (let i = 0; i < fullStars; i++) {
       stars.push(<FontAwesomeIcon key={i} icon={solidStar} style={{ color: 'yellow' }} />);
@@ -222,6 +223,11 @@ const Product = () => {
 
     return stars;
   };
+
+  useEffect(() => {
+    fetchRatings();
+  }, [products]);
+
 
 
   return (
@@ -466,41 +472,49 @@ const Product = () => {
               </div>
               {products.length > 0 ? (
                 <div className="result-product">
-                  {products.map((product) => (
 
-                    <div className="element-product" key={product.productId}>
-                      <div className="element-img">
-                        <Link to={`/productDetails/${product.productId}`}>
-                          <img
-                            src={product.imageProducts[0].imageUrl}
-                            className="imgpng"
-                            alt=""
-                          />
-                        </Link>
-                      </div>
-                      <p className="element-name">{product.name}</p>
+                  {products.map((product) => {
+                    const productRating = ratings[product.productId] || {
+                      averageRating: 0,
+                      totalRating: 0,
+                      reviewCount: 0,
+                    };
 
-                      <div className="rate-sold-2">
-                        <div className="rating-stars">
-                          {renderStars()}
+                    return (
+
+                      <div className="element-product" key={product.productId}>
+                        <div className="element-img">
+                          <Link to={`/productDetails/${product.productId}`}>
+                            <img
+                              src={product.imageProducts[0].imageUrl}
+                              className="imgpng"
+                              alt=""
+                            />
+                          </Link>
                         </div>
-                        {/* <p>Total Rating: {ratingInfo.reviewCount}</p> */}
+                        <p className="element-name">{product.name}</p>
+                        <div className="rate-sold-2">
+                          <div className="rating-stars">
+                            {renderStars(productRating.averageRating)}
+                          </div>
+                          <p>Total: {productRating.reviewCount}</p>
+                        </div>
+                        <div className="body-text">
+                          <span className="element-price">
+                            ${product.price.toLocaleString()}{" "}
+                          </span>
+                          <div className="box-icon-product-page">
+                            <BsCart3
+                              className="icon-cart-product-page"
+                              fontSize="1.4em"
+                              onClick={() => addToCart(product)}
+                            />
+                          </div>
 
-                      </div>
-                      <div className="body-text">
-                        <span className="element-price">
-                          ${product.price.toLocaleString()}{" "}
-                        </span>
-                        <div className="box-icon-product-page">
-                          <BsCart3
-                            className="icon-cart-product-page"
-                            fontSize="1.4em"
-                            onClick={() => addToCart(product)}
-                          />
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               ) : (
                 <div className="box-empty">
