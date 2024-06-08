@@ -472,6 +472,7 @@ const Product = () => {
               </div>
               {products.length > 0 ? (
                 <div className="result-product">
+
                   {products.map((product) => {
                     const productRating = ratings[product.productId] || {
                       averageRating: 0,
@@ -509,6 +510,7 @@ const Product = () => {
                               onClick={() => addToCart(product)}
                             />
                           </div>
+
                         </div>
                       </div>
                     );

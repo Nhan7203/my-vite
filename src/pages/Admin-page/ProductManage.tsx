@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import { aProduct } from "../../context/ShopContext";
 import { useNavigate } from "react-router-dom";
 import { useAllProduct } from "../../context/ShopContext";
-
+import * as brandd from "../../apiServices/getBrand";
 import "./Admin.css";
+import { Brand } from "../Product-page/Product";
 
 export interface ImageProduct {
   imageId: number;
@@ -12,11 +13,37 @@ export interface ImageProduct {
   imageUrl: string;
 }
 
+const ageOptions = [
+  { id: 1, name: "0 - 6 Month" },
+  { id: 2, name: "6 - 12 Month" },
+  { id: 3, name: "0 - 1 Year" },
+  { id: 4, name: "1 - 2 year" },
+  { id: 5, name: "+2 year" },
+];
+
+const categoryOptions = [
+  { id: 1, name: "Powdered milk" },
+  { id: 2, name: "Nut milk" },
+  { id: 3, name: "Nutritional drinks" },
+  { id: 4, name: "Fresh milk, Yogurt" },
+
+];
+
 const ProductManage = () => {
   const { allProduct } = useAllProduct();
   const [products, setProducts] = useState<aProduct[]>(allProduct);
+  const [brandList, setBrandList] = useState<Brand[]>([]);
   const navigate = useNavigate();
-  console.log(allProduct);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await brandd.getBrand();
+      setBrandList(result);
+    };
+    fetchData();
+  }, []);
+
 
   useEffect(() => {
     setProducts(allProduct);
@@ -47,6 +74,22 @@ const ProductManage = () => {
       console.error("Error deleting notification:", error);
     }
   };
+
+  const getAgeOptionName = (ageId: number) => {
+    const ageOption = ageOptions.find((option) => option.id === ageId);
+    return ageOption ? ageOption.name : '';
+  };
+
+  const getCategoryOptionName = (categoryId: number) => {
+    const categoryOption = categoryOptions.find((option) => option.id === categoryId);
+    return categoryOption ? categoryOption.name : '';
+  };
+  
+  const getBrandOptionName = (brandId: number) => {
+    const brandOption = brandList.find((option) => option.brandId === brandId);
+    return brandOption ? brandOption.name : '';
+  };
+
 
   return (
     <>
@@ -135,7 +178,10 @@ const ProductManage = () => {
               <div className="head-table">
                 <ul>
                   <li className="view-product">View Product</li>
-                  <li className="add-product" onClick={() => handleClickAdd(products)}>
+                  <li
+                    className="add-product"
+                    onClick={() => handleClickAdd(products)}
+                  >
                     Add Product
                   </li>
                 </ul>
@@ -148,8 +194,12 @@ const ProductManage = () => {
                     <th>ProductId</th>
                     <th>Age</th>
                     <th>Brand</th>
+                    <th>Category</th>
+                    <th>Stock</th>
+                    <th>Price</th>
                     <th>Name</th>
                     <th>Description</th>
+
                     <th>Update</th>
                     <th>Delete</th>
                   </tr>
@@ -169,8 +219,11 @@ const ProductManage = () => {
                         </div>
                       </td>
                       <td>{product.productId}</td>
-                      <td>{product.forAgeId}</td>
-                      <td>{product.brandId}</td>
+                      <td>{getAgeOptionName(product.forAgeId)}</td>
+                      <td>{getBrandOptionName(product.brandId)}</td>
+                      <td>{getCategoryOptionName(product.categoryId)}</td>
+                      <td>{product.stock}</td>
+                      <td>${product.price.toLocaleString()}</td>
                       <td>{product.name}</td>
                       <td>{product.description}</td>
 
