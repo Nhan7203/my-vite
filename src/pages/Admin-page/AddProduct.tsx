@@ -6,7 +6,7 @@ import * as brandd from "../../apiServices/getBrand";
 import swal from "sweetalert";
 
 import {
-  ImageProduct,
+ 
   aProduct,
   useAllProduct,
 } from "../../context/ShopContext";
@@ -15,6 +15,11 @@ export interface Brand {
   brandId: number;
   name: string;
   imageBrandUrl: string;
+}
+
+export interface ImageProduct {
+  productId: number
+  imageUrl: string
 }
 
 const AddProduct = () => {
@@ -40,17 +45,13 @@ const AddProduct = () => {
     price: '',
     imageUrls: '',
   });
-  console.log(imageUrls)
+  // console.log(imageUrls)
   const maxProductId = Math.max(
     ...products.map((product) => product.productId)
   );
   const product = allProduct.find((e) => e.productId === maxProductId);
 
-  let maxImageId: number | undefined;
-  if (product) {
-    maxImageId = Math.max(...product.imageProducts.map((i) => i.imageId));
-    
-  }
+ 
   
   useEffect(() => {
     const fetchData = async () => {
@@ -77,24 +78,28 @@ const AddProduct = () => {
 
   
 
-  const handleImageUpload = (imageId: number,  event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (productId: number, imageIndex: number,  event: React.ChangeEvent<HTMLInputElement>) => {
 
     const file = event.target.files?.[0];
     
     if (file) {
       const imageUrl = `/images/products/${file.name}`;
+      console.log(imageUrl)
       setImageUrls((prevImageUrls) => ({
         ...prevImageUrls,
-        [imageId]: imageUrl,
+        [imageIndex]: imageUrl
+        ,
       }));
+      console.log("maaa",imageIndex)
+      console.log(imageUrls)
       setImageProducts((prevImageProducts) => [
           ...prevImageProducts,
           {
-            imageId,
-            productId: imageId,
-        imageUrl:  imageUrl ,
+            productId: productId + 1,
+            imageUrl:  imageUrl ,
           },          
         ]);
+        console.log(imageProducts)
     } 
   }
   // const handleAddImageProduct = (imageId: number, imageUrl:  string ) => {
@@ -148,10 +153,10 @@ const AddProduct = () => {
       error.check = true
      }
     
-    setErrors(error)
-    if (error.check) {
-      return
-    }
+    // setErrors(error)
+    // if (error.check) {
+    //   return
+    // }
     const payload = {
       name: name,
       description: description,
@@ -164,7 +169,7 @@ const AddProduct = () => {
       isActive: true,
     };
 
-    console.log(payload);
+    
 
     try {
       const response = await fetch(
@@ -178,6 +183,8 @@ const AddProduct = () => {
         }
       );
 
+      console.log(payload);
+
       if (!response.ok) {
         throw new Error("Failed to store cart data");
         
@@ -188,6 +195,7 @@ const AddProduct = () => {
         
       } else {
         swal("Error", "Failed to create product information.", "error");
+        
       }
       const data = await response.json();
 
@@ -306,19 +314,18 @@ const AddProduct = () => {
                     </div>
                   ))} */}
 
-
                 {product?.imageProducts.map((image, index) => (
                   <div key={index}>
-                    <label>Image ID: {maxImageId ? maxImageId + index + 1 : 0}</label>
+                    <label>Image {index + 1}: </label>
                     <input
                       type="file"
-                      onChange={(event) => handleImageUpload(maxImageId ? maxImageId + index + 1 : 0, event)}
+                      onChange={(event) => handleImageUpload(image.productId, index , event)}
                     />
                       
-                    {imageUrls[maxImageId ? maxImageId + index + 1 : 0] ?  (
+                    {imageUrls[index] ?  (
                       <img
-                        src={imageUrls[maxImageId ? maxImageId + index + 1 : 0] }
-                        alt={`Image ${maxImageId ? maxImageId + index + 1 : 0}`}
+                        src={imageUrls[index] }
+                        alt={`Image ${ index + 1 }`}
                         style={{ maxWidth: '200px' }}
                       />
                     ) : (

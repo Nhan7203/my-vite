@@ -166,7 +166,7 @@ const UpdateProduct = () => {
       stock: stock,
       imageProducts: imageProducts.map((image) => ({
         imageId: image.imageId,
-        productId: productId,
+        
         imageUrl: imageUrls[image.imageId] || image.imageUrl,
       })),
 
