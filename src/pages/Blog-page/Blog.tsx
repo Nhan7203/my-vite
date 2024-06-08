@@ -156,10 +156,10 @@ const Blog = () => {
                     <img src={view} className="view" alt="view" />
                     <div>{blog.view}</div>
                     <FaHeart
-                      size={24}
+                     fontSize="1.3em" className="my-icon"
                       style={{
                         cursor: "pointer",
-                        color: blog.like ? "pink" : "inherit",
+                        color: blog.like ? "red" : "inherit",
                       }}
                       onClick={() => handleLikeClick(blog.blogId)}
                     />

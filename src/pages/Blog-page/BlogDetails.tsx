@@ -22,7 +22,6 @@ const BlogDetails = () => {
         navigate("/blog");
         return;
       }
-
       const result = await searchBlogDetails.getBlogId(blogId);
       setBlogDetails(result);
     };
@@ -50,7 +49,7 @@ const BlogDetails = () => {
                 <div className="content-blogdeatails">{blogDetails.content}</div>
                 <div className="author">{blogDetails.author}</div>
                 <div className="img-blogdetails">
-                  <img src={blogDetails.imageUrl} alt="Mô tả ảnh" />
+                  <img src={blogDetails.imageUrl} alt="" />
                 </div>
               </div>
             )}

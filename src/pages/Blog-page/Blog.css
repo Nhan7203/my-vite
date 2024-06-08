@@ -210,3 +210,7 @@
   justify-content: space-around;
   align-items: center;
 }
+
+.my-icon {
+  margin-right: 8px;
+}
