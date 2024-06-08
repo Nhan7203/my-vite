@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import "./Admin.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import * as brandd from "../../apiServices/getBrand";
+import swal from "sweetalert";
+
 import {
   ImageProduct,
   aProduct,
@@ -25,23 +27,31 @@ const AddProduct = () => {
   const [categoryId, setCategoryId] = useState<number>(1);
   const [ageId, setAgeId] = useState<number>(1);
   const [description, setDescription] = useState("");
-  const [price, setPrice] = useState<number>();
-  const [stock, setStock] = useState<number>();
+  const [price, setPrice] = useState<number>(0);
+  const [stock, setStock] = useState<number>(0);
   const [imageProducts, setImageProducts] = useState<ImageProduct[]>([]);
   const [imageUrls, setImageUrls] = useState<{ [key: number]: string }>({});
   const [brandList, setBrandList] = useState<Brand[]>([]);
   const [products] = useState<aProduct[]>(productList);
-
+  const [errors, setErrors] = useState({
+    name: '',
+    description: '',
+    stock: '',
+    price: '',
+    imageUrls: '',
+  });
+  console.log(imageUrls)
   const maxProductId = Math.max(
     ...products.map((product) => product.productId)
   );
   const product = allProduct.find((e) => e.productId === maxProductId);
+
   let maxImageId: number | undefined;
   if (product) {
     maxImageId = Math.max(...product.imageProducts.map((i) => i.imageId));
-    // Tiếp tục sử dụng maxImageId
+    
   }
-  console.log(maxImageId);
+  
   useEffect(() => {
     const fetchData = async () => {
       const result = await brandd.getBrand();
@@ -65,19 +75,83 @@ const AddProduct = () => {
     { id: 4, name: "Fresh milk, Yogurt" },
   ];
 
-  const handleImageUrlChange = (
-    imageId: number,
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setImageUrls((prevImageUrls) => ({
-      ...prevImageUrls,
-      [imageId]: event.target.value,
-    }));
-  };
+  
 
+  const handleImageUpload = (imageId: number,  event: React.ChangeEvent<HTMLInputElement>) => {
+
+    const file = event.target.files?.[0];
+    
+    if (file) {
+      const imageUrl = `/images/products/${file.name}`;
+      setImageUrls((prevImageUrls) => ({
+        ...prevImageUrls,
+        [imageId]: imageUrl,
+      }));
+      setImageProducts((prevImageProducts) => [
+          ...prevImageProducts,
+          {
+            imageId,
+            productId: imageId,
+        imageUrl:  imageUrl ,
+          },          
+        ]);
+    } 
+  }
+  // const handleAddImageProduct = (imageId: number, imageUrl:  string ) => {
+  //   setImageProducts((prevImageProducts) => [
+  //     ...prevImageProducts,
+  //     {
+  //       imageId,
+  //       productId: maxProductId + 1,
+  //       imageUrl: imageUrl ,
+  //     },
+      
+  //   ]);
+  //   console.log(imageUrl)
+  // };
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
+    const error = {
+      name: '',
+      description: '',
+      stock: '',
+      price: '',
+      imageUrls: '',
+      check: false
+    };
+    // const name_parttern = /^[^\d!@#$%^&*(),.?":{}|<>]+$/u
 
+    if (name === "") {
+      error.name = "Name is Required!"
+      error.check = true
+    // } else if (!name_parttern.test(name.trim())) {
+    //   error.name = "The name should not have special characters"
+    //   error.check = true
+     }
+     if (description === "") {
+      error.description = "Description is Required!"
+      error.check = true
+     }
+
+     if (stock === 0) {
+      error.stock = "Stock != 0 "
+      error.check = true
+    }
+
+    if (price === 0) {
+      error.price = "Price != 0 "
+      error.check = true
+    }
+
+    if (imageUrls ) {
+      error.imageUrls = "imageUrl is Required!"
+      error.check = true
+     }
+    
+    setErrors(error)
+    if (error.check) {
+      return
+    }
     const payload = {
       name: name,
       description: description,
@@ -86,7 +160,7 @@ const AddProduct = () => {
       categoryId: categoryId,
       price: price,
       stock: stock,
-      imageProducts: null,
+      imageProducts: imageProducts,
       isActive: true,
     };
 
@@ -106,13 +180,25 @@ const AddProduct = () => {
 
       if (!response.ok) {
         throw new Error("Failed to store cart data");
+        
       }
-
+      if (response.status === 200) {
+        swal("Success", "Product information created successfully!", "success");
+        console.log(payload);    
+        
+      } else {
+        swal("Error", "Failed to create product information.", "error");
+      }
       const data = await response.json();
 
       console.log("Product data stored:", data);
     } catch (error) {
       console.error("Error storing product data:", error);
+      swal(
+        "Error",
+        "Error occurred during create product information.",
+        "error"
+      );
     }
   };
 
@@ -208,46 +294,38 @@ const AddProduct = () => {
                 <div>
                   <h4>ProductId: {products.length + 1}</h4>
 
-                  {/* <h4>Image</h4>
-                  {products.map((product) => {
-                    return (
-                      <div key={products.length}>
-                        {product.imageProducts.map((image) => (
-                          <div key={product.imageProducts.length}>
-                            <label>
-                              Image ID: {product.imageProducts.length}
-                            </label>
-                            <input
-                              type="text"
-                              value={imageUrls[product.imageProducts.length]}
-                              onChange={(event) =>
-                                handleImageUrlChange(image.imageId, event)
-                              }
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    );
-                  })} */}
-
                   <h4>Image</h4>
-                  {product?.imageProducts.map((image, index) => (
+                  {/* {product?.imageProducts.map((image, index) => (
                     <div key={index}>
-                      <label>
-                        Image ID: {maxImageId ? maxImageId + index + 1 : 0}
-                      </label>
+                      <label>Image ID: {maxImageId ? maxImageId + index + 1 : 0}</label>
                       <input
                         type="text"
-                        value={imageUrls[maxImageId ? maxImageId + index + 1 : 0]}
-                        onChange={(event) =>
-                          handleImageUrlChange(
-                            maxImageId ? maxImageId + index + 1 : 0,
-                            event
-                          )
-                        }
+                        value={imageUrls }
+                        onChange={(event) => handleAddImageProduct(maxImageId ? maxImageId + index + 1 : 0, event.target.value)}
                       />
                     </div>
-                  ))}
+                  ))} */}
+
+
+                {product?.imageProducts.map((image, index) => (
+                  <div key={index}>
+                    <label>Image ID: {maxImageId ? maxImageId + index + 1 : 0}</label>
+                    <input
+                      type="file"
+                      onChange={(event) => handleImageUpload(maxImageId ? maxImageId + index + 1 : 0, event)}
+                    />
+                      
+                    {imageUrls[maxImageId ? maxImageId + index + 1 : 0] ?  (
+                      <img
+                        src={imageUrls[maxImageId ? maxImageId + index + 1 : 0] }
+                        alt={`Image ${maxImageId ? maxImageId + index + 1 : 0}`}
+                        style={{ maxWidth: '200px' }}
+                      />
+                    ) : (
+                      <div >{errors.imageUrls && <p style={{ color: "red" }}>{errors.imageUrls}</p>}</div>
+                    )}
+                  </div>
+                ))}
 
                   <h4>For age</h4>
                   <select
@@ -304,6 +382,7 @@ const AddProduct = () => {
                     value={price}
                     onChange={(e) => setPrice(Number(e.target.value))}
                   />
+                  {errors.price && <p style={{ color: "red" }}>{errors.price}</p>}
                   <h4>stock</h4>
                   <input
                     type="number"
@@ -311,6 +390,7 @@ const AddProduct = () => {
                     value={stock}
                     onChange={(e) => setStock(Number(e.target.value))}
                   />
+                  {errors.stock && <p style={{ color: "red" }}>{errors.stock}</p>}
                   <h4>Name</h4>
                   <input
                     type="text"
@@ -318,6 +398,7 @@ const AddProduct = () => {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
+                   {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
                   <h4>Description</h4>
                   <input
                     type="text"
@@ -325,6 +406,7 @@ const AddProduct = () => {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                   />
+                   {errors.description && <p style={{ color: "red" }}>{errors.description}</p>}
                 </div>
               </form>
               <div className="both-button">

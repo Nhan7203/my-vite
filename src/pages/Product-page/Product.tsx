@@ -479,11 +479,13 @@ const Product = () => {
                         </Link>
                       </div>
                       <p className="element-name">{product.name}</p>
+
                       <div className="rate-sold-2">
                         <div className="rating-stars">
                           {renderStars()}
                         </div>
                         {/* <p>Total Rating: {ratingInfo.reviewCount}</p> */}
+
                       </div>
                       <div className="body-text">
                         <span className="element-price">
