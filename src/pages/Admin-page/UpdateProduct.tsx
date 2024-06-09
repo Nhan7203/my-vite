@@ -188,7 +188,7 @@ const UpdateProduct = () => {
   };
   return (
     <>
-      <body>
+      <div>
         <input type="checkbox" id="nav-toggle" />
         <div className="sidebar">
           <div className="sidebar-brand">
@@ -270,7 +270,7 @@ const UpdateProduct = () => {
 
           <main>
             <form onSubmit={handleSubmit} id="boder-form">
-              <form className="form-add ">
+              <div className="form-add ">
                 <div>
                 <h4>ProductId: {productId}</h4>
 
@@ -302,8 +302,7 @@ const UpdateProduct = () => {
                     {ageOptions.map((option) => (
                       <option
                         key={option.id}
-                        value={option.id}
-                        selected={option.id === ageId}
+                        value={option.id}                     
                       >
                         {option.name}
                       </option>
@@ -319,7 +318,6 @@ const UpdateProduct = () => {
                       <option
                         key={option.id}
                         value={option.id}
-                        selected={option.id === categoryId}
                       >
                         {option.name}
                       </option>
@@ -335,7 +333,6 @@ const UpdateProduct = () => {
                       <option
                         key={option.brandId}
                         value={option.brandId}
-                        selected={option.brandId === brandId}
                       >
                         {option.name}
                       </option>
@@ -378,7 +375,7 @@ const UpdateProduct = () => {
                   />
                   {errors.description && <p style={{ color: "red" }}>{errors.description}</p>}
                 </div>
-              </form>
+              </div>
               <div className="both-button">
                 <button type="submit" className="bt-add">
                   Update
@@ -390,7 +387,7 @@ const UpdateProduct = () => {
             </form>
           </main>
         </div>
-      </body>
+      </div>
     </>
   );
 };

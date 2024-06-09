@@ -53,7 +53,8 @@ const Navbar = () => {
           if (response.ok) {
             return response.json();
           } else {
-            throw new Error("Error retrieving notifications");
+            // throw new Error("Error retrieving notifications");
+            return []; 
           }
         })
         .then((data) => {
@@ -63,7 +64,7 @@ const Navbar = () => {
           console.error("Error retrieving notifications:", error);
         });
     }
-  }, []);
+  }, [token]);
 
   const deleteNotification = async (notificationId: number) => {
     try {

@@ -5,15 +5,41 @@ import { useCart } from '../../../pages/Cart-page/CartContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as solidStar, faStarHalfAlt } from '@fortawesome/free-solid-svg-icons';
 import { faStar as regularStarOutline } from '@fortawesome/free-regular-svg-icons';
+import swal from "sweetalert";
 import './ProductCart.css'
+import { aProduct } from '../../../context/ShopContext';
 
 const getGridColumn = (index: number) => {
   const gridColumnMap = ["1 / 3", "4 / 6", "7 / 9", "10 / 12"];
   return gridColumnMap[index % gridColumnMap.length];
 };
 
-const ProductCard = ({ product, index }) => {
+const ProductCard = ({ product, index }: { product: aProduct, index: number }) => {
   const { addToCart } = useCart();
+
+//--------------------------------------------------------------------------------------------
+  const handleCartClick = (product: aProduct) => {
+    if (product.stock > 0) {
+      addToCart(product);
+    } else {
+      try {
+        swal({
+          title: "Out of stock",
+          text: "This product is currently out of stock, but you can place a pre-order.",
+          icon: "info",
+          buttons: ["Cancel", "Confirm"],
+          dangerMode: true,
+        }).then(async (confirm) => {
+          if (confirm) {
+            addToCart(product);
+          }
+        });
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    }
+  };
+//-----------------------------------------------------------------------------------------------------
   const [ratingInfo, setRatingInfo] = useState({
     averageRating: 0,
     totalRating: 0,
@@ -30,7 +56,7 @@ const ProductCard = ({ product, index }) => {
         const allRatings = await response.json();
 
 
-        const productRatings = allRatings.filter(rating => String(rating.productId) === String(product.productId));
+        const productRatings = allRatings.filter((rating: any) => String(rating.productId) === String(product.productId));
 
         if (productRatings.length > 0) {
           const response = await fetch(`https://localhost:7030/api/Review/GetProductRating?productId=${product.productId}`, {
@@ -97,7 +123,7 @@ const ProductCard = ({ product, index }) => {
         <div className="footer-card">
           <h2 className="price">${product.price.toLocaleString()}</h2>
           <div className="box-shopping">
-            <BsCart3 className="icon-shopping" fontSize="1.5em" onClick={() => addToCart(product)} />
+            <BsCart3 className="icon-shopping" fontSize="1.5em" onClick={() => handleCartClick (product)}/>
           </div>
         </div>
       </div>

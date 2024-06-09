@@ -79,7 +79,7 @@ const ProductManage = () => {
   };
 
   const deleteProduct = async (productId: number) => {
-    console.log(productId);
+   
     try {
       swal({
         title: "Are you sure you want to delete this product?",

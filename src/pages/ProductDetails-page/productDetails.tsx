@@ -9,9 +9,12 @@ import adv1 from "/src/assets/adv1.png";
 import adv2 from "/src/assets/adv2.png";
 import "./ProductDetail.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar as solidStar, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons";
+import {
+  faStar as solidStar,
+  faStarHalfAlt,
+} from "@fortawesome/free-solid-svg-icons";
 import { faStar as regularStarOutline } from "@fortawesome/free-regular-svg-icons";
-
+import swal from "sweetalert";
 const ProductDetail = () => {
   const { addToCart2 } = useCart();
   const { allProduct } = useAllProduct();
@@ -28,7 +31,7 @@ const ProductDetail = () => {
   const [ratingInfo, setRatingInfo] = useState({
     averageRating: 0,
     totalRating: 0,
-    reviewCount: 0
+    reviewCount: 0,
   });
 
   const [productReviews, setProductReviews] = useState([]);
@@ -61,7 +64,7 @@ const ProductDetail = () => {
 
   let product: any;
   if (productId) {
-    product = allProduct.find((e) => e.productId === parseInt(productId ?? ''));
+    product = allProduct.find((e) => e.productId === parseInt(productId ?? ""));
   }
 
   const [quantity, setQuantity] = useState(1);
@@ -73,13 +76,32 @@ const ProductDetail = () => {
   };
 
   const handleIncrementQuantity = () => {
-    if (quantity < product.stock) setQuantity(quantity + 1);
+    // if (quantity < product.stock) setQuantity(quantity + 1);
+     setQuantity(quantity + 1);
   };
-
-  const handleAddToCart = (product: aProduct) => {
-    addToCart2(product, quantity, "add");
+//----------------------------------------------------------------------------------------------
+  const handleAddToCart = (product: aProduct, quantity: number) => {
+    if (product.stock > 0) {
+      addToCart2(product, quantity, "add");
+    } else {
+      try {
+        swal({
+          title: "Out of stock",
+          text: "This product is currently out of stock, but you can place a pre-order.",
+          icon: "info",
+          buttons: ["Cancel", "Confirm"],
+          dangerMode: true,
+        }).then(async (confirm) => {
+          if (confirm) {
+            addToCart2(product, quantity, "add");
+          }
+        });
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    }
   };
-
+//--------------------------------------------------------------------------------------------------------
   const handleBuyNow = (product: aProduct) => {
     addToCart2(product, quantity, "buy");
     navigate("/cart");
@@ -87,19 +109,26 @@ const ProductDetail = () => {
 
   const fetchRatings = async (productId: string) => {
     try {
-      const response = await fetch('https://localhost:7030/api/Review/GetAllRating');
+      const response = await fetch(
+        "https://localhost:7030/api/Review/GetAllRating"
+      );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const allRatings = await response.json();
 
-      const productRatings = allRatings.filter(rating => String(rating.productId) === String(productId));
+      const productRatings = allRatings.filter(
+        (rating) => String(rating.productId) === String(productId)
+      );
       setProductReviews(productRatings);
 
       if (productRatings.length > 0) {
-        const response = await fetch(`https://localhost:7030/api/Review/GetProductRating?productId=${productId}`, {
-          method: 'POST',
-        });
+        const response = await fetch(
+          `https://localhost:7030/api/Review/GetProductRating?productId=${productId}`,
+          {
+            method: "POST",
+          }
+        );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -117,7 +146,7 @@ const ProductDetail = () => {
         });
       }
     } catch (error) {
-      console.error('Failed to fetch product ratings:', error);
+      console.error("Failed to fetch product ratings:", error);
     }
   };
 
@@ -139,16 +168,34 @@ const ProductDetail = () => {
     const stars = [];
 
     for (let i = 0; i < fullStars; i++) {
-      stars.push(<FontAwesomeIcon key={`full-${i}`} icon={solidStar} style={{ color: 'yellow' }} />);
+      stars.push(
+        <FontAwesomeIcon
+          key={`full-${i}`}
+          icon={solidStar}
+          style={{ color: "yellow" }}
+        />
+      );
     }
 
     if (halfStar) {
-      stars.push(<FontAwesomeIcon key="half" icon={faStarHalfAlt} style={{ color: 'yellow' }} />);
+      stars.push(
+        <FontAwesomeIcon
+          key="half"
+          icon={faStarHalfAlt}
+          style={{ color: "yellow" }}
+        />
+      );
     }
 
     const emptyStars = 5 - stars.length;
     for (let i = 0; i < emptyStars; i++) {
-      stars.push(<FontAwesomeIcon key={`empty-${i}`} icon={regularStarOutline} style={{ color: 'grey' }} />);
+      stars.push(
+        <FontAwesomeIcon
+          key={`empty-${i}`}
+          icon={regularStarOutline}
+          style={{ color: "grey" }}
+        />
+      );
     }
 
     return stars;
@@ -159,11 +206,11 @@ const ProductDetail = () => {
       <div key={index} className="review">
         <div className="review-header">
           <span className="review-user">User: {review.userId}</span>
-          <span className="review-date">Date: {new Date(review.date).toLocaleDateString()}</span>
+          <span className="review-date">
+            Date: {new Date(review.date).toLocaleDateString()}
+          </span>
         </div>
-        <div className="review-rating">
-          {renderStars(review.rating)}
-        </div>
+        <div className="review-rating">{renderStars(review.rating)}</div>
         <div className="review-comment">
           <p>{review.comment}</p>
         </div>
@@ -189,10 +236,8 @@ const ProductDetail = () => {
               <div className="rating-sold">
                 <span className="sold">Available: {product.stock}</span>
               </div>
-              <div className="rate-sold" >
-                <div className="rating-stars">
-                  {renderStars()}
-                </div>
+              <div className="rate-sold">
+                <div className="rating-stars">{renderStars()}</div>
                 <p>Total Rating: {ratingInfo.reviewCount}</p>
               </div>
               <h3>${product.price.toLocaleString()}</h3>
@@ -223,13 +268,20 @@ const ProductDetail = () => {
               <div className="button-cart">
                 <span
                   className="add-cart"
-                  onClick={() => handleAddToCart(product)}
+                  onClick={() => handleAddToCart(product, quantity)}
                 >
                   Add to cart
                 </span>
-                <span className="buy-now" onClick={() => handleBuyNow(product)}>
-                  Buy now
-                </span>
+                {product.stock > 0 ? (
+                  <span
+                    className="buy-now"
+                    onClick={() => handleBuyNow(product)}
+                  >
+                    Buy now
+                  </span>
+                ) : (
+                  <span className="order">Order now</span>
+                )}
               </div>
             </div>
 

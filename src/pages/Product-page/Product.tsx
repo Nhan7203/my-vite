@@ -17,6 +17,7 @@ import {
   faStarHalfAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { faStar as regularStarOutline } from "@fortawesome/free-regular-svg-icons";
+import swal from "sweetalert";
 
 export interface Brand {
   brandId: number;
@@ -249,6 +250,34 @@ const Product = () => {
   useEffect(() => {
     fetchRatings();
   }, [products]);
+
+
+//-----------------------------------------------------------------------------------------------
+  const handleCartClick = (product: aProduct) => {
+    if (product.stock > 0) {
+      addToCart(product);
+    } else {
+      try {
+        swal({
+          title: "Out of stock",
+          text: "This product is currently out of stock, but you can place a pre-order.",
+          icon: "info",
+          buttons: ["Cancel", "Confirm"],
+          dangerMode: true,
+        }).then(async (confirm) => {
+          if (confirm) {
+            addToCart(product);
+          }
+        });
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    }
+  };
+//-------------------------------------------------------------------------------------------------------------
+
+
+
 
   return (
     <div>
@@ -527,7 +556,7 @@ const Product = () => {
                             <BsCart3
                               className="icon-cart-product-page"
                               fontSize="1.4em"
-                              onClick={() => addToCart(product)}
+                              onClick={() => handleCartClick (product)}
                             />
                           </div>
                         </div>

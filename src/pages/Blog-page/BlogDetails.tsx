@@ -5,12 +5,13 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import * as searchBlogDetails from "../../apiServices/getBlogId";
 import "./Blog.css";
 import { Blog } from "./Blog";
-import { useAllProduct } from "../../context/ShopContext";
+import { aProduct, useAllProduct } from "../../context/ShopContext";
 import { BsCart3 } from "../../import/import-libary";
 import { useCart } from "../Cart-page/CartContext";
+import swal from "sweetalert";
 
 const BlogDetails = () => {
-  const { blogId } = useParams<{ blogId?: string }>();
+  const { blogId } = useParams<{ blogId: string }>();
   const [blogDetails, setBlogDetails] = useState<Blog | null>(null);
   const { addToCart } = useCart();
   const navigate = useNavigate();
@@ -22,13 +23,44 @@ const BlogDetails = () => {
         navigate("/blog");
         return;
       }
-      const result = await searchBlogDetails.getBlogId(blogId);
-      setBlogDetails(result);
+      try {
+        const result = await searchBlogDetails.getBlogId(blogId);
+        setBlogDetails(result);
+      } catch (error) {
+        console.error(error);
+        navigate("/blog");
+      }
     };
     fetchProducts();
-  }, [blogDetails, blogId, navigate]);
+  }, [blogId, navigate]);
 
-  const product = blogDetails?.productId ? allProduct.find((e) => e.productId === blogDetails.productId) : null;
+  const product = blogDetails?.productId
+    ? allProduct.find((e) => e.productId === blogDetails.productId)
+    : null;
+//--------------------------------------------------------------------------------------------
+const handleCartClick = (product: aProduct) => {
+  if (product.stock > 0) {
+    addToCart(product);
+  } else {
+    try {
+      swal({
+        title: "Out of stock",
+        text: "This product is currently out of stock, but you can place a pre-order.",
+        icon: "info",
+        buttons: ["Cancel", "Confirm"],
+        dangerMode: true,
+      }).then(async (confirm) => {
+        if (confirm) {
+          addToCart(product);
+        }
+      });
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+};
+//-----------------------------------------------------------------------------------------------------
+
 
   return (
     <div>
@@ -77,7 +109,7 @@ const BlogDetails = () => {
                     <BsCart3
                       className="icon-shopping"
                       fontSize="1.5em"
-                      onClick={() => addToCart(product)}
+                      onClick={() => handleCartClick (product)}
                     />
                   </div>
                 </div>

@@ -97,11 +97,29 @@ const OrderDetails = () => {
   }, [orderDetails]);
 
   const { addToCart2 } = useCart();
-
+//-----------------------------------------------------------------------------------------------------------
   const handleAddToCart = (product: aProduct, quantity: number) => {
-    addToCart2(product, quantity, "add");
+    if (product.stock > 0) {
+      addToCart2(product, quantity, "add");
+    } else {
+      try {
+        swal({
+          title: "Out of stock",
+          text: "This product is currently out of stock, but you can place a pre-order.",
+          icon: "info",
+          buttons: ["Cancel", "Confirm"],
+          dangerMode: true,
+        }).then(async (confirm) => {
+          if (confirm) {
+            addToCart2(product, quantity, "add");
+          }
+        });
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    }
   };
-
+//---------------------------------------------------------------------------------------------------------------
   const handleCancelOrder = async () => {
     try {
       if (!token) {
