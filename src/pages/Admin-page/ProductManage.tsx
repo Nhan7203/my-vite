@@ -162,7 +162,7 @@ const ProductManage = () => {
 
   return (
     <>
-      <body>
+      <div>
         <input type="checkbox" id="nav-toggle" />
         <div className="sidebar">
           <div className="sidebar-brand">
@@ -270,16 +270,12 @@ const ProductManage = () => {
                   </li>
                   <li>
                     <select
-                      value={forAgeId}
+                      defaultValue={forAgeId}
                       onChange={(e) => setForAgeId(Number(e.target.value))}
                     >
                       <option value="">Select for Age</option>
                       {ageOptions.map((option) => (
-                        <option
-                          key={option.id}
-                          value={option.id}
-                          selected={option.id === forAgeId}
-                        >
+                        <option key={option.id} value={option.id}>
                           {option.name}
                         </option>
                       ))}
@@ -287,7 +283,7 @@ const ProductManage = () => {
                   </li>
                   <li>
                     <select
-                      value={categoryId}
+                      defaultValue={categoryId}
                       onChange={(e) => setCategoryId(Number(e.target.value))}
                     >
                       <option value="">Select Category</option>
@@ -300,16 +296,12 @@ const ProductManage = () => {
                   </li>
                   <li>
                     <select
-                      value={brandId}
+                      defaultValue={brandId}
                       onChange={(e) => setBrandId(Number(e.target.value))}
                     >
                       <option value="">Select Brand</option>
                       {brandList.map((option) => (
-                        <option
-                          key={option.brandId}
-                          value={option.brandId}
-                          selected={option.brandId === brandId}
-                        >
+                        <option key={option.brandId} value={option.brandId}>
                           {option.name}
                         </option>
                       ))}
@@ -388,7 +380,7 @@ const ProductManage = () => {
             </div>
           </main>
         </div>
-      </body>
+      </div>
     </>
   );
 };

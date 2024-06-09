@@ -25,7 +25,11 @@ interface ShopContextType {
   allProduct: aProduct[];
 }
 
-export const ShopContext = createContext<ShopContextType | undefined>(undefined);
+// export const ShopContext = createContext<ShopContextType | undefined>(undefined);
+
+export const ShopContext = createContext<ShopContextType>({
+  allProduct: [],
+});
 
 export const useAllProduct = () => {
   const context = useContext(ShopContext);

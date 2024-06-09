@@ -42,7 +42,7 @@ const Admin = () => {
 
   return (
     <div className="all-page">
-      <body>
+      <div>
         <input type="checkbox" id="nav-toggle" />
         <div className="sidebar">
           <div className="sidebar-brand">
@@ -244,7 +244,7 @@ const Admin = () => {
             </div>
           </main>
         </div>
-      </body>
+      </div>
     </div>
   );
 };
