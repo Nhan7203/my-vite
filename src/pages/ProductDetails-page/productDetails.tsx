@@ -31,6 +31,9 @@ const ProductDetail = () => {
     reviewCount: 0
   });
 
+  const [productReviews, setProductReviews] = useState([]);
+  const [currentProductId, setCurrentProductId] = useState(null);
+
   useEffect(() => {
     const interval = setInterval(nextSlide, 5000);
     return () => clearInterval(interval);
@@ -44,9 +47,21 @@ const ProductDetail = () => {
 
   const { productId } = useParams<{ productId?: string }>();
 
+  const [products, setProducts] = useState<aProduct | null>(null);
+
+  useEffect(() => {
+    if (productId) {
+      const selectedProduct = allProduct.find(
+        (e) => e.productId === parseInt(productId)
+      );
+      setProducts(selectedProduct);
+      setCurrentProductId(productId);
+    }
+  }, [productId, allProduct]);
+
   let product: any;
   if (productId) {
-    product = allProduct.find((e) => e.productId === parseInt(productId));
+    product = allProduct.find((e) => e.productId === parseInt(productId ?? ''));
   }
 
   const [quantity, setQuantity] = useState(1);
@@ -70,47 +85,61 @@ const ProductDetail = () => {
     navigate("/cart");
   };
 
-  useEffect(() => {
-    const fetchRatings = async () => {
-      try {
-        const response = await fetch('https://localhost:7030/api/Review/GetAllRating');
+  const fetchRatings = async (productId: string) => {
+    try {
+      const response = await fetch('https://localhost:7030/api/Review/GetAllRating');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const allRatings = await response.json();
+
+      const productRatings = allRatings.filter(rating => String(rating.productId) === String(productId));
+      setProductReviews(productRatings);
+
+      if (productRatings.length > 0) {
+        const response = await fetch(`https://localhost:7030/api/Review/GetProductRating?productId=${productId}`, {
+          method: 'POST',
+        });
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const allRatings = await response.json();
-
-
-        const productRatings = allRatings.filter(rating => String(rating.productId) === String(product.productId));
-
-        if (productRatings.length > 0) {
-          const response = await fetch(`https://localhost:7030/api/Review/GetProductRating?productId=${product.productId}`, {
-            method: 'POST',
-          });
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          const productRatingDetails = await response.json();
-          setRatingInfo({
-            averageRating: productRatingDetails.averageRating,
-            totalRating: productRatingDetails.totalRating,
-            reviewCount: productRatingDetails.reviewCount
-          });
-        }
-      } catch (error) {
-        console.error('Error fetching ratings:', error);
+        const productRatingDetails = await response.json();
+        setRatingInfo({
+          averageRating: productRatingDetails.averageRating,
+          totalRating: productRatingDetails.totalRating,
+          reviewCount: productRatingDetails.reviewCount,
+        });
+      } else {
+        setRatingInfo({
+          averageRating: 0,
+          totalRating: 0,
+          reviewCount: 0,
+        });
       }
-    };
+    } catch (error) {
+      console.error('Failed to fetch product ratings:', error);
+    }
+  };
 
-    fetchRatings();
-  }, [product.productId]);
+  useEffect(() => {
+    if (currentProductId) {
+      fetchRatings(currentProductId);
+    }
+  }, [currentProductId]);
 
-  const renderStars = () => {
+  useEffect(() => {
+    if (product) {
+      fetchRatings(product.productId);
+    }
+  }, [product]);
+
+  const renderStars = (rating = ratingInfo.averageRating) => {
+    const fullStars = Math.floor(rating);
+    const halfStar = rating - fullStars >= 0.5;
     const stars = [];
-    const fullStars = Math.floor(ratingInfo.averageRating);
-    const halfStar = ratingInfo.averageRating % 1 >= 0.5;
 
     for (let i = 0; i < fullStars; i++) {
-      stars.push(<FontAwesomeIcon key={i} icon={solidStar} style={{ color: 'yellow' }} />);
+      stars.push(<FontAwesomeIcon key={`full-${i}`} icon={solidStar} style={{ color: 'yellow' }} />);
     }
 
     if (halfStar) {
@@ -123,6 +152,23 @@ const ProductDetail = () => {
     }
 
     return stars;
+  };
+
+  const renderProductReviews = () => {
+    return productReviews.map((review, index) => (
+      <div key={index} className="review">
+        <div className="review-header">
+          <span className="review-user">User: {review.userId}</span>
+          <span className="review-date">Date: {new Date(review.date).toLocaleDateString()}</span>
+        </div>
+        <div className="review-rating">
+          {renderStars(review.rating)}
+        </div>
+        <div className="review-comment">
+          <p>{review.comment}</p>
+        </div>
+      </div>
+    ));
   };
 
   return (
@@ -208,6 +254,15 @@ const ProductDetail = () => {
                 alt=""
               />
             </div>
+          </div>
+
+          <div className="product-reviews">
+            <h3>Product Reviews</h3>
+            {productReviews.length > 0 ? (
+              renderProductReviews()
+            ) : (
+              <p>No reviews available for this product.</p>
+            )}
           </div>
         </div>
       ) : (

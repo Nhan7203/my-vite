@@ -38,6 +38,34 @@ const OrderDetails = () => {
   const [selectedOrderDetail, setSelectedOrderDetail] = useState<OrderDetail>();
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
 
+  const [isRated, setIsRated] = useState(false);
+
+
+  useEffect(() => {
+    const fetchUserReviews = async () => {
+      if (token) {
+        const decodedToken: any = jwtDecode(token);
+        const userIdIdentifier = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+        const userId = userIdIdentifier;
+
+        const response = await fetch(`https://localhost:7030/api/Review/GetUserReview?userId=${parseInt(userId)}&orderId=${orderId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await response.json();
+        console.log(data);
+        console.log(orderId);
+
+        if (data.length > 0 && data[0].isRated) {
+          setIsRated(true);
+        }
+      }
+    };
+
+    fetchUserReviews();
+  }, [orderId, token]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -211,13 +239,15 @@ const OrderDetails = () => {
 
     const reviewData = {
       userId,
-      orderDetailId: 1,
-      productId:
-        selectedProducts.length > 0 ? selectedProducts[0].productId : null,
+      orderDetailId: orderId,
+      productId:  selectedProducts.length > 0 ? selectedProducts[0].productId : null,
       date: new Date().toISOString(),
       rating,
-      comment: comment || "",
+      comment: comment || '',
+      isRated: false,
+
     };
+
 
     console.log(reviewData);
    
@@ -336,7 +366,7 @@ const OrderDetails = () => {
                               >
                                 add
                               </button>
-                              {  !selectedProducts.some(
+                              { !isRated && !selectedProducts.some(
                                 (p) => p.productId === product.productId
                               ) && (
                                 <button
@@ -346,6 +376,7 @@ const OrderDetails = () => {
                                 >
                                   Rate
                                 </button>
+
                               )}
                             </div>
                           )}
@@ -388,6 +419,7 @@ const OrderDetails = () => {
                               >
                                 Cancel Rating
                               </button>
+
                             )}
                           </div>
                         </div>
