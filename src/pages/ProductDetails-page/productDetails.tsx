@@ -158,8 +158,8 @@ const ProductDetail = () => {
     return productReviews.map((review, index) => (
       <div key={index} className="review">
         <div className="review-header">
-          <span>UserId: {review.userId}</span>
-          <span>Date: {new Date(review.date).toLocaleDateString()}</span>
+          <span className="review-user">User: {review.userId}</span>
+          <span className="review-date">Date: {new Date(review.date).toLocaleDateString()}</span>
         </div>
         <div className="review-rating">
           {renderStars(review.rating)}
@@ -170,12 +170,6 @@ const ProductDetail = () => {
       </div>
     ));
   };
-
-  const handleProductClick = (productId) => {
-    navigate(`/product/${productId}`);
-    window.location.reload();
-  };
-
 
   return (
     <>

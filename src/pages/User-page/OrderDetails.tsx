@@ -37,19 +37,14 @@ const OrderDetails = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedOrderDetail, setSelectedOrderDetail] = useState(null);
 
-  const [reviews, setReviews] = useState([]);
+  const [isRated, setIsRated] = useState(false);
+
 
   useEffect(() => {
     const fetchUserReviews = async () => {
       if (token) {
-
         const decodedToken: any = jwtDecode(token);
-
-        const userIdIdentifier =
-          decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-          ];
-
+        const userIdIdentifier = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
         const userId = userIdIdentifier;
 
         const response = await fetch(`https://localhost:7030/api/Review/GetUserReview?userId=${parseInt(userId)}&orderId=${orderId}`, {
@@ -57,23 +52,19 @@ const OrderDetails = () => {
             Authorization: `Bearer ${token}`,
           },
         });
+
         const data = await response.json();
-        setReviews(data);
         console.log(data);
         console.log(orderId);
+
+        if (data.length > 0 && data[0].isRated) {
+          setIsRated(true);
+        }
       }
     };
+
     fetchUserReviews();
   }, [orderId, token]);
-
-  const isProductRated = (productId: number, orderDetailId: number) => {
-    return reviews.some(
-      (review) =>
-        review.productId === productId &&
-        review.orderDetailId === orderDetailId &&
-        review.isRated
-    );
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -338,9 +329,13 @@ const OrderDetails = () => {
                                 >
                                   add
                                 </button>
-                                {!isProductRated(product.productId, orderDetail.productId) && (
-                                  <button onClick={() => handleRate(product, orderDetail)}>Rate</button>
+
+                                {!isRated && (
+                                  <button onClick={() => handleRate(product, orderDetail)}>
+                                    Rate
+                                  </button>
                                 )}
+
                               </div>
                             )}
                           </div>
