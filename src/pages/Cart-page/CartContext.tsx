@@ -1,17 +1,9 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import { ImageProduct, aProduct } from "../../context/ShopContext";
+import { aProduct, iProduct } from "../../interfaces";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Cart.css";
-export interface iProduct {
-  productId: number;
-  name: string;
-  imageProducts: ImageProduct[];
-  price: number;
-  quantity: number;
-  stock: number;
-  isActive: boolean;
-}
+
 
 interface CartContextType {
   cart: iProduct[];
@@ -27,6 +19,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useCart = () => {
   const context = useContext(CartContext);
   if (!context) {

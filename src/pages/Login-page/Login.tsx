@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import { getRoleFromToken } from "../../utils/jwtHelper";
 import { useNavigate } from "react-router-dom";
-import { jwtDecode } from 'jwt-decode';
-import { loginApi } from './LoginServices';
+import { useState } from 'react';
+import { loginApi } from '../../apiServices/AccountServices/loginServices';
 import { toast } from 'react-toastify';
 import ReCAPTCHA from "react-google-recaptcha";
+
 import './Login.css';
 
 const Login = () => {
@@ -28,18 +29,15 @@ const Login = () => {
     try {
       const response = await loginApi(email, password);
 
-      if (response.status === 200) {
+      if (response) {
         // Login successful
         //Lay-Luu token vao local storage
         const { token, refreshToken} = response.data;
 
-        const decodedToken: any = jwtDecode(token)
         localStorage.setItem('token', token);
         localStorage.setItem('refreshToken', refreshToken);
 
-        const role = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-
-        // const decodedToken = jwt.decode(token) as JwtPayload;
+        const role = getRoleFromToken(token);
 
         if (role === "User") {
           alert("Oke bạn nay User ne");
@@ -48,7 +46,7 @@ const Login = () => {
         }
         else if (role === "Staff") {
           alert("Oke bạn nay Staff ne");
-          // Redirect to 'Staff' page
+          navigate("/admin");
 
         } else if (role === "Admin") {
 
