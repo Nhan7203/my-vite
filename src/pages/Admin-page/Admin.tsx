@@ -1,21 +1,9 @@
+import { getAllUsers, getTotalOrder, getTotalProduct, getTotalProfit, getTotalUser } from "../../apiServices/AdminServices/adminServices";
 import { useState, useEffect } from "react";
 import { useAllProduct } from "../../context/ShopContext";
-import * as tu from "../../apiServices/getTotalUser";
-import * as tp from "../../apiServices/getTotalProduct";
-import * as to from "../../apiServices/getTotalOrder";
-import * as tf from "../../apiServices/getTotalProfit";
-import * as au from "../../apiServices/GetAllUsers";
-import vu from "../../assets/vu.jpg";
+import { AllUsers } from "../../interfaces";
+import { vu } from "../../import/import-assets";
 import "./Admin.css";
-
-export interface AllUsers {
-  userId: number;
-  roleId: number;
-  email: string;
-  phoneNumber: number;
-  adress: string;
-  isActive: boolean;
-}
 
 const Admin = () => {
   const { allProduct } = useAllProduct();
@@ -26,15 +14,15 @@ const Admin = () => {
   const [allUsers, setAllUsers] = useState<AllUsers[]>([]);
   useEffect(() => {
     const fetchData = async () => {
-      const result = await tu.getTotalUser();
+      const result = await getTotalUser();
       setTotalUser(result);
-      const result1 = await tp.getTotalProduct();
+      const result1 = await getTotalProduct();
       setTotalProduct(result1);
-      const result2 = await to.getTotalOrder();
+      const result2 = await getTotalOrder();
       setTotalOrder(result2);
-      const result3 = await tf.getTotalProfit();
+      const result3 = await getTotalProfit();
       setTotalProfit(result3);
-      const result4 = await au.GetAllUsers();
+      const result4 = await getAllUsers();
       setAllUsers(result4);
     };
     fetchData();
@@ -102,12 +90,7 @@ const Admin = () => {
               </label>
               Dashboard
             </h2>
-
-            {/* <div className="search-wrapper">
-              <span className="las la-search"></span>
-              <input type="search" placeholder="Search here" />
-            </div> */}
-
+        
             <div className="user-wrapper">
               <img
                 src="/src/assets/anya-cute.jpg"

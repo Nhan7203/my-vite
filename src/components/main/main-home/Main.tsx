@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
-import ProductCard from "./ProductCard";
-import adv from "../../../assets/adv.png";
-import adv1 from "../../../assets/adv1.png";
-import adv2 from "../../../assets/adv1.png";
-import "./Main.css";
+import { adv, adv1, adv2 } from "../../../import/import-assets";
 import { useAllProduct } from "../../../context/ShopContext";
+import ProductCard from "./ProductCard";
+import "./Main.css";
 
 const Main = () => {
 

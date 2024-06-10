@@ -1,23 +1,31 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { BsCart3 } from 'react-icons/bs';
-import { useCart } from '../../../pages/Cart-page/CartContext';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar as solidStar, faStarHalfAlt } from '@fortawesome/free-solid-svg-icons';
-import { faStar as regularStarOutline } from '@fortawesome/free-regular-svg-icons';
+import { getAllRating, getProductRating } from "../../../apiServices/ReviewServices/reviewServices";
+import { Link, BsCart3, FontAwesomeIcon } from "../../../import/import-libary";
+import { useEffect, useState } from "react";
+import { aProduct } from "../../../interfaces";
+import { useCart } from "../../../pages/Cart-page/CartContext";
+import {
+  faStar as regularStarOutline,
+  faStar as solidStar,
+  faStarHalfAlt,
+} from "@fortawesome/free-solid-svg-icons";
 import swal from "sweetalert";
-import './ProductCart.css'
-import { aProduct } from '../../../context/ShopContext';
+import "./Main.css";
 
 const getGridColumn = (index: number) => {
   const gridColumnMap = ["1 / 3", "4 / 6", "7 / 9", "10 / 12"];
   return gridColumnMap[index % gridColumnMap.length];
 };
 
-const ProductCard = ({ product, index }: { product: aProduct, index: number }) => {
+const ProductCard = ({
+  product,
+  index,
+}: {
+  product: aProduct;
+  index: number;
+}) => {
   const { addToCart } = useCart();
 
-//--------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------
   const handleCartClick = (product: aProduct) => {
     if (product.stock > 0) {
       addToCart(product);
@@ -39,41 +47,44 @@ const ProductCard = ({ product, index }: { product: aProduct, index: number }) =
       }
     }
   };
-//-----------------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------------
   const [ratingInfo, setRatingInfo] = useState({
     averageRating: 0,
     totalRating: 0,
-    reviewCount: 0
+    reviewCount: 0,
   });
 
   useEffect(() => {
     const fetchRatings = async () => {
       try {
-        const response = await fetch('https://localhost:7030/api/Review/GetAllRating');
-        if (!response.ok) {
+        const response = await getAllRating();
+        // console.log("haha", response)
+
+        if (!response) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const allRatings = await response.json();
+        const allRatings = response;
 
-
-        const productRatings = allRatings.filter((rating: any) => String(rating.productId) === String(product.productId));
+        const productRatings = allRatings.filter(
+          (rating: any) =>
+            String(rating.productId) === String(product.productId)
+        );
 
         if (productRatings.length > 0) {
-          const response = await fetch(`https://localhost:7030/api/Review/GetProductRating?productId=${product.productId}`, {
-            method: 'POST',
-          });
-          if (!response.ok) {
+          const response = await getProductRating(product.productId);
+
+          if (!response) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
-          const productRatingDetails = await response.json();
+          const productRatingDetails = response;
           setRatingInfo({
             averageRating: productRatingDetails.averageRating,
             totalRating: productRatingDetails.totalRating,
-            reviewCount: productRatingDetails.reviewCount
+            reviewCount: productRatingDetails.reviewCount,
           });
         }
       } catch (error) {
-        console.error('Error fetching ratings:', error);
+        console.error("Error fetching ratings:", error);
       }
     };
 
@@ -86,22 +97,37 @@ const ProductCard = ({ product, index }: { product: aProduct, index: number }) =
     const halfStar = ratingInfo.averageRating % 1 >= 0.5;
 
     for (let i = 0; i < fullStars; i++) {
-      stars.push(<FontAwesomeIcon key={i} icon={solidStar} style={{ color: 'yellow' }} />);
+      stars.push(
+        <FontAwesomeIcon key={i} icon={solidStar} style={{ color: "yellow" }} />
+      );
     }
 
     if (halfStar) {
-      stars.push(<FontAwesomeIcon key="half" icon={faStarHalfAlt} style={{ color: 'yellow' }} />);
+      stars.push(
+        <FontAwesomeIcon
+          key="half"
+          icon={faStarHalfAlt}
+          style={{ color: "yellow" }}
+        />
+      );
     }
 
     const emptyStars = 5 - stars.length;
     for (let i = 0; i < emptyStars; i++) {
-      stars.push(<FontAwesomeIcon key={`empty-${i}`} icon={regularStarOutline} style={{ color: 'grey' }} />);
+      stars.push(
+        <FontAwesomeIcon
+          key={`empty-${i}`}
+          icon={regularStarOutline}
+          style={{ color: "grey" }}
+        />
+      );
     }
 
     return stars;
   };
 
-  const imageUrl = product.imageProducts.length > 0 ? product.imageProducts[0].imageUrl : '';
+  const imageUrl =
+    product.imageProducts.length > 0 ? product.imageProducts[0].imageUrl : "";
 
   return (
     <div className="card" style={{ gridColumn: getGridColumn(index) }}>
@@ -115,15 +141,17 @@ const ProductCard = ({ product, index }: { product: aProduct, index: number }) =
           <p>{product.name}</p>
         </div>
         <div className="rate-sold">
-          <div className="rating-stars">
-            {renderStars()}
-          </div>
+          <div className="rating-stars">{renderStars()}</div>
           <p>Total Rating: {ratingInfo.reviewCount}</p>
         </div>
         <div className="footer-card">
           <h2 className="price">${product.price.toLocaleString()}</h2>
           <div className="box-shopping">
-            <BsCart3 className="icon-shopping" fontSize="1.5em" onClick={() => handleCartClick (product)}/>
+            <BsCart3
+              className="icon-shopping"
+              fontSize="1.5em"
+              onClick={() => handleCartClick(product)}
+            />
           </div>
         </div>
       </div>

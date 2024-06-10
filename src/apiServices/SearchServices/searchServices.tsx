@@ -1,4 +1,4 @@
-import * as request from "../utils/request";
+import * as request from "../../utils/request";
 
 export const search = async (queryParams: URLSearchParams) => {
   try {

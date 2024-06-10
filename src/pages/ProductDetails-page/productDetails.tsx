@@ -1,8 +1,8 @@
-import { useAllProduct, aProduct } from "../../context/ShopContext";
+import { useAllProduct } from "../../context/ShopContext";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Navbar, Footer } from "../../import/import-router";
-import { useCart } from "../../pages/Cart-page/CartContext";
+import { useCart } from "../Cart-page/CartContext";
 import ProductCard from "../../components/main/main-home/ProductCard";
 import adv from "/src/assets/adv.png";
 import adv1 from "/src/assets/adv1.png";
@@ -15,6 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faStar as regularStarOutline } from "@fortawesome/free-regular-svg-icons";
 import swal from "sweetalert";
+import { aProduct } from "../../interfaces";
 const ProductDetail = () => {
   const { addToCart2 } = useCart();
   const { allProduct } = useAllProduct();
@@ -76,10 +77,13 @@ const ProductDetail = () => {
   };
 
   const handleIncrementQuantity = () => {
-    // if (quantity < product.stock) setQuantity(quantity + 1);
-     setQuantity(quantity + 1);
+    if (quantity < product.stock) {
+      setQuantity(quantity + 1);
+    } else {
+      setQuantity(quantity);
+    }
   };
-//----------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------------------
   const handleAddToCart = (product: aProduct, quantity: number) => {
     if (product.stock > 0) {
       addToCart2(product, quantity, "add");
@@ -101,7 +105,7 @@ const ProductDetail = () => {
       }
     }
   };
-//--------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------
   const handleBuyNow = (product: aProduct) => {
     addToCart2(product, quantity, "buy");
     navigate("/cart");

@@ -1,19 +1,10 @@
-import { toast } from "react-toastify";
-import "./Admin.css";
+import { getTotalUser, getAllUsers } from "../../apiServices/AdminServices/adminServices";
 import { useState, useEffect } from "react";
-import * as tu from "../../apiServices/getTotalUser";
-import * as au from "../../apiServices/GetAllUsers";
+import { toast } from "react-toastify";
+import { AllUsers } from "../../interfaces";
 import "./Admin.css";
-export interface AllUsers {
-  userId: number;
-  roleId: number;
-  email: string;
-  phoneNumber: number;
-  address: string;
-  isActive: boolean;
-  password: string;
-  name: string;
-}
+
+
 
 const Customer = () => {
   // console.log('check empty: ', isEmptyObj);
@@ -69,9 +60,9 @@ const Customer = () => {
 //   console.log("check empty: ", isEmptyObj);
   useEffect(() => {
     const fetchData = async () => {
-      const result = await tu.getTotalUser();
+      const result = await getTotalUser();
       setTotalUser(result);
-      const result2 = await au.GetAllUsers();
+      const result2 = await getAllUsers();
       setAllUsers(result2);
     };
     fetchData();

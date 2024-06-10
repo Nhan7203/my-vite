@@ -6,7 +6,7 @@ import { useAllProduct } from "../../context/ShopContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import swal from "sweetalert";
 import { ImageProduct } from "../../context/ShopContext";
-import * as brandd from "../../apiServices/getBrand";
+import * as brandd from "../../apiServices/BrandServices/brandServices";
 
 export interface Brand {
   brandId: number;

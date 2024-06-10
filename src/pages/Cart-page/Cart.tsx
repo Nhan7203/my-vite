@@ -4,6 +4,8 @@ import { useCart } from "./CartContext";
 import Swal from "sweetalert2";
 import "./Cart.css";
 import ra from "../../assets/rabbit.png";
+import swal from "sweetalert";
+import { useState } from "react";
 
 const ShoppingCart = () => {
   const { cart, decrementQuantity, incrementQuantity, removeItems } = useCart();
@@ -13,14 +15,33 @@ const ShoppingCart = () => {
     0
   );
 
+  // const handleIncrement = (productId: number, quantity: number, stock: number) => {
+  //   if (quantity < stock) {
+  //     incrementQuantity(productId);
+  //   } else {
+  //     Swal.fire({
+  //       title: "Oops!",
+  //       text: "Cannot increase quantity beyond available stock!",
+  //       icon: "error",
+  //     });
+  //   }
+  // };
+  const [isPreOrder, setIsPreOrder] = useState(false);
   const handleIncrement = (productId: number, quantity: number, stock: number) => {
-    if (quantity < stock) {
+    if (quantity < stock || isPreOrder) {
       incrementQuantity(productId);
     } else {
-      Swal.fire({
-        title: "Oops!",
-        text: "Cannot increase quantity beyond available stock!",
-        icon: "error",
+      swal({
+        title: "Out of stock",
+        text: "This product is currently out of stock, but you can place a pre-order.",
+        icon: "info",
+        buttons: ["Cancel", "Confirm"],
+        dangerMode: true,
+      }).then(async (confirm) => {
+        if (confirm) {
+          incrementQuantity(productId);
+          setIsPreOrder(true);
+        }
       });
     }
   };
