@@ -19,6 +19,7 @@ export interface ImageProduct {
   imageId: number
   productId: number
   imageUrl: string
+  imageFile?: File | null
 }
 
 interface ShopContextType {

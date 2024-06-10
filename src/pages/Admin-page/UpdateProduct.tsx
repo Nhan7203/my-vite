@@ -6,7 +6,7 @@ import { useAllProduct } from "../../context/ShopContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import swal from "sweetalert";
 import { ImageProduct } from "../../context/ShopContext";
-import * as brandd from "../../apiServices/getBrand";
+import * as brand from "../../apiServices/getBrand";
 
 export interface Brand {
   brandId: number;
@@ -27,20 +27,25 @@ const UpdateProduct = () => {
   const [price, setPrice] = useState<number>(0);
   const [stock, setStock] = useState<number>(0);
   const [imageProducts, setImageProducts] = useState<ImageProduct[]>([]);
-  const [imageUrls, setImageUrls] = useState<{ [key: number]: string }>({});
+  const [imageData, setImageData] = useState<{
+    [key: number]: {
+      imageUrl: string,
+      imageFile: File | null
+    },
+  }>({});
   const [brandList, setBrandList] = useState<Brand[]>([]);
   const [errors, setErrors] = useState({
     name: '',
     description: '',
     stock: '',
     price: '',
-    
+
   });
 
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await brandd.getBrand();
+      const result = await brand.getBrand();
       setBrandList(result);
     };
     fetchData();
@@ -62,7 +67,7 @@ const UpdateProduct = () => {
     { id: 2, name: "Nut milk" },
     { id: 3, name: "Nutritional drinks" },
     { id: 4, name: "Fresh milk, Yogurt" },
- 
+
   ];
 
   useEffect(() => {
@@ -76,11 +81,19 @@ const UpdateProduct = () => {
       setStock(product.stock);
       setImageProducts(product.imageProducts);
 
-      const initialImageUrls: { [key: number]: string } = {};
+      const initialImageData: {
+        [key: number]: {
+          imageUrl: string,
+          imageFile: File | null
+        },
+      } = {};
       product.imageProducts.forEach((image) => {
-        initialImageUrls[image.imageId] = image.imageUrl;
+        initialImageData[image.imageId] = {
+          imageUrl: image.imageUrl,
+          imageFile: null,
+        };
       });
-      setImageUrls(initialImageUrls);
+      setImageData(initialImageData);
     }
   }, [product]);
 
@@ -88,15 +101,20 @@ const UpdateProduct = () => {
   const handleImageUpload = (imageId: number, event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const imageUrl = `/images/products/${file.name}`;
-      setImageUrls((prevImageUrls) => ({
-        ...prevImageUrls,
-        [imageId]: imageUrl,
-      }));
-  
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const imageUrl = e.target?.result as string;
+        setImageData((prevImageData) => ({
+          ...prevImageData,
+          [imageId]: {
+            imageFile: file,
+            imageUrl,
+          },
+        }));
+      };
+      reader.readAsDataURL(file);
     }
   };
- 
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
@@ -110,78 +128,159 @@ const UpdateProduct = () => {
     };
 
     if (name === "") {
-      error.name = "Name is Required!"
-      error.check = true
-    
-     }
-     if (description === "") {
-      error.description = "Description is Required!"
-      error.check = true
-     }
+      error.name = "Name is Required!";
+      error.check = true;
+    }
+    if (description === "") {
+      error.description = "Description is Required!";
+      error.check = true;
+    }
 
-     if (stock === 0) {
-      error.stock = "Stock != 0 "
-      error.check = true
+    if (stock === 0) {
+      error.stock = "Stock must be greater than 0.";
+      error.check = true;
     }
 
     if (price === 0) {
-      error.price = "Price != 0 "
-      error.check = true
+      error.price = "Price must be greater than 0.";
+      error.check = true;
     }
-    
-    setErrors(error)
+
+    setErrors(error);
     if (error.check) {
-      return
+      return;
     }
 
-    const payload = {
-      productId: productId,
-      name: name,
-      description: description,
-      forAgeId: ageId,
-      brandId: brandId,
-      categoryId: categoryId,
-      price: price,
-      stock: stock,
-      imageProducts: imageProducts.map((image) => ({
-        imageId: image.imageId,
-        
-        imageUrl: imageUrls[image.imageId] || image.imageUrl,
-      })),
+    const formData = new FormData();
+    formData.append('productId', productId.toString());
+    formData.append('name', name);
+    formData.append('description', description);
+    formData.append('forAgeId', ageId.toString());
+    formData.append('brandId', brandId.toString());
+    formData.append('categoryId', categoryId.toString());
+    formData.append('price', price.toString());
+    formData.append('stock', stock.toString());
+    formData.append('isActive', 'true');
 
-      isActive: true,
-    };
-
-    console.log(payload);
+    imageProducts.forEach((image, index) => {
+      formData.append(`imageProducts[${index}].imageId`, image.imageId.toString());
+      formData.append(`imageProducts[${index}].productId`, productId.toString());
+      formData.append(`imageProducts[${index}].imageUrl`, imageData[image.imageId].imageUrl || image.imageUrl);
+      const imageFile = imageData[image.imageId].imageFile;
+      if (imageFile) {
+        formData.append(`imageProducts[${index}].imageFile`, imageFile);
+      }
+      // if (imageData[image.imageId].imageFile) {
+      //   formData.append(`imageProducts[${index}].imageFile`, imageData[image.imageId].imageFile);
+      // }
+    });
 
     try {
       const response = await fetch(
         `https://localhost:7030/api/Products/Update?id=${parseInt(productId)}`,
         {
           method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
+          body: formData,
         }
       );
 
       if (response.status === 200) {
         swal("Success", "Product information updated successfully!", "success");
-        console.log(payload);
         // window.location.reload();
       } else {
         swal("Error", "Failed to update product information.", "error");
       }
     } catch (error) {
       console.log(error);
-      swal(
-        "Error",
-        "Error occurred during updating product information.",
-        "error"
-      );
+      swal("Error", "Error occurred during updating product information.", "error");
     }
   };
+
+
+  // const handleSubmit = async (event: { preventDefault: () => void }) => {
+  //   event.preventDefault();
+
+  //   const error = {
+  //     name: '',
+  //     description: '',
+  //     stock: '',
+  //     price: '',
+  //     check: false
+  //   };
+
+  //   if (name === "") {
+  //     error.name = "Name is Required!"
+  //     error.check = true
+
+  //   }
+  //   if (description === "") {
+  //     error.description = "Description is Required!"
+  //     error.check = true
+  //   }
+
+  //   if (stock === 0) {
+  //     error.stock = "Stock != 0 "
+  //     error.check = true
+  //   }
+
+  //   if (price === 0) {
+  //     error.price = "Price != 0 "
+  //     error.check = true
+  //   }
+
+  //   setErrors(error)
+  //   if (error.check) {
+  //     return
+  //   }
+
+  //   const payload = {
+  //     productId: productId,
+  //     name: name,
+  //     description: description,
+  //     forAgeId: ageId,
+  //     brandId: brandId,
+  //     categoryId: categoryId,
+  //     price: price,
+  //     stock: stock,
+  //     imageProducts: imageProducts.map((image) => ({
+  //       imageId: image.imageId,
+  //       imageUrl: imageData[image.imageId].imageUrl || image.imageUrl,
+  //       imageFile: imageData[image.imageId].imageFile || null
+  //     })),
+
+  //     isActive: true,
+  //   };
+
+  //   console.log(payload);
+
+  //   try {
+  //     const response = await fetch(
+  //       `https://localhost:7030/api/Products/Update?id=${parseInt(productId)}`,
+  //       {
+  //         method: "PUT",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify(payload),
+  //       }
+  //     );
+
+  //     if (response.status === 200) {
+  //       swal("Success", "Product information updated successfully!", "success");
+  //       console.log(payload);
+  //       // window.location.reload();
+  //     } else {
+  //       swal("Error", "Failed to update product information.", "error");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     swal(
+  //       "Error",
+  //       "Error occurred during updating product information.",
+  //       "error"
+  //     );
+  //   }
+  // };
 
   const handleCancel = () => {
     navigate("/manage-product");
@@ -272,26 +371,26 @@ const UpdateProduct = () => {
             <form onSubmit={handleSubmit} id="boder-form">
               <form className="form-add ">
                 <div>
-                <h4>ProductId: {productId}</h4>
+                  <h4>ProductId: {productId}</h4>
 
-                <h4>Image</h4>
+                  <h4>Image</h4>
                   {product?.imageProducts.map((image) => (
                     <div key={image.imageId}>
                       <label>Image ID: {image.imageId}</label>
                       <input
                         type="file"
-                        
+                        accept="image/*"
                         onChange={(event) =>
                           handleImageUpload(image.imageId, event)
                         }
                       />
-                      {imageUrls && (
-                      <img
-                        src={imageUrls[image.imageId]}
-                        alt={`Image ${image.imageId }`}
-                        style={{ maxWidth: '200px' }}
-                      />
-                    )}
+                      {imageData && (
+                        <img
+                          src={imageData[image.imageId]?.imageUrl}
+                          alt={`Image ${image.imageId}`}
+                          style={{ maxWidth: '200px' }}
+                        />
+                      )}
                     </div>
                   ))}
                   <h4>For age</h4>
@@ -325,7 +424,7 @@ const UpdateProduct = () => {
                       </option>
                     ))}
                   </select>
-                  
+
                   <h4>Brand</h4>
                   <select
                     value={brandId}
@@ -341,7 +440,7 @@ const UpdateProduct = () => {
                       </option>
                     ))}
                   </select>
-                  
+
                   <h4>price</h4>
                   <input
                     type="number"
@@ -358,7 +457,7 @@ const UpdateProduct = () => {
                     value={stock}
                     onChange={(e) => setStock(Number(e.target.value))}
                   />
-                  {errors.stock && <p style={{ color: "red" }}>{errors.stock}</p>}    
+                  {errors.stock && <p style={{ color: "red" }}>{errors.stock}</p>}
 
                   <h4>Name</h4>
                   <input
