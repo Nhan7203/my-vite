@@ -4,6 +4,8 @@ import { getProduct } from "../apiServices/ProductServices/productServices";
 
 // export const ShopContext = createContext<ShopContextType | undefined>(undefined);
 
+
+
 export const ShopContext = createContext<ShopContextType>({
   allProduct: [],
 });
