@@ -14,7 +14,7 @@ export const getProductRating = async (productId: number) => {
   try {
     const res = await request.post(`Review/GetProductRating?productId=${productId}`);
     //console.log("check data search: ", res);
-    return res;
+    return res.data;
   } catch (error) {
     console.log(error);
   }
