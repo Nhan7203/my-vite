@@ -2,7 +2,7 @@ import "./Admin.css";
 import { useState, useEffect } from "react";
 import "./Admin.css";
 import { useLocation, useNavigate } from "react-router-dom";
-import * as brandd from "../../apiServices/getBrand";
+import * as brandd from "../../apiServices/BrandServices/brandServices";
 import swal from "sweetalert";
 
 import {
@@ -190,7 +190,7 @@ const AddProduct = () => {
 
   return (
     <>
-      <body>
+      <div>
         <input type="checkbox" id="nav-toggle" />
         <div className="sidebar">
           <div className="sidebar-brand">
@@ -251,10 +251,10 @@ const AddProduct = () => {
               Dashboard
             </h2>
 
-            <div className="search-wrapper">
+            {/* <div className="search-wrapper">
               <span className="las la-search"></span>
               <input type="search" placeholder="Search here" />
-            </div>
+            </div> */}
 
             <div className="user-wrapper">
               <img
@@ -272,7 +272,7 @@ const AddProduct = () => {
 
           <main>
             <form onSubmit={handleSubmit} id="boder-form">
-              <form className="form-add ">
+              <div className="form-add ">
                 <div>
                   <h4>ProductId: {products.length + 1}</h4>
 
@@ -300,14 +300,14 @@ const AddProduct = () => {
 
                   <h4>For age</h4>
                   <select
-                    value={ageId}
+                    defaultValue={ageId}
                     onChange={(e) => setAgeId(Number(e.target.value))}
                   >
                     {ageOptions.map((option) => (
                       <option
                         key={option.id}
                         value={option.id}
-                        selected={option.id === ageId}
+                       
                       >
                         {option.name}
                       </option>
@@ -316,14 +316,14 @@ const AddProduct = () => {
 
                   <h4>Category</h4>
                   <select
-                    value={categoryId}
+                    defaultValue={categoryId}
                     onChange={(e) => setCategoryId(Number(e.target.value))}
                   >
                     {categoryOptions.map((option) => (
                       <option
                         key={option.id}
                         value={option.id}
-                        selected={option.id === categoryId}
+                       
                       >
                         {option.name}
                       </option>
@@ -332,14 +332,14 @@ const AddProduct = () => {
 
                   <h4>Brand</h4>
                   <select
-                    value={brandId}
+                    defaultValue={brandId}
                     onChange={(e) => setBrandId(Number(e.target.value))}
                   >
                     {brandList.map((option) => (
                       <option
                         key={option.brandId}
                         value={option.brandId}
-                        selected={option.brandId === brandId}
+                        
                       >
                         {option.name}
                       </option>
@@ -379,7 +379,7 @@ const AddProduct = () => {
                   />
                    {errors.description && <p style={{ color: "red" }}>{errors.description}</p>}
                 </div>
-              </form>
+              </div>
               <div className="both-button">
                 <button type="submit" className="bt-add">
                   Update
@@ -391,7 +391,7 @@ const AddProduct = () => {
             </form>
           </main>
         </div>
-      </body>
+      </div>
     </>
   );
 };

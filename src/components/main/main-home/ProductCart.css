@@ -1,8 +1,0 @@
-.rating-stars {
-    display: flex;
-    align-items: center;
-  }
-  
-  .rating-stars .fa-icon {
-    margin-right: 4px; /* Adjust as needed for spacing */
-  }

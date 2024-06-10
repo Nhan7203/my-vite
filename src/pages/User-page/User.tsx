@@ -79,10 +79,9 @@ const User = () => {
             userIdIdentifier
           )}`
         );
-
+        
         if (response.ok) {
           const data = await response.json();
-
           const updatedOrderData = data.map((order: Order) => {
             const total = order.orderDetails.reduce(
               (acc, detail) => acc + detail.total,

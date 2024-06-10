@@ -2,13 +2,13 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Navbar, Footer } from "../../import/import-router";
 import BoxMenuUser from "./components/BoxMenuUser";
 import { useEffect, useState } from "react";
-import * as searchOrderDetails from "../../apiServices/getOrderDetails";
-import * as searchProduct from "../../apiServices/getProductId";
+import { getProductId } from "../../apiServices/ProductServices/productServices";
+import { getOrderDetails } from "../../apiServices/UserServices/userServices";
 import { jwtDecode } from "jwt-decode";
-import { aProduct } from "../../context/ShopContext";
 import { useCart } from "../Cart-page/CartContext";
 import swal from "sweetalert";
-import './OrderDetails.css';
+import "./OrderDetails.css";
+import { aProduct } from "../../interfaces";
 
 export interface OrderDetail {
   productId: number;
@@ -34,9 +34,38 @@ const OrderDetails = () => {
   const [showRatingBox, setShowRatingBox] = useState<boolean>(false);
   const [selectedStars, setSelectedStars] = useState<number>(0);
   const [comment, setComment] = useState<string>("");
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [selectedOrderDetail, setSelectedOrderDetail] = useState(null);
+  //const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedOrderDetail, setSelectedOrderDetail] = useState<OrderDetail>();
+  const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
 
+  const [isRated, setIsRated] = useState(false);
+
+
+  useEffect(() => {
+    const fetchUserReviews = async () => {
+      if (token) {
+        const decodedToken: any = jwtDecode(token);
+        const userIdIdentifier = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+        const userId = userIdIdentifier;
+
+        const response = await fetch(`https://localhost:7030/api/Review/GetUserReview?userId=${parseInt(userId)}&orderId=${orderId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await response.json();
+        console.log(data);
+        console.log(orderId);
+
+        if (data.length > 0 && data[0].isRated) {
+          setIsRated(true);
+        }
+      }
+    };
+
+    fetchUserReviews();
+  }, [orderId, token]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,7 +75,7 @@ const OrderDetails = () => {
       }
       const queryParams = new URLSearchParams();
       queryParams.append("orderId", orderId.toString());
-      const result = await searchOrderDetails.getOrderDetails(queryParams);
+      const result = await getOrderDetails(queryParams);
       setOrderDetails(result);
     };
     fetchData();
@@ -61,18 +90,36 @@ const OrderDetails = () => {
       if (productIds != null) {
         queryParams.append("", productIds.toString());
       }
-      const result = await searchProduct.getProductId(queryParams);
+      const result = await getProductId(queryParams);
       setProducts(result);
     };
     fetchProducts();
   }, [orderDetails]);
 
   const { addToCart2 } = useCart();
-
+//-----------------------------------------------------------------------------------------------------------
   const handleAddToCart = (product: aProduct, quantity: number) => {
-    addToCart2(product, quantity, "add");
+    if (product.stock > 0) {
+      addToCart2(product, quantity, "add");
+    } else {
+      try {
+        swal({
+          title: "Out of stock",
+          text: "This product is currently out of stock, but you can place a pre-order.",
+          icon: "info",
+          buttons: ["Cancel", "Confirm"],
+          dangerMode: true,
+        }).then(async (confirm) => {
+          if (confirm) {
+            addToCart2(product, quantity, "add");
+          }
+        });
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    }
   };
-
+//---------------------------------------------------------------------------------------------------------------
   const handleCancelOrder = async () => {
     try {
       if (!token) {
@@ -84,7 +131,7 @@ const OrderDetails = () => {
 
       const userIdIdentifier =
         decodedToken[
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
         ];
 
       const userId = userIdIdentifier;
@@ -132,7 +179,7 @@ const OrderDetails = () => {
 
       const userIdIdentifier =
         decodedToken[
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
         ];
 
       const userId = userIdIdentifier;
@@ -176,7 +223,7 @@ const OrderDetails = () => {
   };
 
   const handleRate = (product: Product, orderDetail: OrderDetail) => {
-    setSelectedProduct(product);
+    setSelectedProducts([...selectedProducts, product]);
     setSelectedOrderDetail(orderDetail);
     setShowRatingBox(true);
   };
@@ -185,20 +232,34 @@ const OrderDetails = () => {
     setSelectedStars(star);
   };
 
-  const handleRatingCancel = () => {
+  const handleRatingCancel = (productToRemove: Product | undefined) => {
+    // setSelectedProducts(
+    //   selectedProducts.filter((p) => p.productId !== product?.productId)
+    // );
+    const orderData: OrderData = JSON.parse(localStorage.getItem('orderData') || '{}');
+  if (orderId && orderData[orderId]) {
+    const updatedSelectedProducts = orderData[orderId].filter((product) => product.productId !== productToRemove?.productId);
+    const updatedOrderData: OrderData = {
+      ...orderData,
+      [orderId]: updatedSelectedProducts,
+    };
+    localStorage.setItem('orderData', JSON.stringify(updatedOrderData));
+    setSelectedProducts(updatedSelectedProducts);
+  }
+   
     setShowRatingBox(false);
     setSelectedStars(0);
     setComment("");
   };
 
   const handleRatingSubmit = async () => {
-    if (!selectedProduct || !selectedOrderDetail) return;
+    if (selectedProducts.length === 0 || !selectedOrderDetail) return;
 
     const decodedToken: any = jwtDecode(token);
 
     const userIdIdentifier =
       decodedToken[
-      "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
       ];
 
     const userId = userIdIdentifier;
@@ -207,38 +268,70 @@ const OrderDetails = () => {
 
     const reviewData = {
       userId,
-      orderDetailId: 1,
-      productId: selectedProduct.productId,
+      orderDetailId: orderId,
+      productId:  selectedProducts.length > 0 ? selectedProducts[0].productId : null,
       date: new Date().toISOString(),
       rating,
       comment: comment || '',
+      isRated: false,
+
     };
 
-    console.log(reviewData);
 
+    console.log(reviewData);
+   
     try {
-      const response = await fetch('https://localhost:7030/api/Review', {
-        method: 'POST',
+      const response = await fetch("https://localhost:7030/api/Review", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(reviewData),
       });
-
+     
+     
       if (response.ok) {
-        swal('Success!', 'Your review has been submitted.', 'success');
+        swal("Success!", "Your review has been submitted.", "success");
+        
         setShowRatingBox(false);
         setSelectedStars(0);
-        setComment('');
+        setComment("");
       } else {
-        throw new Error('Failed to submit review');
+        throw new Error("Failed to submit review");
       }
     } catch (error) {
-      console.error('Error submitting review:', error);
-      swal('Error', 'Failed to submit your review. Please try again.', 'error');
+      console.error("Error submitting review:", error);
+      swal("Error", "Failed to submit your review. Please try again.", "error");
     }
   };
+
+  interface OrderData {
+    [orderId: string]: Product[];
+  }
+
+ 
+  
+  useEffect(() => {
+    if (orderId && selectedProducts.length > 0) {
+      const orderData: OrderData = {
+        ...JSON.parse(localStorage.getItem('orderData') || '{}'),
+        [orderId]: selectedProducts,
+      };
+      localStorage.setItem('orderData', JSON.stringify(orderData));
+    }
+  }, [orderId, selectedProducts]);
+  
+  // Đọc dữ liệu từ localStorage
+  useEffect(() => {
+    const orderData: OrderData = JSON.parse(localStorage.getItem('orderData') || '{}');
+    if (orderId) {
+      setSelectedProducts(orderData[orderId] || []);
+    } else {
+      setSelectedProducts([]);
+    }
+  }, [orderId]);
+
 
   return (
     <div>
@@ -289,21 +382,78 @@ const OrderDetails = () => {
                       </div>
                       {(orderStatus === "Completed" ||
                         currentOrderStatus === "Completed") && (
-                          <div className="">
-                            {product && (
-                              <div className="add-product" style={{ width: "280px" }}>
+                        <div className="">
+                          {product && (
+                            <div
+                              className="add-product"
+                              style={{ width: "280px" }}
+                            >
+                              <button
+                                onClick={() =>
+                                  handleAddToCart(product, orderDetail.quantity)
+                                }
+                              >
+                                add
+                              </button>
+                              { !isRated && !selectedProducts.some(
+                                (p) => p.productId === product.productId
+                              ) && (
                                 <button
                                   onClick={() =>
-                                    handleAddToCart(product, orderDetail.quantity)
+                                    handleRate(product, orderDetail)
                                   }
                                 >
-                                  add
+                                  Rate
                                 </button>
-                                <button onClick={() => handleRate(product, orderDetail)}>Rate</button>                              </div>
+
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    {showRatingBox && (
+                      <div className="rating-box-overlay">
+                        <div className="rating-box">
+                          <h3>Rate the Product</h3>
+                          <div className="stars">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <span
+                                key={star}
+                                className={`star ${
+                                  selectedStars >= star ? "filled" : ""
+                                }`}
+                                onClick={() => handleStarClick(star)}
+                              >
+                                &#9733;
+                              </span>
+                            ))}
+                          </div>
+                          <textarea
+                            value={comment}
+                            onChange={(e) => setComment(e.target.value)}
+                            placeholder="Leave a comment (optional)"
+                          />
+                          <div className="rating-buttons">
+                            <button onClick={handleRatingSubmit}>Submit</button>
+                            { selectedProducts.length > 0 && (
+                              <button
+                                onClick={() =>
+                                  handleRatingCancel(
+                                    selectedProducts[
+                                      selectedProducts.length - 1
+                                    ]
+                                  )
+                                }
+                              >
+                                Cancel Rating
+                              </button>
+
                             )}
                           </div>
-                        )}
-                    </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -328,33 +478,7 @@ const OrderDetails = () => {
         </div>
       </div>
       <Footer />
-      {showRatingBox && (
-        <div className="rating-box-overlay">
-          <div className="rating-box">
-            <h3>Rate the Product</h3>
-            <div className="stars">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <span
-                  key={star}
-                  className={`star ${selectedStars >= star ? 'filled' : ''}`}
-                  onClick={() => handleStarClick(star)}
-                >
-                  &#9733;
-                </span>
-              ))}
-            </div>
-            <textarea
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              placeholder="Leave a comment (optional)"
-            />
-            <div className="rating-buttons">
-              <button onClick={handleRatingSubmit}>Submit</button>
-              <button onClick={handleRatingCancel}>Cancel</button>
-            </div>
-          </div>
-        </div>
-      )}
+
       <Footer />
     </div>
   );

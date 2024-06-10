@@ -6,7 +6,9 @@ import { useAllProduct } from "../../context/ShopContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import swal from "sweetalert";
 import { ImageProduct } from "../../context/ShopContext";
-import * as brand from "../../apiServices/getBrand";
+
+import { getBrand } from "../../apiServices/BrandServices/brandServices";
+
 
 export interface Brand {
   brandId: number;
@@ -45,7 +47,7 @@ const UpdateProduct = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await brand.getBrand();
+      const result = await getBrand();
       setBrandList(result);
     };
     fetchData();
@@ -287,7 +289,7 @@ const UpdateProduct = () => {
   };
   return (
     <>
-      <body>
+      <div>
         <input type="checkbox" id="nav-toggle" />
         <div className="sidebar">
           <div className="sidebar-brand">
@@ -348,10 +350,10 @@ const UpdateProduct = () => {
               Dashboard
             </h2>
 
-            <div className="search-wrapper">
+            {/* <div className="search-wrapper">
               <span className="las la-search"></span>
               <input type="search" placeholder="Search here" />
-            </div>
+            </div> */}
 
             <div className="user-wrapper">
               <img
@@ -369,7 +371,7 @@ const UpdateProduct = () => {
 
           <main>
             <form onSubmit={handleSubmit} id="boder-form">
-              <form className="form-add ">
+              <div className="form-add ">
                 <div>
                   <h4>ProductId: {productId}</h4>
 
@@ -401,8 +403,7 @@ const UpdateProduct = () => {
                     {ageOptions.map((option) => (
                       <option
                         key={option.id}
-                        value={option.id}
-                        selected={option.id === ageId}
+                        value={option.id}                     
                       >
                         {option.name}
                       </option>
@@ -418,7 +419,6 @@ const UpdateProduct = () => {
                       <option
                         key={option.id}
                         value={option.id}
-                        selected={option.id === categoryId}
                       >
                         {option.name}
                       </option>
@@ -434,7 +434,6 @@ const UpdateProduct = () => {
                       <option
                         key={option.brandId}
                         value={option.brandId}
-                        selected={option.brandId === brandId}
                       >
                         {option.name}
                       </option>
@@ -477,7 +476,7 @@ const UpdateProduct = () => {
                   />
                   {errors.description && <p style={{ color: "red" }}>{errors.description}</p>}
                 </div>
-              </form>
+              </div>
               <div className="both-button">
                 <button type="submit" className="bt-add">
                   Update
@@ -489,7 +488,7 @@ const UpdateProduct = () => {
             </form>
           </main>
         </div>
-      </body>
+      </div>
     </>
   );
 };

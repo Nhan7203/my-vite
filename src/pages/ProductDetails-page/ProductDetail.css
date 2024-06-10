@@ -221,3 +221,45 @@
   margin-bottom: 0;
   border-bottom: 5px solid #ff469e;
 }
+
+.review {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.review-user {
+  font-weight: bold;
+}
+
+.review-date {
+  color: #888;
+}
+
+.review-rating {
+  margin-bottom: 5px;
+}
+
+.review-comment p {
+  margin: 0;
+}
+
+.product-reviews{
+  padding-left: 150px;
+  padding-right: 150px;
+}
+
+.product-reviews > h3 {
+  margin-top: 40px;
+  grid-column: 1 / 4;
+  font-family: "Poppins";
+  font-size: 24px;
+  margin-bottom: 0;
+  border-bottom: 5px solid #ff469e;
+}

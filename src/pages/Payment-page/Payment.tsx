@@ -11,7 +11,7 @@ import SEC from "../../assets/ship-economical.png";
 import SR from "../../assets/ship-regular.png";
 import SE from "../../assets/ship-Epress.png";
 import "./Payment.css";
-import { refreshToken } from "../../apiServices/refreshTokenServices";
+import { refreshToken } from "../../apiServices/AccountServices/refreshTokenServices";
 
 const Payment = () => {
   const [shippingMethodId, setShippingMethodId] = useState<number>(0);

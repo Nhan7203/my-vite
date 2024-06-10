@@ -1,24 +1,17 @@
-import { Navbar, Footer } from "../../import/import-router";
+import {
+  increaseLike,
+  cancelLike,
+  getAllBlogs,
+  increaseView,
+} from "../../apiServices/BlogServices/blogServices";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { getUserIdFromToken } from "../../utils/jwtHelper";
+import { Navbar, Footer } from "../../import/import-router";
+import { FaHeart } from "react-icons/fa";
+import { Link } from "../../import/import-libary";
+import type { Blog } from "../../interfaces";
 import view from "../../assets/view.png";
 import "./Blog.css";
-import { Link } from "../../import/import-libary";
-import { jwtDecode } from "jwt-decode";
-import { FaHeart } from "react-icons/fa";
-
-export interface Blog {
-  blogId: number;
-  title: string;
-  content: string;
-  author: string;
-  productId: number;
-  uploadDate: Date;
-  updateDate: Date;
-  view: number;
-  like: number;
-  imageUrl: string;
-}
 
 const getGridColumn = (index: number) => {
   const gridColumnMap = ["1 / 4", "5 / 8", "9 / 12"];
@@ -40,12 +33,9 @@ const Blog = () => {
 
     try {
       if (!liked) {
-        const response = await axios.post(
-          `https://localhost:7030/api/Blog/IncreaseLike?userId=${parseInt(
-            userId
-          )}&blogId=${blogId}`
-        );
-        if (response.status === 200) {
+        const response = await increaseLike(userId, blogId);
+        console.log(response);
+        if (response) {
           setBlogList((prevBlogList) =>
             prevBlogList.map((blog) =>
               blog.blogId === blogId
@@ -55,12 +45,8 @@ const Blog = () => {
           );
         }
       } else {
-        const response = await axios.post(
-          `https://localhost:7030/api/Blog/CancelLike?userId=${parseInt(
-            userId
-          )}&blogId=${blogId}`
-        );
-        if (response.status === 200) {
+        const response = await cancelLike(userId, blogId);
+        if (response) {
           setBlogList((prevBlogList) =>
             prevBlogList.map((blog) =>
               blog.blogId === blogId
@@ -79,10 +65,8 @@ const Blog = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `https://localhost:7030/api/Blog/getAllBlogs`
-        );
-        const updatedBlogList = response.data.map((blog: Blog) => ({
+        const response = await getAllBlogs();
+        const updatedBlogList = response.map((blog: Blog) => ({
           ...blog,
           liked: false,
         }));
@@ -96,14 +80,7 @@ const Blog = () => {
 
   const increaseViewCount = async (userId: string, blogId: number) => {
     try {
-      await fetch(
-        `https://localhost:7030/api/Blog/IncreaseView?userId=${parseInt(
-          userId
-        )}&blogId=${blogId}`,
-        {
-          method: "POST",
-        }
-      );
+      await increaseView(userId, blogId);
     } catch (error) {
       console.error("Error increasing view count:", error);
     }
@@ -117,14 +94,9 @@ const Blog = () => {
     return null;
   }
 
-  const decodedToken: any = jwtDecode(token);
+  const userIdFromToken = getUserIdFromToken(token);
 
-  const userIdIdentifier =
-    decodedToken[
-    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-    ];
-
-  const userId = userIdIdentifier;
+  const userId = userIdFromToken;
 
   return (
     <div>
@@ -156,10 +128,11 @@ const Blog = () => {
                     <img src={view} className="view" alt="view" />
                     <div>{blog.view}</div>
                     <FaHeart
-                      size={24}
+                      fontSize="1.3em"
+                      className="my-icon"
                       style={{
                         cursor: "pointer",
-                        color: blog.like ? "pink" : "inherit",
+                        color: blog.like ? "red" : "inherit",
                       }}
                       onClick={() => handleLikeClick(blog.blogId)}
                     />

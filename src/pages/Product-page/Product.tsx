@@ -5,15 +5,19 @@ import { useLocation } from "react-router-dom";
 import { aProduct } from "../../context/ShopContext";
 import { BsCart3 } from "react-icons/bs";
 import { useCart } from "../../pages/Cart-page/CartContext";
-import * as searchServices from "../../apiServices/searchServices";
-import * as brand from "../../apiServices/getBrand";
+import * as searchServices from "../../apiServices/SearchServices/searchServices";
+import * as brand from "../../apiServices/BrandServices/brandServices";
 import by from "../../assets/search-empty.png";
 import { MdNavigateBefore, MdNavigateNext } from "../../import/import-libary";
 import "./Product.css";
 import React, { useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar as solidStar, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons";
+import {
+  faStar as solidStar,
+  faStarHalfAlt,
+} from "@fortawesome/free-solid-svg-icons";
 import { faStar as regularStarOutline } from "@fortawesome/free-regular-svg-icons";
+import swal from "sweetalert";
 
 export interface Brand {
   brandId: number;
@@ -35,8 +39,6 @@ const Product = () => {
   const [activeOrder, setActiveOrder] = useState("");
 
   const [ratings, setRatings] = useState({});
-
-
 
   useEffect(() => {
     const fetchProductsByFilter = async () => {
@@ -163,7 +165,9 @@ const Product = () => {
 
   const fetchRatings = async () => {
     try {
-      const response = await fetch('https://localhost:7030/api/Review/GetAllRating');
+      const response = await fetch(
+        "https://localhost:7030/api/Review/GetAllRating"
+      );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -173,12 +177,17 @@ const Product = () => {
 
       for (const product of products) {
         const productId = product.productId;
-        const productRatings = allRatings.filter(rating => String(rating.productId) === String(productId));
+        const productRatings = allRatings.filter(
+          (rating) => String(rating.productId) === String(productId)
+        );
 
         if (productRatings.length > 0) {
-          const response = await fetch(`https://localhost:7030/api/Review/GetProductRating?productId=${productId}`, {
-            method: 'POST',
-          });
+          const response = await fetch(
+            `https://localhost:7030/api/Review/GetProductRating?productId=${productId}`,
+            {
+              method: "POST",
+            }
+          );
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
@@ -199,7 +208,7 @@ const Product = () => {
 
       setRatings(ratingsMap);
     } catch (error) {
-      console.error('Error fetching ratings:', error);
+      console.error("Error fetching ratings:", error);
     }
   };
 
@@ -209,16 +218,30 @@ const Product = () => {
     const halfStar = averageRating % 1 >= 0.5;
 
     for (let i = 0; i < fullStars; i++) {
-      stars.push(<FontAwesomeIcon key={i} icon={solidStar} style={{ color: 'yellow' }} />);
+      stars.push(
+        <FontAwesomeIcon key={i} icon={solidStar} style={{ color: "yellow" }} />
+      );
     }
 
     if (halfStar) {
-      stars.push(<FontAwesomeIcon key="half" icon={faStarHalfAlt} style={{ color: 'yellow' }} />);
+      stars.push(
+        <FontAwesomeIcon
+          key="half"
+          icon={faStarHalfAlt}
+          style={{ color: "yellow" }}
+        />
+      );
     }
 
     const emptyStars = 5 - stars.length;
     for (let i = 0; i < emptyStars; i++) {
-      stars.push(<FontAwesomeIcon key={`empty-${i}`} icon={regularStarOutline} style={{ color: 'grey' }} />);
+      stars.push(
+        <FontAwesomeIcon
+          key={`empty-${i}`}
+          icon={regularStarOutline}
+          style={{ color: "grey" }}
+        />
+      );
     }
 
     return stars;
@@ -227,6 +250,32 @@ const Product = () => {
   useEffect(() => {
     fetchRatings();
   }, [products]);
+
+
+//-----------------------------------------------------------------------------------------------
+  const handleCartClick = (product: aProduct) => {
+    if (product.stock > 0) {
+      addToCart(product);
+    } else {
+      try {
+        swal({
+          title: "Out of stock",
+          text: "This product is currently out of stock, but you can place a pre-order.",
+          icon: "info",
+          buttons: ["Cancel", "Confirm"],
+          dangerMode: true,
+        }).then(async (confirm) => {
+          if (confirm) {
+            addToCart(product);
+          }
+        });
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    }
+  };
+//-------------------------------------------------------------------------------------------------------------
+
 
 
 
@@ -250,8 +299,10 @@ const Product = () => {
           >
             {brandList.map((brand, index) => (
               <div
-                className={`element-brand ${brandId === brand.brandId ? "active" : ""
-                  }`}
+                key={brand.brandId}
+                className={`element-brand ${
+                  brandId === brand.brandId ? "active" : ""
+                }`}
                 style={{
                   gridColumn: getGridColumn(index),
                   zIndex: "0",
@@ -472,7 +523,6 @@ const Product = () => {
               </div>
               {products.length > 0 ? (
                 <div className="result-product">
-
                   {products.map((product) => {
                     const productRating = ratings[product.productId] || {
                       averageRating: 0,
@@ -481,7 +531,6 @@ const Product = () => {
                     };
 
                     return (
-
                       <div className="element-product" key={product.productId}>
                         <div className="element-img">
                           <Link to={`/productDetails/${product.productId}`}>
@@ -507,10 +556,9 @@ const Product = () => {
                             <BsCart3
                               className="icon-cart-product-page"
                               fontSize="1.4em"
-                              onClick={() => addToCart(product)}
+                              onClick={() => handleCartClick (product)}
                             />
                           </div>
-
                         </div>
                       </div>
                     );
