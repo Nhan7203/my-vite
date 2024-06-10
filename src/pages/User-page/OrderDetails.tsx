@@ -2,13 +2,13 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Navbar, Footer } from "../../import/import-router";
 import BoxMenuUser from "./components/BoxMenuUser";
 import { useEffect, useState } from "react";
-import * as searchOrderDetails from "../../apiServices/getOrderDetails";
-import * as searchProduct from "../../apiServices/getProductId";
+import { getProductId } from "../../apiServices/ProductServices/productServices";
+import { getOrderDetails } from "../../apiServices/UserServices/userServices";
 import { jwtDecode } from "jwt-decode";
-import { aProduct } from "../../context/ShopContext";
 import { useCart } from "../Cart-page/CartContext";
 import swal from "sweetalert";
 import "./OrderDetails.css";
+import { aProduct } from "../../interfaces";
 
 export interface OrderDetail {
   productId: number;
@@ -75,7 +75,7 @@ const OrderDetails = () => {
       }
       const queryParams = new URLSearchParams();
       queryParams.append("orderId", orderId.toString());
-      const result = await searchOrderDetails.getOrderDetails(queryParams);
+      const result = await getOrderDetails(queryParams);
       setOrderDetails(result);
     };
     fetchData();
@@ -90,7 +90,7 @@ const OrderDetails = () => {
       if (productIds != null) {
         queryParams.append("", productIds.toString());
       }
-      const result = await searchProduct.getProductId(queryParams);
+      const result = await getProductId(queryParams);
       setProducts(result);
     };
     fetchProducts();
@@ -232,10 +232,21 @@ const OrderDetails = () => {
     setSelectedStars(star);
   };
 
-  const handleRatingCancel = (product: Product | undefined) => {
-    setSelectedProducts(
-      selectedProducts.filter((p) => p.productId !== product?.productId)
-    );
+  const handleRatingCancel = (productToRemove: Product | undefined) => {
+    // setSelectedProducts(
+    //   selectedProducts.filter((p) => p.productId !== product?.productId)
+    // );
+    const orderData: OrderData = JSON.parse(localStorage.getItem('orderData') || '{}');
+  if (orderId && orderData[orderId]) {
+    const updatedSelectedProducts = orderData[orderId].filter((product) => product.productId !== productToRemove?.productId);
+    const updatedOrderData: OrderData = {
+      ...orderData,
+      [orderId]: updatedSelectedProducts,
+    };
+    localStorage.setItem('orderData', JSON.stringify(updatedOrderData));
+    setSelectedProducts(updatedSelectedProducts);
+  }
+   
     setShowRatingBox(false);
     setSelectedStars(0);
     setComment("");

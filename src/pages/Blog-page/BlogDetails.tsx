@@ -2,7 +2,7 @@ import { Navbar, Footer } from "../../import/import-router";
 import view from "../../assets/view.png";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import * as searchBlogDetails from "../../apiServices/getBlogId";
+import * as searchBlogDetails from "../../apiServices/BlogServices/blogServices";
 import "./Blog.css";
 import { Blog } from "./Blog";
 import { aProduct, useAllProduct } from "../../context/ShopContext";

@@ -228,7 +228,6 @@ a.white {
   z-index: 50;
 }
 
-
 .icon-noti .active {
   opacity: 1;
   visibility: visible;
@@ -267,7 +266,6 @@ a.white {
 .img-noti > img {
   width: 45px;
   height: 45px;
-  
 }
 
 .icon-trash-all {
