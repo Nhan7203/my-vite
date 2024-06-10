@@ -34,7 +34,7 @@ const UpdateProduct = () => {
     description: '',
     stock: '',
     price: '',
-    
+
   });
 
 
@@ -62,7 +62,7 @@ const UpdateProduct = () => {
     { id: 2, name: "Nut milk" },
     { id: 3, name: "Nutritional drinks" },
     { id: 4, name: "Fresh milk, Yogurt" },
- 
+
   ];
 
   useEffect(() => {
@@ -93,10 +93,10 @@ const UpdateProduct = () => {
         ...prevImageUrls,
         [imageId]: imageUrl,
       }));
-  
+
     }
   };
- 
+
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
@@ -112,14 +112,14 @@ const UpdateProduct = () => {
     if (name === "") {
       error.name = "Name is Required!"
       error.check = true
-    
-     }
-     if (description === "") {
+
+    }
+    if (description === "") {
       error.description = "Description is Required!"
       error.check = true
-     }
+    }
 
-     if (stock === 0) {
+    if (stock === 0) {
       error.stock = "Stock != 0 "
       error.check = true
     }
@@ -128,7 +128,7 @@ const UpdateProduct = () => {
       error.price = "Price != 0 "
       error.check = true
     }
-    
+
     setErrors(error)
     if (error.check) {
       return
@@ -145,7 +145,7 @@ const UpdateProduct = () => {
       stock: stock,
       imageProducts: imageProducts.map((image) => ({
         imageId: image.imageId,
-        
+
         imageUrl: imageUrls[image.imageId] || image.imageUrl,
       })),
 
@@ -272,26 +272,27 @@ const UpdateProduct = () => {
             <form onSubmit={handleSubmit} id="boder-form">
               <div className="form-add ">
                 <div>
-                <h4>ProductId: {productId}</h4>
+                  <h4>ProductId: {productId}</h4>
 
-                <h4>Image</h4>
+                  <h4>Image</h4>
                   {product?.imageProducts.map((image) => (
                     <div key={image.imageId}>
                       <label>Image ID: {image.imageId}</label>
+                      {imageUrls && (
+                        <img
+                          src={imageUrls[image.imageId]}
+                          alt={`Image ${image.imageId}`}
+                          style={{ maxWidth: '200px', margin: 24 }}
+                        />
+                      )}
                       <input
                         type="file"
-                        
+                        className="update-image"
                         onChange={(event) =>
                           handleImageUpload(image.imageId, event)
                         }
                       />
-                      {imageUrls && (
-                      <img
-                        src={imageUrls[image.imageId]}
-                        alt={`Image ${image.imageId }`}
-                        style={{ maxWidth: '200px' }}
-                      />
-                    )}
+
                     </div>
                   ))}
                   <h4>For age</h4>
@@ -302,7 +303,7 @@ const UpdateProduct = () => {
                     {ageOptions.map((option) => (
                       <option
                         key={option.id}
-                        value={option.id}                     
+                        value={option.id}
                       >
                         {option.name}
                       </option>
@@ -323,7 +324,7 @@ const UpdateProduct = () => {
                       </option>
                     ))}
                   </select>
-                  
+
                   <h4>Brand</h4>
                   <select
                     value={brandId}
@@ -338,7 +339,7 @@ const UpdateProduct = () => {
                       </option>
                     ))}
                   </select>
-                  
+
                   <h4>price</h4>
                   <input
                     type="number"
@@ -355,7 +356,7 @@ const UpdateProduct = () => {
                     value={stock}
                     onChange={(e) => setStock(Number(e.target.value))}
                   />
-                  {errors.stock && <p style={{ color: "red" }}>{errors.stock}</p>}    
+                  {errors.stock && <p style={{ color: "red" }}>{errors.stock}</p>}
 
                   <h4>Name</h4>
                   <input

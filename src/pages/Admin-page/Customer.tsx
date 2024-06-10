@@ -1,9 +1,9 @@
 import { toast } from "react-toastify";
-import "./Admin.css";
+import './Admin.css'
 import { useState, useEffect } from "react";
 import * as tu from "../../apiServices/getTotalUser";
 import * as au from "../../apiServices/GetAllUsers";
-import "./Admin.css";
+
 export interface AllUsers {
   userId: number;
   roleId: number;
@@ -15,12 +15,18 @@ export interface AllUsers {
   name: string;
 }
 
+
 const Customer = () => {
+
+
+
+
+
   // console.log('check empty: ', isEmptyObj);
   const handleDelete = (user: AllUsers) => {
-    // console.log("check user ", user);
+    console.log('check user ', user);
     let currentUser = allUsers;
-    currentUser = allUsers.filter((users) => users.userId !== user.userId);
+    currentUser = allUsers.filter(users => users.userId !== user.userId);
     setAllUsers(currentUser);
     toast.success(`Delete Success!`, {
       position: "top-left",
@@ -32,20 +38,21 @@ const Customer = () => {
       progress: undefined,
       theme: "colored",
     });
-  };
+
+  }
   const [totalUser, setTotalUser] = useState<number>();
   const [allUsers, setAllUsers] = useState<AllUsers[]>([]);
   const [editUser, seteditUser] = useState<AllUsers | undefined>();
   const handleEdit = (user: AllUsers) => {
     let isEmptyObj = !editUser || Object.keys(editUser).length === 0;
 
+
     //save
     if (isEmptyObj === false && editUser?.userId === user.userId) {
       let allUsersCopy = [...allUsers];
-      let objIndex = allUsersCopy.findIndex(
-        (item) => item.userId === user.userId
-      );
-      allUsersCopy[objIndex].address = editUser.address;
+      let objIndex = allUsersCopy.findIndex((item => item.userId === user.userId));
+      allUsersCopy[objIndex].name = editUser.name;
+      allUsersCopy[objIndex].email = editUser.email;
       setAllUsers(allUsersCopy);
       seteditUser(undefined);
 
@@ -63,78 +70,78 @@ const Customer = () => {
       return;
     }
     seteditUser(user);
-  };
+
+  }
 
   let isEmptyObj = !editUser || Object.keys(editUser).length === 0;
-//   console.log("check empty: ", isEmptyObj);
+  console.log('check empty: ', isEmptyObj);
   useEffect(() => {
     const fetchData = async () => {
       const result = await tu.getTotalUser();
       setTotalUser(result);
       const result2 = await au.GetAllUsers();
       setAllUsers(result2);
+
     };
     fetchData();
   }, []);
 
-  const handleOnChangeEdit = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOnChangeEditName = (e: React.ChangeEvent<HTMLInputElement>) => {
+
     if (!editUser) return;
     const editUserCopy = { ...editUser };
-    editUserCopy.address = e.target.value;
+    editUserCopy.name = e.target.value;
     seteditUser(editUserCopy);
-  };
+  }
+
+  const handleOnChangeEditEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+    if (!editUser) return;
+    const editUserCopy = { ...editUser };
+    editUserCopy.email = e.target.value;
+    seteditUser(editUserCopy);
+  }
 
   return (
     <>
-      <div>
+      <body>
+
         <input type="checkbox" id="nav-toggle" />
         <div className="sidebar">
           <div className="sidebar-brand">
-            <h2>
-              <span className="lab la-accusoft"></span> <span>M&B</span>
+            <h2><span className="lab la-accusoft"></span> <span>M&B</span>
             </h2>
           </div>
 
           <div className="sidebar-menu">
             <ul>
               <li>
-                <a href="/admin" className="active">
-                  <span className="las la-igloo"></span>
-                  <span>Dashboard</span>
-                </a>
+                <a href="/admin" className="active"><span className="las la-igloo"></span>
+                  <span>Dashboard</span></a>
               </li>
               <li>
-                <a href="/customer">
-                  <span className="las la-users"></span>
-                  <span>Customers</span>
-                </a>
+                <a href="/customer"><span className="las la-users"></span>
+                  <span>Customers</span></a>
               </li>
               <li>
-                <a href="/manage-product">
-                  <span className="las la-clipboard-list"></span>
-                  <span>Products</span>
-                </a>
+                <a href="/manage-product"><span className="las la-clipboard-list"></span>
+                  <span>Products</span></a>
               </li>
               <li>
-                <a href="/order">
-                  <span className="las la-shopping-bag"></span>
-                  <span>Orders</span>
-                </a>
+                <a href="/order"><span className="las la-shopping-bag"></span>
+                  <span>Orders</span></a>
               </li>
 
               <li>
-                <a href="/account">
-                  <span className="las la-user-circle"></span>
-                  <span>Accounts</span>
-                </a>
+                <a href="/account"><span className="las la-user-circle"></span>
+                  <span>Accounts</span></a>
               </li>
               <li>
-                <a href="">
-                  <span className="las la-clipboard-list"></span>
-                  <span>Tasks</span>
-                </a>
+                <a href=""><span className="las la-clipboard-list"></span>
+                  <span>Tasks</span></a>
               </li>
             </ul>
+
           </div>
         </div>
 
@@ -153,12 +160,7 @@ const Customer = () => {
             </div>
 
             <div className="user-wrapper">
-              <img
-                src="/src/assets/anya-cute.jpg"
-                width="40px"
-                height="40px"
-                alt=""
-              />
+              <img src="/src/assets/anya-cute.jpg" width="40px" height="40px" alt="" />
               <div>
                 <h4>Datnt nt</h4>
                 <small>Super admin</small>
@@ -173,89 +175,140 @@ const Customer = () => {
                   <tr>
                     <th>No</th>
                     <th>UserID</th>
-                    <th>FUll Name</th>
-                    <th>RoleID</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Address</th>
                     <th>Password</th>
                     <th>Update</th>
                     <th>Delete</th>
                   </tr>
+
                 </thead>
                 <tbody>
+
                   {allUsers.map((user, index) => (
+
                     <tr key={user.userId}>
                       <td>{index + 1}</td>
                       <td>
                         <span>{user.userId}</span>
                       </td>
                       <td>
-                        {isEmptyObj === true ? (
-                          <span>{user.address}</span>
-                        ) : (
+
+                        {isEmptyObj === true ?
+                          <span>{user.name}</span>
+                          :
                           <>
-                            {editUser?.userId === user.userId ? (
-                              <input
-                                type="text"
-                                name="fullName"
-                                value={editUser.address}
-                                onChange={handleOnChangeEdit}
+                            {editUser?.userId === user.userId ?
+                              <input type="text" name="fullName" value={editUser.name}
+                                onChange={handleOnChangeEditName}
                               />
-                            ) : (
-                              <span>{user.address}</span>
-                            )}
+                              :
+                              <span>{user.name}</span>
+                            }
                           </>
-                        )}
+                        }
+
                       </td>
                       <td>
-                        {isEmptyObj === true ? (
-                          <span>{user.roleId}</span>
-                        ) : (
+
+                        {isEmptyObj === true ?
+                          <span>{user.email}</span> :
+
                           <>
-                            {editUser?.userId === user.userId ? (
-                              <input
-                                type="text"
-                                name="roleID"
-                                value={editUser.roleId}
+                            {editUser?.userId === user.userId ?
+                              <input type="email" name="email" value={editUser.email}
+                                required
+                                onChange={handleOnChangeEditEmail}
                               />
-                            ) : (
-                              <span>{user.roleId}</span>
-                            )}
+                              :
+                              <span>{user.email}</span>
+                            }
                           </>
-                        )}
+
+                        }
+
+                      </td>
+
+                      <td>
+
+                        {isEmptyObj === true ?
+                          <span>{user.phoneNumber}</span> :
+
+                          <>
+                            {editUser?.userId === user.userId ?
+                              <input type="text" name="phoneNumber" value={editUser.phoneNumber} />
+                              :
+                              <span>{user.phoneNumber}</span>
+                            }
+                          </>
+
+                        }
+
+                      </td>
+
+                      <td>
+
+                        {isEmptyObj === true ?
+                          <span>{user.address}</span> :
+
+                          <>
+                            {editUser?.userId === user.userId ?
+                              <input type="text" name="address" value={editUser.address} />
+                              :
+                              <span>{user.address}</span>
+                            }
+                          </>
+
+                        }
+
                       </td>
 
                       <td>
                         <span>{user.password}</span>
                       </td>
+
+
+
+
                       <td>
-                        <button
-                          className="Edit"
+                        <button className="Edit"
                           onClick={() => handleEdit(user)}
+
+
                         >
-                          {isEmptyObj === false &&
-                          editUser?.userId === user.userId
-                            ? "Save"
-                            : "Edit"}
+                          {isEmptyObj === false && editUser?.phoneNumber === user.phoneNumber
+                            ? 'Save' : 'Edit'
+                          }
                         </button>
                       </td>
 
                       <td>
-                        <button
-                          className="Delete"
+                        <button className="Delete"
                           onClick={() => handleDelete(user)}
-                        >
-                          Delete
-                        </button>
+                        >Delete</button>
                       </td>
                     </tr>
                   ))}
+
+
+
                 </tbody>
+
               </table>
             </div>
-          </main>
-        </div>
-      </div>
-    </>
-  );
-};
 
-export default Customer;
+          </main>
+        </div >
+
+      </body >
+
+
+
+
+    </>
+  )
+}
+
+export default Customer
