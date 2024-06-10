@@ -54,3 +54,13 @@ export interface Blog {
   like: number;
   imageUrl: string;
 }
+
+export interface iProduct {
+  productId: number;
+  name: string;
+  imageProducts: ImageProduct[];
+  price: number;
+  quantity: number;
+  stock: number;
+  isActive: boolean;
+}

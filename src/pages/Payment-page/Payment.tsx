@@ -1,17 +1,13 @@
-import { Link } from "react-router-dom";
-import { useCart } from "../Cart-page/CartContext";
-import { useState } from "react";
-import { jwtDecode } from "jwt-decode";
-import { GiPositionMarker } from "../../import/import-libary";
-import swal from "sweetalert";
-import Footer from "../../components/Footer/footer";
-import avatar from "../../assets/vu.jpg";
-import Paypal from "./Paypal";
-import SEC from "../../assets/ship-economical.png";
-import SR from "../../assets/ship-regular.png";
-import SE from "../../assets/ship-Epress.png";
-import "./Payment.css";
+import { getUserIdFromToken, getAddressFromToken } from "../../utils/jwtHelper";
+import { GiPositionMarker, Link } from "../../import/import-libary";
+import { avatar, sec, sr, se } from "../../import/import-assets";
 import { refreshToken } from "../../apiServices/AccountServices/refreshTokenServices";
+import { useState } from "react";
+import { useCart } from "../Cart-page/CartContext";
+import Footer from "../../components/Footer/footer";
+import Paypal from "./Paypal";
+import swal from "sweetalert";
+import "./Payment.css";
 
 const Payment = () => {
   const [shippingMethodId, setShippingMethodId] = useState<number>(0);
@@ -32,17 +28,10 @@ const Payment = () => {
         return;
       }
 
-      const decodedToken: any = jwtDecode(token);
+      const userIdFromToken = getUserIdFromToken(token);
+      const userAddress = getAddressFromToken(token);
 
-      const userIdIdentifier =
-        decodedToken[
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-        ];
-      const userAddress =
-        decodedToken[
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/streetaddress"
-        ];
-      const userId = userIdIdentifier;
+      const userId = userIdFromToken;
       const orderDate = new Date().toISOString();
 
       const paymentMethod = "By Cash"; //From web
@@ -109,8 +98,6 @@ const Payment = () => {
     }
   };
 
-
-
   //Renove token logout
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -170,11 +157,12 @@ const Payment = () => {
             <div className="ship-method-list">
               <div className="economical">
                 <div
-                  className={`box-sec ${shippingMethodId === 1 ? "active" : ""
-                    }`}
+                  className={`box-sec ${
+                    shippingMethodId === 1 ? "active" : ""
+                  }`}
                   onClick={() => handleOrderShipChange(1)}
                 >
-                  <img src={SEC} alt="" className="logo-sec" />
+                  <img src={sec} alt="" className="logo-sec" />
                   <div>Economical delivery $30,000</div>
                 </div>
               </div>
@@ -183,7 +171,7 @@ const Payment = () => {
                   className={`box-sr ${shippingMethodId === 2 ? "active" : ""}`}
                   onClick={() => handleOrderShipChange(2)}
                 >
-                  <img src={SR} alt="" className="logo-sr" />
+                  <img src={sr} alt="" className="logo-sr" />
                   <div>Regular delivery $50,000</div>
                 </div>
               </div>
@@ -192,7 +180,7 @@ const Payment = () => {
                   className={`box-se ${shippingMethodId === 3 ? "active" : ""}`}
                   onClick={() => handleOrderShipChange(3)}
                 >
-                  <img src={SE} alt="" className="logo-se" />
+                  <img src={se} alt="" className="logo-se" />
                   <div>Express delivery $120,000</div>
                 </div>
               </div>
@@ -227,13 +215,11 @@ const Payment = () => {
                   shippingMethod={shippingMethodId}
                 />
               ) : (
-
                 <Paypal
                   payload={[]}
                   amount="0.00"
                   shippingMethod={shippingMethodId}
                 />
-
               )}
             </div>
 

@@ -4,7 +4,7 @@
   background-color: #f5f7fc;
 }
 
-.body-cart>div {
+.body-cart > div {
   width: 1180px;
   margin: 0 auto;
   display: grid;
@@ -19,7 +19,7 @@
   background-color: white;
   border-radius: 20px;
   margin-top: 15px;
-  grid-column: 1 / 9; 
+  grid-column: 1 / 9;
 }
 
 .Cart-Summary {
@@ -28,7 +28,6 @@
   grid-template-columns: repeat(12, 60px);
   column-gap: 5px;
   row-gap: 20px;
- 
 }
 
 .Cart-Summary ul {
@@ -39,14 +38,13 @@
   grid-column: 6 / 12;
 }
 
-.Cart-Summary>h2 {
+.Cart-Summary > h2 {
   grid-column: 1 / 6;
   margin-left: 20px;
   color: #67686c;
 }
 
 .Cart-Summary ul li {
-
   font-size: 14px;
   color: #67686c;
 }
@@ -104,7 +102,6 @@
   border-radius: 20px;
   margin-top: 15px;
   grid-column: 9 / 13;
-  
 }
 
 .adress {
@@ -117,8 +114,6 @@
   font-weight: bolder;
 }
 
-
-
 .box-adress {
   border: 3px solid red;
   border-style: dashed;
@@ -126,17 +121,16 @@
   border-radius: 5px;
 }
 
-.box-adress>div {
+.box-adress > div {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 60px;
   cursor: pointer;
   background-color: azure;
-
 }
 
-.adress>h4 {
+.adress > h4 {
   margin-top: 0;
 }
 
@@ -154,7 +148,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
 
 .decrease {
@@ -162,7 +155,7 @@
   width: 30px;
   /* border: solid 0.5px; */
   cursor: pointer;
-  background-color: #E0E0E0;
+  background-color: #e0e0e0;
   font-weight: 500;
 }
 
@@ -178,9 +171,8 @@
   text-align: center;
   width: 30px;
   cursor: pointer;
-  background-color: #E0E0E0;
+  background-color: #e0e0e0;
   font-weight: 500;
-
 }
 
 .voucher {
@@ -191,14 +183,14 @@
   margin-top: 35px;
 }
 
-.voucher>p {
+.voucher > p {
   margin: 10px 0 10px 0;
   font-size: 18px;
   color: #67686c;
   font-weight: bolder;
 }
 
-.voucher>div {
+.voucher > div {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -209,8 +201,6 @@
   border: 2px solid orange;
   border-radius: 10px;
 }
-
-
 
 .bill {
   background-color: white;
@@ -225,7 +215,6 @@
 
 .money-voucher {
   margin-bottom: 5px;
-
 }
 
 .total {
@@ -236,7 +225,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-
 }
 
 .vat {
@@ -267,18 +255,16 @@
   z-index: 0;
 }
 
-
-.No-product-cart{
+.No-product-cart {
   height: 425px;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column
+  flex-direction: column;
 }
 .No-product-cart p {
   margin-top: 20px;
   font-style: italic;
-  
 }
 .ra-img {
   width: 300px;
