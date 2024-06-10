@@ -1,8 +1,10 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from "axios";
 
 const request = axios.create({
+
   baseURL: 'https://localhost:7030/api/'
 })
+
 
 export const get = async (path: string, options = {}) => {
   try {
@@ -62,6 +64,4 @@ export const post = async (path: string, options = {}) => {
   }
 };
 
-
-
-export default request
+export default request;
