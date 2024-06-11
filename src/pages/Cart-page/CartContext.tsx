@@ -1,23 +1,11 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { aProduct, iProduct } from "../../interfaces";
+import { CartContextType } from "../../interfaces"
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Cart.css";
 
-
-interface CartContextType {
-  cart: iProduct[];
-  totals: { [productId: number]: number };
-  addToCart: (product: aProduct) => void;
-  addToCart2: (productId: aProduct, quantity: number, actionType: string) => void;
-  incrementQuantity: (productId: number) => void;
-  decrementQuantity: (productId: number) => void;
-  removeItems: (productId: number) => void;
-}
-
 const CartContext = createContext<CartContextType | undefined>(undefined);
-
-
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const useCart = () => {
@@ -39,7 +27,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       setCart(JSON.parse(storedCart));
     }
   }, []);
-  
+
   const [isToastVisible, setIsToastVisible] = useState(false);
 
   const addToCart = (aProduct: aProduct) => {
@@ -96,8 +84,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
-  const addToCart2 = (aProduct: aProduct, quantity: number, actionType: string) => {
-   
+  const addToCart2 = (
+    aProduct: aProduct,
+    quantity: number,
+    actionType: string
+  ) => {
     const existingProduct = cart.find(
       (item) => item.productId === aProduct.productId
     );
@@ -128,19 +119,18 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       localStorage.setItem("cart", JSON.stringify(updatedCart));
       setTotals(calculateTotals(updatedCart));
     }
-    if( actionType == "add")
-    toast.success(`Sản phẩm đã được thêm vào giỏ hàng!`, {
-      position: "top-left",
-      autoClose: 500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
+    if (actionType == "add")
+      toast.success(`Sản phẩm đã được thêm vào giỏ hàng!`, {
+        position: "top-left",
+        autoClose: 500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
   };
-
 
   const incrementQuantity = (productId: number) => {
     const updatedCart = cart.map((item) =>
@@ -189,6 +179,14 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     setCart(updatedCart);
     localStorage.removeItem("cart");
     localStorage.setItem("cart", JSON.stringify(updatedCart));
+
+    const storedQuantitiesStr = localStorage.getItem("currentQuantities");
+    const storedQuantities = storedQuantitiesStr
+      ? JSON.parse(storedQuantitiesStr)
+      : {};
+    delete storedQuantities[productId];
+
+    localStorage.setItem("currentQuantities", JSON.stringify(storedQuantities));
   };
 
   return (

@@ -1,11 +1,12 @@
+import { getUserIdFromToken, getAddressFromToken } from "../../utils/jwtHelper";
 import { StickyBox, Link, FaRegTrashCan } from "../../import/import-libary";
 import { Navbar, Footer } from "../../import/import-router";
+import { useState } from "react";
 import { useCart } from "./CartContext";
 import Swal from "sweetalert2";
-import "./Cart.css";
-import ra from "../../assets/rabbit.png";
 import swal from "sweetalert";
-import { useState } from "react";
+import ra from "../../assets/rabbit.png";
+import "./Cart.css";
 
 const ShoppingCart = () => {
   const { cart, decrementQuantity, incrementQuantity, removeItems } = useCart();
@@ -27,7 +28,11 @@ const ShoppingCart = () => {
   //   }
   // };
   const [isPreOrder, setIsPreOrder] = useState(false);
-  const handleIncrement = (productId: number, quantity: number, stock: number) => {
+  const handleIncrement = (
+    productId: number,
+    quantity: number,
+    stock: number
+  ) => {
     if (quantity < stock || isPreOrder) {
       incrementQuantity(productId);
     } else {
@@ -46,9 +51,15 @@ const ShoppingCart = () => {
     }
   };
 
-  const isLoggedIn = localStorage.getItem("token");
-  //localStorage.setItem('hasAddress', true);
-  const hasAddress = localStorage.getItem("hasAddress");
+  const token = localStorage.getItem("token");
+  if (!token) {
+    console.error("Token not found");
+    return;
+  }
+  const isLoggedIn = getUserIdFromToken(token);
+
+  const hasAddress = getAddressFromToken(token);
+
   return (
     <div>
       <StickyBox offsetTop={0} className="sticky-navbar">
@@ -139,9 +150,11 @@ const ShoppingCart = () => {
               {isLoggedIn ? (
                 <>
                   {hasAddress ? (
-                    <div className="box-adress">
-                      <div>Has Address</div>
-                    </div>
+                    <Link to="/profile" >
+                      <div className="box-adress">
+                        <div>{hasAddress}</div>
+                      </div>
+                    </Link>
                   ) : (
                     <Link to="/profile" style={{ color: "white" }}>
                       <div className="box-adress">

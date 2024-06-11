@@ -5,7 +5,7 @@ import "./Admin.css";
 import { useAllProduct } from "../../context/ShopContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import swal from "sweetalert";
-import { ImageProduct } from "../../context/ShopContext";
+import { ImageProduct } from "../../interfaces";
 
 import { getBrand } from "../../apiServices/BrandServices/brandServices";
 
