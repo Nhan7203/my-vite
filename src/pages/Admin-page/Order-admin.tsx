@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 //import * as productitems from "../../apiServices/productItems";
-import { aProduct } from "../../context/ShopContext";
+import { aProduct } from "../../interfaces";
 import { useNavigate } from "react-router-dom";
 import { useAllProduct } from "../../context/ShopContext";
 import { jwtDecode } from "jwt-decode";
 import swal from "sweetalert";
-import StatusListOrder from "../User-page/components/StatusListOrder";
+//import StatusListOrder from "../User-page/components/StatusListOrder";
 import "./Admin.css";
 
 export interface ImageProduct {

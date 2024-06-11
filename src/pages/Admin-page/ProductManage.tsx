@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { aProduct } from "../../context/ShopContext";
+import { aProduct } from "../../interfaces";
 import { useNavigate } from "react-router-dom";
 import { useAllProduct } from "../../context/ShopContext";
 import * as brandd from "../../apiServices/BrandServices/brandServices";
