@@ -2,7 +2,7 @@ import "./Admin.css";
 import { useState, useEffect } from "react";
 import "./Admin.css";
 import { useLocation, useNavigate } from "react-router-dom";
-import * as brandd from "../../apiServices/getBrand";
+import * as brandd from "../../apiServices/BrandServices/brandServices";
 import swal from "sweetalert";
 
 import {

@@ -1,6 +1,6 @@
 import {
   Forgetpassword,
-  Navbar,
+  Home,
   Login,
   Adress,
   Product,
@@ -11,8 +11,6 @@ import {
   Customer,
   Account,
   Order,
-  Main,
-  Footer,
   Admin,
   Blog,
   Voucher,
@@ -31,7 +29,6 @@ import {
   UpdateProduct,
   OrderDetails,
   SecurityCodeRegister,
-
 } from "./import/import-router";
 import {
   createBrowserRouter,
@@ -44,73 +41,54 @@ import { ToastContainer } from "./import/import-libary";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
-// const Home = () => {
-//   return (
-//     <div>
-//       <StickyBox offsetTop={0}>
-//         <Navbar />
-//       </StickyBox>
-//       <Main />
-//       <Footer />
-//     </div>
-//   );
-// };
-
-const Home = () => {
-  return (
-    <div>
-      <Navbar />
-      <Main />
-      <Footer />
-    </div>
-  );
-};
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
       <Route path="/" element={<Home />} />
+
       <Route path="/login" element={<Login />} />
-      <Route path="/admin" element={<Admin />} />
-      <Route path="/user" element={<User />} />
-      <Route path="/payment" element={<Payment />} />
-      <Route path="/adress" element={<Adress />} />
-      <Route path="/cart" element={<Cart />} />
-      <Route path="/product" element={<Product />} />
-      <Route path="/admin" element={<Admin />} />
-      <Route path="/customer" element={<Customer />} />
-      <Route path="/account" element={<Account />} />
-      <Route path="/order" element={<Order />} />
-
-      <Route path="/manage-product" element={<ProductManage />} />
-
-      <Route path="/orderdetails" element={<OrderDetails />}>
-        <Route path=":orderId" element={<OrderDetails />} />
-      </Route>
-
+      <Route path="/register" element={<Register />} />
+      <Route path="/securityCodeRegister" element={<SecurityCodeRegister />} />
       <Route path="/forgetpassword" element={<Forgetpassword />} />
       <Route path="/securitycode" element={<SecurityCode />} />
       <Route path="/changepassword" element={<ChangePassword />} />
-      <Route path="/addproduct" element={<AddProduct />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/updateproduct" element={<UpdateProduct />} />
 
+      <Route path="/admin" element={<Admin />} />
+      <Route path="/manage-product" element={<ProductManage />} />
+      <Route path="/addproduct" element={<AddProduct />} />
+      <Route path="/updateproduct" element={<UpdateProduct />} />
+      <Route path="/customer" element={<Customer />} />
+      <Route path="/account" element={<Account />} />
+
+      <Route path="/user" element={<User />} />
+      <Route path="/profile" element={<Profile />} />
+
+      <Route path="/order" element={<Order />} />
+      <Route path="/orderdetails" element={<OrderDetails />}>
+        <Route path=":orderId" element={<OrderDetails />} />
+      </Route>
+      
+      <Route path="/complete" element={<Complete />} />
+      <Route path="/processing" element={<Processing />} />
+      <Route path="/processed" element={<Processed />} />
+      <Route path="/cancelled" element={<Cancelled />} />
+      <Route path="/giveback" element={<Giveback />} />
+
+      <Route path="/cart" element={<Cart />} />
+      <Route path="/payment" element={<Payment />} />
+
+      <Route path="/product" element={<Product />} />
       <Route path="/productDetails" element={<ProductDetails />}>
         <Route path=":productId" element={<ProductDetails />} />
       </Route>
+
       <Route path="/blog" element={<Blog />} />
       <Route path="/blogdetails" element={<BlogDetails />}>
         <Route path=":blogId" element={<BlogDetails />} />
       </Route>
 
       <Route path="/voucher" element={<Voucher />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/securityCodeRegister" element={<SecurityCodeRegister />} />
-
-      <Route path="/complete" element={<Complete />} />
-      <Route path="/processing" element={<Processing />} />
-      <Route path="/processed" element={<Processed />} />
-      <Route path="/cancelled" element={<Cancelled />} />
-      <Route path="/giveback" element={<Giveback />} />
+      <Route path="/adress" element={<Adress />} />
     </Route>
   )
 );

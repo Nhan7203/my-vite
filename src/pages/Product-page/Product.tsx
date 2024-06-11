@@ -5,8 +5,8 @@ import { useLocation } from "react-router-dom";
 import { aProduct } from "../../context/ShopContext";
 import { BsCart3 } from "react-icons/bs";
 import { useCart } from "../../pages/Cart-page/CartContext";
-import * as searchServices from "../../apiServices/searchServices";
-import * as brand from "../../apiServices/getBrand";
+import * as searchServices from "../../apiServices/SearchServices/searchServices";
+import * as brand from "../../apiServices/BrandServices/brandServices";
 import by from "../../assets/search-empty.png";
 import { MdNavigateBefore, MdNavigateNext } from "../../import/import-libary";
 import "./Product.css";
@@ -18,6 +18,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faStar as regularStarOutline } from "@fortawesome/free-regular-svg-icons";
 import swal from "sweetalert";
+import Swal from "sweetalert2";
 
 export interface Brand {
   brandId: number;
@@ -251,11 +252,44 @@ const Product = () => {
     fetchRatings();
   }, [products]);
 
+  //-----------------------------------------------------------------------------------------------
+  interface CurrentQuantities {
+    [key: string]: number;
+  }
+  const [currentQuantities, setCurrentQuantities] = useState<CurrentQuantities>(
+    {}
+  );
 
-//-----------------------------------------------------------------------------------------------
+  useEffect(() => {
+    const storedQuantitiesStr = localStorage.getItem("currentQuantities");
+    const storedQuantities = storedQuantitiesStr
+      ? JSON.parse(storedQuantitiesStr)
+      : {};
+    setCurrentQuantities(storedQuantities);
+  }, []);
+  
   const handleCartClick = (product: aProduct) => {
     if (product.stock > 0) {
-      addToCart(product);
+      const newCurrentQuantities = { ...currentQuantities };
+      const newQuantity = (newCurrentQuantities[product.productId] || 0) + 1;
+
+      if (newQuantity > product.stock) {
+        Swal.fire({
+          title: `${newCurrentQuantities[product.productId]}/ ${product.stock}`,
+          text: `You cannot order more than ${product.stock} items of this product.`,
+          icon: "info",
+        }).then(() => {
+          return;
+        });
+      } else {
+        newCurrentQuantities[product.productId] = newQuantity;
+        setCurrentQuantities(newCurrentQuantities);
+        localStorage.setItem(
+          "currentQuantities",
+          JSON.stringify(newCurrentQuantities)
+        );
+        addToCart(product);
+      }
     } else {
       try {
         swal({
@@ -274,10 +308,7 @@ const Product = () => {
       }
     }
   };
-//-------------------------------------------------------------------------------------------------------------
-
-
-
+  //-------------------------------------------------------------------------------------------------------------
 
   return (
     <div>
@@ -556,7 +587,7 @@ const Product = () => {
                             <BsCart3
                               className="icon-cart-product-page"
                               fontSize="1.4em"
-                              onClick={() => handleCartClick (product)}
+                              onClick={() => handleCartClick(product)}
                             />
                           </div>
                         </div>

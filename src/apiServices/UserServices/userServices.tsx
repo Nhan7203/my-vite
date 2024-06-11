@@ -1,4 +1,4 @@
-import * as request from "../utils/request";
+import * as request from "../../utils/request";
 
 export const getOrderDetails = async (queryParams: URLSearchParams) => {
     try {
@@ -9,6 +9,3 @@ export const getOrderDetails = async (queryParams: URLSearchParams) => {
       console.log(error);
     }
   };
-
-
-

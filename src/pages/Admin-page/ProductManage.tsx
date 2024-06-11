@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { aProduct } from "../../context/ShopContext";
 import { useNavigate } from "react-router-dom";
 import { useAllProduct } from "../../context/ShopContext";
-import * as brandd from "../../apiServices/getBrand";
+import * as brandd from "../../apiServices/BrandServices/brandServices";
 import "./Admin.css";
 import { Brand } from "../Product-page/Product";
-import * as searchServices from "../../apiServices/searchServices";
+import * as searchServices from "../../apiServices/SearchServices/searchServices";
 import swal from "sweetalert";
 
 export interface ImageProduct {

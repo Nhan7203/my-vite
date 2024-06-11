@@ -7,6 +7,7 @@ import BoxMenuUser from "./components/BoxMenuUser";
 import "./User.css";
 import "../Admin-page//Admin.css";
 import { Link } from "../../import/import-libary";
+import { useNavigate } from "react-router-dom";
 
 const Processing = () => {
   interface Order {
@@ -27,6 +28,7 @@ const Processing = () => {
   }
 
   const [orderData, setOrderData] = useState<Order[]>([]);
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -126,9 +128,11 @@ const Processing = () => {
               },
             }
           );
-          window.location.reload();
+   
           if (response.ok) {
-            swal("Success!", "Order was canceled!", "success");
+            swal("Success!", "Order was canceled!", "success").then(() => {
+              navigate("/cancelled")
+            });
             const data = await response.json();
             setOrderData(data);
           } else {

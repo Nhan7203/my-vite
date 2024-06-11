@@ -7,7 +7,7 @@ import BoxMenuUser from "./components/BoxMenuUser";
 import "./User.css";
 import "../Admin-page//Admin.css";
 import { Link } from "../../import/import-libary";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 interface Order {
   orderId: number;
@@ -71,7 +71,7 @@ const User = () => {
         const decodedToken: any = jwtDecode(token);
         const userIdIdentifier =
           decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
           ];
 
         const response = await fetch(
@@ -82,7 +82,6 @@ const User = () => {
 
         if (response.ok) {
           const data = await response.json();
-
           const updatedOrderData = data.map((order: Order) => {
             const total = order.orderDetails.reduce(
               (acc, detail) => acc + detail.total,
@@ -117,7 +116,7 @@ const User = () => {
 
       const userIdIdentifier =
         decodedToken[
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
         ];
 
       const userId = userIdIdentifier;
@@ -140,10 +139,11 @@ const User = () => {
             }
           );
           if (response.ok) {
-            swal("Success!", "Order was canceled!", "success");
+            swal("Success!", "Order was canceled!", "success").then(() => {
+              navigate("/cancelled")
+            });
             const data = await response.json();
             setOrderData(data);
-            navigate("/user");
           } else {
             throw new Error("Failed to cancel order");
           }
@@ -165,7 +165,7 @@ const User = () => {
 
       const userIdIdentifier =
         decodedToken[
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
         ];
 
       const userId = userIdIdentifier;
@@ -190,14 +190,15 @@ const User = () => {
             }
           );
           if (response.ok) {
-            swal("Success!", "Thanks for shopping at M&B", "success");
+            swal("Success!", "Thanks for shopping at M&B", "success").then(() => {
+              navigate("/complete")
+            });
             const data = await response.json();
             setOrderData(data);
             navigate("/user");
           } else {
             throw new Error("Failed to cancel order");
           }
-
         }
       });
     } catch (error) {
@@ -278,16 +279,17 @@ const User = () => {
                               <td className="column65 dynamic-content">
                                 <span
                                   style={{ margin: "0 0 0 15px" }}
-                                  className={`status ${order.orderStatus === "Pending"
-                                    ? "yellow"
-                                    : order.orderStatus === "Canceled"
+                                  className={`status ${
+                                    order.orderStatus === "Pending"
+                                      ? "yellow"
+                                      : order.orderStatus === "Canceled"
                                       ? "red"
                                       : order.orderStatus === "Submitted"
-                                        ? "orange"
-                                        : order.orderStatus === "Completed"
-                                          ? "green"
-                                          : ""
-                                    } ${isGlowing ? "glow" : ""}`}
+                                      ? "orange"
+                                      : order.orderStatus === "Completed"
+                                      ? "green"
+                                      : ""
+                                  } ${isGlowing ? "glow" : ""}`}
                                 />
                               </td>
 

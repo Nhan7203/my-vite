@@ -1,8 +1,8 @@
-import { useAllProduct, aProduct } from "../../context/ShopContext";
+import { useAllProduct } from "../../context/ShopContext";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Navbar, Footer } from "../../import/import-router";
-import { useCart } from "../../pages/Cart-page/CartContext";
+import { useCart } from "../Cart-page/CartContext";
 import ProductCard from "../../components/main/main-home/ProductCard";
 import adv from "/src/assets/adv.png";
 import adv1 from "/src/assets/adv1.png";
@@ -15,6 +15,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faStar as regularStarOutline } from "@fortawesome/free-regular-svg-icons";
 import swal from "sweetalert";
+import { aProduct } from "../../interfaces";
+import Swal from "sweetalert2";
 const ProductDetail = () => {
   const { addToCart2 } = useCart();
   const { allProduct } = useAllProduct();
@@ -66,8 +68,23 @@ const ProductDetail = () => {
   if (productId) {
     product = allProduct.find((e) => e.productId === parseInt(productId ?? ""));
   }
+  //-------------------------------------------------------------------------------------------------------------------------
+  interface CurrentQuantities {
+    [key: string]: number;
+  }
 
   const [quantity, setQuantity] = useState(1);
+  const [currentQuantities, setCurrentQuantities] = useState<CurrentQuantities>(
+    {}
+  );
+
+  useEffect(() => {
+    const storedQuantitiesStr = localStorage.getItem("currentQuantities");
+    const storedQuantities = storedQuantitiesStr
+      ? JSON.parse(storedQuantitiesStr)
+      : {};
+    setCurrentQuantities(storedQuantities);
+  }, []);
 
   const handleDecrementQuantity = () => {
     if (quantity > 1) {
@@ -76,13 +93,34 @@ const ProductDetail = () => {
   };
 
   const handleIncrementQuantity = () => {
-    // if (quantity < product.stock) setQuantity(quantity + 1);
-     setQuantity(quantity + 1);
+    if (quantity < product.stock) {
+      setQuantity(quantity + 1);
+    }
   };
-//----------------------------------------------------------------------------------------------
-  const handleAddToCart = (product: aProduct, quantity: number) => {
+
+  const handleAddToCart = (product: aProduct) => {
     if (product.stock > 0) {
-      addToCart2(product, quantity, "add");
+      const newCurrentQuantities = { ...currentQuantities };
+      const newQuantity =
+        (newCurrentQuantities[product.productId] || 0) + quantity;
+
+      if (newQuantity > product.stock) {
+        Swal.fire({
+          title: `${newCurrentQuantities[product.productId]}/ ${product.stock}`,
+          text: `You cannot order more than ${product.stock} items of this product.`,
+          icon: "info",
+        }).then(() => {
+          return;
+        });
+      } else {
+        newCurrentQuantities[product.productId] = newQuantity;
+        setCurrentQuantities(newCurrentQuantities);
+        localStorage.setItem(
+          "currentQuantities",
+          JSON.stringify(newCurrentQuantities)
+        );
+        addToCart2(product, quantity, "add");
+      }
     } else {
       try {
         swal({
@@ -101,11 +139,69 @@ const ProductDetail = () => {
       }
     }
   };
-//--------------------------------------------------------------------------------------------------------
+
+  // const handleAddToCart2 = (product: aProduct) => {
+  //   if (product.stock > 0) {
+  //     addToCart2(product, quantity, "add");
+  //   } else {
+  //     try {
+  //       swal({
+  //         title: "Out of stock",
+  //         text: "This product is currently out of stock, but you can place a pre-order.",
+  //         icon: "info",
+  //         buttons: ["Cancel", "Confirm"],
+  //         dangerMode: true,
+  //       }).then(async (confirm) => {
+  //         if (confirm) {
+  //           addToCart2(product, quantity, "add");
+  //         }
+  //       });
+  //     } catch (error) {
+  //       console.error("Error: ", error);
+  //     }
+  //   }
+  // };
+
   const handleBuyNow = (product: aProduct) => {
-    addToCart2(product, quantity, "buy");
-    navigate("/cart");
+    if (product.stock > 0) {
+      const newCurrentQuantities = { ...currentQuantities };
+      const newQuantity =
+        (newCurrentQuantities[product.productId] || 0) + quantity;
+      if (newQuantity > product.stock) {
+        Swal.fire({
+          title: `${newCurrentQuantities[product.productId]}/ ${product.stock}`,
+          text: `You cannot order more than ${product.stock} items.`,
+          icon: "info",
+        }).then(() => {
+          return;
+        });
+      } else {
+        newCurrentQuantities[product.productId] = newQuantity;
+        setCurrentQuantities(newCurrentQuantities);
+        addToCart2(product, quantity, "buy");
+        navigate("/cart");
+      }
+    } else {
+      try {
+        swal({
+          title: "Out of stock",
+          text: "This product is currently out of stock, but you can place a pre-order.",
+          icon: "info",
+          buttons: ["Cancel", "Confirm"],
+          dangerMode: true,
+        }).then(async (confirm) => {
+          if (confirm) {
+            addToCart2(product, quantity, "add");
+            navigate("/cart");
+          }
+        });
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    }
   };
+  
+  //-------------------------------------------------------------------------------------------------------------------------
 
   const fetchRatings = async (productId: string) => {
     try {
@@ -266,21 +362,38 @@ const ProductDetail = () => {
               </div>
 
               <div className="button-cart">
-                <span
-                  className="add-cart"
-                  onClick={() => handleAddToCart(product, quantity)}
-                >
-                  Add to cart
-                </span>
                 {product.stock > 0 ? (
-                  <span
-                    className="buy-now"
-                    onClick={() => handleBuyNow(product)}
-                  >
-                    Buy now
-                  </span>
+                  <>
+                    <span
+                      className="add-cart"
+                      onClick={() => handleAddToCart(product)}
+                    >
+                      Add to cart
+                    </span>
+
+                    <span
+                      className="buy-now"
+                      onClick={() => handleBuyNow(product)}
+                    >
+                      Buy now
+                    </span>
+                  </>
                 ) : (
-                  <span className="order">Order now</span>
+                  <>
+                    <span
+                      className="add-cart"
+                      onClick={() => handleAddToCart(product)}
+                    >
+                      Add to cart
+                    </span>
+
+                    <span
+                      className="buy-now"
+                      onClick={() => handleBuyNow(product)}
+                    >
+                      Order now
+                    </span>
+                  </>
                 )}
               </div>
             </div>

@@ -8,26 +8,19 @@ import {
   GiPositionMarker,
   FaRegTrashCan,
 } from "../../import/import-libary";
+import {
+  getAllNotisByUser,
+  deleteOneNotification,
+  deleteAllNotificationsByUser,
+  updateNotificationReadStatus,
+} from "../../apiServices/NotificationService/notificationService";
+import { avatar, noti, trash, empty, logo } from "../../import/import-assets";
 import { useState, useEffect } from "react";
+import { getUserIdFromToken } from "../../utils/jwtHelper";
+import { Notification } from "../../interfaces";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../pages/Cart-page/CartContext";
-import logo from "../../assets/logo.png";
 import "./Navbar.css";
-import avatar from "../../assets/vu.jpg";
-import noti from "../../assets/notification.png";
-import trash from "../../assets/trash-can.png";
-import empty from "../../assets/folder.png";
-import { jwtDecode } from "jwt-decode";
-
-export interface Notification {
-  notificationId: number;
-  userId: number;
-  header: string;
-  content: string;
-  isRead: boolean;
-  isRemoved: boolean;
-  createdDate: Date;
-}
 
 const Navbar = () => {
   const [cartCount, setCartCount] = useState(0);
@@ -38,42 +31,24 @@ const Navbar = () => {
 
   useEffect(() => {
     if (token) {
-      const decodedToken: any = jwtDecode(token);
+      const userIdFromToken = getUserIdFromToken(token);
 
-      const userIdIdentifier =
-        decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-        ];
-
-      const userId = userIdIdentifier;
-      const apiUrl = `https://localhost:7030/api/Notification/getAllNotisByUser?userId=${userId}`;
-
-      fetch(apiUrl)
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            // throw new Error("Error retrieving notifications");
-            return []; 
-          }
-        })
-        .then((data) => {
-          setNotifications(data);
-        })
-        .catch((error) => {
+      const fetchNotifications = async () => {
+        try {
+          const result = await getAllNotisByUser(userIdFromToken);
+          setNotifications(result);
+        } catch (error) {
           console.error("Error retrieving notifications:", error);
-        });
+        }
+      };
+
+      fetchNotifications();
     }
   }, [token]);
-
+  //-----------------------------------------------
   const deleteNotification = async (notificationId: number) => {
     try {
-      await fetch(
-        `https://localhost:7030/api/Notification/deleteOneNotification?notificationId=${notificationId}`,
-        {
-          method: "DELETE",
-        }
-      );
+      await deleteOneNotification(notificationId);
 
       setNotifications(
         notifications.filter(
@@ -84,25 +59,13 @@ const Navbar = () => {
       console.error("Error deleting notification:", error);
     }
   };
-
+  //-----------------------------------------------
   const deleteAllNotifications = async () => {
     try {
       if (token) {
-        const decodedToken: any = jwtDecode(token);
+        const userIdFromToken = getUserIdFromToken(token);
 
-        const userIdIdentifier =
-          decodedToken[
-            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-          ];
-
-        const userId = userIdIdentifier;
-
-        await fetch(
-          `https://localhost:7030/api/Notification/deleteAllNotificationsByUser?userId=${userId}`,
-          {
-            method: "DELETE",
-          }
-        );
+        await deleteAllNotificationsByUser(userIdFromToken);
 
         setNotifications([]);
       }
@@ -121,18 +84,11 @@ const Navbar = () => {
       setNotifications(updatedNotifications);
 
       try {
-        const response = await fetch(
-          `https://localhost:7030/api/Notification/updateNotificationReadStatus?notificationId=${notification.notificationId}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ isRead: true }),
-          }
+        const response = await updateNotificationReadStatus(
+          notification.notificationId
         );
 
-        if (!response.ok) {
+        if (!response) {
           throw new Error("Error updating notification status");
         }
       } catch (error) {
@@ -185,9 +141,9 @@ const Navbar = () => {
 
   //Renove token logout
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('cart');
+    localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("cart");
   };
 
   const toggleNotification = () => {
