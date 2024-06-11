@@ -118,6 +118,7 @@ const UpdateProduct = () => {
     }
   };
 
+
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
 
@@ -130,6 +131,7 @@ const UpdateProduct = () => {
     };
 
     if (name === "") {
+
       error.name = "Name is Required!";
       error.check = true;
     }
@@ -141,6 +143,7 @@ const UpdateProduct = () => {
     if (stock === 0) {
       error.stock = "Stock must be greater than 0.";
       error.check = true;
+
     }
 
     if (price === 0) {
@@ -149,6 +152,7 @@ const UpdateProduct = () => {
     }
 
     setErrors(error);
+
     if (error.check) {
       return;
     }
@@ -379,13 +383,23 @@ const UpdateProduct = () => {
                   {product?.imageProducts.map((image) => (
                     <div key={image.imageId}>
                       <label>Image ID: {image.imageId}</label>
+                      {imageUrls && (
+                        <img
+                          src={imageUrls[image.imageId]}
+                          alt={`Image ${image.imageId}`}
+                          style={{ maxWidth: '200px', margin: 24 }}
+                        />
+                      )}
                       <input
                         type="file"
+
                         accept="image/*"
+
                         onChange={(event) =>
                           handleImageUpload(image.imageId, event)
                         }
                       />
+
                       {imageData && (
                         <img
                           src={imageData[image.imageId]?.imageUrl}
@@ -393,6 +407,7 @@ const UpdateProduct = () => {
                           style={{ maxWidth: '200px' }}
                         />
                       )}
+
                     </div>
                   ))}
                   <h4>For age</h4>
@@ -403,7 +418,7 @@ const UpdateProduct = () => {
                     {ageOptions.map((option) => (
                       <option
                         key={option.id}
-                        value={option.id}                     
+                        value={option.id}
                       >
                         {option.name}
                       </option>
