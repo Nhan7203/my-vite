@@ -9,6 +9,7 @@ import { useAllProduct } from "../../context/ShopContext";
 import { BsCart3 } from "../../import/import-libary";
 import { useCart } from "../Cart-page/CartContext";
 import swal from "sweetalert";
+import Swal from "sweetalert2";
 
 const BlogDetails = () => {
   const { blogId } = useParams<{ blogId: string }>();
@@ -38,9 +39,44 @@ const BlogDetails = () => {
     ? allProduct.find((e) => e.productId === blogDetails.productId)
     : null;
 //--------------------------------------------------------------------------------------------
+
+interface CurrentQuantities {
+  [key: string]: number;
+}
+const [currentQuantities, setCurrentQuantities] = useState<CurrentQuantities>(
+  {}
+);
+
+useEffect(() => {
+  const storedQuantitiesStr = localStorage.getItem("currentQuantities");
+  const storedQuantities = storedQuantitiesStr
+    ? JSON.parse(storedQuantitiesStr)
+    : {};
+  setCurrentQuantities(storedQuantities);
+}, []);
+
 const handleCartClick = (product: aProduct) => {
   if (product.stock > 0) {
-    addToCart(product);
+    const newCurrentQuantities = { ...currentQuantities };
+    const newQuantity = (newCurrentQuantities[product.productId] || 0) + 1;
+
+    if (newQuantity > product.stock) {
+      Swal.fire({
+        title: `${newCurrentQuantities[product.productId]}/ ${product.stock}`,
+        text: `You cannot order more than ${product.stock} items of this product.`,
+        icon: "info",
+      }).then(() => {
+        return;
+      });
+    } else {
+      newCurrentQuantities[product.productId] = newQuantity;
+      setCurrentQuantities(newCurrentQuantities);
+      localStorage.setItem(
+        "currentQuantities",
+        JSON.stringify(newCurrentQuantities)
+      );
+      addToCart(product);
+    }
   } else {
     try {
       swal({
@@ -55,7 +91,7 @@ const handleCartClick = (product: aProduct) => {
         }
       });
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error: ", error);
     }
   }
 };

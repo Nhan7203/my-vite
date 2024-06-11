@@ -7,6 +7,7 @@ import BoxMenuUser from "./components/BoxMenuUser";
 import "./User.css";
 import "../Admin-page//Admin.css";
 import { Link } from "../../import/import-libary";
+import { useNavigate } from "react-router-dom";
 
 interface Order {
   orderId: number;
@@ -27,6 +28,7 @@ interface Order {
 
 const Processed = () => {
   const [orderData, setOrderData] = useState<Order[]>([]);
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -129,10 +131,10 @@ const Processed = () => {
             }
           );
 
-          window.location.reload();
-
           if (response.ok) {
-            swal("Success!", "Thanks for shopping at M&B", "success");
+            swal("Success!", "Thanks for shopping at M&B", "success").then(() => {
+              navigate("/complete")
+            });
             const data = await response.json();
             setOrderData(data);
           } else {

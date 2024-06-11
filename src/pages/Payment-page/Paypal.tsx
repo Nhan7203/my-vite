@@ -84,7 +84,7 @@ const ButtonWrapper = ({
 
         localStorage.removeItem("cart");
         swal("Congrat!", "Order was created!", "success");
-        window.location.href = "/user";
+        window.location.href = "/processing";
       }
     } catch (error) {
       console.error("Error storing cart data:", error);

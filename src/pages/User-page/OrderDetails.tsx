@@ -9,6 +9,7 @@ import { useCart } from "../Cart-page/CartContext";
 import swal from "sweetalert";
 import "./OrderDetails.css";
 import { aProduct } from "../../interfaces";
+import Swal from "sweetalert2";
 
 export interface OrderDetail {
   productId: number;
@@ -27,9 +28,9 @@ const OrderDetails = () => {
   const [products, setProducts] = useState<aProduct[]>([]);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  const [currentOrderStatus, setCurrentOrderStatus] = useState<string>("");
   const location = useLocation();
   const { orderStatus } = location.state;
+  const [currentOrderStatus, setCurrentOrderStatus] = useState<string>("");
 
   const [showRatingBox, setShowRatingBox] = useState<boolean>(false);
   const [selectedStars, setSelectedStars] = useState<number>(0);
@@ -38,8 +39,8 @@ const OrderDetails = () => {
   const [selectedOrderDetail, setSelectedOrderDetail] = useState<OrderDetail>();
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
 
-  const [isRated, setIsRated] = useState(false);
-
+  const [isRated, setIsRated] = useState<boolean>(false);
+ 
 
   useEffect(() => {
     const fetchUserReviews = async () => {
@@ -98,27 +99,63 @@ const OrderDetails = () => {
 
   const { addToCart2 } = useCart();
 //-----------------------------------------------------------------------------------------------------------
-  const handleAddToCart = (product: aProduct, quantity: number) => {
-    if (product.stock > 0) {
-      addToCart2(product, quantity, "add");
+
+interface CurrentQuantities {
+  [key: string]: number;
+}
+const [currentQuantities, setCurrentQuantities] = useState<CurrentQuantities>(
+  {}
+);
+
+useEffect(() => {
+  const storedQuantitiesStr = localStorage.getItem("currentQuantities");
+  const storedQuantities = storedQuantitiesStr
+    ? JSON.parse(storedQuantitiesStr)
+    : {};
+  setCurrentQuantities(storedQuantities);
+}, []);
+
+const handleAddToCart = (product: aProduct, quantity: number) => {
+  if (product.stock > 0) {
+    const newCurrentQuantities = { ...currentQuantities };
+    const newQuantity =
+      (newCurrentQuantities[product.productId] || 0) + quantity;
+
+    if (newQuantity > product.stock) {
+      Swal.fire({
+        title: `${newCurrentQuantities[product.productId]}/ ${product.stock}`,
+        text: `You cannot order more than ${product.stock} items of this product.`,
+        icon: "info",
+      }).then(() => {
+        return;
+      });
     } else {
-      try {
-        swal({
-          title: "Out of stock",
-          text: "This product is currently out of stock, but you can place a pre-order.",
-          icon: "info",
-          buttons: ["Cancel", "Confirm"],
-          dangerMode: true,
-        }).then(async (confirm) => {
-          if (confirm) {
-            addToCart2(product, quantity, "add");
-          }
-        });
-      } catch (error) {
-        console.error("Error: ", error);
-      }
+      newCurrentQuantities[product.productId] = newQuantity;
+      setCurrentQuantities(newCurrentQuantities);
+      localStorage.setItem(
+        "currentQuantities",
+        JSON.stringify(newCurrentQuantities)
+      );
+      addToCart2(product, quantity, "add");
     }
-  };
+  } else {
+    try {
+      swal({
+        title: "Out of stock",
+        text: "This product is currently out of stock, but you can place a pre-order.",
+        icon: "info",
+        buttons: ["Cancel", "Confirm"],
+        dangerMode: true,
+      }).then(async (confirm) => {
+        if (confirm) {
+          addToCart2(product, quantity, "add");
+        }
+      });
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  }
+};
 //---------------------------------------------------------------------------------------------------------------
   const handleCancelOrder = async () => {
     try {
@@ -153,7 +190,8 @@ const OrderDetails = () => {
               },
             }
           );
-
+          setCurrentOrderStatus("Canceled");
+          
           if (response.ok) {
             swal("Success!", "Order was canceled!", "success");
             const data = await response.json();
@@ -395,7 +433,7 @@ const OrderDetails = () => {
                               >
                                 add
                               </button>
-                              { !isRated && !selectedProducts.some(
+                              { !selectedProducts.some(
                                 (p) => p.productId === product.productId
                               ) && (
                                 <button
@@ -458,7 +496,7 @@ const OrderDetails = () => {
                 );
               })}
             </div>
-            {orderStatus === "Pending" && (
+            {orderStatus === "Pending" && currentOrderStatus === ""  &&(
               <div
                 className="add-product"
                 style={{ display: "flex", flexDirection: "row-reverse" }}

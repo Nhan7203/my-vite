@@ -1,4 +1,7 @@
-import { getAllRating, getProductRating } from "../../../apiServices/ReviewServices/reviewServices";
+import {
+  getAllRating,
+  getProductRating,
+} from "../../../apiServices/ReviewServices/reviewServices";
 import { Link, BsCart3, FontAwesomeIcon } from "../../../import/import-libary";
 import { useEffect, useState } from "react";
 import { aProduct } from "../../../interfaces";
@@ -10,6 +13,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import swal from "sweetalert";
 import "./Main.css";
+import Swal from "sweetalert2";
 
 const getGridColumn = (index: number) => {
   const gridColumnMap = ["1 / 3", "4 / 6", "7 / 9", "10 / 12"];
@@ -26,9 +30,44 @@ const ProductCard = ({
   const { addToCart } = useCart();
 
   //--------------------------------------------------------------------------------------------
+
+  interface CurrentQuantities {
+    [key: string]: number;
+  }
+  const [currentQuantities, setCurrentQuantities] = useState<CurrentQuantities>(
+    {}
+  );
+
+  useEffect(() => {
+    const storedQuantitiesStr = localStorage.getItem("currentQuantities");
+    const storedQuantities = storedQuantitiesStr
+      ? JSON.parse(storedQuantitiesStr)
+      : {};
+    setCurrentQuantities(storedQuantities);
+  }, []);
+
   const handleCartClick = (product: aProduct) => {
     if (product.stock > 0) {
-      addToCart(product);
+      const newCurrentQuantities = { ...currentQuantities };
+      const newQuantity = (newCurrentQuantities[product.productId] || 0) + 1;
+
+      if (newQuantity > product.stock) {
+        Swal.fire({
+          title: `${newCurrentQuantities[product.productId]}/ ${product.stock}`,
+          text: `You cannot order more than ${product.stock} items of this product.`,
+          icon: "info",
+        }).then(() => {
+          return;
+        });
+      } else {
+        newCurrentQuantities[product.productId] = newQuantity;
+        setCurrentQuantities(newCurrentQuantities);
+        localStorage.setItem(
+          "currentQuantities",
+          JSON.stringify(newCurrentQuantities)
+        );
+        addToCart(product);
+      }
     } else {
       try {
         swal({

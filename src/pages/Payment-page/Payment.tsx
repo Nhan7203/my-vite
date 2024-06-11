@@ -18,10 +18,12 @@ const Payment = () => {
     (total, product) => total + product.price * product.quantity,
     0
   );
+  const token = localStorage.getItem("token");
 
+  const hasAddress = getAddressFromToken(token);
   const handleContinueClick = async () => {
     try {
-      const token = localStorage.getItem("token");
+     
 
       if (!token) {
         console.error("Token not found");
@@ -191,7 +193,19 @@ const Payment = () => {
             <div className="adress">
               <p>Shipping Address</p>
               <div className="box-adress">
-                <div>Confirm Shipping Address</div>
+              {hasAddress ? (
+                    <Link to="/profile" >
+                      <div className="box-adress">
+                        <div>{hasAddress}</div>
+                      </div>
+                    </Link>
+                  ) : (
+                    <Link to="/profile" style={{ color: "white" }}>
+                      <div className="box-adress">
+                        <div>Confirm Shipping Address</div>
+                      </div>
+                    </Link>
+                  )}
               </div>
             </div>
             <div className="voucher">
@@ -254,7 +268,7 @@ const Payment = () => {
                         },
                       },
                     }).then(() => {
-                      window.location.href = "/user";
+                      window.location.href = "/processing";
                     });
                   }}
                 >
