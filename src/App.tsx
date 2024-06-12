@@ -31,7 +31,7 @@ import {
   UpdateProduct,
   OrderDetails,
   SecurityCodeRegister,
-
+  OrderInfo
 } from "./import/import-router";
 import {
   createBrowserRouter,
@@ -80,6 +80,7 @@ const router = createBrowserRouter(
       <Route path="/customer" element={<Customer />} />
       <Route path="/account" element={<Account />} />
       <Route path="/order" element={<Order />} />
+      <Route path="/order-information" element={<OrderInfo />} />
 
       <Route path="/manage-product" element={<ProductManage />} />
 

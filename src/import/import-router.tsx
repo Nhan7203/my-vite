@@ -15,6 +15,7 @@ import User from "../pages/User-page/User";
 import Customer from "../pages/Admin-page/Customer";
 import Account from "../pages/Admin-page/Account";
 import Order from "../pages/Admin-page/Order-admin";
+import OrderInfo from "../pages/Admin-page/Order-info";
 import OrderDetails from "../pages/User-page/OrderDetails";
 import Forgetpassword from "../pages/Forgetpassword-page/Forgetpassword";
 import SecurityCode from "../pages/SecurityCode-page/SecurityCode";
@@ -48,6 +49,7 @@ export {
   Customer,
   Account,
   Order,
+  OrderInfo,
   Forgetpassword,
   SecurityCode,
   ChangePassword,

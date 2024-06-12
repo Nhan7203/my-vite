@@ -43,11 +43,11 @@ const ButtonWrapper = ({ currency, showSpinner, amount, payload, shippingMethodI
                 const decodedToken: any = jwtDecode(token)
 
                 const userIdIdentifier = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
-                const userAddress =decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/streetaddress"];
+                const userAddress = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/streetaddress"];
 
                 const userId = parseInt(userIdIdentifier);
                 const orderDate = new Date().toISOString();
-                const shippingMethodId =  shippingMethodIdPay;         // From web
+                const shippingMethodId = shippingMethodIdPay;         // From web
                 const paymentMethod = "By Paypal";  // From web
                 const address = userAddress;              // From web
 

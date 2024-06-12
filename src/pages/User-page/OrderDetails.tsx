@@ -97,7 +97,7 @@ const OrderDetails = () => {
   }, [orderDetails]);
 
   const { addToCart2 } = useCart();
-//-----------------------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------------------
   const handleAddToCart = (product: aProduct, quantity: number) => {
     if (product.stock > 0) {
       addToCart2(product, quantity, "add");
@@ -119,7 +119,7 @@ const OrderDetails = () => {
       }
     }
   };
-//---------------------------------------------------------------------------------------------------------------
+  //---------------------------------------------------------------------------------------------------------------
   const handleCancelOrder = async () => {
     try {
       if (!token) {
@@ -131,7 +131,7 @@ const OrderDetails = () => {
 
       const userIdIdentifier =
         decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
         ];
 
       const userId = userIdIdentifier;
@@ -179,7 +179,7 @@ const OrderDetails = () => {
 
       const userIdIdentifier =
         decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
         ];
 
       const userId = userIdIdentifier;
@@ -248,7 +248,7 @@ const OrderDetails = () => {
 
     const userIdIdentifier =
       decodedToken[
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+      "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
       ];
 
     const userId = userIdIdentifier;
@@ -258,7 +258,7 @@ const OrderDetails = () => {
     const reviewData = {
       userId,
       orderDetailId: orderId,
-      productId:  selectedProducts.length > 0 ? selectedProducts[0].productId : null,
+      productId: selectedProducts.length > 0 ? selectedProducts[0].productId : null,
       date: new Date().toISOString(),
       rating,
       comment: comment || '',
@@ -268,7 +268,7 @@ const OrderDetails = () => {
 
 
     console.log(reviewData);
-   
+
     try {
       const response = await fetch("https://localhost:7030/api/Review", {
         method: "POST",
@@ -278,11 +278,11 @@ const OrderDetails = () => {
         },
         body: JSON.stringify(reviewData),
       });
-     
-     
+
+
       if (response.ok) {
         swal("Success!", "Your review has been submitted.", "success");
-        
+
         setShowRatingBox(false);
         setSelectedStars(0);
         setComment("");
@@ -299,8 +299,8 @@ const OrderDetails = () => {
     [orderId: string]: Product[];
   }
 
- 
-  
+
+
   useEffect(() => {
     if (orderId && selectedProducts.length > 0) {
       const orderData: OrderData = {
@@ -310,7 +310,7 @@ const OrderDetails = () => {
       localStorage.setItem('orderData', JSON.stringify(orderData));
     }
   }, [orderId, selectedProducts]);
-  
+
   // Đọc dữ liệu từ localStorage
   useEffect(() => {
     const orderData: OrderData = JSON.parse(localStorage.getItem('orderData') || '{}');
@@ -371,35 +371,35 @@ const OrderDetails = () => {
                       </div>
                       {(orderStatus === "Completed" ||
                         currentOrderStatus === "Completed") && (
-                        <div className="">
-                          {product && (
-                            <div
-                              className="add-product"
-                              style={{ width: "280px" }}
-                            >
-                              <button
-                                onClick={() =>
-                                  handleAddToCart(product, orderDetail.quantity)
-                                }
+                          <div className="">
+                            {product && (
+                              <div
+                                className="add-product"
+                                style={{ width: "280px" }}
                               >
-                                add
-                              </button>
-                              { !isRated && !selectedProducts.some(
-                                (p) => p.productId === product.productId
-                              ) && (
                                 <button
                                   onClick={() =>
-                                    handleRate(product, orderDetail)
+                                    handleAddToCart(product, orderDetail.quantity)
                                   }
                                 >
-                                  Rate
+                                  add
                                 </button>
+                                {!isRated && !selectedProducts.some(
+                                  (p) => p.productId === product.productId
+                                ) && (
+                                    <button
+                                      onClick={() =>
+                                        handleRate(product, orderDetail)
+                                      }
+                                    >
+                                      Rate
+                                    </button>
 
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      )}
+                                  )}
+                              </div>
+                            )}
+                          </div>
+                        )}
                     </div>
                     {showRatingBox && (
                       <div className="rating-box-overlay">
@@ -409,9 +409,8 @@ const OrderDetails = () => {
                             {[1, 2, 3, 4, 5].map((star) => (
                               <span
                                 key={star}
-                                className={`star ${
-                                  selectedStars >= star ? "filled" : ""
-                                }`}
+                                className={`star ${selectedStars >= star ? "filled" : ""
+                                  }`}
                                 onClick={() => handleStarClick(star)}
                               >
                                 &#9733;
@@ -425,12 +424,12 @@ const OrderDetails = () => {
                           />
                           <div className="rating-buttons">
                             <button onClick={handleRatingSubmit}>Submit</button>
-                            { selectedProducts.length > 0 && (
+                            {selectedProducts.length > 0 && (
                               <button
                                 onClick={() =>
                                   handleRatingCancel(
                                     selectedProducts[
-                                      selectedProducts.length - 1
+                                    selectedProducts.length - 1
                                     ]
                                   )
                                 }

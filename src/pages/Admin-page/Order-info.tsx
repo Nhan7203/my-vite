@@ -31,7 +31,7 @@ interface Order {
     total: number;
 }
 
-const Order = () => {
+const OrderInfo = () => {
     const [orderData, setOrderData] = useState<Order[]>([]);
     const token = localStorage.getItem("token");
     const [isGlowing, setIsGlowing] = useState(false);
@@ -176,10 +176,6 @@ const Order = () => {
         }
     };
 
-    const handleClick = () => {
-        location.href = "order-information";
-    }
-
     return (
         <>
             <body>
@@ -263,74 +259,115 @@ const Order = () => {
                     </div>
 
                     <main>
-                        <div>
-                            <div className="head-table">
-                                <ul>
-                                    <li className="view-product">All</li>
-                                    <li className="add-product">
-                                        Pending
-                                    </li>
-                                    <li className="view-product">Processing</li>
-                                    <li className="view-product">Processed</li>
-                                    <li className="view-product">Completed</li>
-                                    <li className="view-product">Cancelled</li>
-                                    <li className="view-product">Give back</li>
-                                </ul>
-                            </div>
-                            <table className="table-order">
-                                {
-                                    orderData.map((order, index) => (
-                                        <tr
-                                            key={order.orderId}
-                                        >
+                        <form id="boder-form">
+                            <div className="spacing"></div>
+                            <div className="form-content">
+                                <h4>ORDER INFORMATION</h4>
+                                <div className="head-info">
+                                    <div>
+                                        <p>Full Name</p>
+                                        <p>Phone Number</p>
+                                        <p>Email</p>
+                                        <p>Address</p>
+
+                                    </div>
+                                    <div className="value-info">
+                                        <p>Nguyen Thanh Nhan</p>
+                                        <p>099999999</p>
+                                        <p>nhanntse123@gmail.com</p>
+                                        <p>Nguyen Thanh Nhan</p>
+                                    </div>
+
+                                </div>
+
+                                <div className="product-info">
+                                    <table>
+                                        <tr>
+                                            <td>Image</td>
+                                            <td>Product</td>
+                                            <td>Age</td>
+                                            <div className="spacing-td">
+
+                                            </div>
+                                            <td>Quantity</td>
+                                            <td>Price</td>
+                                        </tr>
+                                        <div className="line-row"></div>
+                                        <tr>
                                             <td>
-                                                <div className="square-box" onClick={handleClick}>
-                                                    <div className="header-square">
-                                                        <span className="id-border">Order Id: {order.orderId}</span>
-                                                        <span className="status-head">
-                                                            {order.orderStatus}
-                                                        </span>
-                                                    </div>
-                                                    <div className="customer-span">
-                                                        <span>Customer <p>{userToken.Name}</p></span>
-                                                    </div>
-
-                                                    <span>Payment <p>{order.paymentMethod}</p></span>
-                                                    <div className="remainder-span">
-                                                        <span>Shipping<p>
-                                                            {
-                                                                [
-                                                                    "Economical delivery",
-                                                                    "Regular delivery",
-                                                                    "Express delivery",
-                                                                ][order.shippingMethodId - 1]
-                                                            }
-                                                        </p></span>
-                                                    </div>
-
-                                                    <div className="line-bottom">
-
-                                                    </div>
-                                                    <div className="under-square">
-                                                        <span className="total-text">Total <p id="p-total">${order.total.toLocaleString()}</p></span>
-                                                        <p> {order.orderDate}</p>
-                                                    </div>
-
+                                                <div className="img-table">
+                                                    <img className="img-product" src="" alt="" />
                                                 </div>
                                             </td>
+                                            <td>Meiji Infant Formula</td>
+                                            <td>0 - 6 month</td>
+                                            <div className="spacing-td">
 
+                                            </div>
+                                            <div>
 
+                                            </div>
+                                            <td style={{ textAlign: "center" }}>1</td>
+                                            <td>$999.999</td>
                                         </tr>
-                                    ))}
-                            </table>
-                        </div>
+                                        <div className="line-row"></div>
+                                    </table>
+
+                                    <div className="total-discount">
+                                        <div className="vertical-line"></div>
+                                        <div className="parameter-total">
+                                            <p>Discount</p>
+                                            <p style={{ fontWeight: 700 }} >Total</p>
+                                        </div>
+
+                                        <div className="value-total">
+                                            <p>$0</p>
+                                            <p style={{ fontWeight: 700 }}>$0.00</p>
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+
+
+
+
+                            </div>
+
+                            <div className="form-content">
+                                <h4>PAYMENT</h4>
+                                <div className="payment-info">
+                                    <div>
+                                        <p>Payment Method</p>
+                                        <p>Shipping Method</p>
+                                        <p>Payment Date</p>
+                                    </div>
+                                    <div className="value-info">
+                                        <p>Nguyen Thanh Nhan</p>
+                                        <p>099999999</p>
+                                        <p>nhanntse123@gmail.com</p>
+
+                                    </div>
+
+                                </div>
+
+                                <div className="button-payment">
+                                    <button className="button-accept">ACCEPT PAYMENT</button>
+                                    <button className="button-cancel">CANCEL PAYMENT</button>
+                                </div>
+
+
+
+                            </div>
+                        </form>
                     </main>
                 </div >
             </body >
         </>
     );
 }
-export default Order;
+export default OrderInfo;
 
 
 
