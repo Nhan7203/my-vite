@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { adv, adv1, adv2 } from "../../../import/import-assets";
 import { useAllProduct } from "../../../context/ShopContext";
 import ProductCard from "./ProductCard";
+import ChatIconComponent from "../../Chat/ChatIconComponent";
 import "./Main.css";
 
 const Main = () => {
@@ -52,6 +53,7 @@ const Main = () => {
           <button onClick={loadMore}>Load more</button>
         </div>
       )}
+      {<ChatIconComponent />}
     </div>
   );
 };
