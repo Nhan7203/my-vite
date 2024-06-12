@@ -1,3 +1,35 @@
+import { useEffect, useState } from "react";
+//import * as productitems from "../../apiServices/productItems";
+import { aProduct } from "../../interfaces";
+import { useNavigate } from "react-router-dom";
+import { useAllProduct } from "../../context/ShopContext";
+import { jwtDecode } from "jwt-decode";
+import swal from "sweetalert";
+//import StatusListOrder from "../User-page/components/StatusListOrder";
+import "./Admin.css";
+
+export interface ImageProduct {
+    imageId: number;
+    productId: number;
+    imageUrl: string;
+}
+
+interface Order {
+    orderId: number;
+    userId: number;
+    orderDate: string;
+    address: string;
+    paymentMethod: string;
+    shippingMethodId: number;
+    orderStatus: string;
+    orderDetails: {
+        productId: number;
+        quantity: number;
+        price: number;
+        total: number;
+    }[];
+    total: number;
+}
 
 import { useEffect, useState } from "react";
 //import * as productitems from "../../apiServices/productItems";

@@ -1,3 +1,20 @@
+import { toast } from "react-toastify";
+import "./Admin.css";
+import { useState, useEffect } from "react";
+
+import "./Admin.css";
+import { getAllUsers, getTotalUser } from "../../apiServices/AdminServices/adminServices";
+
+export interface AllUsers {
+  userId: number;
+  roleId: number;
+  email: string;
+  phoneNumber: number;
+  address: string;
+  isActive: boolean;
+  password: string;
+  name: string;
+}
 
 import { toast } from "react-toastify";
 import "./Admin.css";
