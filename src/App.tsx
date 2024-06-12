@@ -21,7 +21,7 @@ import {
   BlogDetails,
   Complete,
   Cancelled,
-  Giveback,
+  PreOrder,
   Processing,
   Processed,
   ProductManage,
@@ -72,7 +72,7 @@ const router = createBrowserRouter(
       <Route path="/processing" element={<Processing />} />
       <Route path="/processed" element={<Processed />} />
       <Route path="/cancelled" element={<Cancelled />} />
-      <Route path="/giveback" element={<Giveback />} />
+      <Route path="/preorder" element={<PreOrder />} />
 
       <Route path="/cart" element={<Cart />} />
       <Route path="/payment" element={<Payment />} />

@@ -9,9 +9,9 @@ import { getUserIdFromToken } from "../../utils/jwtHelper";
 import { Navbar, Footer } from "../../import/import-router";
 import { FaHeart } from "react-icons/fa";
 import { Link } from "../../import/import-libary";
-import type { Blog } from "../../interfaces";
+import  { aBlog } from "../../interfaces";
 import view from "../../assets/view.png";
-import "./Blog.css";
+// import "./Blog.css";
 
 const getGridColumn = (index: number) => {
   const gridColumnMap = ["1 / 4", "5 / 8", "9 / 12"];
@@ -19,7 +19,7 @@ const getGridColumn = (index: number) => {
 };
 
 const Blog = () => {
-  const [blogList, setBlogList] = useState<Blog[]>([]);
+  const [blogList, setBlogList] = useState<aBlog[]>([]);
 
   const handleLikeClick = async (blogId: number) => {
     const likedBlog = blogList.find((blog) => blog.blogId === blogId);

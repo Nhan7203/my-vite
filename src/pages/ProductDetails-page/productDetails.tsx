@@ -1,22 +1,26 @@
-import { useAllProduct } from "../../context/ShopContext";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { Navbar, Footer } from "../../import/import-router";
-import { useCart } from "../Cart-page/CartContext";
-import ProductCard from "../../components/main/main-home/ProductCard";
-import adv from "/src/assets/adv.png";
-import adv1 from "/src/assets/adv1.png";
-import adv2 from "/src/assets/adv2.png";
-import "./ProductDetail.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import {
+  useCart,
+  useNavigate,
+  useParams,
+  useAllProduct,
+  useState,
+  useEffect,
+  swal,
+  swal2,
+} from "../../import/import-another";
 import {
   faStar as solidStar,
   faStarHalfAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { faStar as regularStarOutline } from "@fortawesome/free-regular-svg-icons";
-import swal from "sweetalert";
+import { FontAwesomeIcon, Link } from "../../import/import-libary";
+import { adv, adv1, adv2 } from "../../import/import-assets";
+import { Navbar, Footer } from "../../import/import-router";
+import { ProductCard } from "../../import/import-components";
 import { aProduct } from "../../interfaces";
-import Swal from "sweetalert2";
+import "./ProductDetail.css";
+
 const ProductDetail = () => {
   const { addToCart2 } = useCart();
   const { allProduct } = useAllProduct();
@@ -105,13 +109,17 @@ const ProductDetail = () => {
         (newCurrentQuantities[product.productId] || 0) + quantity;
 
       if (newQuantity > product.stock) {
-        Swal.fire({
-          title: `${newCurrentQuantities[product.productId]}/ ${product.stock}`,
-          text: `You cannot order more than ${product.stock} items of this product.`,
-          icon: "info",
-        }).then(() => {
-          return;
-        });
+        swal2
+          .fire({
+            title: `${newCurrentQuantities[product.productId]}/ ${
+              product.stock
+            }`,
+            text: `You cannot order more than ${product.stock} items of this product.`,
+            icon: "info",
+          })
+          .then(() => {
+            return;
+          });
       } else {
         newCurrentQuantities[product.productId] = newQuantity;
         setCurrentQuantities(newCurrentQuantities);
@@ -139,28 +147,6 @@ const ProductDetail = () => {
       }
     }
   };
-
-  // const handleAddToCart2 = (product: aProduct) => {
-  //   if (product.stock > 0) {
-  //     addToCart2(product, quantity, "add");
-  //   } else {
-  //     try {
-  //       swal({
-  //         title: "Out of stock",
-  //         text: "This product is currently out of stock, but you can place a pre-order.",
-  //         icon: "info",
-  //         buttons: ["Cancel", "Confirm"],
-  //         dangerMode: true,
-  //       }).then(async (confirm) => {
-  //         if (confirm) {
-  //           addToCart2(product, quantity, "add");
-  //         }
-  //       });
-  //     } catch (error) {
-  //       console.error("Error: ", error);
-  //     }
-  //   }
-  // };
 
   const handleBuyNow = (product: aProduct) => {
     if (product.stock > 0) {
@@ -200,7 +186,7 @@ const ProductDetail = () => {
       }
     }
   };
-  
+
   //-------------------------------------------------------------------------------------------------------------------------
 
   const fetchRatings = async (productId: string) => {
@@ -212,9 +198,9 @@ const ProductDetail = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const allRatings = await response.json();
-
+      console.log("hhhhhhhhhhhhhh: ", allRatings)
       const productRatings = allRatings.filter(
-        (rating) => String(rating.productId) === String(productId)
+        (rating: any) => String(rating.productId) === String(productId)
       );
       setProductReviews(productRatings);
 

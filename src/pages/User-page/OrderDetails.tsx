@@ -10,6 +10,7 @@ import swal from "sweetalert";
 import "./OrderDetails.css";
 import { aProduct } from "../../interfaces";
 import Swal from "sweetalert2";
+import { getUserIdFromToken } from "../../utils/jwtHelper";
 
 export interface OrderDetail {
   productId: number;
@@ -38,22 +39,29 @@ const OrderDetails = () => {
   //const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedOrderDetail, setSelectedOrderDetail] = useState<OrderDetail>();
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
-
+  const [selectedProduct, setSelectedProduct] = useState<Product>();
   const [isRated, setIsRated] = useState<boolean>(false);
- 
 
   useEffect(() => {
     const fetchUserReviews = async () => {
       if (token) {
         const decodedToken: any = jwtDecode(token);
-        const userIdIdentifier = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+        const userIdIdentifier =
+          decodedToken[
+            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+          ];
         const userId = userIdIdentifier;
 
-        const response = await fetch(`https://localhost:7030/api/Review/GetUserReview?userId=${parseInt(userId)}&orderId=${orderId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          `https://localhost:7030/api/Review/GetUserReview?userId=${parseInt(
+            userId
+          )}&orderId=${orderId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         const data = await response.json();
         console.log(data);
@@ -98,65 +106,65 @@ const OrderDetails = () => {
   }, [orderDetails]);
 
   const { addToCart2 } = useCart();
-//-----------------------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------------------
 
-interface CurrentQuantities {
-  [key: string]: number;
-}
-const [currentQuantities, setCurrentQuantities] = useState<CurrentQuantities>(
-  {}
-);
-
-useEffect(() => {
-  const storedQuantitiesStr = localStorage.getItem("currentQuantities");
-  const storedQuantities = storedQuantitiesStr
-    ? JSON.parse(storedQuantitiesStr)
-    : {};
-  setCurrentQuantities(storedQuantities);
-}, []);
-
-const handleAddToCart = (product: aProduct, quantity: number) => {
-  if (product.stock > 0) {
-    const newCurrentQuantities = { ...currentQuantities };
-    const newQuantity =
-      (newCurrentQuantities[product.productId] || 0) + quantity;
-
-    if (newQuantity > product.stock) {
-      Swal.fire({
-        title: `${newCurrentQuantities[product.productId]}/ ${product.stock}`,
-        text: `You cannot order more than ${product.stock} items of this product.`,
-        icon: "info",
-      }).then(() => {
-        return;
-      });
-    } else {
-      newCurrentQuantities[product.productId] = newQuantity;
-      setCurrentQuantities(newCurrentQuantities);
-      localStorage.setItem(
-        "currentQuantities",
-        JSON.stringify(newCurrentQuantities)
-      );
-      addToCart2(product, quantity, "add");
-    }
-  } else {
-    try {
-      swal({
-        title: "Out of stock",
-        text: "This product is currently out of stock, but you can place a pre-order.",
-        icon: "info",
-        buttons: ["Cancel", "Confirm"],
-        dangerMode: true,
-      }).then(async (confirm) => {
-        if (confirm) {
-          addToCart2(product, quantity, "add");
-        }
-      });
-    } catch (error) {
-      console.error("Error: ", error);
-    }
+  interface CurrentQuantities {
+    [key: string]: number;
   }
-};
-//---------------------------------------------------------------------------------------------------------------
+  const [currentQuantities, setCurrentQuantities] = useState<CurrentQuantities>(
+    {}
+  );
+
+  useEffect(() => {
+    const storedQuantitiesStr = localStorage.getItem("currentQuantities");
+    const storedQuantities = storedQuantitiesStr
+      ? JSON.parse(storedQuantitiesStr)
+      : {};
+    setCurrentQuantities(storedQuantities);
+  }, []);
+
+  const handleAddToCart = (product: aProduct, quantity: number) => {
+    if (product.stock > 0) {
+      const newCurrentQuantities = { ...currentQuantities };
+      const newQuantity =
+        (newCurrentQuantities[product.productId] || 0) + quantity;
+
+      if (newQuantity > product.stock) {
+        Swal.fire({
+          title: `${newCurrentQuantities[product.productId]}/ ${product.stock}`,
+          text: `You cannot order more than ${product.stock} items of this product.`,
+          icon: "info",
+        }).then(() => {
+          return;
+        });
+      } else {
+        newCurrentQuantities[product.productId] = newQuantity;
+        setCurrentQuantities(newCurrentQuantities);
+        localStorage.setItem(
+          "currentQuantities",
+          JSON.stringify(newCurrentQuantities)
+        );
+        addToCart2(product, quantity, "add");
+      }
+    } else {
+      try {
+        swal({
+          title: "Out of stock",
+          text: "This product is currently out of stock, but you can place a pre-order.",
+          icon: "info",
+          buttons: ["Cancel", "Confirm"],
+          dangerMode: true,
+        }).then(async (confirm) => {
+          if (confirm) {
+            addToCart2(product, quantity, "add");
+          }
+        });
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    }
+  };
+  //---------------------------------------------------------------------------------------------------------------
   const handleCancelOrder = async () => {
     try {
       if (!token) {
@@ -191,7 +199,7 @@ const handleAddToCart = (product: aProduct, quantity: number) => {
             }
           );
           setCurrentOrderStatus("Canceled");
-          
+
           if (response.ok) {
             swal("Success!", "Order was canceled!", "success");
             const data = await response.json();
@@ -206,19 +214,14 @@ const handleAddToCart = (product: aProduct, quantity: number) => {
     }
   };
 
+  if (!token) {
+    console.error("Token not found");
+    return;
+  }
+
   const handleCompleteOrder = async () => {
     try {
-      if (!token) {
-        console.error("Token not found");
-        return;
-      }
-
-      const decodedToken: any = jwtDecode(token);
-
-      const userIdIdentifier =
-        decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-        ];
+      const userIdIdentifier = getUserIdFromToken(token);
 
       const userId = userIdIdentifier;
 
@@ -264,6 +267,7 @@ const handleAddToCart = (product: aProduct, quantity: number) => {
     setSelectedProducts([...selectedProducts, product]);
     setSelectedOrderDetail(orderDetail);
     setShowRatingBox(true);
+    setSelectedProduct(product);
   };
 
   const handleStarClick = (star: number) => {
@@ -274,17 +278,21 @@ const handleAddToCart = (product: aProduct, quantity: number) => {
     // setSelectedProducts(
     //   selectedProducts.filter((p) => p.productId !== product?.productId)
     // );
-    const orderData: OrderData = JSON.parse(localStorage.getItem('orderData') || '{}');
-  if (orderId && orderData[orderId]) {
-    const updatedSelectedProducts = orderData[orderId].filter((product) => product.productId !== productToRemove?.productId);
-    const updatedOrderData: OrderData = {
-      ...orderData,
-      [orderId]: updatedSelectedProducts,
-    };
-    localStorage.setItem('orderData', JSON.stringify(updatedOrderData));
-    setSelectedProducts(updatedSelectedProducts);
-  }
-   
+    const orderData: OrderData = JSON.parse(
+      localStorage.getItem("orderData") || "{}"
+    );
+    if (orderId && orderData[orderId]) {
+      const updatedSelectedProducts = orderData[orderId].filter(
+        (product) => product.productId !== productToRemove?.productId
+      );
+      const updatedOrderData: OrderData = {
+        ...orderData,
+        [orderId]: updatedSelectedProducts,
+      };
+      localStorage.setItem("orderData", JSON.stringify(updatedOrderData));
+      setSelectedProducts(updatedSelectedProducts);
+    }
+
     setShowRatingBox(false);
     setSelectedStars(0);
     setComment("");
@@ -293,12 +301,7 @@ const handleAddToCart = (product: aProduct, quantity: number) => {
   const handleRatingSubmit = async () => {
     if (selectedProducts.length === 0 || !selectedOrderDetail) return;
 
-    const decodedToken: any = jwtDecode(token);
-
-    const userIdIdentifier =
-      decodedToken[
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-      ];
+    const userIdIdentifier = getUserIdFromToken(token);
 
     const userId = userIdIdentifier;
 
@@ -307,17 +310,17 @@ const handleAddToCart = (product: aProduct, quantity: number) => {
     const reviewData = {
       userId,
       orderDetailId: orderId,
-      productId:  selectedProducts.length > 0 ? selectedProducts[0].productId : null,
+      productId: selectedProduct?.productId,
+
       date: new Date().toISOString(),
       rating,
-      comment: comment || '',
+      comment: comment || "",
       isRated: false,
-
     };
 
+    console.log("hiiiii", selectedProducts);
+    console.log("hahahahah", reviewData);
 
-    console.log(reviewData);
-   
     try {
       const response = await fetch("https://localhost:7030/api/Review", {
         method: "POST",
@@ -327,11 +330,10 @@ const handleAddToCart = (product: aProduct, quantity: number) => {
         },
         body: JSON.stringify(reviewData),
       });
-     
-     
+
       if (response.ok) {
         swal("Success!", "Your review has been submitted.", "success");
-        
+
         setShowRatingBox(false);
         setSelectedStars(0);
         setComment("");
@@ -348,28 +350,27 @@ const handleAddToCart = (product: aProduct, quantity: number) => {
     [orderId: string]: Product[];
   }
 
- 
-  
   useEffect(() => {
     if (orderId && selectedProducts.length > 0) {
       const orderData: OrderData = {
-        ...JSON.parse(localStorage.getItem('orderData') || '{}'),
+        ...JSON.parse(localStorage.getItem("orderData") || "{}"),
         [orderId]: selectedProducts,
       };
-      localStorage.setItem('orderData', JSON.stringify(orderData));
+      localStorage.setItem("orderData", JSON.stringify(orderData));
     }
   }, [orderId, selectedProducts]);
-  
+
   // Đọc dữ liệu từ localStorage
   useEffect(() => {
-    const orderData: OrderData = JSON.parse(localStorage.getItem('orderData') || '{}');
+    const orderData: OrderData = JSON.parse(
+      localStorage.getItem("orderData") || "{}"
+    );
     if (orderId) {
       setSelectedProducts(orderData[orderId] || []);
     } else {
       setSelectedProducts([]);
     }
   }, [orderId]);
-
 
   return (
     <div>
@@ -433,7 +434,7 @@ const handleAddToCart = (product: aProduct, quantity: number) => {
                               >
                                 add
                               </button>
-                              { !selectedProducts.some(
+                              {!selectedProducts.some(
                                 (p) => p.productId === product.productId
                               ) && (
                                 <button
@@ -443,7 +444,6 @@ const handleAddToCart = (product: aProduct, quantity: number) => {
                                 >
                                   Rate
                                 </button>
-
                               )}
                             </div>
                           )}
@@ -474,7 +474,8 @@ const handleAddToCart = (product: aProduct, quantity: number) => {
                           />
                           <div className="rating-buttons">
                             <button onClick={handleRatingSubmit}>Submit</button>
-                            { selectedProducts.length > 0 && (
+
+                            {selectedProducts.length > 0 && (
                               <button
                                 onClick={() =>
                                   handleRatingCancel(
@@ -486,7 +487,6 @@ const handleAddToCart = (product: aProduct, quantity: number) => {
                               >
                                 Cancel Rating
                               </button>
-
                             )}
                           </div>
                         </div>
@@ -496,7 +496,7 @@ const handleAddToCart = (product: aProduct, quantity: number) => {
                 );
               })}
             </div>
-            {orderStatus === "Pending" && currentOrderStatus === ""  &&(
+            {orderStatus === "Pending" && currentOrderStatus === "" && (
               <div
                 className="add-product"
                 style={{ display: "flex", flexDirection: "row-reverse" }}

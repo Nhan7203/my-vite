@@ -20,16 +20,13 @@ const Payment = () => {
   );
   const token = localStorage.getItem("token");
 
+  if (!token) {
+    console.error("Token not found");
+    return;
+  }
   const hasAddress = getAddressFromToken(token);
   const handleContinueClick = async () => {
     try {
-     
-
-      if (!token) {
-        console.error("Token not found");
-        return;
-      }
-
       const userIdFromToken = getUserIdFromToken(token);
       const userAddress = getAddressFromToken(token);
 
@@ -73,9 +70,9 @@ const Payment = () => {
       if (response.status === 401) {
         await refreshToken();
       }
-
-      const data = await response.json();
       localStorage.removeItem("cart");
+      localStorage.removeItem("currentQuantities");
+      const data = await response.json();  
       console.log("Cart data stored:", data);
     } catch (error) {
       console.error("Error storing cart data:", error);
@@ -104,6 +101,7 @@ const Payment = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("cart");
+    localStorage.removeItem("currentQuantities");
   };
 
   return (
@@ -193,19 +191,19 @@ const Payment = () => {
             <div className="adress">
               <p>Shipping Address</p>
               <div className="box-adress">
-              {hasAddress ? (
-                    <Link to="/profile" >
-                      <div className="box-adress">
-                        <div>{hasAddress}</div>
-                      </div>
-                    </Link>
-                  ) : (
-                    <Link to="/profile" style={{ color: "white" }}>
-                      <div className="box-adress">
-                        <div>Confirm Shipping Address</div>
-                      </div>
-                    </Link>
-                  )}
+                {hasAddress ? (
+                  <Link to="/profile">
+                    <div className="box-adress">
+                      <div>{hasAddress}</div>
+                    </div>
+                  </Link>
+                ) : (
+                  <Link to="/profile" style={{ color: "white" }}>
+                    <div className="box-adress">
+                      <div>Confirm Shipping Address</div>
+                    </div>
+                  </Link>
+                )}
               </div>
             </div>
             <div className="voucher">
