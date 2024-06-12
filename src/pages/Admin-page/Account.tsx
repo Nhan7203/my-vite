@@ -16,24 +16,6 @@ export interface AllUsers {
   name: string;
 }
 
-import { toast } from "react-toastify";
-import "./Admin.css";
-import { useState, useEffect } from "react";
-
-import "./Admin.css";
-import { getAllUsers, getTotalUser } from "../../apiServices/AdminServices/adminServices";
-
-export interface AllUsers {
-  userId: number;
-  roleId: number;
-  email: string;
-  phoneNumber: number;
-  address: string;
-  isActive: boolean;
-  password: string;
-  name: string;
-}
-
 const Account = () => {
   // console.log('check empty: ', isEmptyObj);
   const handleDelete = (user: AllUsers) => {
@@ -260,7 +242,7 @@ const Account = () => {
                           onClick={() => handleEdit(user)}
                         >
                           {isEmptyObj === false &&
-                          editUser?.userId === user.userId
+                            editUser?.userId === user.userId
                             ? "Save"
                             : "Edit"}
                         </button>
