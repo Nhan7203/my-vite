@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { aProduct } from "../../context/ShopContext";
 import { useNavigate } from "react-router-dom";
 import { useAllProduct } from "../../context/ShopContext";
 import * as brandd from "../../apiServices/BrandServices/brandServices";
@@ -7,6 +6,7 @@ import "./Admin.css";
 import { Brand } from "../Product-page/Product";
 import * as searchServices from "../../apiServices/SearchServices/searchServices";
 import swal from "sweetalert";
+import { aProduct } from "../../interfaces";
 
 export interface ImageProduct {
   imageId: number;
@@ -39,6 +39,7 @@ const ProductManage = () => {
   const [brandId, setBrandId] = useState<number>(0);
   const [orderBy, setOrderBy] = useState("");
   const [activeOrder, setActiveOrder] = useState("");
+  const [activeTab, setActiveTab] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -54,7 +55,10 @@ const ProductManage = () => {
   }, [allProduct]);
 
   const handleClickView = () => {
+    setActiveTab("view-product");
+    setActiveOrder("view-product");
     window.location.reload();
+
   };
 
   const handleClickAdd = (products: aProduct[]) => {
@@ -72,14 +76,20 @@ const ProductManage = () => {
     } else if (value === "priceDesc") {
       setOrderBy("priceDesc");
       setActiveOrder("priceDesc");
+    } else if (value === "view-product") {
+      setActiveOrder("view-product");
+      setActiveTab("view-product");
+
+
     } else {
       setOrderBy("");
       setActiveOrder("");
+      setActiveTab("");
     }
   };
 
   const deleteProduct = async (productId: number) => {
-   
+
     try {
       swal({
         title: "Are you sure you want to delete this product?",
@@ -251,7 +261,7 @@ const ProductManage = () => {
             <div>
               <div className="head-table">
                 <ul>
-                  <li className="view-product" onClick={handleClickView}>
+                  <li className={activeTab === 'view-product' ? 'active' : ''} onClick={handleClickView}>
                     View All
                   </li>
 
@@ -268,7 +278,7 @@ const ProductManage = () => {
                   >
                     Price High - Low
                   </li>
-                  <li>
+                  <li className="select-age">
                     <select
                       defaultValue={forAgeId}
                       onChange={(e) => setForAgeId(Number(e.target.value))}
@@ -281,7 +291,7 @@ const ProductManage = () => {
                       ))}
                     </select>
                   </li>
-                  <li>
+                  <li className="select-category">
                     <select
                       defaultValue={categoryId}
                       onChange={(e) => setCategoryId(Number(e.target.value))}
@@ -294,7 +304,7 @@ const ProductManage = () => {
                       ))}
                     </select>
                   </li>
-                  <li>
+                  <li className="select-brand">
                     <select
                       defaultValue={brandId}
                       onChange={(e) => setBrandId(Number(e.target.value))}

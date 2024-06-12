@@ -3,9 +3,7 @@ import Login from "../pages/Login-page/Login";
 import Adress from "../pages/Adress-page/Adress";
 import Cart from "../pages/Cart-page/Cart";
 import Product from "../pages/Product-page/Product";
-import ProductDetails from "../pages/ProductDetails-page/ProductDetails"
 import Home from "../pages/Home-page/Home";
-import Blog from "../pages/Blog-page/Blog";
 import Voucher from "../pages/Voucher-page/Voucher";
 import Main from "../components/main/main-home/Main";
 import Register from "../pages/Register-page/Register";
@@ -31,6 +29,8 @@ import Giveback from "../pages/User-page/GiveBack";
 import AddProduct from "../pages/Admin-page/AddProduct";
 import UpdateProduct from "../pages/Admin-page/UpdateProduct";
 import SecurityCodeRegister from "../pages/Register-page/SecurityCodeRegister";
+import ProductDetails from "../pages/ProductDetails-page/productDetails";
+import Blog from "../pages/Blog-page/Blog";
 export {
   Navbar,
   Login,

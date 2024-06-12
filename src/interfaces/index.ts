@@ -36,6 +36,7 @@ export interface ImageProduct {
   imageId: number;
   productId: number;
   imageUrl: string;
+  imageFile?: File | null
 }
 
 export interface ShopContextType {
@@ -63,4 +64,18 @@ export interface iProduct {
   quantity: number;
   stock: number;
   isActive: boolean;
+}
+
+export interface CartContextType {
+  cart: iProduct[];
+  totals: { [productId: number]: number };
+  addToCart: (product: aProduct) => void;
+  addToCart2: (
+    productId: aProduct,
+    quantity: number,
+    actionType: string
+  ) => void;
+  incrementQuantity: (productId: number) => void;
+  decrementQuantity: (productId: number) => void;
+  removeItems: (productId: number) => void;
 }
