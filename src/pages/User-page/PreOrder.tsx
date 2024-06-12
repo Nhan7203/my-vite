@@ -1,26 +1,16 @@
-import {
-  useState,
-  useEffect,
-  useNavigate,
-  swal,
-} from "../../import/import-another";
 import { StatusListOrder, BoxMenuUser } from "../../import/import-components";
-import {
-  completeOrder,
-  getOrderList,
-} from "../../apiServices/UserServices/userServices";
-import { Navbar, Footer, Order } from "../../import/import-router";
+import { useState, useEffect } from "react";
 import { getUserIdFromToken } from "../../utils/jwtHelper";
-import { Link } from "../../import/import-libary";
-import "./User.css";
-import "../Admin-page//Admin.css";
+import { Navbar, Footer } from "../../import/import-router";
+import { getOrderList } from "../../apiServices/UserServices/userServices";
+import { Order } from "../../interfaces";
+import { Link } from "react-router-dom";
+import swal from "sweetalert";
 
-const Processed = () => {
+const PreOrder = () => {
   const [orderData, setOrderData] = useState<Order[]>([]);
-  const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-
   const [isGlowing, setIsGlowing] = useState(false);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setIsGlowing((prevIsGlowing) => !prevIsGlowing);
@@ -84,58 +74,14 @@ const Processed = () => {
 
     fetchOrderData();
   }, []);
-
-  const handleOrderReceived = (orderId: number) => {
-    try {
-      if (!token) {
-        console.error("Token not found");
-        return;
-      }
-
-      const userIdIdentifier = getUserIdFromToken(token);
-
-      const userId = userIdIdentifier;
-
-      swal({
-        title: "Recieved The Order!",
-        text: `Confirm payment of $${orderData
-          .find((order) => order.orderId === orderId)
-          ?.total.toLocaleString()} to the seller`,
-        icon: "warning",
-        buttons: ["Cancel", "Confirm"],
-        dangerMode: true,
-      }).then(async (confirmDelete) => {
-        if (confirmDelete) {
-          const response = await completeOrder(userId, orderId, token);
-          if (response) {
-            swal("Success!", "Thanks for shopping at M&B", "success").then(
-              () => {
-                navigate("/complete");
-              }
-            );
-            // const data = await response.json();
-            // setOrderData(data);
-          } else {
-            throw new Error("Failed to cancel order");
-          }
-        }
-      });
-    } catch (error) {
-      console.error("Error canceling order:", error);
-    }
-  };
-
   return (
     <div>
       <Navbar />
-
       <div className="body-user">
         <div>
           <BoxMenuUser />
-
           <div className="box-menu-order">
             <StatusListOrder />
-
             <div className="order-show">
               <div className="limiter">
                 <div className="container-table100">
@@ -158,7 +104,7 @@ const Processed = () => {
                         <tbody>
                           {orderData
                             .filter(
-                              (order) => order.orderStatus === "Submitted"
+                              (order) => order.orderStatus === "Pre-Order"
                             )
                             .map((order, index) => (
                               <tr
@@ -202,8 +148,8 @@ const Processed = () => {
                                   <span
                                     style={{ margin: "0 0 0 15px" }}
                                     className={`status ${
-                                      order.orderStatus === "Submitted"
-                                        ? "orange"
+                                      order.orderStatus === "Pre-Order"
+                                        ? "purple"
                                         : ""
                                     } ${isGlowing ? "glow" : ""}`}
                                   />
@@ -212,20 +158,7 @@ const Processed = () => {
                                 <td className="column7 dynamic-content">
                                   {order.orderStatus}
                                 </td>
-                                <td className="column8 dynamic-content">
-                                  {order.orderStatus === "Submitted" && (
-                                    <>
-                                      <button
-                                        className="received-button"
-                                        onClick={() =>
-                                          handleOrderReceived(order.orderId)
-                                        }
-                                      >
-                                        Received
-                                      </button>
-                                    </>
-                                  )}
-                                </td>
+                                <td className="column8 dynamic-content"></td>
                               </tr>
                             ))}
                         </tbody>
@@ -238,10 +171,9 @@ const Processed = () => {
           </div>
         </div>
       </div>
-
       <Footer />
     </div>
   );
 };
 
-export default Processed;
+export default PreOrder;

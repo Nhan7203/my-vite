@@ -1,37 +1,25 @@
-import { useState, useEffect } from "react";
-import { Navbar, Footer } from "../../import/import-router";
-import { jwtDecode } from "jwt-decode";
-import swal from "sweetalert";
-import StatusListOrder from "./components/StatusListOrder";
-import BoxMenuUser from "./components/BoxMenuUser";
-import "./User.css";
-import "../Admin-page//Admin.css";
+import {
+  cancelOrder,
+  completeOrder,
+  getOrderList,
+} from "../../apiServices/UserServices/userServices";
+import {
+  useState,
+  useEffect,
+  useNavigate,
+  swal,
+} from "../../import/import-another";
+import { StatusListOrder, BoxMenuUser } from "../../import/import-components";
+import { Navbar, Footer, Order } from "../../import/import-router";
+import { getUserIdFromToken } from "../../utils/jwtHelper";
 import { Link } from "../../import/import-libary";
-import { useNavigate } from "react-router-dom";
-
-interface Order {
-  orderId: number;
-  userId: number;
-  orderDate: string;
-  address: string;
-  paymentMethod: string;
-  shippingMethodId: number;
-  orderStatus: string;
-  orderDetails: {
-    productId: number;
-    quantity: number;
-    price: number;
-    total: number;
-  }[];
-  total: number;
-}
+import "../Admin-page//Admin.css";
 
 const User = () => {
   const [orderData, setOrderData] = useState<Order[]>([]);
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [isGlowing, setIsGlowing] = useState(false);
-
   useEffect(() => {
     const interval = setInterval(() => {
       setIsGlowing((prevIsGlowing) => !prevIsGlowing);
@@ -68,21 +56,12 @@ const User = () => {
           return;
         }
 
-        const decodedToken: any = jwtDecode(token);
-        const userIdIdentifier =
-          decodedToken[
-            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-          ];
+        const userIdIdentifier = getUserIdFromToken(token);
 
-        const response = await fetch(
-          `https://localhost:7030/api/User/getOrderList?userId=${parseInt(
-            userIdIdentifier
-          )}`
-        );
+        const response = await getOrderList(userIdIdentifier);
 
-        if (response.ok) {
-          const data = await response.json();
-          const updatedOrderData = data.map((order: Order) => {
+        if (response) {
+          const updatedOrderData = response.map((order: Order) => {
             const total = order.orderDetails.reduce(
               (acc, detail) => acc + detail.total,
               0
@@ -95,7 +74,7 @@ const User = () => {
 
           setOrderData(updatedOrderData);
         } else {
-          console.error("Failed to retrieve order data:", response.status);
+          console.error("Failed to retrieve order data:", response);
         }
       } catch (error) {
         console.error("Failed to retrieve order data:", error);
@@ -112,12 +91,7 @@ const User = () => {
         return;
       }
 
-      const decodedToken: any = jwtDecode(token);
-
-      const userIdIdentifier =
-        decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-        ];
+      const userIdIdentifier = getUserIdFromToken(token);
 
       const userId = userIdIdentifier;
 
@@ -129,21 +103,14 @@ const User = () => {
         dangerMode: true,
       }).then(async (confirmDelete) => {
         if (confirmDelete) {
-          const response = await fetch(
-            `https://localhost:7030/api/User/cancelOrder?userId=${userId}&orderId=${orderId}`,
-            {
-              method: "DELETE",
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          if (response.ok) {
+          const response = await cancelOrder(userId, orderId, token);
+          if (response) {
             swal("Success!", "Order was canceled!", "success").then(() => {
-              navigate("/cancelled")
+              navigate("/cancelled");
             });
-            const data = await response.json();
-            setOrderData(data);
+            // const data = await response.json();
+            // console.log("maaaaaaaaaaa: ", data)
+            // setOrderData(data);
           } else {
             throw new Error("Failed to cancel order");
           }
@@ -161,12 +128,7 @@ const User = () => {
         return;
       }
 
-      const decodedToken: any = jwtDecode(token);
-
-      const userIdIdentifier =
-        decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-        ];
+      const userIdIdentifier = getUserIdFromToken(token);
 
       const userId = userIdIdentifier;
 
@@ -180,22 +142,15 @@ const User = () => {
         dangerMode: true,
       }).then(async (confirmDelete) => {
         if (confirmDelete) {
-          const response = await fetch(
-            `https://localhost:7030/api/User/completeOrder?userId=${userId}&orderId=${orderId}`,
-            {
-              method: "PUT",
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          if (response.ok) {
-            swal("Success!", "Thanks for shopping at M&B", "success").then(() => {
-              navigate("/complete")
-            });
-            const data = await response.json();
-            setOrderData(data);
-            navigate("/user");
+          const response = await completeOrder(userId, orderId, token);
+          if (response) {
+            swal("Success!", "Thanks for shopping at M&B", "success").then(
+              () => {
+                navigate("/complete");
+              }
+            );
+            // const data = await response.json();
+            // setOrderData(data);
           } else {
             throw new Error("Failed to cancel order");
           }
@@ -288,6 +243,8 @@ const User = () => {
                                       ? "orange"
                                       : order.orderStatus === "Completed"
                                       ? "green"
+                                      : order.orderStatus === "Pre-Order"
+                                      ? "purple"
                                       : ""
                                   } ${isGlowing ? "glow" : ""}`}
                                 />

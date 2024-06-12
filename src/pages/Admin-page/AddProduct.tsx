@@ -1,15 +1,12 @@
 import "./Admin.css";
 import { useState, useEffect } from "react";
 import "./Admin.css";
+import { aProduct } from "../../interfaces";
 import { useLocation, useNavigate } from "react-router-dom";
 import * as brandd from "../../apiServices/BrandServices/brandServices";
 import swal from "sweetalert";
 
-import {
- 
-  aProduct,
-  useAllProduct,
-} from "../../context/ShopContext";
+import { useAllProduct } from "../../context/ShopContext";
 
 export interface Brand {
   brandId: number;
@@ -18,8 +15,8 @@ export interface Brand {
 }
 
 export interface ImageProduct {
-  productId: number
-  imageUrl: string
+  productId: number;
+  imageUrl: string;
 }
 
 const AddProduct = () => {
@@ -39,19 +36,17 @@ const AddProduct = () => {
   const [brandList, setBrandList] = useState<Brand[]>([]);
   const [products] = useState<aProduct[]>(productList);
   const [errors, setErrors] = useState({
-    name: '',
-    description: '',
-    stock: '',
-    price: '',
-    imageUrls: '',
+    name: "",
+    description: "",
+    stock: "",
+    price: "",
+    imageUrls: "",
   });
   const maxProductId = Math.max(
     ...products.map((product) => product.productId)
   );
   const product = allProduct.find((e) => e.productId === maxProductId);
 
- 
-  
   useEffect(() => {
     const fetchData = async () => {
       const result = await brandd.getBrand();
@@ -75,68 +70,68 @@ const AddProduct = () => {
     { id: 4, name: "Fresh milk, Yogurt" },
   ];
 
-  const handleImageUpload = (productId: number, imageIndex: number,  event: React.ChangeEvent<HTMLInputElement>) => {
-
+  const handleImageUpload = (
+    productId: number,
+    imageIndex: number,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
-    
+
     if (file) {
       const imageUrl = `/images/products/${file.name}`;
       setImageUrls((prevImageUrls) => ({
         ...prevImageUrls,
-        [imageIndex]: imageUrl
-        ,
+        [imageIndex]: imageUrl,
       }));
-      console.log("maaa",imageIndex)
+      console.log("maaa", imageIndex);
       setImageProducts((prevImageProducts) => [
-          ...prevImageProducts,
-          {
-            productId: productId + 1,
-            imageUrl:  imageUrl ,
-          },          
-        ]);
-    
-    } 
-  }
+        ...prevImageProducts,
+        {
+          productId: productId + 1,
+          imageUrl: imageUrl,
+        },
+      ]);
+    }
+  };
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
     const error = {
-      name: '',
-      description: '',
-      stock: '',
-      price: '',
-      imageUrls: '',
-      check: false
+      name: "",
+      description: "",
+      stock: "",
+      price: "",
+      imageUrls: "",
+      check: false,
     };
 
     if (name === "") {
-      error.name = "Name is Required!"
-      error.check = true
-   
-     }
-     if (description === "") {
-      error.description = "Description is Required!"
-      error.check = true
-     }
+      error.name = "Name is Required!";
+      error.check = true;
+    }
+    if (description === "") {
+      error.description = "Description is Required!";
+      error.check = true;
+    }
 
-     if (stock === 0) {
-      error.stock = "Stock != 0 "
-      error.check = true
+    if (stock === 0) {
+      error.stock = "Stock != 0 ";
+      error.check = true;
     }
 
     if (price === 0) {
-      error.price = "Price != 0 "
-      error.check = true
+      error.price = "Price != 0 ";
+      error.check = true;
     }
 
     if (!imageUrls || Object.keys(imageUrls).length === 0) {
-      error.imageUrls = "imageUrl is Required!"
-      error.check = true
-     }
- 
-    setErrors(error)
+      error.imageUrls = "imageUrl is Required!";
+      error.check = true;
+    }
+
+    setErrors(error);
     if (error.check) {
-      return
+      return;
     }
     const payload = {
       name: name,
@@ -149,8 +144,6 @@ const AddProduct = () => {
       imageProducts: imageProducts,
       isActive: true,
     };
-
-    
 
     try {
       const response = await fetch(
@@ -168,9 +161,8 @@ const AddProduct = () => {
 
       if (!response.ok) {
         throw new Error("Failed to store cart data");
-        
       }
-     
+
       const data = await response.json();
       swal("Success", "Product information created successfully!", "success");
       console.log("Product data stored:", data);
@@ -277,26 +269,32 @@ const AddProduct = () => {
                   <h4>ProductId: {products.length + 1}</h4>
 
                   <h4>Image</h4>
-                 
-                {product?.imageProducts.map((image, index) => (
-                  <div key={index}>
-                    <label>Image {index + 1}: </label>
-                    <input
-                      type="file"
-                      onChange={(event) => handleImageUpload(image.productId, index , event)}
-                    />
-                      
-                    {imageUrls[index] ?  (
-                      <img
-                        src={imageUrls[index] }
-                        alt={`Image ${ index + 1 }`}
-                        style={{ maxWidth: '200px' }}
+
+                  {product?.imageProducts.map((image, index) => (
+                    <div key={index}>
+                      <label>Image {index + 1}: </label>
+                      <input
+                        type="file"
+                        onChange={(event) =>
+                          handleImageUpload(image.productId, index, event)
+                        }
                       />
-                    ) : (
-                      <div >{errors.imageUrls && <p style={{ color: "red" }}>{errors.imageUrls}</p>}</div>
-                    )}
-                  </div>
-                ))}
+
+                      {imageUrls[index] ? (
+                        <img
+                          src={imageUrls[index]}
+                          alt={`Image ${index + 1}`}
+                          style={{ maxWidth: "200px" }}
+                        />
+                      ) : (
+                        <div>
+                          {errors.imageUrls && (
+                            <p style={{ color: "red" }}>{errors.imageUrls}</p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ))}
 
                   <h4>For age</h4>
                   <select
@@ -304,11 +302,7 @@ const AddProduct = () => {
                     onChange={(e) => setAgeId(Number(e.target.value))}
                   >
                     {ageOptions.map((option) => (
-                      <option
-                        key={option.id}
-                        value={option.id}
-                       
-                      >
+                      <option key={option.id} value={option.id}>
                         {option.name}
                       </option>
                     ))}
@@ -320,11 +314,7 @@ const AddProduct = () => {
                     onChange={(e) => setCategoryId(Number(e.target.value))}
                   >
                     {categoryOptions.map((option) => (
-                      <option
-                        key={option.id}
-                        value={option.id}
-                       
-                      >
+                      <option key={option.id} value={option.id}>
                         {option.name}
                       </option>
                     ))}
@@ -336,11 +326,7 @@ const AddProduct = () => {
                     onChange={(e) => setBrandId(Number(e.target.value))}
                   >
                     {brandList.map((option) => (
-                      <option
-                        key={option.brandId}
-                        value={option.brandId}
-                        
-                      >
+                      <option key={option.brandId} value={option.brandId}>
                         {option.name}
                       </option>
                     ))}
@@ -353,7 +339,9 @@ const AddProduct = () => {
                     value={price}
                     onChange={(e) => setPrice(Number(e.target.value))}
                   />
-                  {errors.price && <p style={{ color: "red" }}>{errors.price}</p>}
+                  {errors.price && (
+                    <p style={{ color: "red" }}>{errors.price}</p>
+                  )}
                   <h4>stock</h4>
                   <input
                     type="number"
@@ -361,7 +349,9 @@ const AddProduct = () => {
                     value={stock}
                     onChange={(e) => setStock(Number(e.target.value))}
                   />
-                  {errors.stock && <p style={{ color: "red" }}>{errors.stock}</p>}
+                  {errors.stock && (
+                    <p style={{ color: "red" }}>{errors.stock}</p>
+                  )}
                   <h4>Name</h4>
                   <input
                     type="text"
@@ -369,7 +359,7 @@ const AddProduct = () => {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
-                   {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
+                  {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
                   <h4>Description</h4>
                   <input
                     type="text"
@@ -377,7 +367,9 @@ const AddProduct = () => {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                   />
-                   {errors.description && <p style={{ color: "red" }}>{errors.description}</p>}
+                  {errors.description && (
+                    <p style={{ color: "red" }}>{errors.description}</p>
+                  )}
                 </div>
               </div>
               <div className="both-button">

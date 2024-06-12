@@ -9,7 +9,7 @@ const StatusListOrder = () => {
       { to: '/processed', label: 'Processed' },
       { to: '/complete', label: 'Completed' },
       { to: '/cancelled', label: 'Cancelled' },
-      { to: '/giveback', label: 'Give back' },
+      { to: '/preorder', label: 'Pre-Order' },
     ].map((link) => (
       <div key={link.to} >
         <Link

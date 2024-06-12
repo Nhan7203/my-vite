@@ -1,32 +1,26 @@
-import { useState, useEffect } from "react";
-import { Navbar, Footer } from "../../import/import-router";
-import { jwtDecode } from "jwt-decode";
-import swal from "sweetalert";
-import StatusListOrder from "./components/StatusListOrder";
-import BoxMenuUser from "./components/BoxMenuUser";
-import "./User.css";
-import "../Admin-page//Admin.css";
+import { StatusListOrder, BoxMenuUser } from "../../import/import-components";
+import { useState, useEffect, swal } from "../../import/import-another";
+import { Navbar, Footer, Order } from "../../import/import-router";
+import { getUserIdFromToken } from "../../utils/jwtHelper";
+import { getOrderList } from "../../apiServices/UserServices/userServices";
 import { Link } from "../../import/import-libary";
+import "../Admin-page//Admin.css";
+import "./User.css";
 
-interface Order {
-  orderId: number;
-  userId: number;
-  orderDate: string;
-  address: string;
-  paymentMethod: string;
-  shippingMethodId: number;
-  orderStatus: string;
-  orderDetails: {
-    productId: number;
-    quantity: number;
-    price: number;
-    total: number;
-  }[];
-  total: number;
-}
 
 const Cancelled = () => {
   const [orderData, setOrderData] = useState<Order[]>([]);
+  const [isGlowing, setIsGlowing] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsGlowing((prevIsGlowing) => !prevIsGlowing);
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchOrderData = async () => {
@@ -54,22 +48,12 @@ const Cancelled = () => {
           return;
         }
 
-        const decodedToken: any = jwtDecode(token);
-        const userIdIdentifier =
-          decodedToken[
-            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-          ];
+        const userIdIdentifier = getUserIdFromToken(token);
 
-        const response = await fetch(
-          `https://localhost:7030/api/User/getOrderList?userId=${parseInt(
-            userIdIdentifier
-          )}`
-        );
+        const response = await getOrderList(userIdIdentifier);
 
-        if (response.ok) {
-          const data = await response.json();
-
-          const updatedOrderData = data.map((order: Order) => {
+        if (response) {
+          const updatedOrderData = response.map((order: Order) => {
             const total = order.orderDetails.reduce(
               (acc, detail) => acc + detail.total,
               0
@@ -82,7 +66,7 @@ const Cancelled = () => {
 
           setOrderData(updatedOrderData);
         } else {
-          console.error("Failed to retrieve order data:", response.status);
+          console.error("Failed to retrieve order data:", response);
         }
       } catch (error) {
         console.error("Failed to retrieve order data:", error);
@@ -170,7 +154,7 @@ const Cancelled = () => {
                                       order.orderStatus === "Canceled"
                                         ? "red"
                                         : ""
-                                    }`}
+                                    } ${isGlowing ? "glow" : ""}`}
                                   />
                                 </td>
 

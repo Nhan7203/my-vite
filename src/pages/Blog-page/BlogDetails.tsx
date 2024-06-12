@@ -1,19 +1,15 @@
-import { Navbar, Footer } from "../../import/import-router";
-import view from "../../assets/view.png";
-import { useEffect, useState } from "react";
+import { swal, swal2, useCart, useAllProduct, useEffect, useState } from "../../import/import-another";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import * as searchBlogDetails from "../../apiServices/BlogServices/blogServices";
-import "./Blog.css";
-import { aProduct, Blog } from "../../interfaces";
-import { useAllProduct } from "../../context/ShopContext";
+import { aProduct, aBlog } from "../../interfaces";
+import { Navbar, Footer } from "../../import/import-router";
+import { getBlogId } from "../../apiServices/BlogServices/blogServices";
 import { BsCart3 } from "../../import/import-libary";
-import { useCart } from "../Cart-page/CartContext";
-import swal from "sweetalert";
-import Swal from "sweetalert2";
+import view from "../../assets/view.png";
+import "./Blog.css";
 
 const BlogDetails = () => {
   const { blogId } = useParams<{ blogId: string }>();
-  const [blogDetails, setBlogDetails] = useState<Blog | null>(null);
+  const [blogDetails, setBlogDetails] = useState<aBlog | null>(null);
   const { addToCart } = useCart();
   const navigate = useNavigate();
   const { allProduct } = useAllProduct();
@@ -25,7 +21,7 @@ const BlogDetails = () => {
         return;
       }
       try {
-        const result = await searchBlogDetails.getBlogId(blogId);
+        const result = await getBlogId(blogId);
         setBlogDetails(result);
       } catch (error) {
         console.error(error);
@@ -61,7 +57,7 @@ const handleCartClick = (product: aProduct) => {
     const newQuantity = (newCurrentQuantities[product.productId] || 0) + 1;
 
     if (newQuantity > product.stock) {
-      Swal.fire({
+      swal2.fire({
         title: `${newCurrentQuantities[product.productId]}/ ${product.stock}`,
         text: `You cannot order more than ${product.stock} items of this product.`,
         icon: "info",

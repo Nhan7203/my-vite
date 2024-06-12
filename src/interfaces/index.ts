@@ -42,7 +42,7 @@ export interface ShopContextType {
   allProduct: aProduct[];
 }
 
-export interface Blog {
+export interface aBlog {
   blogId: number;
   title: string;
   content: string;
@@ -77,4 +77,21 @@ export interface CartContextType {
   incrementQuantity: (productId: number) => void;
   decrementQuantity: (productId: number) => void;
   removeItems: (productId: number) => void;
+}
+
+export interface Order {
+  orderId: number;
+  userId: number;
+  orderDate: string;
+  address: string;
+  paymentMethod: string;
+  shippingMethodId: number;
+  orderStatus: string;
+  orderDetails: {
+    productId: number;
+    quantity: number;
+    price: number;
+    total: number;
+  }[];
+  total: number;
 }

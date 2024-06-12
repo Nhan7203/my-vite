@@ -83,6 +83,7 @@ const ButtonWrapper = ({
         }
 
         localStorage.removeItem("cart");
+        localStorage.removeItem("currentQuantities");
         swal("Congrat!", "Order was created!", "success");
         window.location.href = "/processing";
       }

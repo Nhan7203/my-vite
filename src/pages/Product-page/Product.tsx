@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { StickyBox, Link } from "../../import/import-libary";
 import { Navbar, Footer } from "../../import/import-router";
 import { useLocation } from "react-router-dom";
-import { aProduct } from "../../context/ShopContext";
+import { aProduct } from "../../interfaces";
 import { BsCart3 } from "react-icons/bs";
 import { useCart } from "../../pages/Cart-page/CartContext";
 import * as searchServices from "../../apiServices/SearchServices/searchServices";

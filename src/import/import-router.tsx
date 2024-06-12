@@ -27,7 +27,7 @@ import Processing from "../pages/User-page/Processing";
 import Processed from "../pages/User-page/Processed";
 import Complete from "../pages/User-page/Complete";
 import Cancelled from "../pages/User-page/Cancelled";
-import Giveback from "../pages/User-page/GiveBack";
+import PreOrder from "../pages/User-page/PreOrder";
 import AddProduct from "../pages/Admin-page/AddProduct";
 import UpdateProduct from "../pages/Admin-page/UpdateProduct";
 import SecurityCodeRegister from "../pages/Register-page/SecurityCodeRegister";
@@ -56,7 +56,7 @@ export {
   Profile,
   Complete,
   Cancelled,
-  Giveback,
+  PreOrder,
   Processing,
   Processed,
   ProductManage,
