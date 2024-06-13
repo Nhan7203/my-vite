@@ -1,4 +1,3 @@
-
 import {
   useCart,
   useNavigate,
@@ -15,24 +14,21 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faStar as regularStarOutline } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon, Link } from "../../import/import-libary";
-import { adv, adv1, adv2 } from "../../import/import-assets";
+import { bgProduct } from "../../import/import-assets";
 import { Navbar, Footer } from "../../import/import-router";
 import { ProductCard } from "../../import/import-components";
 import { aProduct } from "../../interfaces";
 import "./ProductDetail.css";
+import { useCallback } from "react";
 
 const ProductDetail = () => {
   const { addToCart2 } = useCart();
   const { allProduct } = useAllProduct();
   const [noOfElement, setNoOfElement] = useState(8);
-  const [currentSlide, setCurrentSlide] = useState(0);
+
   const navigate = useNavigate();
 
-  const bannerImages = [adv, adv1, adv2];
 
-  const nextSlide = () => {
-    setCurrentSlide((prevSlide) => (prevSlide + 1) % bannerImages.length);
-  };
 
   const [ratingInfo, setRatingInfo] = useState({
     averageRating: 0,
@@ -42,11 +38,6 @@ const ProductDetail = () => {
 
   const [productReviews, setProductReviews] = useState([]);
   const [currentProductId, setCurrentProductId] = useState(null);
-
-  useEffect(() => {
-    const interval = setInterval(nextSlide, 5000);
-    return () => clearInterval(interval);
-  }, []);
 
   const loadMore = () => {
     setNoOfElement((prevNoOfElement) => prevNoOfElement + noOfElement);
@@ -72,6 +63,35 @@ const ProductDetail = () => {
   if (productId) {
     product = allProduct.find((e) => e.productId === parseInt(productId ?? ""));
   }
+
+  //----------------------- next sile and select img product ------------------------------------------------------------------------
+
+  const [bannerImages, setBannerImages] = useState([]);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    if (product && product.imageProducts) {
+      setBannerImages(
+        product.imageProducts.map(
+          (image: { imageUrl: string }) => image.imageUrl
+        )
+      );
+    }
+  }, [product]);
+
+  const nextSlide = useCallback(() => {
+    setCurrentSlide((prevSlide) => (prevSlide + 1) % bannerImages.length);
+  }, [bannerImages]);
+
+  useEffect(() => {
+    const interval = setInterval(nextSlide, 5000);
+    return () => clearInterval(interval);
+  }, [nextSlide]);
+
+  const handleImageClick = (index: number) => {
+    setCurrentSlide(index);
+  };
+
   //-------------------------------------------------------------------------------------------------------------------------
   interface CurrentQuantities {
     [key: string]: number;
@@ -198,7 +218,7 @@ const ProductDetail = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const allRatings = await response.json();
-      console.log("hhhhhhhhhhhhhh: ", allRatings)
+      console.log("hhhhhhhhhhhhhh: ", allRatings);
       const productRatings = allRatings.filter(
         (rating: any) => String(rating.productId) === String(productId)
       );
@@ -306,10 +326,13 @@ const ProductDetail = () => {
       {product ? (
         <div className="body-detail">
           <div className="grid-12">
-            <div className="big-image">
+            <div
+              className="big-image"
+              style={{ backgroundImage: `url(${bgProduct})` }}
+            >
               <img
                 className="img-detail"
-                src={product.imageProducts[0].imageUrl}
+                src={bannerImages[currentSlide]}
                 alt=""
               />
             </div>
@@ -384,21 +407,21 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            <div className="box-img-1">
+            <div className="box-img-1" onClick={() => handleImageClick(1)}>
               <img
                 className="img-1"
                 src={product.imageProducts[1].imageUrl}
                 alt=""
               />
             </div>
-            <div className="box-img-2">
+            <div className="box-img-2" onClick={() => handleImageClick(2)}>
               <img
                 className="img-2"
                 src={product.imageProducts[2].imageUrl}
                 alt=""
               />
             </div>
-            <div className="box-img-3">
+            <div className="box-img-3" onClick={() => handleImageClick(3)}>
               <img
                 className="img-3"
                 src={product.imageProducts[3].imageUrl}

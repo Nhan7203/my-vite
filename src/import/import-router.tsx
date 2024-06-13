@@ -3,7 +3,7 @@ import Login from "../pages/Login-page/Login";
 import Adress from "../pages/Adress-page/Adress";
 import Cart from "../pages/Cart-page/Cart";
 import Product from "../pages/Product-page/Product";
-import ProductDetails from "../pages/ProductDetails-page/productDetails"
+import ProductDetails from "../pages/ProductDetails-page/ProductDetails"
 import Home from "../pages/Home-page/Home";
 import Blog from "../pages/Blog-page/Blog";
 import Voucher from "../pages/Voucher-page/Voucher";

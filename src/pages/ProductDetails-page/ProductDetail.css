@@ -15,9 +15,10 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  max-width: 100%;
+  max-width: 250px;
   max-height: 100%;
   object-fit: cover;
+
 }
 
 .grid-12 {
@@ -38,6 +39,9 @@
   background-color: #fff;
   border-radius: 8px;
   border: 0.5px solid #e8e8e8;
+  background-size: 100% 100%;
+  background-position: center ;
+  box-shadow: 0 8px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .grid-12 > img {
@@ -48,22 +52,34 @@
 
 .box-img-1 {
   width: 180px;
-  border: 0.5px solid #e8e8e8;
+  border: 2px solid #e8e8e8;
   margin-top: 15px;
+  cursor: pointer;
+  &:hover {
+    border: 2px solid #ff469e; 
+  }
 }
 
 .box-img-2 {
   grid-column: 3/5;
   width: 180px;
-  border: 0.5px solid #e8e8e8;
+  border: 2px solid #e8e8e8;
   margin-top: 15px;
+  cursor: pointer;
+  &:hover {
+    border: 2px solid #ff469e; 
+  }
 }
 
 .box-img-3 {
   grid-column: 5/7;
   width: 180px;
-  border: 0.5px solid #e8e8e8;
+  border: 2px solid #e8e8e8;
   margin-top: 15px;
+  cursor: pointer;
+  &:hover {
+    border: 2px solid #ff469e; 
+  }
 }
 
 .img-1 {

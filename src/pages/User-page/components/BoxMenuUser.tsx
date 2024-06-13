@@ -1,4 +1,4 @@
-import vu from "../../../assets/vu.jpg";
+import { avatar } from "../../../import/import-assets";
 import box from "../../../assets/box.png";
 import adress from "../../../assets/adress.png";
 import voucher from "../../../assets/voucher.png";
@@ -48,7 +48,7 @@ const BoxMenuUser = () => {
     <div className="box-menu-user">
       <div className="box-profile-avatar">
         <div className="avatar-img">
-          <img src={vu} alt="" />
+          <img src={avatar} alt="" />
         </div>
         <div className="onlick-profile">
           <h5>{userToken.Name}</h5>

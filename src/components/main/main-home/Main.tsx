@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { adv, adv1, adv2 } from "../../../import/import-assets";
 import { useAllProduct } from "../../../context/ShopContext";
 import ProductCard from "./ProductCard";
@@ -11,16 +11,16 @@ const Main = () => {
   const [noOfElement, setNoOfElement] = useState(8);
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  const bannerImages = [adv, adv1, adv2];
+  const bannerImages = useMemo(() => [adv, adv1, adv2], []);
 
-  const nextSlide = () => {
+  const nextSlide = useCallback(() => {
     setCurrentSlide((prevSlide) => (prevSlide + 1) % bannerImages.length);
-  };
+  }, [bannerImages]);
 
   useEffect(() => {
     const interval = setInterval(nextSlide, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [nextSlide]);
 
   const loadMore = () => {
     setNoOfElement((prevNoOfElement) => prevNoOfElement + noOfElement);

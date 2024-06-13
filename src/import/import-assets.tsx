@@ -1,4 +1,4 @@
-import avatar from "../assets/vu.jpg";
+import avatar from "../assets/✧.jpg";
 import noti from "../assets/notification.png";
 import trash from "../assets/trash-can.png";
 import empty from "../assets/folder.png";
@@ -10,6 +10,8 @@ import vu from "../assets/vu.jpg";
 import sec from "../assets/ship-economical.png";
 import sr from "../assets/ship-regular.png";
 import se from "../assets/ship-Epress.png";
+import bgProduct from "../assets/bg-product.jpg";
+// import bgProduct1 from "../assets/bg-product.jpg";
 export {
   avatar,
   noti,
@@ -23,4 +25,5 @@ export {
   sec,
   sr,
   se,
+  bgProduct
 };
