@@ -4,108 +4,55 @@ import {
   useCart,
   swal,
   swal2,
-  useMemo,
   useCallback,
-} from "../../import/import-another";
-import {
-  cancelOrder,
-  completeOrder,
-  getOrderDetails,
-  review,
-} from "../../apiServices/UserServices/userServices";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { Navbar, Footer, BoxMenuUser } from "../../import/import-components";
-import { OrderDetail, aProduct } from "../../interfaces";
-import { getUserIdFromToken } from "../../utils/jwtHelper";
-import { getUserReview } from "../../apiServices/ReviewServices/reviewServices";
-import { getProductId } from "../../apiServices/ProductServices/productServices";
-import "./OrderDetails.css";
+} from "../../../import/import-another";
+import { review } from "../../../apiServices/UserServices/userServices";
+import { useLocation } from "react-router-dom";
+import { Navbar, Footer, BoxMenuUser } from "../../../import/import-components";
+import { OrderDetail, aProduct } from "../../../interfaces";
 
+// import { getUserReview } from "../../../apiServices/ReviewServices/reviewServices";
+
+import "./OrderDetails.css";
+import {
+  useHandleCancelOrder,
+  useHandleOrderReceived,
+} from "../components/HandleOrder";
+
+import { useOrderDetails } from "./useOrderDetails";
 
 const OrderDetails = () => {
-  
-  const navigate = useNavigate();
+  const { orderDetails, products, currentUserId, orderData, orderId, token } =
+    useOrderDetails();
   const location = useLocation();
   const { orderStatus } = location.state;
-  const { orderId } = useParams<{ orderId?: string }>();
   const [comment, setComment] = useState<string>("");
-  const [products, setProducts] = useState<aProduct[]>([]);
   const [selectedStars, setSelectedStars] = useState<number>(0);
   const [selectedOrderDetail, setSelectedOrderDetail] = useState<OrderDetail>();
   const [showRatingBox, setShowRatingBox] = useState<boolean>(false);
-  const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([]);
-  const [currentOrderStatus, setCurrentOrderStatus] = useState<string>("");
- 
- 
-  //const [isRated, setIsRated] = useState<boolean>(false);
-  //const [cancelOrderResponse, setCancelOrderResponse] = useState();
 
-  const token = localStorage.getItem("token");
+  // const fetchUserReviews = useCallback(
+  //   async (userId: string) => {
+  //     try {
+  //       const response = await getUserReview(userId, orderId ?? "", token);
+  //       if (response) {
+  //         console.log(response);
+  //       } else {
+  //         throw new Error("Failed to fetch GetUserReview");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching GetUserReview:", error);
+  //     }
+  //   },
+  //   [orderId, token]
+  // );
 
-  const currentUserId = useMemo(() => {
-    if (!token) {
-      console.error("Token not found");
-      return null;
-    }
-    const userId = getUserIdFromToken(token);
-    return typeof userId === "string" ? parseInt(userId) : userId;
-  }, [token]);
+  // useEffect(() => {
+  //   if (currentUserId) {
+  //     fetchUserReviews(currentUserId);
+  //   }
+  // }, [currentUserId, fetchUserReviews]);
 
-  const fetchUserReviews = useCallback(
-    async (userId: string) => {
-      try {
-        const response = await getUserReview(userId, orderId ?? "", token);
-
-        if (response) {
-          const data = response;
-          console.log(data);
-          console.log(orderId);
-        } else {
-          throw new Error("Failed to fetch GetUserReview");
-        }
-      } catch (error) {
-        console.error("Error fetching GetUserReview:", error);
-      }
-    },
-    [token, orderId]
-  );
-
-  useEffect(() => {
-    if (currentUserId) {
-      fetchUserReviews(currentUserId);
-    }
-  }, [currentUserId, fetchUserReviews]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!orderId) {
-        navigate("/user");
-        return;
-      }
-      const queryParams = new URLSearchParams();
-      queryParams.append("orderId", orderId.toString());
-      const result = await getOrderDetails(queryParams);
-      setOrderDetails(result);
-    };
-    fetchData();
-  }, [orderId, navigate]);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const queryParams = new URLSearchParams();
-      const productIds = orderDetails.map(
-        (orderDetail) => orderDetail.productId
-      );
-      if (productIds != null) {
-        queryParams.append("", productIds.toString());
-      }
-      const result = await getProductId(queryParams);
-      setProducts(result);
-    };
-    fetchProducts();
-  }, [orderDetails]);
-
- 
   //---------------------------------------------- quantitty handle -------------------------------------------------------------
 
   interface CurrentQuantities {
@@ -169,86 +116,23 @@ const OrderDetails = () => {
       }
     }
   };
-  //----------------------------------------- Complete Order handle ---------------------------------------------------------------
+  //-----------------------------------------  Order handle ---------------------------------------------------------------
 
-  const handleCompleteOrder = useCallback(async () => {
-    try {
-      const userId = currentUserId;
+  const { handleCancelOrder } = useHandleCancelOrder();
+  const { handleOrderReceived } = useHandleOrderReceived(orderData);
 
-      const totalPrice = orderDetails.reduce(
-        (sum, orderDetail) => sum + orderDetail.total,
-        0
-      );
+  const handleCancelClick = (orderId: number) => {
+    handleCancelOrder(orderId);
+  };
 
-      swal({
-        title: "Recieved The Order!",
-        text: `Confirm payment of $${totalPrice.toLocaleString()} to the seller`,
-        icon: "warning",
-        buttons: ["Cancel", "Confirm"],
-        dangerMode: true,
-      }).then(async (confirmDelete) => {
-        if (confirmDelete) {
-          const response = await completeOrder(
-            parseInt(userId),
-            parseInt(orderId ?? ""),
-            token
-          );
-
-          if (response) {
-            swal("Success!", "Thanks for shopping at M&B", "success").then(
-              () => {
-                setCurrentOrderStatus("Completed");
-              }
-            );
-          } else {
-            throw new Error("Failed to cancel order");
-          }
-        }
-      });
-    } catch (error) {
-      console.error("Error canceling order:", error);
-    }
-  }, [currentUserId, orderDetails, orderId, token]);
-
-  //----------------------------------------- Cancel Order handle ---------------------------------------------------------------
-
-  const handleCancelOrder = useCallback(async () => {
-    try {
-      const userId = currentUserId;
-      swal({
-        title: "This can not be undo!",
-        text: "You are about to cancel the order!",
-        icon: "warning",
-        buttons: ["Cancel", "Confirm"],
-        dangerMode: true,
-      }).then(async (confirmDelete) => {
-        if (confirmDelete) {
-          const response = await cancelOrder(
-            parseInt(userId),
-            parseInt(orderId ?? ""),
-            token
-          );
-
-          if (response.ok) {
-            swal("Success!", "Order was canceled!", "success").then(() => {
-              setCurrentOrderStatus("Canceled");
-            });
-          } else {
-            throw new Error("Failed to cancel order");
-          }
-        }
-      });
-    } catch (error) {
-      console.error("Error canceling order:", error);
-    }
-  }, [currentUserId, orderId, token]);
-
-  //---------------------------------------------- Rate handle --------------------------------------
-
+  const handleReceiveClick = (orderId: number) => {
+    handleOrderReceived(orderId);
+  };
+//----------------------------------------------------------------------------------------------------------------------------
   interface Product {
     productId: number;
   }
-  
+
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product>();
 
@@ -262,7 +146,7 @@ const OrderDetails = () => {
   const handleStarClick = (star: number) => {
     setSelectedStars(star);
   };
-//---------------------------------------------- Rate cancel handle --------------------------------------
+  //---------------------------------------------- Rate cancel handle --------------------------------------
 
   const handleRatingCancel = (productToRemove: Product | undefined) => {
     const orderData: OrderData = JSON.parse(
@@ -329,7 +213,7 @@ const OrderDetails = () => {
   ]);
 
   //------------------------------------------------- localStorage orderData ------------------------------------------
-  
+
   interface OrderData {
     [orderId: string]: Product[];
   }
@@ -403,8 +287,7 @@ const OrderDetails = () => {
                       <div className="money">
                         ${orderDetail.total.toLocaleString()}
                       </div>
-                      {(orderStatus === "Completed" ||
-                        currentOrderStatus === "Completed") && (
+                      {orderStatus === "Completed" && (
                         <div className="">
                           {product && (
                             <div
@@ -480,20 +363,28 @@ const OrderDetails = () => {
                 );
               })}
             </div>
-            {orderStatus === "Pending" && currentOrderStatus === "" && (
+            {orderStatus === "Pending" && (
               <div
                 className="add-product"
                 style={{ display: "flex", flexDirection: "row-reverse" }}
               >
-                <button onClick={handleCancelOrder}>Cancel Order</button>
+                <button
+                  onClick={() => handleCancelClick(parseInt(orderId ?? ""))}
+                >
+                  Cancel Order
+                </button>
               </div>
             )}
-            {orderStatus === "Submitted" && currentOrderStatus === "" && (
+            {orderStatus === "Submitted" && (
               <div
                 className="add-product"
                 style={{ display: "flex", flexDirection: "row-reverse" }}
               >
-                <button onClick={handleCompleteOrder}>Received</button>
+                <button
+                  onClick={() => handleReceiveClick(parseInt(orderId ?? ""))}
+                >
+                  Received
+                </button>
               </div>
             )}
           </div>

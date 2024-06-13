@@ -10,7 +10,7 @@ import {
 import { getNameFromToken } from "../../../utils/jwtHelper";
 import { useMemo } from "../../../import/import-another";
 import { Link } from "../../../import/import-libary";
-import "../User.css";
+
 
 const BoxMenuUser = () => {
   const token = localStorage.getItem("token");
