@@ -1,10 +1,8 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 
 const request = axios.create({
-
-  baseURL: 'https://localhost:7030/api/'
-})
-
+  baseURL: "https://localhost:7030/api/",
+});
 
 export const get = async (path: string, options = {}) => {
   try {
@@ -63,6 +61,5 @@ export const post = async (path: string, options = {}) => {
     throw error;
   }
 };
-
 
 export default request;

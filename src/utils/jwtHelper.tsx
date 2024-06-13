@@ -44,3 +44,16 @@ export function getAddressFromToken(token: string) {
     return null;
   }
 }
+
+export function getNameFromToken(token: string) {
+  try {
+    const decodedToken = jwtDecode<JwtPayload>(token);
+    const userName =
+    decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
+
+    return userName;
+  } catch (error) {
+    console.error("Error decoding JWT token:", error);
+    return null;
+  }
+}

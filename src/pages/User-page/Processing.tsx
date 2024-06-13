@@ -4,20 +4,19 @@ import {
   useNavigate,
   swal,
 } from "../../import/import-another";
-import { StatusListOrder, BoxMenuUser } from "../../import/import-components";
+import { StatusListOrder, BoxMenuUser, Navbar, Footer } from "../../import/import-components";
 import {
   cancelOrder,
   getOrderList,
 } from "../../apiServices/UserServices/userServices";
-import { Navbar, Footer, Order } from "../../import/import-router";
 import { getUserIdFromToken } from "../../utils/jwtHelper";
+import { aOrder } from "../../interfaces";
 import { Link } from "../../import/import-libary";
-
-import "./User.css";
 import "../Admin-page//Admin.css";
+import "./User.css";
 
 const Processing = () => {
-  const [orderData, setOrderData] = useState<Order[]>([]);
+  const [orderData, setOrderData] = useState<aOrder[]>([]);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
@@ -63,7 +62,7 @@ const Processing = () => {
         const response = await getOrderList(userIdIdentifier);
 
         if (response) {
-          const updatedOrderData = response.map((order: Order) => {
+          const updatedOrderData = response.map((order: aOrder) => {
             const total = order.orderDetails.reduce(
               (acc, detail) => acc + detail.total,
               0

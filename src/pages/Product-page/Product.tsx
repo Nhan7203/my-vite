@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { StickyBox, Link } from "../../import/import-libary";
-import { Navbar, Footer } from "../../import/import-router";
+import { Navbar, Footer } from "../../import/import-components";
 import { useLocation } from "react-router-dom";
 import { aProduct } from "../../interfaces";
 import { BsCart3 } from "react-icons/bs";

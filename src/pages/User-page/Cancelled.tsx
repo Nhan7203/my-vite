@@ -1,15 +1,14 @@
-import { StatusListOrder, BoxMenuUser } from "../../import/import-components";
+import { StatusListOrder, BoxMenuUser, Navbar, Footer  } from "../../import/import-components";
 import { useState, useEffect, swal } from "../../import/import-another";
-import { Navbar, Footer, Order } from "../../import/import-router";
 import { getUserIdFromToken } from "../../utils/jwtHelper";
 import { getOrderList } from "../../apiServices/UserServices/userServices";
+import { aOrder } from "../../interfaces";
 import { Link } from "../../import/import-libary";
 import "../Admin-page//Admin.css";
 import "./User.css";
 
-
 const Cancelled = () => {
-  const [orderData, setOrderData] = useState<Order[]>([]);
+  const [orderData, setOrderData] = useState<aOrder[]>([]);
   const [isGlowing, setIsGlowing] = useState(false);
 
   useEffect(() => {
@@ -53,7 +52,7 @@ const Cancelled = () => {
         const response = await getOrderList(userIdIdentifier);
 
         if (response) {
-          const updatedOrderData = response.map((order: Order) => {
+          const updatedOrderData = response.map((order: aOrder) => {
             const total = order.orderDetails.reduce(
               (acc, detail) => acc + detail.total,
               0

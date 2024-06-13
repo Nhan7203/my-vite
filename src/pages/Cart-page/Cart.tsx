@@ -1,6 +1,6 @@
 import { getUserIdFromToken, getAddressFromToken } from "../../utils/jwtHelper";
 import { StickyBox, Link, FaRegTrashCan } from "../../import/import-libary";
-import { Navbar, Footer } from "../../import/import-router";
+import { Navbar, Footer } from "../../import/import-components";
 import { useState } from "react";
 import { useCart } from "./CartContext";
 import Swal from "sweetalert2";

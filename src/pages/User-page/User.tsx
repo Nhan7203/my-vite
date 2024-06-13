@@ -9,14 +9,14 @@ import {
   useNavigate,
   swal,
 } from "../../import/import-another";
-import { StatusListOrder, BoxMenuUser } from "../../import/import-components";
-import { Navbar, Footer, Order } from "../../import/import-router";
+import { StatusListOrder, BoxMenuUser, Navbar, Footer } from "../../import/import-components";
 import { getUserIdFromToken } from "../../utils/jwtHelper";
 import { Link } from "../../import/import-libary";
+import { aOrder } from "../../interfaces";
 import "../Admin-page//Admin.css";
 
 const User = () => {
-  const [orderData, setOrderData] = useState<Order[]>([]);
+  const [orderData, setOrderData] = useState<aOrder[]>([]);
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [isGlowing, setIsGlowing] = useState(false);
@@ -61,7 +61,7 @@ const User = () => {
         const response = await getOrderList(userIdIdentifier);
 
         if (response) {
-          const updatedOrderData = response.map((order: Order) => {
+          const updatedOrderData = response.map((order: aOrder) => {
             const total = order.orderDetails.reduce(
               (acc, detail) => acc + detail.total,
               0

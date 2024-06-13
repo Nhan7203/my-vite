@@ -1,45 +1,44 @@
 .container-profile {
-    width: 1180px;
-    margin: 30px auto 0 auto;
-    display: grid;
-    grid-template-columns: repeat(12, 80px);
-    column-gap: 20px;
-    
+  width: 1180px;
+  margin: 30px auto 0 auto;
+  display: grid;
+  grid-template-columns: repeat(12, 80px);
+  column-gap: 20px;
 }
 
 .container-profile .user-profile-nav {
-    grid-column: 1 / 4;
+  grid-column: 1 / 4;
 }
 
 .container-profile .user-profile-nav .user-avatar {
-    display: flex;
-    align-items: center;
-    column-gap: 10px;
-    margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+  margin-bottom: 30px;
 }
 
-.container-profile .user-profile-nav .user-avatar>._img {
-    width: 50px;
-    height: 50px;
-    background-color: #4F4A4A;
-    border-radius: 50%;
+.container-profile .user-profile-nav .user-avatar > ._img {
+  width: 50px;
+  height: 50px;
+  background-color: #4f4a4a;
+  border-radius: 50%;
 }
 
-.container-profile .user-profile-nav .user-avatar>span {
-    font-family: 'Roboto Slab';
-    font-weight: 300;
-    font-size: 14px;
-    line-height: 18px;
-    color: #000000;
+.container-profile .user-profile-nav .user-avatar > span {
+  font-family: "Roboto Slab";
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 18px;
+  color: #000000;
 }
 
-.container-profile .user-profile-nav>div:nth-child(2) {
-    height: 1px;
-    background-color: rgb(0, 0, 0, 0.3);
+.container-profile .user-profile-nav > div:nth-child(2) {
+  height: 1px;
+  background-color: rgb(0, 0, 0, 0.3);
 }
 
-.container-profile .user-profile-nav>ul:nth-child(3) {
-    margin-top: 40px;
+.container-profile .user-profile-nav > ul:nth-child(3) {
+  margin-top: 40px;
 }
 
 /* .container-profile .user-profile-nav>ul:nth-child(3)>li.active {
@@ -52,158 +51,167 @@
     border-color: #fff;
 } */
 
-.container-profile .user-profile-nav>ul:nth-child(3)>li.active>img.non-red {
-    display: none;
+.container-profile
+  .user-profile-nav
+  > ul:nth-child(3)
+  > li.active
+  > img.non-red {
+  display: none;
 }
 
-.container-profile .user-profile-nav>ul:nth-child(3)>li>img.red {
-    display: block;
+.container-profile .user-profile-nav > ul:nth-child(3) > li > img.red {
+  display: block;
 }
 
 a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
-.container-profile .user-profile-nav>ul:nth-child(3)>li {
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    column-gap: 15px;
-    font-family: 'Roboto Slab';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 18px;
-    color: #4F4A4A;
-    cursor: pointer;
+.container-profile .user-profile-nav > ul:nth-child(3) > li {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  column-gap: 15px;
+  font-family: "Roboto Slab";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  color: #4f4a4a;
+  cursor: pointer;
 }
 
-.container-profile .user-profile-nav>ul:nth-child(3)>li>img {
-    width: 24px;
-    height: 24px;
+.container-profile .user-profile-nav > ul:nth-child(3) > li > img {
+  width: 24px;
+  height: 24px;
 }
 
 .container-profile .content {
-    display: none;
-    grid-column: 4 / 13;
+  display: none;
+  grid-column: 4 / 13;
 }
 
 .container-profile .content .head-content {
-    height: 50px;
-    background-color: #FFFFFF;
-    margin-bottom: 20px;
+  height: 50px;
+  background-color: #ffffff;
+  margin-bottom: 20px;
 }
 
-.container-profile .content .head-content>ul {
-    display: grid;
-    grid-template-columns: repeat(9, 80px);
-    column-gap: 20px;
-    height: 100%;
+.container-profile .content .head-content > ul {
+  display: grid;
+  grid-template-columns: repeat(9, 80px);
+  column-gap: 20px;
+  height: 100%;
 }
 
-.container-profile .content .head-content>ul>li {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Roboto Slab';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 15px;
-    line-height: 18px;
-    color: #4F4A4A;
-    grid-column: span 2;
+.container-profile .content .head-content > ul > li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Roboto Slab";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 18px;
+  color: #4f4a4a;
+  grid-column: span 2;
 }
 
 .container-profile .account.active {
-    display: block;
-    margin-top: 15px;
+  display: block;
+  margin-top: 15px;
 }
 
 .container-profile .account {
-    grid-column: 3  /13;
-    background-color: #FFFFFF;
-    border-radius: 10px;
+  grid-column: 3 /13;
+  background-color: #ffffff;
+  border-radius: 10px;
 }
 
-.container-profile .account>.main-profile {
-    display: grid;
-    grid-template-columns: repeat(9, 80px);
-    column-gap: 20px;
+.container-profile .account > .main-profile {
+  display: grid;
+  grid-template-columns: repeat(9, 80px);
+  column-gap: 20px;
 }
 
-.container-profile .account>.main-profile>h1 {
-    grid-column: span 9;
-    margin: 30px 0 20px 20px;
-    font-family: 'Roboto Slab';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 24px;
-    line-height: 18px;
-    letter-spacing: 0.75px;
+.container-profile .account > .main-profile > h1 {
+  grid-column: span 9;
+  margin: 30px 0 20px 20px;
+  font-family: "Roboto Slab";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 18px;
+  letter-spacing: 0.75px;
 }
 
-.container-profile .account>.main-profile>p {
-    grid-column: span 9;
-    margin: 0 0 20px 20px;
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 18px;
-    letter-spacing: 0.75px;
+.container-profile .account > .main-profile > p {
+  grid-column: span 9;
+  margin: 0 0 20px 20px;
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0.75px;
 }
 
-.container-profile .account>.main-profile>div {
-    height: 1px;
-    background-color: rgb(0, 0, 0, 0.2);
-    grid-column: span 9;
+.container-profile .account > .main-profile > div {
+  height: 1px;
+  background-color: rgb(0, 0, 0, 0.2);
+  grid-column: span 9;
 }
 
-.container-profile .account>.main-profile>form {
-    grid-column-start: 1;
-    grid-column-end: 6;
+.container-profile .account > .main-profile > form {
+  grid-column-start: 1;
+  grid-column-end: 6;
 }
 
-.container-profile .account>.main-profile>form>table {
-    width: 100%;
-    margin-top: 30px;
-    font-family: 'Roboto Slab';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 18px;
-    color: #4F4A4A;
-    margin-left: 30px;
+.container-profile .account > .main-profile > form > table {
+  width: 100%;
+  margin-top: 30px;
+  font-family: "Roboto Slab";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  color: #4f4a4a;
+  margin-left: 30px;
 }
 
-.container-profile .account>.main-profile>form>table tr {
-    height: 50px;
+.container-profile .account > .main-profile > form > table tr {
+  height: 50px;
 }
 
-.container-profile .account>.main-profile>form>table td>input {
-    width: 100%;
-    height: 40px;
-    padding: 0 10px;
-    border-radius: 5px;
-    outline: none;
-    border: 1px solid rgb(0, 0, 0, 0.2);
-    font-family: 'Roboto Slab';
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 18px;
-    color: #4F4A4A;
+.container-profile .account > .main-profile > form > table td > input {
+  width: 100%;
+  height: 40px;
+  padding: 0 10px;
+  border-radius: 5px;
+  outline: none;
+  border: 1px solid rgb(0, 0, 0, 0.2);
+  font-family: "Roboto Slab";
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  color: #4f4a4a;
 }
 
-.container-profile .account>.main-profile>form>table tr:last-child {
-    height: 90px;
+.container-profile .account > .main-profile > form > table tr:last-child {
+  height: 90px;
 }
 
-.container-profile .account>.main-profile>form>table tr:last-child td>input {
-    width: 130px;
-    background-color: #EB569C;
-    border: none;
-    color: #FFFFFF;
-    cursor: pointer;
+.container-profile
+  .account
+  > .main-profile
+  > form
+  > table
+  tr:last-child
+  td
+  > input {
+  width: 130px;
+  background-color: #eb569c;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
 }
-
-

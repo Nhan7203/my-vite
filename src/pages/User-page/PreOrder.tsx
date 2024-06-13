@@ -1,14 +1,12 @@
-import { StatusListOrder, BoxMenuUser } from "../../import/import-components";
-import { useState, useEffect } from "react";
+import { StatusListOrder, BoxMenuUser, Navbar, Footer } from "../../import/import-components";
+import { useState, useEffect, swal } from "../../import/import-another";
 import { getUserIdFromToken } from "../../utils/jwtHelper";
-import { Navbar, Footer } from "../../import/import-router";
 import { getOrderList } from "../../apiServices/UserServices/userServices";
-import { Order } from "../../interfaces";
+import { aOrder } from "../../interfaces";
 import { Link } from "react-router-dom";
-import swal from "sweetalert";
 
 const PreOrder = () => {
-  const [orderData, setOrderData] = useState<Order[]>([]);
+  const [orderData, setOrderData] = useState<aOrder[]>([]);
   const [isGlowing, setIsGlowing] = useState(false);
 
   useEffect(() => {
@@ -52,7 +50,7 @@ const PreOrder = () => {
         const response = await getOrderList(userIdIdentifier);
 
         if (response) {
-          const updatedOrderData = response.map((order: Order) => {
+          const updatedOrderData = response.map((order: aOrder) => {
             const total = order.orderDetails.reduce(
               (acc, detail) => acc + detail.total,
               0

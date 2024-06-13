@@ -1,49 +1,30 @@
-import { avatar } from "../../../import/import-assets";
-import box from "../../../assets/box.png";
-import adress from "../../../assets/adress.png";
-import voucher from "../../../assets/voucher.png";
+import {
+  avatar,
+  box,
+  adress,
+  voucher,
+  comment,
+  iblog,
+  watched,
+} from "../../../import/import-assets";
+import { getNameFromToken } from "../../../utils/jwtHelper";
+import { useMemo } from "../../../import/import-another";
 import { Link } from "../../../import/import-libary";
-import comment from "../../../assets/comment.png";
-import blog from "../../../assets/blogging.png";
-import watched from "../../../assets/watched.png";
 import "../User.css";
-import { jwtDecode } from "jwt-decode";
-import swal from "sweetalert";
+
 const BoxMenuUser = () => {
-
-
   const token = localStorage.getItem("token");
 
-  if (!token) {
-    swal({
-      title: "Oops!",
-      text: "You haven't logged in yet! Redirecting to Login Page...",
-      icon: "warning",
-      buttons: {
-        ok: {
-          text: "OK",
-          value: true,
-          className: "swal-ok-button",
-        },
-      },
-    }).then((value) => {
-      if (value) {
-        window.location.href = "/login";
-      }
-    });
+  const userName = useMemo(() => {
+    if (!token) {
+      console.error("Token not found");
+      return null;
+    }
+    const usernameIdentifier = getNameFromToken(token);
 
-    return;
-  }
+    return usernameIdentifier;
+  }, [token]);
 
-  const decodedToken: any = jwtDecode(token);
-
-
-  const userName =
-    decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
-  
-  const userToken = {
-    Name: userName,
-  };
   return (
     <div className="box-menu-user">
       <div className="box-profile-avatar">
@@ -51,7 +32,7 @@ const BoxMenuUser = () => {
           <img src={avatar} alt="" />
         </div>
         <div className="onlick-profile">
-          <h5>{userToken.Name}</h5>
+          <h5>{userName}</h5>
           <p>
             <Link to="/profile">Profile user</Link>
           </p>
@@ -60,7 +41,7 @@ const BoxMenuUser = () => {
       <div className="box-oder-adress-voucher">
         <Link to="/user" className="purchased-order">
           <img src={box} alt="" />
-         <p>Purchase order</p>
+          <p>Purchase order</p>
         </Link>
         <div className="my-adress">
           <img src={adress} alt="" />
@@ -78,7 +59,7 @@ const BoxMenuUser = () => {
           <p>My review</p>
         </div>
         <div className="my-adress">
-          <img src={blog} alt="" />
+          <img src={iblog} alt="" />
           <p>blog viewed</p>
         </div>
         <div className="my-voucher">
