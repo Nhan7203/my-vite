@@ -9,10 +9,12 @@ const HeaderMain = () => {
               Dashboard
             </h2>
 
-            <div className="search-wrapper">
-              <span className="las la-search"></span>
-              <input type="search" placeholder="Search here" />
-            </div>
+
+              {/* <div className="search-wrapper">
+                <span className="las la-search"></span>
+                <input type="search" placeholder="Search here" />
+              </div> */}
+
 
             <div className="user-wrapper">
               <img

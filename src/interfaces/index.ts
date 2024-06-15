@@ -33,6 +33,17 @@ export interface AllUsers {
   name: string;
 }
 
+export interface User {
+  userId: number;
+  roleId: number;
+  email: string;
+  phoneNumber: number;
+  address: string;
+  isActive: boolean;
+  password: string;
+  name: string;
+}
+
 export interface ImageProduct {
   imageId: number;
   productId: number;
@@ -97,6 +108,15 @@ export interface aOrder {
   total: number;
 }
 
+export interface Order {
+  orderId: number;
+  userId: number;
+  orderDate: string;
+  address: string;
+  paymentMethod: string;
+  shippingMethodId: number;
+}
+
 export interface aProductReview {
   userId: number,
   orderDetailId: number,
@@ -128,3 +148,19 @@ export interface ReviewData {
   comment: string;
   isRated: boolean;
 }
+
+export const ageOptions = [
+  { id: 1, name: "0 - 6 Month" },
+  { id: 2, name: "6 - 12 Month" },
+  { id: 3, name: "0 - 1 Year" },
+  { id: 4, name: "1 - 2 year" },
+  { id: 5, name: "+2 year" },
+];
+
+export const categoryOptions = [
+  { id: 1, name: "Powdered milk" },
+  { id: 2, name: "Nut milk" },
+  { id: 3, name: "Nutritional drinks" },
+  { id: 4, name: "Fresh milk, Yogurt" },
+
+];

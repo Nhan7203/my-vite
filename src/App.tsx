@@ -76,9 +76,13 @@ const router = createBrowserRouter(
       <Route path="/profile" element={<Profile />} />
 
       <Route path="/order" element={<Order />} />
-      <Route path="/order-information" element={<OrderInfo />}>
-      <Route path=":orderId" element={<OrderInfo />} />
+
+      <Route path="/orderinformation" element={<OrderInfo />}>
+      
+      <Route path=":orderId/:userId" element={<OrderInfo />} />
       </Route>
+      
+
       <Route path="/orderdetails" element={<OrderDetails />}>
         <Route path=":orderId" element={<OrderDetails />} />
       </Route>

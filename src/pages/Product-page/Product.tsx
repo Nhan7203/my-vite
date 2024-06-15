@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
 import { StickyBox, Link } from "../../import/import-libary";
 import { Navbar, Footer } from "../../import/import-components";
@@ -39,7 +40,13 @@ const Product = () => {
   const [isBrandChecked, setIsBrandChecked] = useState(false);
   const [activeOrder, setActiveOrder] = useState("");
 
-  const [ratings, setRatings] = useState({});
+  const [ratings, setRatings] = useState<{ [key: string]: RatingDetails }>({});
+
+interface RatingDetails {
+  averageRating: number;
+  totalRating: number;
+  reviewCount: number;
+}
 
   useEffect(() => {
     const fetchProductsByFilter = async () => {
@@ -174,12 +181,12 @@ const Product = () => {
       }
       const allRatings = await response.json();
 
-      const ratingsMap = {};
+      const ratingsMap: { [key: string]: RatingDetails } = {}
 
       for (const product of products) {
         const productId = product.productId;
-        const productRatings = allRatings.filter(
-          (rating) => String(rating.productId) === String(productId)
+        const productRatings =  allRatings.filter(
+          (rating: any) => String(rating.productId) === String(productId)
         );
 
         if (productRatings.length > 0) {

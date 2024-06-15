@@ -10,7 +10,9 @@ const PreOrderInAdmin = () => {
   const navigate = useNavigate();
 
   const handleViewOrderDetails = (order: aOrder) => {
-    navigate(`/order-information/${order.orderId}`, {
+
+    navigate(`/orderinformation/${order.orderId}/${order.userId}`, {
+
       state: { orderStatus: order.orderStatus },
     });
   };
