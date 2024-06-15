@@ -40,7 +40,13 @@ const Product = () => {
   const [isBrandChecked, setIsBrandChecked] = useState(false);
   const [activeOrder, setActiveOrder] = useState("");
 
-  const [ratings, setRatings] = useState({});
+  const [ratings, setRatings] = useState<{ [key: string]: RatingDetails }>({});
+
+interface RatingDetails {
+  averageRating: number;
+  totalRating: number;
+  reviewCount: number;
+}
 
   useEffect(() => {
     const fetchProductsByFilter = async () => {
@@ -175,11 +181,11 @@ const Product = () => {
       }
       const allRatings = await response.json();
 
-      const ratingsMap = {};
+      const ratingsMap: { [key: string]: RatingDetails } = {}
 
       for (const product of products) {
         const productId = product.productId;
-        const productRatings = allRatings.filter(
+        const productRatings =  allRatings.filter(
           (rating: any) => String(rating.productId) === String(productId)
         );
 

@@ -1,17 +1,22 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import emailjs from 'emailjs-com';
 import './Forgetpassword.css';
 import { useState } from 'react';
 import swal from 'sweetalert';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Forgetpassword = () => {
 
     const [email, setEmail] = useState('');
     const navigate = useNavigate();
 
-    const handleBtContinue = (e) => {
+    const handleBtContinue = (e: any) => {
         e.preventDefault();
-
+        if (email == "") {
+            toast.error("Missing Email");
+            return
+        }
         // Call your API to check if the email exists in the database
         fetch(`https://localhost:7030/api/Account/resetPassword?email=${encodeURIComponent(email)}`, {
             method: 'POST',
@@ -111,6 +116,7 @@ const Forgetpassword = () => {
                                     required
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
+                                   
                                 />
                                 {/*<p className="text-msg">Email is invalid</p>*/}
                             </div>
@@ -123,6 +129,7 @@ const Forgetpassword = () => {
                                     name="btAction"
                                     value="Continue"
                                     onClick={(e) => handleBtContinue(e)}
+                                    
                                 />
 
                                 <input

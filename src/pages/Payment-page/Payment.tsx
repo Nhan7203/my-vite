@@ -72,7 +72,7 @@ const Payment = () => {
       }
       localStorage.removeItem("cart");
       localStorage.removeItem("currentQuantities");
-      const data = await response.json();  
+      const data = await response.json();
       console.log("Cart data stored:", data);
     } catch (error) {
       console.error("Error storing cart data:", error);
@@ -190,21 +190,19 @@ const Payment = () => {
           <div className="box-right">
             <div className="adress">
               <p>Shipping Address</p>
-              <div className="box-adress">
-                {hasAddress ? (
-                  <Link to="/profile">
-                    <div className="box-adress">
-                      <div>{hasAddress}</div>
-                    </div>
-                  </Link>
-                ) : (
-                  <Link to="/profile" style={{ color: "white" }}>
-                    <div className="box-adress">
-                      <div>Confirm Shipping Address</div>
-                    </div>
-                  </Link>
-                )}
-              </div>
+              {hasAddress ? (
+                <Link to="/profile">
+                  <div className="box-adress">
+                    <div>{hasAddress}</div>
+                  </div>
+                </Link>
+              ) : (
+                <Link to="/profile" style={{ color: "white" }}>
+                  <div className="box-adress">
+                    <div>Confirm Shipping Address</div>
+                  </div>
+                </Link>
+              )}
             </div>
             <div className="voucher">
               <p>Voucher</p>
