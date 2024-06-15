@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface Notification {
   notificationId: number;
   userId: number;
@@ -22,6 +23,17 @@ export interface aProduct {
 }
 
 export interface AllUsers {
+  userId: number;
+  roleId: number;
+  email: string;
+  phoneNumber: number;
+  address: string;
+  isActive: boolean;
+  password: string;
+  name: string;
+}
+
+export interface User {
   userId: number;
   roleId: number;
   email: string;
@@ -79,7 +91,7 @@ export interface CartContextType {
   removeItems: (productId: number) => void;
 }
 
-export interface Order {
+export interface aOrder {
   orderId: number;
   userId: number;
   orderDate: string;
@@ -95,3 +107,60 @@ export interface Order {
   }[];
   total: number;
 }
+
+export interface Order {
+  orderId: number;
+  userId: number;
+  orderDate: string;
+  address: string;
+  paymentMethod: string;
+  shippingMethodId: number;
+}
+
+export interface aProductReview {
+  userId: number,
+  orderDetailId: number,
+  productId: number,
+  date: Date,
+  rating: number,
+  comment: string,
+}
+
+export interface RatingInfo {
+    averageRating: number,
+    totalRating: number,
+    reviewCount: number,
+}
+
+export interface OrderDetail {
+  productId: number;
+  quantity: number;
+  price: number;
+  total: number;
+}
+
+export interface ReviewData {
+  userId: any;
+  orderDetailId: any;
+  productId: number | undefined;
+  date: string;
+  rating: number;
+  comment: string;
+  isRated: boolean;
+}
+
+export const ageOptions = [
+  { id: 1, name: "0 - 6 Month" },
+  { id: 2, name: "6 - 12 Month" },
+  { id: 3, name: "0 - 1 Year" },
+  { id: 4, name: "1 - 2 year" },
+  { id: 5, name: "+2 year" },
+];
+
+export const categoryOptions = [
+  { id: 1, name: "Powdered milk" },
+  { id: 2, name: "Nut milk" },
+  { id: 3, name: "Nutritional drinks" },
+  { id: 4, name: "Fresh milk, Yogurt" },
+
+];

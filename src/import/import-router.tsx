@@ -1,4 +1,4 @@
-import Navbar from "../components/Navbar/Navbar";
+
 import Login from "../pages/Login-page/Login";
 import Adress from "../pages/Adress-page/Adress";
 import Cart from "../pages/Cart-page/Cart";
@@ -7,43 +7,45 @@ import ProductDetails from "../pages/ProductDetails-page/productDetails"
 import Home from "../pages/Home-page/Home";
 import Blog from "../pages/Blog-page/Blog";
 import Voucher from "../pages/Voucher-page/Voucher";
-import Main from "../components/main/main-home/Main";
 import Register from "../pages/Register-page/Register";
-import Footer from "../components/Footer/footer";
 import Admin from "../pages/Admin-page/Admin";
 import Payment from "../pages/Payment-page/Payment";
-import User from "../pages/User-page/User";
+import User from "../pages/User-page/OrderStatus-page/User";
 import Customer from "../pages/Admin-page/Customer";
 import Account from "../pages/Admin-page/Account";
-import Order from "../pages/Admin-page/Order-admin";
-import OrderDetails from "../pages/User-page/OrderDetails";
+import Order from "../pages/Admin-page/OrderStatus-page/Order-staff";
+import OrderDetails from "../pages/User-page/OrderDetails-page/OrderDetails";
 import Forgetpassword from "../pages/Forgetpassword-page/Forgetpassword";
 import SecurityCode from "../pages/SecurityCode-page/SecurityCode";
 import ChangePassword from "../pages/ChangePassword-page/ChangePassword";
 import Profile from "../pages/User-page/Profile-page/Profile";
 import ProductManage from "../pages/Admin-page/ProductManage";
 import BlogDetails from "../pages/Blog-page/BlogDetails";
-import Processing from "../pages/User-page/Processing";
-import Processed from "../pages/User-page/Processed";
-import Complete from "../pages/User-page/Complete";
-import Cancelled from "../pages/User-page/Cancelled";
-import PreOrder from "../pages/User-page/PreOrder";
+import Processing from "../pages/User-page/OrderStatus-page/Processing";
+import ProcessingInAdmin from "../pages/Admin-page/OrderStatus-page/Processing";
+import ProcessedInAdmin from "../pages/Admin-page/OrderStatus-page/Processed";
+import CompleteInAdmin from "../pages/Admin-page/OrderStatus-page/Complete";
+import CancelledInAdmin from "../pages/Admin-page/OrderStatus-page/Cancelled";
+import PreOrderInAdmin from "../pages/Admin-page/OrderStatus-page/PreOrder";
+import Processed from "../pages/User-page/OrderStatus-page/Processed";
+import Complete from "../pages/User-page/OrderStatus-page/Complete";
+import Cancelled from "../pages/User-page/OrderStatus-page/Cancelled";
+import PreOrder from "../pages/User-page/OrderStatus-page/PreOrder";
 import AddProduct from "../pages/Admin-page/AddProduct";
 import UpdateProduct from "../pages/Admin-page/UpdateProduct";
+import OrderInfo from "../pages/Admin-page/Order-info";
 import SecurityCodeRegister from "../pages/Register-page/SecurityCodeRegister";
 export {
-  Navbar,
   Login,
+  OrderInfo,
   Adress,
   Product,
   ProductDetails,
   Cart,
   Blog,
   Home,
-  Main,
   Voucher,
   Register,
-  Footer,
   Admin,
   Payment,
   User,
@@ -64,5 +66,10 @@ export {
   UpdateProduct,
   OrderDetails,
   SecurityCodeRegister,
-  BlogDetails
+  BlogDetails,
+  ProcessingInAdmin,
+  ProcessedInAdmin,
+  CompleteInAdmin,
+  CancelledInAdmin,
+  PreOrderInAdmin
 };

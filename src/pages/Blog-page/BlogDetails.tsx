@@ -1,7 +1,7 @@
 import { swal, swal2, useCart, useAllProduct, useEffect, useState } from "../../import/import-another";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { aProduct, aBlog } from "../../interfaces";
-import { Navbar, Footer } from "../../import/import-router";
+import { Navbar, Footer } from "../../import/import-components";
 import { getBlogId } from "../../apiServices/BlogServices/blogServices";
 import { BsCart3 } from "../../import/import-libary";
 import view from "../../assets/view.png";

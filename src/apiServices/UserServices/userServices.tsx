@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import axios from "axios";
+import { ReviewData } from "../../interfaces";
 import * as request from "../../utils/request";
 
 export const getOrderDetails = async (queryParams: URLSearchParams) => {
@@ -20,7 +23,7 @@ export const getOrderDetails = async (queryParams: URLSearchParams) => {
     }
   };
 
-  export const completeOrder = async (userId: number, orderId: number, token: string) => {
+  export const completeOrder = async (userId: number, orderId: number, token: any) => {
     try {
       const response = await request.put(
         `User/completeOrder?userId=${userId}&orderId=${orderId}`,
@@ -37,7 +40,8 @@ export const getOrderDetails = async (queryParams: URLSearchParams) => {
     }
   };
 
-  export const cancelOrder = async (userId: number, orderId: number, token: string) => {
+ 
+  export const cancelOrder = async (userId: number, orderId: number, token: any) => {
     try {
       const response = await request.deleteData(
         `User/cancelOrder?userId=${userId}&orderId=${orderId}`,
@@ -52,3 +56,18 @@ export const getOrderDetails = async (queryParams: URLSearchParams) => {
       console.log(error);
     }
   };
+
+  export const review = async (token: any, reviewData: ReviewData) => {
+    try {
+      const response = await axios.post("https://localhost:7030/api/Review", reviewData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+

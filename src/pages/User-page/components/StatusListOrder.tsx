@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import "../User.css"
+
+
 const StatusListOrder = () => {
   return (
     <div className="status-list-order">

@@ -1,4 +1,4 @@
-import { Footer, Main, Navbar } from "../../import/import-router";
+import { Footer, Main, Navbar } from "../../import/import-components";
 
 // const Home = () => {
 //   return (

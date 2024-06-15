@@ -1,116 +1,64 @@
-import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { Navbar, Footer } from "../../import/import-router";
-import BoxMenuUser from "./components/BoxMenuUser";
-import { useEffect, useState } from "react";
-import { getProductId } from "../../apiServices/ProductServices/productServices";
-import { getOrderDetails } from "../../apiServices/UserServices/userServices";
-import { jwtDecode } from "jwt-decode";
-import { useCart } from "../Cart-page/CartContext";
-import swal from "sweetalert";
-import "./OrderDetails.css";
-import { aProduct } from "../../interfaces";
-import Swal from "sweetalert2";
-import { getUserIdFromToken } from "../../utils/jwtHelper";
+import {
+  useEffect,
+  useState,
+  useCart,
+  swal,
+  swal2,
+  useCallback,
+} from "../../../import/import-another";
+import { review } from "../../../apiServices/UserServices/userServices";
+import { useLocation } from "react-router-dom";
+import { Navbar, Footer, BoxMenuUser } from "../../../import/import-components";
+import { OrderDetail, aProduct } from "../../../interfaces";
 
-export interface OrderDetail {
-  productId: number;
-  quantity: number;
-  price: number;
-  total: number;
-}
-interface Product {
-  productId: number;
-}
+// import { getUserReview } from "../../../apiServices/ReviewServices/reviewServices";
+
+import "./OrderDetails.css";
+import {
+  useHandleCancelOrder,
+  useHandleOrderReceived,
+} from "../components/HandleOrder";
+
+import { useOrderDetails } from "./useOrderDetails";
 
 const OrderDetails = () => {
-  const { orderId } = useParams<{ orderId?: string }>();
-  const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([]);
-  const [cancelOrderResponse, setCancelOrderResponse] = useState();
-  const [products, setProducts] = useState<aProduct[]>([]);
-  const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  const { orderDetails, products, currentUserId, orderData, orderId, token } =
+    useOrderDetails();
   const location = useLocation();
   const { orderStatus } = location.state;
-  const [currentOrderStatus, setCurrentOrderStatus] = useState<string>("");
-
-  const [showRatingBox, setShowRatingBox] = useState<boolean>(false);
-  const [selectedStars, setSelectedStars] = useState<number>(0);
   const [comment, setComment] = useState<string>("");
-  //const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedStars, setSelectedStars] = useState<number>(0);
   const [selectedOrderDetail, setSelectedOrderDetail] = useState<OrderDetail>();
-  const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
-  const [selectedProduct, setSelectedProduct] = useState<Product>();
-  const [isRated, setIsRated] = useState<boolean>(false);
+  const [showRatingBox, setShowRatingBox] = useState<boolean>(false);
 
-  useEffect(() => {
-    const fetchUserReviews = async () => {
-      if (token) {
-        const decodedToken: any = jwtDecode(token);
-        const userIdIdentifier =
-          decodedToken[
-            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-          ];
-        const userId = userIdIdentifier;
+  // const fetchUserReviews = useCallback(
+  //   async (userId: string) => {
+  //     try {
+  //       const response = await getUserReview(userId, orderId ?? "", token);
+  //       if (response) {
+  //         console.log(response);
+  //       } else {
+  //         throw new Error("Failed to fetch GetUserReview");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching GetUserReview:", error);
+  //     }
+  //   },
+  //   [orderId, token]
+  // );
 
-        const response = await fetch(
-          `https://localhost:7030/api/Review/GetUserReview?userId=${parseInt(
-            userId
-          )}&orderId=${orderId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+  // useEffect(() => {
+  //   if (currentUserId) {
+  //     fetchUserReviews(currentUserId);
+  //   }
+  // }, [currentUserId, fetchUserReviews]);
 
-        const data = await response.json();
-        console.log(data);
-        console.log(orderId);
-
-        if (data.length > 0 && data[0].isRated) {
-          setIsRated(true);
-        }
-      }
-    };
-
-    fetchUserReviews();
-  }, [orderId, token]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!orderId) {
-        navigate("/user");
-        return;
-      }
-      const queryParams = new URLSearchParams();
-      queryParams.append("orderId", orderId.toString());
-      const result = await getOrderDetails(queryParams);
-      setOrderDetails(result);
-    };
-    fetchData();
-  }, [orderId, navigate]);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const queryParams = new URLSearchParams();
-      const productIds = orderDetails.map(
-        (orderDetail) => orderDetail.productId
-      );
-      if (productIds != null) {
-        queryParams.append("", productIds.toString());
-      }
-      const result = await getProductId(queryParams);
-      setProducts(result);
-    };
-    fetchProducts();
-  }, [orderDetails]);
-
-  const { addToCart2 } = useCart();
-  //-----------------------------------------------------------------------------------------------------------
+  //---------------------------------------------- quantitty handle -------------------------------------------------------------
 
   interface CurrentQuantities {
     [key: string]: number;
   }
+  const { addToCart2 } = useCart();
   const [currentQuantities, setCurrentQuantities] = useState<CurrentQuantities>(
     {}
   );
@@ -130,13 +78,17 @@ const OrderDetails = () => {
         (newCurrentQuantities[product.productId] || 0) + quantity;
 
       if (newQuantity > product.stock) {
-        Swal.fire({
-          title: `${newCurrentQuantities[product.productId]}/ ${product.stock}`,
-          text: `You cannot order more than ${product.stock} items of this product.`,
-          icon: "info",
-        }).then(() => {
-          return;
-        });
+        swal2
+          .fire({
+            title: `${newCurrentQuantities[product.productId]}/ ${
+              product.stock
+            }`,
+            text: `You cannot order more than ${product.stock} items of this product.`,
+            icon: "info",
+          })
+          .then(() => {
+            return;
+          });
       } else {
         newCurrentQuantities[product.productId] = newQuantity;
         setCurrentQuantities(newCurrentQuantities);
@@ -164,104 +116,26 @@ const OrderDetails = () => {
       }
     }
   };
-  //---------------------------------------------------------------------------------------------------------------
-  const handleCancelOrder = async () => {
-    try {
-      if (!token) {
-        console.error("Token not found");
-        return;
-      }
+  
+  //-----------------------------------------  Order handle ---------------------------------------------------------------
 
-      const decodedToken: any = jwtDecode(token);
+  const { handleCancelOrder } = useHandleCancelOrder();
+  const { handleOrderReceived } = useHandleOrderReceived(orderData);
 
-      const userIdIdentifier =
-        decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-        ];
-
-      const userId = userIdIdentifier;
-
-      swal({
-        title: "This can not be undo!",
-        text: "You are about to cancel the order!",
-        icon: "warning",
-        buttons: ["Cancel", "Confirm"],
-        dangerMode: true,
-      }).then(async (confirmDelete) => {
-        if (confirmDelete) {
-          const response = await fetch(
-            `https://localhost:7030/api/User/cancelOrder?userId=${userId}&orderId=${orderId}`,
-            {
-              method: "DELETE",
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          setCurrentOrderStatus("Canceled");
-
-          if (response.ok) {
-            swal("Success!", "Order was canceled!", "success");
-            const data = await response.json();
-            setCancelOrderResponse(data);
-          } else {
-            throw new Error("Failed to cancel order");
-          }
-        }
-      });
-    } catch (error) {
-      console.error("Error canceling order:", error);
-    }
+  const handleCancelClick = (orderId: number) => {
+    handleCancelOrder(orderId);
   };
 
-  if (!token) {
-    console.error("Token not found");
-    return;
+  const handleReceiveClick = (orderId: number) => {
+    handleOrderReceived(orderId);
+  };
+//----------------------------------------------------------------------------------------------------------------------------
+  interface Product {
+    productId: number;
   }
 
-  const handleCompleteOrder = async () => {
-    try {
-      const userIdIdentifier = getUserIdFromToken(token);
-
-      const userId = userIdIdentifier;
-
-      const totalPrice = orderDetails.reduce(
-        (sum, orderDetail) => sum + orderDetail.total,
-        0
-      );
-
-      swal({
-        title: "Recieved The Order!",
-        text: `Confirm payment of $${totalPrice.toLocaleString()} to the seller`,
-        icon: "warning",
-        buttons: ["Cancel", "Confirm"],
-        dangerMode: true,
-      }).then(async (confirmDelete) => {
-        if (confirmDelete) {
-          const response = await fetch(
-            `https://localhost:7030/api/User/completeOrder?userId=${userId}&orderId=${orderId}`,
-            {
-              method: "PUT",
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          setCurrentOrderStatus("Completed");
-
-          if (response.ok) {
-            swal("Success!", "Thanks for shopping at M&B", "success");
-            const data = await response.json();
-            setCancelOrderResponse(data);
-          } else {
-            throw new Error("Failed to cancel order");
-          }
-        }
-      });
-    } catch (error) {
-      console.error("Error canceling order:", error);
-    }
-  };
+  const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
+  const [selectedProduct, setSelectedProduct] = useState<Product>();
 
   const handleRate = (product: Product, orderDetail: OrderDetail) => {
     setSelectedProducts([...selectedProducts, product]);
@@ -273,11 +147,9 @@ const OrderDetails = () => {
   const handleStarClick = (star: number) => {
     setSelectedStars(star);
   };
+  //---------------------------------------------- Rate cancel handle --------------------------------------
 
   const handleRatingCancel = (productToRemove: Product | undefined) => {
-    // setSelectedProducts(
-    //   selectedProducts.filter((p) => p.productId !== product?.productId)
-    // );
     const orderData: OrderData = JSON.parse(
       localStorage.getItem("orderData") || "{}"
     );
@@ -297,43 +169,29 @@ const OrderDetails = () => {
     setSelectedStars(0);
     setComment("");
   };
+  //--------------------------------------- Submit handle ---------------------------------------------
 
-  const handleRatingSubmit = async () => {
+  const handleRatingSubmit = useCallback(async () => {
     if (selectedProducts.length === 0 || !selectedOrderDetail) return;
-
-    const userIdIdentifier = getUserIdFromToken(token);
-
-    const userId = userIdIdentifier;
 
     const rating = selectedStars || 1;
 
     const reviewData = {
-      userId,
-      orderDetailId: orderId,
+      userId: parseInt(currentUserId),
+      orderDetailId: parseInt(orderId ?? ""),
       productId: selectedProduct?.productId,
 
       date: new Date().toISOString(),
-      rating,
+      rating: rating,
       comment: comment || "",
       isRated: false,
     };
-
-    console.log("hiiiii", selectedProducts);
-    console.log("hahahahah", reviewData);
-
+    console.log("h0000", reviewData);
     try {
-      const response = await fetch("https://localhost:7030/api/Review", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(reviewData),
-      });
+      const response = await review(token, reviewData);
 
-      if (response.ok) {
+      if (response) {
         swal("Success!", "Your review has been submitted.", "success");
-
         setShowRatingBox(false);
         setSelectedStars(0);
         setComment("");
@@ -344,7 +202,18 @@ const OrderDetails = () => {
       console.error("Error submitting review:", error);
       swal("Error", "Failed to submit your review. Please try again.", "error");
     }
-  };
+  }, [
+    comment,
+    orderId,
+    selectedOrderDetail,
+    selectedProduct?.productId,
+    selectedProducts.length,
+    selectedStars,
+    token,
+    currentUserId,
+  ]);
+
+  //------------------------------------------------- localStorage orderData ------------------------------------------
 
   interface OrderData {
     [orderId: string]: Product[];
@@ -419,8 +288,7 @@ const OrderDetails = () => {
                       <div className="money">
                         ${orderDetail.total.toLocaleString()}
                       </div>
-                      {(orderStatus === "Completed" ||
-                        currentOrderStatus === "Completed") && (
+                      {orderStatus === "Completed" && (
                         <div className="">
                           {product && (
                             <div
@@ -496,20 +364,28 @@ const OrderDetails = () => {
                 );
               })}
             </div>
-            {orderStatus === "Pending" && currentOrderStatus === "" && (
+            {orderStatus === "Pending" && (
               <div
                 className="add-product"
                 style={{ display: "flex", flexDirection: "row-reverse" }}
               >
-                <button onClick={handleCancelOrder}>Cancel Order</button>
+                <button
+                  onClick={() => handleCancelClick(parseInt(orderId ?? ""))}
+                >
+                  Cancel Order
+                </button>
               </div>
             )}
-            {orderStatus === "Submitted" && currentOrderStatus === "" && (
+            {orderStatus === "Submitted" && (
               <div
                 className="add-product"
                 style={{ display: "flex", flexDirection: "row-reverse" }}
               >
-                <button onClick={handleCompleteOrder}>Received</button>
+                <button
+                  onClick={() => handleReceiveClick(parseInt(orderId ?? ""))}
+                >
+                  Received
+                </button>
               </div>
             )}
           </div>

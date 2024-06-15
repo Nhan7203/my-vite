@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
 import { StickyBox, Link } from "../../import/import-libary";
-import { Navbar, Footer } from "../../import/import-router";
+import { Navbar, Footer } from "../../import/import-components";
 import { useLocation } from "react-router-dom";
 import { aProduct } from "../../interfaces";
 import { BsCart3 } from "react-icons/bs";
@@ -179,7 +180,7 @@ const Product = () => {
       for (const product of products) {
         const productId = product.productId;
         const productRatings = allRatings.filter(
-          (rating) => String(rating.productId) === String(productId)
+          (rating: any) => String(rating.productId) === String(productId)
         );
 
         if (productRatings.length > 0) {

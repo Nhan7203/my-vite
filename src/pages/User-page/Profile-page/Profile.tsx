@@ -1,11 +1,9 @@
-import { Navbar, Footer } from "../../../import/import-router";
+import { Navbar, Footer, BoxMenuUser } from "../../../import/import-components";
+import { useEffect, useState, swal } from "../../../import/import-another";
 import { refreshToken } from "../../../apiServices/AccountServices/refreshTokenServices";
 import { jwtDecode } from "jwt-decode";
-import { useEffect, useState } from "react";
-import swal from "sweetalert";
-import "./Profile.css";
-import BoxMenuUser from "../components/BoxMenuUser";
 import axios from "axios";
+import "./Profile.css";
 
 export interface IUser {
   userId: number;

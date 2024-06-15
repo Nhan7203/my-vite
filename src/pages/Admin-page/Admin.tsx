@@ -2,7 +2,7 @@ import { getAllUsers, getTotalOrder, getTotalProduct, getTotalProfit, getTotalUs
 import { useState, useEffect } from "react";
 import { useAllProduct } from "../../context/ShopContext";
 import { AllUsers } from "../../interfaces";
-import { vu } from "../../import/import-assets";
+import { avatar } from "../../import/import-assets";
 import "./Admin.css";
 
 const Admin = () => {
@@ -207,7 +207,7 @@ const Admin = () => {
                       {allUsers.map((user) => (
                         <div className="customer" key={user.userId}>
                           <div className="info">
-                            <img src={vu} width="40px" height="40px" alt="" />
+                            <img src={avatar} width="40px" height="40px" alt="" />
                             <div>
                               <h4>{user.email}</h4>
                               <small>{['User', 'Staff', 'Admin'][user.roleId - 1]}</small>

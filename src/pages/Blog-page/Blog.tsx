@@ -6,7 +6,7 @@ import {
 } from "../../apiServices/BlogServices/blogServices";
 import { useState, useEffect } from "react";
 import { getUserIdFromToken } from "../../utils/jwtHelper";
-import { Navbar, Footer } from "../../import/import-router";
+import { Navbar, Footer } from "../../import/import-components";
 import { FaHeart } from "react-icons/fa";
 import { Link } from "../../import/import-libary";
 import  { aBlog } from "../../interfaces";

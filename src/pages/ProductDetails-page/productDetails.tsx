@@ -1,7 +1,7 @@
-
 import {
   useCart,
   useNavigate,
+  useCallback,
   useParams,
   useAllProduct,
   useState,
@@ -13,70 +13,77 @@ import {
   faStar as solidStar,
   faStarHalfAlt,
 } from "@fortawesome/free-solid-svg-icons";
+import {
+  getAllRating,
+  getProductRating,
+} from "../../apiServices/ReviewServices/reviewServices";
 import { faStar as regularStarOutline } from "@fortawesome/free-regular-svg-icons";
+import { ProductCard, Navbar, Footer } from "../../import/import-components";
+import { RatingInfo, aProduct, aProductReview } from "../../interfaces";
 import { FontAwesomeIcon, Link } from "../../import/import-libary";
-import { adv, adv1, adv2 } from "../../import/import-assets";
-import { Navbar, Footer } from "../../import/import-router";
-import { ProductCard } from "../../import/import-components";
-import { aProduct } from "../../interfaces";
+import { bgProduct } from "../../import/import-assets";
 import "./ProductDetail.css";
 
 const ProductDetail = () => {
-  const { addToCart2 } = useCart();
   const { allProduct } = useAllProduct();
-  const [noOfElement, setNoOfElement] = useState(8);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const navigate = useNavigate();
-
-  const bannerImages = [adv, adv1, adv2];
-
-  const nextSlide = () => {
-    setCurrentSlide((prevSlide) => (prevSlide + 1) % bannerImages.length);
-  };
-
-  const [ratingInfo, setRatingInfo] = useState({
-    averageRating: 0,
-    totalRating: 0,
-    reviewCount: 0,
-  });
-
-  const [productReviews, setProductReviews] = useState([]);
-  const [currentProductId, setCurrentProductId] = useState(null);
-
-  useEffect(() => {
-    const interval = setInterval(nextSlide, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const loadMore = () => {
-    setNoOfElement((prevNoOfElement) => prevNoOfElement + noOfElement);
-  };
-
-  const slice = allProduct.slice(0, noOfElement);
-
   const { productId } = useParams<{ productId?: string }>();
 
-  const [products, setProducts] = useState<aProduct | null>(null);
+  const [currentProductId, setCurrentProductId] = useState<number>();
+  const [product, setProduct] = useState<aProduct | null>(null);
 
   useEffect(() => {
     if (productId) {
       const selectedProduct = allProduct.find(
-        (e) => e.productId === parseInt(productId)
+        (e) => e.productId === parseInt(productId ?? "")
       );
-      setProducts(selectedProduct);
-      setCurrentProductId(productId);
+      if (selectedProduct) {
+        setProduct(selectedProduct);
+        setCurrentProductId(parseInt(productId));
+      }
     }
   }, [productId, allProduct]);
 
-  let product: any;
-  if (productId) {
-    product = allProduct.find((e) => e.productId === parseInt(productId ?? ""));
-  }
-  //-------------------------------------------------------------------------------------------------------------------------
+  //--------------------------- load product ------------------------------------------------------------------
+
+  const [noOfElement, setNoOfElement] = useState(8);
+  const loadMore = () => {
+    setNoOfElement((prevNoOfElement) => prevNoOfElement + noOfElement);
+  };
+  const slice = allProduct.slice(0, noOfElement);
+
+  //---------------------------------next sile and select img product -----------------------------------------
+
+  const [bannerImages, setBannerImages] = useState<string[]>([]);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    if (product && product.imageProducts) {
+      setBannerImages(
+        product.imageProducts.map(
+          (image: { imageUrl: string }) => image.imageUrl
+        )
+      );
+    }
+  }, [product]);
+
+  const nextSlide = useCallback(() => {
+    setCurrentSlide((prevSlide) => (prevSlide + 1) % bannerImages.length);
+  }, [bannerImages]);
+
+  useEffect(() => {
+    const interval = setInterval(nextSlide, 5000);
+    return () => clearInterval(interval);
+  }, [nextSlide]);
+
+  const handleImageClick = (index: number) => {
+    setCurrentSlide(index);
+  };
+
+  //--------------------------------Product Quantity Handling-------------------------------
   interface CurrentQuantities {
     [key: string]: number;
   }
-
+  const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
   const [currentQuantities, setCurrentQuantities] = useState<CurrentQuantities>(
     {}
@@ -96,11 +103,13 @@ const ProductDetail = () => {
     }
   };
 
-  const handleIncrementQuantity = () => {
+  const handleIncrementQuantity = (product: aProduct) => {
     if (quantity < product.stock) {
       setQuantity(quantity + 1);
     }
   };
+
+  const { addToCart2 } = useCart();
 
   const handleAddToCart = (product: aProduct) => {
     if (product.stock > 0) {
@@ -154,13 +163,17 @@ const ProductDetail = () => {
       const newQuantity =
         (newCurrentQuantities[product.productId] || 0) + quantity;
       if (newQuantity > product.stock) {
-        Swal.fire({
-          title: `${newCurrentQuantities[product.productId]}/ ${product.stock}`,
-          text: `You cannot order more than ${product.stock} items.`,
-          icon: "info",
-        }).then(() => {
-          return;
-        });
+        swal2
+          .fire({
+            title: `${newCurrentQuantities[product.productId]}/ ${
+              product.stock
+            }`,
+            text: `You cannot order more than ${product.stock} items.`,
+            icon: "info",
+          })
+          .then(() => {
+            return;
+          });
       } else {
         newCurrentQuantities[product.productId] = newQuantity;
         setCurrentQuantities(newCurrentQuantities);
@@ -187,34 +200,41 @@ const ProductDetail = () => {
     }
   };
 
-  //-------------------------------------------------------------------------------------------------------------------------
+  //------------------------------------------Product Reviews Section"---------------------------
 
-  const fetchRatings = async (productId: string) => {
+  const [productReviews, setProductReviews] = useState<aProductReview[]>([]);
+  const [ratingInfo, setRatingInfo] = useState<RatingInfo>({
+    averageRating: 0,
+    totalRating: 0,
+    reviewCount: 0,
+  });
+
+  useEffect(() => {
+    if (currentProductId) {
+      fetchRatings(currentProductId);
+    }
+  }, [currentProductId]);
+
+  const fetchRatings = async (productId: number) => {
     try {
-      const response = await fetch(
-        "https://localhost:7030/api/Review/GetAllRating"
-      );
-      if (!response.ok) {
+      const response = await getAllRating();
+      if (!response) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const allRatings = await response.json();
-      console.log("hhhhhhhhhhhhhh: ", allRatings)
+      const allRatings = await response;
+
       const productRatings = allRatings.filter(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (rating: any) => String(rating.productId) === String(productId)
       );
       setProductReviews(productRatings);
 
       if (productRatings.length > 0) {
-        const response = await fetch(
-          `https://localhost:7030/api/Review/GetProductRating?productId=${productId}`,
-          {
-            method: "POST",
-          }
-        );
-        if (!response.ok) {
+        const response = await getProductRating(productId);
+        if (!response) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const productRatingDetails = await response.json();
+        const productRatingDetails = await response;
         setRatingInfo({
           averageRating: productRatingDetails.averageRating,
           totalRating: productRatingDetails.totalRating,
@@ -231,18 +251,6 @@ const ProductDetail = () => {
       console.error("Failed to fetch product ratings:", error);
     }
   };
-
-  useEffect(() => {
-    if (currentProductId) {
-      fetchRatings(currentProductId);
-    }
-  }, [currentProductId]);
-
-  useEffect(() => {
-    if (product) {
-      fetchRatings(product.productId);
-    }
-  }, [product]);
 
   const renderStars = (rating = ratingInfo.averageRating) => {
     const fullStars = Math.floor(rating);
@@ -306,10 +314,13 @@ const ProductDetail = () => {
       {product ? (
         <div className="body-detail">
           <div className="grid-12">
-            <div className="big-image">
+            <div
+              className="big-image"
+              style={{ backgroundImage: `url(${bgProduct})` }}
+            >
               <img
                 className="img-detail"
-                src={product.imageProducts[0].imageUrl}
+                src={bannerImages[currentSlide]}
                 alt=""
               />
             </div>
@@ -341,7 +352,10 @@ const ProductDetail = () => {
                   </div>
 
                   <span id="quantity">{quantity}</span>
-                  <div id="btPlus" onClick={handleIncrementQuantity}>
+                  <div
+                    id="btPlus"
+                    onClick={() => handleIncrementQuantity(product)}
+                  >
                     <img src="/src/assets/plus.svg" alt="" />
                   </div>
                 </div>
@@ -384,21 +398,21 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            <div className="box-img-1">
+            <div className="box-img-1" onClick={() => handleImageClick(1)}>
               <img
                 className="img-1"
                 src={product.imageProducts[1].imageUrl}
                 alt=""
               />
             </div>
-            <div className="box-img-2">
+            <div className="box-img-2" onClick={() => handleImageClick(2)}>
               <img
                 className="img-2"
                 src={product.imageProducts[2].imageUrl}
                 alt=""
               />
             </div>
-            <div className="box-img-3">
+            <div className="box-img-3" onClick={() => handleImageClick(3)}>
               <img
                 className="img-3"
                 src={product.imageProducts[3].imageUrl}
