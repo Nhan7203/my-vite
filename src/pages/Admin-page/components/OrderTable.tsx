@@ -24,7 +24,9 @@ const OrderTable: React.FC<OrderTableProps> = ({
               <td>
                 <div
                   className="square-box"
+
                   onClick={() => handleViewOrderDetails(order)}
+
                 >
                   <div className="header-square">
                     <span className="id-border">Order Id: {order.orderId}</span>

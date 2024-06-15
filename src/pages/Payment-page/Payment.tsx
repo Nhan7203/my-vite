@@ -4,15 +4,32 @@ import { avatar, sec, sr, se } from "../../import/import-assets";
 import { refreshToken } from "../../apiServices/AccountServices/refreshTokenServices";
 import { useState } from "react";
 import { useCart } from "../Cart-page/CartContext";
+import VoucherModal from "../../components/Voucher/VoucherModal"
 import Footer from "../../components/Footer/footer";
 import Paypal from "./Paypal";
 import swal from "sweetalert";
 import "./Payment.css";
 
+interface Voucher {
+  id: number;
+  name: string;
+  code: string;
+  discountType: string;
+  discountValue: number;
+  minimumTotal: number;
+  createdDate: string;
+  expDate: string;
+  isActive: boolean;
+  productId: number | null;
+}
+
 const Payment = () => {
   const [shippingMethodId, setShippingMethodId] = useState<number>(0);
   const [subtotal, setSubtotal] = useState<number>(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedVoucher, setSelectedVoucher] = useState<Voucher | null>(null);
   const { cart } = useCart();
+
 
   const totalAmount = cart.reduce(
     (total, product) => total + product.price * product.quantity,
@@ -35,12 +52,13 @@ const Payment = () => {
 
       const paymentMethod = "By Cash"; //From web
       const address = userAddress; //From web
+
       //console.error("Token not found", address);
       const products = cart.map((product) => ({
         productId: product.productId,
         quantity: product.quantity,
         price: product.price,
-        total: product.quantity * product.price,
+        total: discountedTotal + subtotal,
       }));
 
       const order = {
@@ -50,6 +68,7 @@ const Payment = () => {
         paymentMethod,
         shippingMethodId,
         products,
+        total: discountedTotal + subtotal,
       };
 
       console.log(JSON.stringify(order));
@@ -104,6 +123,36 @@ const Payment = () => {
     localStorage.removeItem("currentQuantities");
   };
 
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleVoucherSelect = (voucher: Voucher) => {
+    setSelectedVoucher(voucher);
+  };
+
+  const calculateDiscountedTotal = () => {
+    if (selectedVoucher) {
+      if (selectedVoucher.discountType === '%') {
+        return totalAmount - (totalAmount * selectedVoucher.discountValue / 100);
+      } else if (selectedVoucher.discountType === 'K') {
+        return totalAmount - (selectedVoucher.discountValue * 1000);
+      }
+    }
+    return totalAmount;
+  };
+
+  const handleRemoveVoucher = () => {
+    setSelectedVoucher(null);
+    setIsModalOpen(false);
+  };
+
+  const discountedTotal = calculateDiscountedTotal();
+
   return (
     <div>
       <div className="header-payment">
@@ -157,9 +206,8 @@ const Payment = () => {
             <div className="ship-method-list">
               <div className="economical">
                 <div
-                  className={`box-sec ${
-                    shippingMethodId === 1 ? "active" : ""
-                  }`}
+                  className={`box-sec ${shippingMethodId === 1 ? "active" : ""
+                    }`}
                   onClick={() => handleOrderShipChange(1)}
                 >
                   <img src={sec} alt="" className="logo-sec" />
@@ -207,7 +255,29 @@ const Payment = () => {
             <div className="voucher">
               <p>Voucher</p>
               <div className="box-voucher">
-                <div>Promo Code</div>
+                {selectedVoucher ? (
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div onClick={handleRemoveVoucher} style={{ cursor: 'pointer', marginRight: '8px' }}>
+                        &#x2715; {/* X */}
+                      </div>
+                      <div>{selectedVoucher.code}</div>
+                    </div>
+                  </div>
+                ) : (
+                  <div onClick={handleOpenModal}>
+                    Select Vouchers
+                  </div>
+                )}
+                {!selectedVoucher && (
+                  <VoucherModal
+                    isOpen={isModalOpen}
+                    onRequestClose={handleCloseModal}
+                    cart={cart}
+                    totalAmount={totalAmount}
+                    onVoucherSelect={handleVoucherSelect}
+                  />
+                )}
               </div>
             </div>
 
@@ -238,11 +308,21 @@ const Payment = () => {
                 <p>Subtotal</p>
                 <div>${subtotal.toLocaleString()}</div>
               </div>
-              <div className="money-voucher">Voucher</div>
+              <div className="money-voucher">
+                <p>Voucher</p>
+                <div>
+                  {selectedVoucher ? (
+                    selectedVoucher.discountValue + (selectedVoucher.discountType === '%' ? "%" : selectedVoucher.discountType === 'K' ? "K" : "")
+                  ) : (
+                    "None"
+                  )}
+                </div>
+
+              </div>
               <div className="total">
                 <p>Total</p>
                 <div className="total-price">
-                  ${(totalAmount + subtotal).toLocaleString()}
+                  ${(discountedTotal + subtotal).toLocaleString()}
                 </div>
               </div>
 
@@ -324,7 +404,7 @@ const Payment = () => {
         </div>
       </div>
       <Footer />
-    </div>
+    </div >
   );
 };
 

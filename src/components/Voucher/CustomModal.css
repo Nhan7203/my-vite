@@ -1,0 +1,147 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.modal-header {
+    text-align: right;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.voucher-list {
+    max-height: 400px;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.voucher {
+    display: flex;
+    flex-direction: column;
+    background-color: #ffe5f6;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    padding: 5px;
+    border: 1px solid #ff8c00;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s;
+}
+
+.voucher.invalid {
+    opacity: 0.5;
+}
+
+.voucher:hover {
+    box-shadow: none;
+    cursor: default;
+}
+
+.voucher-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.amount-condition {
+    border-radius: 0px;
+    display: flex;
+    align-items: center;
+}
+
+.amount-condition-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px;
+}
+
+.amount {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ff0080;
+}
+
+.condition {
+    font-size: 0.9rem;
+    color: #6d6d6d;
+}
+
+.code-box {
+    border: 1px solid #ff8c00;
+    border-radius: 4px;
+    padding: 5px 10px;
+    background-color: white;
+    flex-grow: 1;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.code {
+    font-size: 1rem;
+    color: #ff8c00;
+}
+
+.voucher-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.validity {
+    font-size: 0.9rem;
+    color: #6d6d6d;
+    margin-right: 10px;
+}
+
+.claim-button {
+    background: linear-gradient(to right, #ff0080, #ff8c00);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.claim-button:hover {
+    background: linear-gradient(to right, #ff8c00, #ff0080);
+}
+
+.claim-button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}

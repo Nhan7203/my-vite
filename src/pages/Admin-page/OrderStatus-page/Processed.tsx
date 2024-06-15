@@ -13,7 +13,9 @@ const ProcessedInAdmin = () => {
   const navigate = useNavigate();
 
   const handleViewOrderDetails = (order: aOrder) => {
+
     navigate(`/orderinformation/${order.orderId}/${order.userId}`, {
+
       state: { orderStatus: order.orderStatus },
     });
   };
