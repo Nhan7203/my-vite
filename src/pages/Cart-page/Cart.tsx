@@ -52,13 +52,9 @@ const ShoppingCart = () => {
   };
 
   const token = localStorage.getItem("token");
-  if (!token) {
-    console.error("Token not found");
-    return;
-  }
-  const isLoggedIn = getUserIdFromToken(token);
-
-  const hasAddress = getAddressFromToken(token);
+  
+  const isLoggedIn = token ? getUserIdFromToken(token) : null;
+  const hasAddress = token ? getAddressFromToken(token) : null;
 
   return (
     <div>

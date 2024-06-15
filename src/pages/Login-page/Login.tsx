@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { loginApi } from '../../apiServices/AccountServices/loginServices';
 import { toast } from 'react-toastify';
 import ReCAPTCHA from "react-google-recaptcha";
-
+import swal from 'sweetalert';
 import './Login.css';
 
 const Login = () => {
@@ -56,6 +56,36 @@ const Login = () => {
       } else {
         // Login failed
         console.error("Login failed");
+        swal({
+          title: "Incorrect Account or Password ",
+          text: "Please click 'Forgot password?' to reset your password or 'Register' to create a new account.",
+          icon: "error",
+          buttons: {
+            ok: {
+              text: "OK",
+              value: true,
+              className: "swal-ok-button",
+            },
+            forgot: {
+              text: "Forgot?",
+              value: "forgot",
+              className: "swal-forgot-button",
+            },
+            register: {
+              text: "Register",
+              value: "register",
+              className: "swal-register-button",
+            },
+          },
+        }).then((value) => {
+          if (value === "forgot") {
+            // Redirect the user to the password reset page
+            window.location.href = "/forgetpassword";
+          } else if (value === "register") {
+            // Redirect the user to the registration page
+            window.location.href = "/register";
+          }
+        });
       }
     } catch (error) {
       // Handle any network or server errors

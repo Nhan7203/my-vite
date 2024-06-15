@@ -66,7 +66,7 @@ const Blog = () => {
     const fetchData = async () => {
       try {
         const response = await getAllBlogs();
-        const updatedBlogList = response.map((blog: Blog) => ({
+        const updatedBlogList = response.map((blog: aBlog) => ({
           ...blog,
           liked: false,
         }));
