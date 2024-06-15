@@ -6,7 +6,7 @@ import {
 } from "../../../import/import-components.tsx";
 import useGlowingEffect from "../components/useGlowingEffect.tsx";
 import useOrderData from "../components/useOrderData.tsx";
-import OrderTable from "../components/OrderTable.tsx.tsx";
+import OrderTable from "../components/OrderTable.tsx";
 
 const Cancelled = () => {
   const isGlowing = useGlowingEffect(true, 1000);

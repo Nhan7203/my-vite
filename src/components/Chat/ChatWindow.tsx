@@ -151,7 +151,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     >
       {isLoading ? (
         <Typography variant="body1" align="center" sx={{ my: 2 }}>
-          Loading...
+          Login to use Chat Function!
         </Typography>
       ) : !selectedUser ? (
         hasChatted ? (

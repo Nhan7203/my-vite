@@ -229,6 +229,18 @@
   font-weight: bold;
 }
 
+.money-voucher{
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.money-voucher > div {
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+
 .payment-methods {
   padding-bottom: 0;
   font-size: 18px;

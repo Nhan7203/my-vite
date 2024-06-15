@@ -1,4 +1,4 @@
-import avatar from "../assets/✧.jpg";
+import avatar from "../assets/Kequing.jpg";
 import noti from "../assets/notification.png";
 import trash from "../assets/trash-can.png";
 import empty from "../assets/folder.png";
