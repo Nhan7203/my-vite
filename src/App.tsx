@@ -1,5 +1,6 @@
 import {
   Forgetpassword,
+  OrderInfo,
   Home,
   Login,
   Adress,
@@ -29,6 +30,11 @@ import {
   UpdateProduct,
   OrderDetails,
   SecurityCodeRegister,
+  ProcessingInAdmin,
+  CompleteInAdmin,
+  ProcessedInAdmin,
+  CancelledInAdmin,
+  PreOrderInAdmin,
 } from "./import/import-router";
 import {
   createBrowserRouter,
@@ -60,10 +66,21 @@ const router = createBrowserRouter(
       <Route path="/customer" element={<Customer />} />
       <Route path="/account" element={<Account />} />
 
+      <Route path="/complete-staff" element={<CompleteInAdmin />} />
+      <Route path="/processing-staff" element={<ProcessingInAdmin />} />
+      <Route path="/processed-staff" element={<ProcessedInAdmin />} />
+      <Route path="/cancelled-staff" element={<CancelledInAdmin />} />
+      <Route path="/preorder-staff" element={<PreOrderInAdmin />} />
+
       <Route path="/user" element={<User />} />
       <Route path="/profile" element={<Profile />} />
 
       <Route path="/order" element={<Order />} />
+      <Route path="/orderinformation" element={<OrderInfo />}>
+      
+      <Route path=":orderId/:userId" element={<OrderInfo />} />
+      </Route>
+      
       <Route path="/orderdetails" element={<OrderDetails />}>
         <Route path=":orderId" element={<OrderDetails />} />
       </Route>

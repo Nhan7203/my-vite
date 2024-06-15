@@ -10,7 +10,7 @@ import {
 } from "../components/HandleOrder.tsx";
 import useGlowingEffect from "../components/useGlowingEffect.tsx";
 import useOrderData from "../components/useOrderData.tsx";
-import OrderTable from "../components/OrderTable.tsx.tsx";
+import OrderTable from "../components/OrderTable.tsx";
 import "./User.css"
 
 const User = () => {
