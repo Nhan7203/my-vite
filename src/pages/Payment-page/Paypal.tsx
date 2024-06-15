@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   PayPalScriptProvider,
   PayPalButtons,
@@ -6,17 +7,35 @@ import {
 import { getUserIdFromToken, getAddressFromToken } from "../../utils/jwtHelper";
 import { useEffect } from "react";
 import swal from "sweetalert";
+
+type PayPalButtonStyle = {
+  layout?: "vertical" | "horizontal";
+};
+
 // Style Paypal
-const style = { layout: "vertical" };
+const style: PayPalButtonStyle = {
+  layout: "vertical",
+};
+
+
+interface ButtonWrapperProps {
+  currency: string,
+  showSpinner: boolean,
+  amount: any,
+  payload: any,
+  shippingMethodIdPay: number
+}
+
 
 // Layout Loading Screen Paypal
-const ButtonWrapper = ({
+const ButtonWrapper: React.FC<ButtonWrapperProps>  = ({
   currency,
   showSpinner,
   amount,
   payload,
   shippingMethodIdPay,
 }) => {
+
   const [{ isPending, options }, dispatch] = usePayPalScriptReducer();
 
   useEffect(() => {
@@ -27,9 +46,10 @@ const ButtonWrapper = ({
         currency: currency,
       },
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currency, showSpinner]);
 
-  const handlePaymentSuccess = async (data, actions) => {
+  const handlePaymentSuccess = async (_data: any, actions: any) => {
     try {
       const response = await actions.order.capture();
       console.log(response);
@@ -52,7 +72,7 @@ const ButtonWrapper = ({
         const paymentMethod = "By Paypal"; // From web
         const address = userAddress; // From web
 
-        const products = payload.map((product) => ({
+        const products = payload.map((product: any) => ({
           productId: product.productId,
           quantity: product.quantity,
           price: product.price,
@@ -100,7 +120,7 @@ const ButtonWrapper = ({
         disabled={false}
         forceReRender={[style, currency, amount]}
         fundingSource={undefined}
-        createOrder={(data, actions) =>
+        createOrder={(_data, actions) =>
           actions.order.create({
             purchase_units: [
               {
@@ -119,7 +139,8 @@ const ButtonWrapper = ({
   );
 };
 
-export default function Paypal({ amount, payload, shippingMethod }) {
+export default function Paypal({ amount, payload, shippingMethod } : {amount: any, payload: any, shippingMethod: number}) {
+
   return (
     <div style={{ maxWidth: "750px", minHeight: "156px" }}>
       <PayPalScriptProvider
