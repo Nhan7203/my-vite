@@ -20,6 +20,7 @@ import {
 } from "../components/HandleOrder";
 
 import { useOrderDetails } from "./useOrderDetails";
+import OrderDetailItem from "./OrderDetailItem";
 
 const OrderDetails = () => {
   const { orderDetails, products, currentUserId, orderData, orderId, token } =
@@ -116,7 +117,7 @@ const OrderDetails = () => {
       }
     }
   };
-  
+
   //-----------------------------------------  Order handle ---------------------------------------------------------------
 
   const { handleCancelOrder } = useHandleCancelOrder();
@@ -129,7 +130,7 @@ const OrderDetails = () => {
   const handleReceiveClick = (orderId: number) => {
     handleOrderReceived(orderId);
   };
-//----------------------------------------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------------------------------------------------
   interface Product {
     productId: number;
   }
@@ -247,148 +248,24 @@ const OrderDetails = () => {
       <div className="body-user">
         <div>
           <BoxMenuUser />
-          <div className="box-orderdeatail">
-            <div className="Cart-Summary">
-              <h2>Order: {orderId}</h2>
-              <ul>
-                <li>Price</li>
-                <li className="quantity">Quantity</li>
-                <li className="total-amount">Total amount</li>
-              </ul>
-            </div>
-            <div
-              style={{
-                overflow: "auto",
-                height: "355px",
-                borderTop: "1px solid #eaeaea",
-              }}
-            >
-              {orderDetails.map((orderDetail) => {
-                const product = products.find(
-                  (p) => p.productId === orderDetail.productId
-                );
-
-                return (
-                  <div className="detail-order" key={orderDetail.productId}>
-                    <div className="order-list">
-                      <div className="img">
-                        <img
-                          src={product?.imageProducts[0].imageUrl}
-                          className="ma"
-                          alt=""
-                        />
-                      </div>
-                      <div className="name">{product?.name}</div>
-                      <div className="price-order">
-                        ${product?.price.toLocaleString()}
-                      </div>
-                      <div className="quantity-count">
-                        {`${orderDetail.quantity}`}
-                      </div>
-                      <div className="money">
-                        ${orderDetail.total.toLocaleString()}
-                      </div>
-                      {orderStatus === "Completed" && (
-                        <div className="">
-                          {product && (
-                            <div
-                              className="add-product"
-                              style={{ width: "280px" }}
-                            >
-                              <button
-                                onClick={() =>
-                                  handleAddToCart(product, orderDetail.quantity)
-                                }
-                              >
-                                add
-                              </button>
-                              {!selectedProducts.some(
-                                (p) => p.productId === product.productId
-                              ) && (
-                                <button
-                                  onClick={() =>
-                                    handleRate(product, orderDetail)
-                                  }
-                                >
-                                  Rate
-                                </button>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                    {showRatingBox && (
-                      <div className="rating-box-overlay">
-                        <div className="rating-box">
-                          <h3>Rate the Product</h3>
-                          <div className="stars">
-                            {[1, 2, 3, 4, 5].map((star) => (
-                              <span
-                                key={star}
-                                className={`star ${
-                                  selectedStars >= star ? "filled" : ""
-                                }`}
-                                onClick={() => handleStarClick(star)}
-                              >
-                                &#9733;
-                              </span>
-                            ))}
-                          </div>
-                          <textarea
-                            value={comment}
-                            onChange={(e) => setComment(e.target.value)}
-                            placeholder="Leave a comment (optional)"
-                          />
-                          <div className="rating-buttons">
-                            <button onClick={handleRatingSubmit}>Submit</button>
-
-                            {selectedProducts.length > 0 && (
-                              <button
-                                onClick={() =>
-                                  handleRatingCancel(
-                                    selectedProducts[
-                                      selectedProducts.length - 1
-                                    ]
-                                  )
-                                }
-                              >
-                                Cancel Rating
-                              </button>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-            {orderStatus === "Pending" && (
-              <div
-                className="add-product"
-                style={{ display: "flex", flexDirection: "row-reverse" }}
-              >
-                <button
-                  onClick={() => handleCancelClick(parseInt(orderId ?? ""))}
-                >
-                  Cancel Order
-                </button>
-              </div>
-            )}
-            {orderStatus === "Submitted" && (
-              <div
-                className="add-product"
-                style={{ display: "flex", flexDirection: "row-reverse" }}
-              >
-                <button
-                  onClick={() => handleReceiveClick(parseInt(orderId ?? ""))}
-                >
-                  Received
-                </button>
-              </div>
-            )}
-          </div>
+          <OrderDetailItem
+            orderId={orderId}
+            comment={comment}
+            products={products}
+            orderStatus={orderStatus}
+            orderDetails={orderDetails}
+            selectedStars={selectedStars}
+            showRatingBox={showRatingBox}
+            selectedProducts={selectedProducts}
+            setComment={setComment}
+            handleRate={handleRate}
+            handleStarClick={handleStarClick}
+            handleAddToCart={handleAddToCart}
+            handleCancelClick={handleCancelClick}
+            handleReceiveClick={handleReceiveClick}
+            handleRatingSubmit={handleRatingSubmit}
+            handleRatingCancel={handleRatingCancel}
+          />
         </div>
       </div>
       <Footer />

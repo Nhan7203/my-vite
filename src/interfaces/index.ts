@@ -99,6 +99,7 @@ export interface aOrder {
   paymentMethod: string;
   shippingMethodId: number;
   orderStatus: string;
+
   orderDetails: {
     productId: number;
     quantity: number;
@@ -115,6 +116,7 @@ export interface Order {
   address: string;
   paymentMethod: string;
   shippingMethodId: number;
+  total: number;
 }
 
 export interface aProductReview {
@@ -162,5 +164,12 @@ export const categoryOptions = [
   { id: 2, name: "Nut milk" },
   { id: 3, name: "Nutritional drinks" },
   { id: 4, name: "Fresh milk, Yogurt" },
+
+];
+
+export const shippingMethodOptions = [
+  { id: 1, price: "30,000" },
+  { id: 2, price: "50,000" },
+  { id: 3, price: "120,000" },
 
 ];

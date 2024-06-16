@@ -169,7 +169,7 @@ const ShoppingCart = () => {
             </div>
             <div className="voucher">
               <p>Voucher</p>
-              <div className="box-voucher">
+              <div className="box-voucher" style={{backgroundColor: "#B4B4B4", color: "white", border: "none"}}>
                 <div>Promo Code</div>
               </div>
             </div>

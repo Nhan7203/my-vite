@@ -69,8 +69,8 @@ const useHandleOrderReceived = (orderData: aOrder[]) => {
         icon: "warning",
         buttons: ["Cancel", "Confirm"],
         dangerMode: true,
-      }).then(async (confirmDelete) => {
-        if (confirmDelete) {
+      }).then(async (confirmReceived) => {
+        if (confirmReceived) {
           const response = await completeOrder(userId, orderId, token);
           if (response) {
             swal("Success!", "Thanks for shopping at M&B", "success").then(

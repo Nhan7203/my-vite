@@ -48,12 +48,12 @@
 .voucher {
     display: flex;
     flex-direction: column;
-    background-color: #ffe5f6;
+  
     border-radius: 8px;
     overflow: hidden;
     margin-bottom: 10px;
-    padding: 5px;
-    border: 1px solid #ff8c00;
+    padding: 5px 20px;
+
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.3s;
 }

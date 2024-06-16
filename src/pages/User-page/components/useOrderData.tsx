@@ -31,20 +31,20 @@ const useOrderData = () => {
         const userIdIdentifier = getUserIdFromToken(token);
 
         const response = await getOrderList(userIdIdentifier);
-
+        console.log("hahahahah", response)
         if (response) {
-          const updatedOrderData = response.map((order: aOrder) => {
-            const total = order.orderDetails.reduce(
-              (acc, detail) => acc + detail.total,
-              0
-            );
-            return {
-              ...order,
-              total: total,
-            };
-          });
-
-          setOrderData(updatedOrderData);
+          // const updatedOrderData = response.map((order: aOrder) => {
+          //   const total = order.orderDetails.reduce(
+          //     (acc, detail) => acc + detail.total,
+          //     0
+          //   );
+          //   return {
+          //     ...order,
+          //     total: total ,
+          //   };
+          // });
+          setOrderData(response);
+          // setOrderData(updatedOrderData);
         } else {
           console.error("Failed to retrieve order data:", response);
         }
