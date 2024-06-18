@@ -11,6 +11,7 @@ import {
   getUserAPI,
   userUpdate,
 } from "../../../apiServices/UserServices/userServices";
+import { refreshToken } from "../../../apiServices/AccountServices/refreshTokenServices";
 
 export interface IUser {
   userId: number;
@@ -146,6 +147,7 @@ const Profile = () => {
         const updatedUser = response;
         swal("Success", "User information updated successfully!", "success");
         setUser(updatedUser); // Cập nhật state user với dữ liệu mới
+        refreshToken();
       } else {
         swal("Error", "Failed to update user information.", "error");
       }
