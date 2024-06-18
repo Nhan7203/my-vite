@@ -11,7 +11,7 @@ import swal from "sweetalert";
 import "./Payment.css";
 
 interface Voucher {
-  id: number;
+  voucherId: number;
   name: string;
   code: string;
   discountType: string;
@@ -68,6 +68,7 @@ const Payment = () => {
         paymentMethod,
         shippingMethodId,
         products,
+        voucherId: selectedVoucher ? selectedVoucher.voucherId : null,
         total: discountedTotal + subtotal,
       };
 
@@ -132,6 +133,7 @@ const Payment = () => {
   };
 
   const handleVoucherSelect = (voucher: Voucher) => {
+    console.log('Selected Voucher:', voucher);
     setSelectedVoucher(voucher);
   };
 
@@ -270,13 +272,15 @@ const Payment = () => {
                   </div>
                 )}
                 {!selectedVoucher && (
-                  <VoucherModal
-                    isOpen={isModalOpen}
-                    onRequestClose={handleCloseModal}
-                    cart={cart}
-                    totalAmount={totalAmount}
-                    onVoucherSelect={handleVoucherSelect}
-                  />
+                  <div style={{ zIndex: 999 }} >
+                    <VoucherModal
+                      isOpen={isModalOpen}
+                      onRequestClose={handleCloseModal}
+                      cart={cart}
+                      totalAmount={totalAmount}
+                      onVoucherSelect={handleVoucherSelect}
+                    />
+                  </div>
                 )}
               </div>
             </div>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './CustomModal.css';
 
 interface Voucher {
-    id: number;
+    voucherId: number;
     name: string;
     code: string;
     discountType: string;
@@ -76,7 +76,7 @@ const CustomModal: React.FC<CustomModalProps> = ({ isOpen, onRequestClose, cart,
                     {sortedVouchers.map(voucher => {
                         const isValid = checkVoucherValidity(voucher);
                         return (
-                            <div key={voucher.id} className={`voucher ${isValid ? '' : 'invalid'}`}>
+                            <div key={voucher.voucherId} className={`voucher ${isValid ? '' : 'invalid'}`}>
                                 <div className="voucher-info">
                                     <div className="amount-condition">
                                         <span className="amount">{voucher.discountValue}{voucher.discountType}</span>
