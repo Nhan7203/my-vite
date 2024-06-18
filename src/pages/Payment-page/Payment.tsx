@@ -12,7 +12,7 @@ import "./Payment.css";
 import { orders } from "../../apiServices/OrderServices/OrderServices";
 
 interface Voucher {
-  id: number;
+  voucherId: number;
   name: string;
   code: string;
   discountType: string;
@@ -69,6 +69,7 @@ const Payment = () => {
         paymentMethod,
         shippingMethodId,
         products,
+        voucherId: selectedVoucher ? selectedVoucher.voucherId : null,
         total: discountedTotal + subtotal,
       };
 
@@ -126,6 +127,7 @@ const Payment = () => {
   };
 
   const handleVoucherSelect = (voucher: Voucher) => {
+    console.log('Selected Voucher:', voucher);
     setSelectedVoucher(voucher);
   };
 
@@ -268,7 +270,9 @@ const Payment = () => {
                   <div >Select Vouchers</div>
                 )}
                 {!selectedVoucher && (
+
                   <div style={{ zIndex: 999 }}>
+
                     <VoucherModal
                       isOpen={isModalOpen}
                       onRequestClose={handleCloseModal}

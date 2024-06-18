@@ -2,16 +2,18 @@ import React, { useEffect, useState } from "react";
 import "./CustomModal.css";
 
 interface Voucher {
-  id: number;
-  name: string;
-  code: string;
-  discountType: string;
-  discountValue: number;
-  minimumTotal: number;
-  createdDate: string;
-  expDate: string;
-  isActive: boolean;
-  productId: number | null;
+
+    voucherId: number;
+    name: string;
+    code: string;
+    discountType: string;
+    discountValue: number;
+    minimumTotal: number;
+    createdDate: string;
+    expDate: string;
+    isActive: boolean;
+    productId: number | null;
+
 }
 
 interface CustomModalProps {
@@ -80,40 +82,34 @@ const CustomModal: React.FC<CustomModalProps> = ({
 
   if (!isOpen) return null;
 
-  return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <button
-          className="close-button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onRequestClose();
-          }}
-        >
-          ×
-        </button>
-        <h2 className="modal-header">Available Vouchers</h2>
-        <div className="voucher-list">
-          {sortedVouchers.map((voucher) => {
-            const isValid = checkVoucherValidity(voucher);
-            return (
-              <div
-                key={voucher.id}
-                className={`voucher ${isValid ? "" : "invalid"}`}
-              >
-                <div className="voucher-info">
-                  <div className="amount-condition">
-                    <span className="amount">
-                      {voucher.discountValue}
-                      {voucher.discountType}
-                    </span>
-                    <span className="condition">
-                      cho đơn từ {voucher.minimumTotal}
-                    </span>
-                  </div>
-                  <div className="code-box">
-                    <span className="code">{voucher.code}</span>
-                  </div>
+
+    return (
+        <div className="modal-overlay">
+            <div className="modal-content">
+                <button className="close-button" onClick={onRequestClose}>×</button>
+                <h2 className="modal-header">Available Vouchers</h2>
+                <div className="voucher-list">
+                    {sortedVouchers.map(voucher => {
+                        const isValid = checkVoucherValidity(voucher);
+                        return (
+                            <div key={voucher.voucherId} className={`voucher ${isValid ? '' : 'invalid'}`}>
+                                <div className="voucher-info">
+                                    <div className="amount-condition">
+                                        <span className="amount">{voucher.discountValue}{voucher.discountType}</span>
+                                        <span className="condition">cho đơn từ {voucher.minimumTotal}</span>
+                                    </div>
+                                    <div className="code-box">
+                                        <span className="code">{voucher.code}</span>
+                                    </div>
+                                </div>
+                                <div className="voucher-footer">
+                                    <span className="validity">Valid until: {formatDate(voucher.expDate)}</span>
+                                    <button className="claim-button" disabled={!isValid} onClick={() => handleVoucherSelect(voucher)}>Lấy mã</button>
+                                </div>
+                            </div>
+                        );
+                    })}
+
                 </div>
                 <div className="voucher-footer">
                   <span className="validity">
