@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { StickyBox, Link } from "../../import/import-libary";
 import { Navbar, Footer } from "../../import/import-components";
 import { useLocation } from "react-router-dom";
@@ -20,6 +20,7 @@ import {
 import { faStar as regularStarOutline } from "@fortawesome/free-regular-svg-icons";
 import swal from "sweetalert";
 import Swal from "sweetalert2";
+import { getAllRating, getProductRating } from "../../apiServices/ReviewServices/reviewServices";
 
 export interface Brand {
   brandId: number;
@@ -171,15 +172,13 @@ interface RatingDetails {
     }
   };
 
-  const fetchRatings = async () => {
+  const fetchRatings  = useCallback(async () => {
     try {
-      const response = await fetch(
-        "https://localhost:7030/api/Review/GetAllRating"
-      );
-      if (!response.ok) {
+      const response = await getAllRating();
+      if (!response) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const allRatings = await response.json();
+      const allRatings = response;
 
       const ratingsMap: { [key: string]: RatingDetails } = {}
 
@@ -190,16 +189,11 @@ interface RatingDetails {
         );
 
         if (productRatings.length > 0) {
-          const response = await fetch(
-            `https://localhost:7030/api/Review/GetProductRating?productId=${productId}`,
-            {
-              method: "POST",
-            }
-          );
-          if (!response.ok) {
+          const response = await getProductRating(productId)
+          if (!response) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
-          const productRatingDetails = await response.json();
+          const productRatingDetails = response;
           ratingsMap[productId] = {
             averageRating: productRatingDetails.averageRating,
             totalRating: productRatingDetails.totalRating,
@@ -218,7 +212,11 @@ interface RatingDetails {
     } catch (error) {
       console.error("Error fetching ratings:", error);
     }
-  };
+  }, [products]);
+
+  useEffect(() => {
+    fetchRatings();
+  }, [fetchRatings]);
 
   const renderStars = (averageRating: number) => {
     const stars = [];
@@ -255,9 +253,7 @@ interface RatingDetails {
     return stars;
   };
 
-  useEffect(() => {
-    fetchRatings();
-  }, [products]);
+  
 
   //-----------------------------------------------------------------------------------------------
   interface CurrentQuantities {

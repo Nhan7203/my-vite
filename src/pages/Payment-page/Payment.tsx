@@ -9,6 +9,7 @@ import Footer from "../../components/Footer/footer";
 import Paypal from "./Paypal";
 import swal from "sweetalert";
 import "./Payment.css";
+import { orders } from "../../apiServices/OrderServices/OrderServices";
 
 interface Voucher {
   id: number;
@@ -23,19 +24,12 @@ interface Voucher {
   productId: number | null;
 }
 
-interface UserVoucher {
-  voucherid: number;
-  OrderId: number;
-  discountType: string;
-  discountValue: number;
-}
-
 const Payment = () => {
   const [shippingMethodId, setShippingMethodId] = useState<number>(0);
   const [subtotal, setSubtotal] = useState<number>(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedVoucher, setSelectedVoucher] = useState<Voucher | null>(null);
-  const [userVoucher, setUserVoucher] = useState<UserVoucher | null>(null);
+
   const { cart } = useCart();
 
   const totalAmount = cart.reduce(
@@ -79,17 +73,10 @@ const Payment = () => {
       };
 
       console.log(JSON.stringify(order));
-      const response = await fetch("https://localhost:7030/api/orders", {
-        //API CALL
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // Authorization: `Bearer ${token}`, //do later
-        },
-        body: JSON.stringify(order),
-      });
 
-      if (!response.ok) {
+      const response = await orders(order)
+
+      if (!response) {
         throw new Error("Failed to store cart data");
       }
 
@@ -98,7 +85,7 @@ const Payment = () => {
       }
       localStorage.removeItem("cart");
       localStorage.removeItem("currentQuantities");
-      const data = await response.json();
+      const data = await response.data;
       console.log("Cart data stored:", data);
     } catch (error) {
       console.error("Error storing cart data:", error);
@@ -306,12 +293,13 @@ const Payment = () => {
                   }))}
                   amount={(totalAmount / 23500).toFixed(2)}
                   shippingMethod={shippingMethodId}
+                  total={(discountedTotal + subtotal)}
                 />
               ) : (
                 <Paypal
-                  payload={[]}
-                  amount="0.00"
-                  shippingMethod={shippingMethodId}
+                    payload={[]}
+                    amount="0.00"
+                    shippingMethod={shippingMethodId} total={0}                  
                 />
               )}
             </div>

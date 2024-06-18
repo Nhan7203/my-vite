@@ -31,7 +31,7 @@ const useOrderData = () => {
         const userIdIdentifier = getUserIdFromToken(token);
 
         const response = await getOrderList(userIdIdentifier);
-        console.log("hahahahah", response)
+      
         if (response) {
           // const updatedOrderData = response.map((order: aOrder) => {
           //   const total = order.orderDetails.reduce(

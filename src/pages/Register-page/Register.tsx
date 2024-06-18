@@ -1,11 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import './Register.css';
 import RegisterVallidation, { IRegisterValues } from './RegisterVallidation';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import swal from 'sweetalert';
 import emailjs from 'emailjs-com';
+import { checkMail } from '../../apiServices/AccountServices/accountServices';
 
 const Register = () => {
     const [registerValues, setRegisterValue] = useState({
@@ -43,78 +45,71 @@ const Register = () => {
                 registerUser();
             }
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [errors]);
 
-    const registerUser = async () => {
+    
+    const registerUser = useCallback(async () => {
         try {
-            fetch(`https://localhost:7030/api/Account/checkMail?email=${encodeURIComponent(registerValues.email)}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }).then((response) => {
-                if (response.ok) {
-                    swal({
-                        title: "Email Sent!",
-                        text: "We have sent you an Email if this Email was linked with your account!",
-                        icon: "success",
-                        buttons: {
-                            ok: {
-                                text: "OK",
-                                value: true,
-                                className: "swal-ok-button",
-                            }
-                        },
-                    }).then((value) => {
-                        if (value) {
-                            if (response.ok) {
-                                const code = Math.floor(10000000 + Math.random() * 90000000);
-    
-    
-                                const templateParams = {
-                                    from_name: 'MnB Shop <no-reply@mnbshop.com>',
-                                    to_email: registerValues.email, // Change the property name to 'to_email'
-                                    subject: 'Send mail',
-                                    code: code,
-                                };
-    
-                                emailjs
-                                    .send(
-                                        'service_4j0f6f9', // Replace with your EmailJS service ID
-                                        'template_pyes21y', // Replace with your EmailJS template ID
-                                        templateParams,
-                                        'Fm8U5RN0vDmjsIl4S' // Replace with your EmailJS user ID
-                                    )
-                                    .then(() => {
-                                        navigate('/securityCodeRegister', { state: { registerValues, code } });
-                                    })
-                                    .catch((error) => {
-                                        console.log(error);
-    
-                                    });
-                            }
-                        }
-                    });
-                } else {
-                    swal({
-                        title: "registered email!!!",
-                        text: "Email has been registered, you can log in",
-                        icon: "error",
-                        buttons: {
-                            ok: {
-                                text: "OK",
-                                value: true,
-                                className: "swal-ok-button",
-                            }
-                        },
-                    })
+          const response = await checkMail(registerValues.email);
+          if (response) {
+            swal({
+              title: "Email Sent!",
+              text: "We have sent you an Email if this Email was linked with your account!",
+              icon: "success",
+              buttons: {
+                ok: {
+                  text: "OK",
+                  value: true,
+                  className: "swal-ok-button",
                 }
-            })
+              },
+            }).then((value) => {
+              if (value) {
+                const code = Math.floor(10000000 + Math.random() * 90000000);
+                const templateParams = {
+                  from_name: 'MnB Shop <no-reply@mnbshop.com>',
+                  to_email: registerValues.email,
+                  subject: 'Send mail',
+                  code: code,
+                };
+                emailjs
+                  .send(
+                    'service_4j0f6f9',
+                    'template_pyes21y',
+                    templateParams,
+                    'Fm8U5RN0vDmjsIl4S'
+                  )
+                  .then(() => {
+                    navigate('/securityCodeRegister', { state: { registerValues, code } });
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                  });
+              }
+            });
+          } else {
+            swal({
+              title: "registered email!!!",
+              text: "Email has been registered, you can log in",
+              icon: "error",
+              buttons: {
+                ok: {
+                  text: "OK",
+                  value: true,
+                  className: "swal-ok-button",
+                }
+              },
+            });
+          }
         } catch (error) {
-            toast.error('some request fail');
-            console.error(error);
+          toast.error('some request fail');
+          console.error(error);
         }
-    };
+        
+      }, [navigate, registerValues]);
+
+      
 
     return (
         <>
