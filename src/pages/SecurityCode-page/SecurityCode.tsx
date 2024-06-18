@@ -8,7 +8,7 @@ const SecurityCode = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const handleOnContinue = (e) => {
+    const handleOnContinue = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
 
         const { email, code } = location.state;
