@@ -9,7 +9,6 @@ import { ImageProduct } from "../../interfaces";
 
 import { getBrand } from "../../apiServices/BrandServices/brandServices";
 
-
 export interface Brand {
   brandId: number;
   name: string;
@@ -31,19 +30,17 @@ const UpdateProduct = () => {
   const [imageProducts, setImageProducts] = useState<ImageProduct[]>([]);
   const [imageData, setImageData] = useState<{
     [key: number]: {
-      imageUrl: string,
-      imageFile: File | null
-    },
+      imageUrl: string;
+      imageFile: File | null;
+    };
   }>({});
   const [brandList, setBrandList] = useState<Brand[]>([]);
   const [errors, setErrors] = useState({
-    name: '',
-    description: '',
-    stock: '',
-    price: '',
-
+    name: "",
+    description: "",
+    stock: "",
+    price: "",
   });
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,7 +49,6 @@ const UpdateProduct = () => {
     };
     fetchData();
   }, []);
-
 
   const product = allProduct.find((e) => e.productId === parseInt(productId));
 
@@ -69,7 +65,6 @@ const UpdateProduct = () => {
     { id: 2, name: "Nut milk" },
     { id: 3, name: "Nutritional drinks" },
     { id: 4, name: "Fresh milk, Yogurt" },
-
   ];
 
   useEffect(() => {
@@ -85,9 +80,9 @@ const UpdateProduct = () => {
 
       const initialImageData: {
         [key: number]: {
-          imageUrl: string,
-          imageFile: File | null
-        },
+          imageUrl: string;
+          imageFile: File | null;
+        };
       } = {};
       product.imageProducts.forEach((image) => {
         initialImageData[image.imageId] = {
@@ -99,8 +94,10 @@ const UpdateProduct = () => {
     }
   }, [product]);
 
-
-  const handleImageUpload = (imageId: number, event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (
+    imageId: number,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
@@ -122,11 +119,11 @@ const UpdateProduct = () => {
     event.preventDefault();
 
     const error = {
-      name: '',
-      description: '',
-      stock: '',
-      price: '',
-      check: false
+      name: "",
+      description: "",
+      stock: "",
+      price: "",
+      check: false,
     };
 
     if (name === "") {
@@ -154,20 +151,29 @@ const UpdateProduct = () => {
     }
 
     const formData = new FormData();
-    formData.append('productId', productId.toString());
-    formData.append('name', name);
-    formData.append('description', description);
-    formData.append('forAgeId', ageId.toString());
-    formData.append('brandId', brandId.toString());
-    formData.append('categoryId', categoryId.toString());
-    formData.append('price', price.toString());
-    formData.append('stock', stock.toString());
-    formData.append('isActive', 'true');
+    formData.append("productId", productId.toString());
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("forAgeId", ageId.toString());
+    formData.append("brandId", brandId.toString());
+    formData.append("categoryId", categoryId.toString());
+    formData.append("price", price.toString());
+    formData.append("stock", stock.toString());
+    formData.append("isActive", "true");
 
     imageProducts.forEach((image, index) => {
-      formData.append(`imageProducts[${index}].imageId`, image.imageId.toString());
-      formData.append(`imageProducts[${index}].productId`, productId.toString());
-      formData.append(`imageProducts[${index}].imageUrl`, imageData[image.imageId].imageUrl || image.imageUrl);
+      formData.append(
+        `imageProducts[${index}].imageId`,
+        image.imageId.toString()
+      );
+      formData.append(
+        `imageProducts[${index}].productId`,
+        productId.toString()
+      );
+      formData.append(
+        `imageProducts[${index}].imageUrl`,
+        imageData[image.imageId].imageUrl || image.imageUrl
+      );
       const imageFile = imageData[image.imageId].imageFile;
       if (imageFile) {
         formData.append(`imageProducts[${index}].imageFile`, imageFile);
@@ -194,95 +200,13 @@ const UpdateProduct = () => {
       }
     } catch (error) {
       console.log(error);
-      swal("Error", "Error occurred during updating product information.", "error");
+      swal(
+        "Error",
+        "Error occurred during updating product information.",
+        "error"
+      );
     }
   };
-
-
-  // const handleSubmit = async (event: { preventDefault: () => void }) => {
-  //   event.preventDefault();
-
-  //   const error = {
-  //     name: '',
-  //     description: '',
-  //     stock: '',
-  //     price: '',
-  //     check: false
-  //   };
-
-  //   if (name === "") {
-  //     error.name = "Name is Required!"
-  //     error.check = true
-
-  //   }
-  //   if (description === "") {
-  //     error.description = "Description is Required!"
-  //     error.check = true
-  //   }
-
-  //   if (stock === 0) {
-  //     error.stock = "Stock != 0 "
-  //     error.check = true
-  //   }
-
-  //   if (price === 0) {
-  //     error.price = "Price != 0 "
-  //     error.check = true
-  //   }
-
-  //   setErrors(error)
-  //   if (error.check) {
-  //     return
-  //   }
-
-  //   const payload = {
-  //     productId: productId,
-  //     name: name,
-  //     description: description,
-  //     forAgeId: ageId,
-  //     brandId: brandId,
-  //     categoryId: categoryId,
-  //     price: price,
-  //     stock: stock,
-  //     imageProducts: imageProducts.map((image) => ({
-  //       imageId: image.imageId,
-  //       imageUrl: imageData[image.imageId].imageUrl || image.imageUrl,
-  //       imageFile: imageData[image.imageId].imageFile || null
-  //     })),
-
-  //     isActive: true,
-  //   };
-
-  //   console.log(payload);
-
-  //   try {
-  //     const response = await fetch(
-  //       `https://localhost:7030/api/Products/Update?id=${parseInt(productId)}`,
-  //       {
-  //         method: "PUT",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify(payload),
-  //       }
-  //     );
-
-  //     if (response.status === 200) {
-  //       swal("Success", "Product information updated successfully!", "success");
-  //       console.log(payload);
-  //       // window.location.reload();
-  //     } else {
-  //       swal("Error", "Failed to update product information.", "error");
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     swal(
-  //       "Error",
-  //       "Error occurred during updating product information.",
-  //       "error"
-  //     );
-  //   }
-  // };
 
   const handleCancel = () => {
     navigate("/manage-product");
@@ -335,6 +259,12 @@ const UpdateProduct = () => {
                 <a href="">
                   <span className="las la-clipboard-list"></span>
                   <span>Tasks</span>
+                </a>
+              </li>
+              <li>
+                <a href="/charts">
+                  <span className="las la-clipboard-list"></span>
+                  <span>Đây nè Vũ chó điên</span>
                 </a>
               </li>
             </ul>
@@ -390,7 +320,7 @@ const UpdateProduct = () => {
                         <img
                           src={imageData[image.imageId]?.imageUrl}
                           alt={`Image ${image.imageId}`}
-                          style={{ maxWidth: '200px' }}
+                          style={{ maxWidth: "200px" }}
                         />
                       )}
                     </div>
@@ -401,10 +331,7 @@ const UpdateProduct = () => {
                     onChange={(e) => setAgeId(Number(e.target.value))}
                   >
                     {ageOptions.map((option) => (
-                      <option
-                        key={option.id}
-                        value={option.id}                     
-                      >
+                      <option key={option.id} value={option.id}>
                         {option.name}
                       </option>
                     ))}
@@ -416,10 +343,7 @@ const UpdateProduct = () => {
                     onChange={(e) => setCategoryId(Number(e.target.value))}
                   >
                     {categoryOptions.map((option) => (
-                      <option
-                        key={option.id}
-                        value={option.id}
-                      >
+                      <option key={option.id} value={option.id}>
                         {option.name}
                       </option>
                     ))}
@@ -431,10 +355,7 @@ const UpdateProduct = () => {
                     onChange={(e) => setBrandId(Number(e.target.value))}
                   >
                     {brandList.map((option) => (
-                      <option
-                        key={option.brandId}
-                        value={option.brandId}
-                      >
+                      <option key={option.brandId} value={option.brandId}>
                         {option.name}
                       </option>
                     ))}
@@ -447,7 +368,9 @@ const UpdateProduct = () => {
                     value={price}
                     onChange={(e) => setPrice(Number(e.target.value))}
                   />
-                  {errors.price && <p style={{ color: "red" }}>{errors.price}</p>}
+                  {errors.price && (
+                    <p style={{ color: "red" }}>{errors.price}</p>
+                  )}
 
                   <h4>stock</h4>
                   <input
@@ -456,7 +379,9 @@ const UpdateProduct = () => {
                     value={stock}
                     onChange={(e) => setStock(Number(e.target.value))}
                   />
-                  {errors.stock && <p style={{ color: "red" }}>{errors.stock}</p>}
+                  {errors.stock && (
+                    <p style={{ color: "red" }}>{errors.stock}</p>
+                  )}
 
                   <h4>Name</h4>
                   <input
@@ -474,7 +399,9 @@ const UpdateProduct = () => {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                   />
-                  {errors.description && <p style={{ color: "red" }}>{errors.description}</p>}
+                  {errors.description && (
+                    <p style={{ color: "red" }}>{errors.description}</p>
+                  )}
                 </div>
               </div>
               <div className="both-button">

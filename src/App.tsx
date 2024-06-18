@@ -5,6 +5,7 @@ import {
   Login,
   Adress,
   Product,
+  Chart,
   ProductDetails,
   Cart,
   Payment,
@@ -65,7 +66,9 @@ const router = createBrowserRouter(
       <Route path="/updateproduct" element={<UpdateProduct />} />
       <Route path="/customer" element={<Customer />} />
       <Route path="/account" element={<Account />} />
+      <Route path="/charts" element={<Chart />} />
 
+      
       <Route path="/complete-staff" element={<CompleteInAdmin />} />
       <Route path="/processing-staff" element={<ProcessingInAdmin />} />
       <Route path="/processed-staff" element={<ProcessedInAdmin />} />
