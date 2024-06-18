@@ -142,6 +142,12 @@ const Account = () => {
                   <span>Tasks</span>
                 </a>
               </li>
+              <li>
+                <a href="/charts">
+                  <span className="las la-clipboard-list"></span>
+                  <span>Đây nè Vũ chó điên</span>
+                </a>
+              </li>
             </ul>
           </div>
         </div>

@@ -6,6 +6,7 @@ import Product from "../pages/Product-page/Product";
 import ProductDetails from "../pages/ProductDetails-page/productDetails"
 import Home from "../pages/Home-page/Home";
 import Blog from "../pages/Blog-page/Blog";
+import Chart from "../pages/Admin-page/Chart";
 import Voucher from "../pages/Voucher-page/Voucher";
 import Register from "../pages/Register-page/Register";
 import Admin from "../pages/Admin-page/Admin";
@@ -44,6 +45,7 @@ export {
   Cart,
   Blog,
   Home,
+  Chart,
   Voucher,
   Register,
   Admin,
