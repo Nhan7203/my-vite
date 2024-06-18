@@ -8,7 +8,7 @@ import {
   useHandleCancelOrder,
   useHandleConfirmOrder,
 } from "./components/HandleOrder";
-import { ageOptions, categoryOptions } from "../../interfaces";
+import { ageOptions, categoryOptions, shippingMethodOptions } from "../../interfaces";
 
 const OrderInfo = () => {
   const { orderDetails, products, orderId, userData, order, brandList } =
@@ -33,6 +33,13 @@ const OrderInfo = () => {
       (option) => option.id === categoryId
     );
     return categoryOption ? categoryOption.name : "";
+  };
+
+  const getShippingMethodOption = (shippingMethodId: any) => {
+    const shippingMethodOption = shippingMethodOptions.find(
+      (option) => option.id === shippingMethodId
+    );
+    return shippingMethodOption ? shippingMethodOption.price : 0;
   };
 
   const handleCancelClick = (
@@ -126,17 +133,19 @@ const OrderInfo = () => {
                   <div className="total-discount">
                     <div className="vertical-line"></div>
                     <div className="parameter-total">
-                      <p>Discount</p>
+                      <p>Subtotal</p>
+                      <p>Voucher</p>
                       <p style={{ fontWeight: 700 }}>Total</p>
                     </div>
 
                     <div className="value-total">
+                      <p>${getShippingMethodOption(order?.shippingMethodId)}</p>
                       <p>$0</p>
                       <p style={{ fontWeight: 700 }}>
-                        $
-                        {orderDetails
+                        ${order?.total.toLocaleString()}
+                        {/* {orderDetails
                           .reduce((total, order) => total + order.total, 0)
-                          .toLocaleString()}
+                          .toLocaleString()} */}
                       </p>
                     </div>
                   </div>

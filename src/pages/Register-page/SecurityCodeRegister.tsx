@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../SecurityCode-page/SecurityCode.css';
-import axios from 'axios';
 import { toast } from 'react-toastify';
+import { register } from '../../apiServices/AccountServices/accountServices';
 
 const SecurityCodeRegister = () => {
     const [otp, setOtp] = useState('');
@@ -24,8 +25,8 @@ const SecurityCodeRegister = () => {
 
         if (otp == initialCode) {
             try {
-                const response = await axios.post('https://localhost:7030/api/Account/Register', registerValues);
-                if (response.status === 200) {
+                const response = await register(registerValues);
+                if (response) {
                     toast.success('Registration successful');
                     navigate(`/login`);
                 }

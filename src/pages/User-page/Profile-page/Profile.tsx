@@ -1,9 +1,16 @@
 import { Navbar, Footer, BoxMenuUser } from "../../../import/import-components";
-import { useEffect, useState, swal } from "../../../import/import-another";
-import { refreshToken } from "../../../apiServices/AccountServices/refreshTokenServices";
-import { jwtDecode } from "jwt-decode";
-import axios from "axios";
+import {
+  useEffect,
+  useState,
+  swal,
+  useMemo,
+} from "../../../import/import-another";
 import "./Profile.css";
+import { getUserIdFromToken } from "../../../utils/jwtHelper";
+import {
+  getUserAPI,
+  userUpdate,
+} from "../../../apiServices/UserServices/userServices";
 
 export interface IUser {
   userId: number;
@@ -17,51 +24,53 @@ export interface IUser {
 
 const Profile = () => {
   const token = localStorage.getItem("token");
-  if (!token) {
-    swal({
-      title: "Oops!",
-      text: "You haven't logged in yet! Redirecting to Login Page...",
-      icon: "warning",
-      buttons: {
-        ok: {
-          text: "OK",
-          value: true,
-          className: "swal-ok-button",
-        },
-      },
-    }).then((value) => {
-      if (value) {
-        window.location.href = "/login";
-      }
-    });
-
-    return;
-  }
-
   const [user, setUser] = useState({} as IUser);
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
   const [errors, setErrors] = useState({
-    name: '',
-    phoneNumber: '',
-    address: ''
+    name: "",
+    phoneNumber: "",
+    address: "",
   });
-  const decodedToken: any = jwtDecode(token);
-  const userIdIdentifier = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+
+  const userId = useMemo(() => {
+    if (!token) {
+      swal({
+        title: "Oops!",
+        text: "You haven't logged in yet! Redirecting to Login Page...",
+        icon: "warning",
+        buttons: {
+          ok: {
+            text: "OK",
+            value: true,
+            className: "swal-ok-button",
+          },
+        },
+      }).then((value) => {
+        if (value) {
+          window.location.href = "/login";
+        }
+      });
+
+      return null;
+    }
+    const userId = getUserIdFromToken(token);
+    return userId;
+  }, [token]);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const userData = await getUser(userIdIdentifier);
+        const userData = await getUser(userId);
         setUser(userData);
       } catch (error) {
-        throw new Error('User not found');
+        throw new Error("User not found");
       }
     };
 
     fetchUser();
-  }, [userIdIdentifier]);
+  }, [userId]);
 
   useEffect(() => {
     if (user) {
@@ -71,12 +80,12 @@ const Profile = () => {
     }
   }, [user]);
 
-  const getUser = async (id: any) => {
+  const getUser = async (id: number) => {
     try {
-      const response = await axios.get(`https://localhost:7030/api/User/${id}`);
-      return response.data;
+      const response = await getUserAPI(id);
+      return response;
     } catch (error) {
-      console.error('Error fetching user', error);
+      console.error("Error fetching user", error);
       throw error;
     }
   };
@@ -85,40 +94,40 @@ const Profile = () => {
     event.preventDefault();
     //check valid
     const error = {
-      name: '',
-      phoneNumber: '',
-      address: '',
-      check: false
+      name: "",
+      phoneNumber: "",
+      address: "",
+      check: false,
     };
-    const name_parttern = /^[^\d!@#$%^&*(),.?":{}|<>]+$/u
+    const name_parttern = /^[^\d!@#$%^&*(),.?":{}|<>]+$/u;
 
     if (name === "") {
-      error.name = "Name is Required!"
-      error.check = true
+      error.name = "Name is Required!";
+      error.check = true;
     } else if (!name_parttern.test(name.trim())) {
-      error.name = "The name should not have special characters"
-      error.check = true
+      error.name = "The name should not have special characters";
+      error.check = true;
     }
 
     if (phoneNumber === "") {
-      error.phoneNumber = "phoneNumber is Required!"
-      error.check = true
+      error.phoneNumber = "phoneNumber is Required!";
+      error.check = true;
     } else if (!(phoneNumber.charAt(0) == "0") || !(phoneNumber.length == 10)) {
-      error.phoneNumber = "PhoneNumber is wrong"
-      error.check = true
+      error.phoneNumber = "PhoneNumber is wrong";
+      error.check = true;
     }
 
     if (address === "") {
-      error.address = "address is Required!"
-      error.check = true
+      error.address = "address is Required!";
+      error.check = true;
     } else if (address.length < 3) {
-      error.address = "Address must be at least 3 characters"
-      error.check = true
+      error.address = "Address must be at least 3 characters";
+      error.check = true;
     }
 
-    setErrors(error)
+    setErrors(error);
     if (error.check) {
-      return
+      return;
     }
 
     const payload = {
@@ -128,26 +137,15 @@ const Profile = () => {
       address: address,
     };
 
-    console.log(payload)
+    console.log(payload);
 
     try {
-      const response = await fetch(
-        `https://localhost:7030/api/User/Update?id=${parseInt(userIdIdentifier)}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await userUpdate(userId, payload);
 
-      if (response.status === 200) {
-        const updatedUser = await response.json(); // Chuyển đổi response thành JSON
+      if (response) {
+        const updatedUser = response;
         swal("Success", "User information updated successfully!", "success");
         setUser(updatedUser); // Cập nhật state user với dữ liệu mới
-      } else if (response.status === 401) {
-        await refreshToken();
       } else {
         swal("Error", "Failed to update user information.", "error");
       }
@@ -173,8 +171,8 @@ const Profile = () => {
             <p>Manage profile information for account security</p>
             <div></div>
             <form onSubmit={handleSubmit}>
-              <table >
-                <tbody >
+              <table>
+                <tbody>
                   <tr style={{ background: "white" }}>
                     <td>Email</td>
                     <td>{user.email}</td>
@@ -189,7 +187,9 @@ const Profile = () => {
                         value={name || ""}
                         onChange={(e) => setName(e.target.value)}
                       />
-                      {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
+                      {errors.name && (
+                        <p style={{ color: "red" }}>{errors.name}</p>
+                      )}
                     </td>
                   </tr>
 
@@ -202,7 +202,9 @@ const Profile = () => {
                         value={phoneNumber || ""}
                         onChange={(e) => setPhoneNumber(e.target.value)}
                       />
-                      {errors.phoneNumber && <p style={{ color: "red" }}>{errors.phoneNumber}</p>}
+                      {errors.phoneNumber && (
+                        <p style={{ color: "red" }}>{errors.phoneNumber}</p>
+                      )}
                     </td>
                   </tr>
 
@@ -215,7 +217,9 @@ const Profile = () => {
                         value={address || ""}
                         onChange={(e) => setAddress(e.target.value)}
                       />
-                      {errors.address && <p style={{ color: "red" }}>{errors.address}</p>}
+                      {errors.address && (
+                        <p style={{ color: "red" }}>{errors.address}</p>
+                      )}
                     </td>
                   </tr>
 

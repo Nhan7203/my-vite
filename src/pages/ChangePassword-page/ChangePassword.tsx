@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './ChangePassword.css';
 import swal from 'sweetalert';
+import { changePassword } from '../../apiServices/AccountServices/accountServices';
 
 const ChangePassword = () => {
 
@@ -19,46 +20,40 @@ const ChangePassword = () => {
 
     const handleOnContinue = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
-
+      
         if (newPassword !== confirmPassword) {
-            setPasswordMismatch(true);
-            return;
+          setPasswordMismatch(true);
+          return;
         }
-        //check data
-        console.log(JSON.stringify({ email, password: newPassword }));
+      
         try {
-            const endpoint = `https://localhost:7030/api/Account/changePassword?email=${email}&password=${newPassword}`;
-            const response = await fetch(endpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
 
-            if (response.ok) {
-                swal({
-                    title: "Password Reset!",
-                    text: "Your password has been reset! Please login again!",
-                    icon: "success",
-                    buttons: {
-                        ok: {
-                            text: "OK",
-                            value: true,
-                            className: "swal-ok-button",
-                        }
-                    },
-                }).then((value) => {
-                    if (value) {
-                        navigate("/login");
-                    }
-                });
-            } else {
-                throw new Error('Failed to change password');
-            }
+          const response = await changePassword(email, newPassword)
+      
+          if (response) {
+            swal({
+              title: "Password Reset!",
+              text: "Your password has been reset! Please login again!",
+              icon: "success",
+              buttons: {
+                ok: {
+                  text: "OK",
+                  value: true,
+                  className: "swal-ok-button",
+                },
+              },
+            }).then((value) => {
+              if (value) {
+                navigate("/login");
+              }
+            });
+          } else {
+            throw new Error('Failed to change password');
+          }
         } catch (error) {
-            console.error(error);
+          console.error(error);
         }
-    };
+      };
 
     const handleBtCancel = () => {
         navigate("/securitycode");

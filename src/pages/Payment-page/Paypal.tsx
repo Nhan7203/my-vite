@@ -7,6 +7,8 @@ import {
 import { getUserIdFromToken, getAddressFromToken } from "../../utils/jwtHelper";
 import { useEffect } from "react";
 import swal from "sweetalert";
+import { ordersPaypal } from "../../apiServices/OrderServices/OrderServices";
+import { useNavigate } from "react-router-dom";
 
 type PayPalButtonStyle = {
   layout?: "vertical" | "horizontal";
@@ -24,6 +26,7 @@ interface ButtonWrapperProps {
   amount: any,
   payload: any,
   shippingMethodIdPay: number
+  total: number
 }
 
 
@@ -34,7 +37,10 @@ const ButtonWrapper: React.FC<ButtonWrapperProps>  = ({
   amount,
   payload,
   shippingMethodIdPay,
+  total
 }) => {
+
+  const navigate = useNavigate();
 
   const [{ isPending, options }, dispatch] = usePayPalScriptReducer();
 
@@ -50,6 +56,7 @@ const ButtonWrapper: React.FC<ButtonWrapperProps>  = ({
   }, [currency, showSpinner]);
 
   const handlePaymentSuccess = async (_data: any, actions: any) => {
+
     try {
       const response = await actions.order.capture();
       console.log(response);
@@ -86,26 +93,23 @@ const ButtonWrapper: React.FC<ButtonWrapperProps>  = ({
           paymentMethod,
           shippingMethodId,
           products,
+          total: total
         };
+        console.log(JSON.stringify(order));//
+        const apiResponse = await ordersPaypal(order,token)
 
-        const apiResponse = await fetch("https://localhost:7030/api/orders", {
-          //https://localhost:7030/api/orders
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(order),
-        });
-
-        if (!apiResponse.ok) {
+        if (!apiResponse) {
           throw new Error("Failed to store cart data");
         }
 
         localStorage.removeItem("cart");
         localStorage.removeItem("currentQuantities");
-        swal("Congrat!", "Order was created!", "success");
-        window.location.href = "/processing";
+        swal("Congrat!", "Order was created!", "success").then(() => {
+          navigate("/processing");
+        });
+        
+        const data = await apiResponse.data;//
+        console.log("Cart data stored:", data);//
       }
     } catch (error) {
       console.error("Error storing cart data:", error);
@@ -139,7 +143,7 @@ const ButtonWrapper: React.FC<ButtonWrapperProps>  = ({
   );
 };
 
-export default function Paypal({ amount, payload, shippingMethod } : {amount: any, payload: any, shippingMethod: number}) {
+export default function Paypal({ amount, payload, shippingMethod, total } : {amount: any, payload: any, shippingMethod: number, total: number}) {
 
   return (
     <div style={{ maxWidth: "750px", minHeight: "156px" }}>
@@ -152,6 +156,7 @@ export default function Paypal({ amount, payload, shippingMethod } : {amount: an
           amount={amount}
           showSpinner={false}
           shippingMethodIdPay={shippingMethod}
+          total={total}
         />
       </PayPalScriptProvider>
     </div>
