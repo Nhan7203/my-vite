@@ -81,7 +81,7 @@ const Admin = () => {
               <li>
                 <a href="/charts">
                   <span className="las la-clipboard-list"></span>
-                  <span>Đây nè Vũ chó điên</span>
+                  <span>Admin Dash Board</span>
                 </a>
               </li>
             </ul>
@@ -96,7 +96,7 @@ const Admin = () => {
               </label>
               Dashboard
             </h2>
-        
+
             <div className="user-wrapper">
               <img
                 src="/src/assets/anya-cute.jpg"
@@ -180,7 +180,7 @@ const Admin = () => {
                           {allProduct
                             .slice(0, 9)
                             .map((product, index: number) => (
-                              <tr key={index} style={{backgroundColor: "white"}}>
+                              <tr key={index} style={{ backgroundColor: "white" }}>
                                 <td>{product.name}</td>
                                 <td>{product.stock}</td>
                                 <td>

@@ -47,11 +47,11 @@ const Sidebar = () => {
             </a>
           </li>
           <li>
-                <a href="/charts">
-                  <span className="las la-clipboard-list"></span>
-                  <span>Đây nè Vũ chó điên</span>
-                </a>
-              </li>
+            <a href="/charts">
+              <span className="las la-clipboard-list"></span>
+              <span>Admin Dash Board</span>
+            </a>
+          </li>
         </ul>
       </div>
     </div>
