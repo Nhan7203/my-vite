@@ -1,7 +1,7 @@
 import { getOrders } from "../../../apiServices/StaffServices/staffServices";
-import { useEffect, useState } from "../../../import/import-another";
+import { useEffect, useState, swal } from "../../../import/import-another";
 import { aOrder } from "../../../interfaces";
-import swal from "sweetalert";
+
 
 const useOrderData = () => {
     const [orderData, setOrderData] = useState<aOrder[]>([]);

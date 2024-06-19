@@ -1,5 +1,5 @@
 import "./Admin.css";
-import { useState, useEffect, SetStateAction } from "react";
+import { useState, useEffect } from "react";
 import "./Admin.css";
 import { aProduct, ageOptions, categoryOptions } from "../../interfaces";
 import { useLocation, useNavigate } from "react-router-dom";

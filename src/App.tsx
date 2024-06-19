@@ -16,6 +16,8 @@ import {
   Order,
   Admin,
   Blog,
+  AddBlog,
+  UpdateBlog,
   Blogs,
   Voucher,
   Register,
@@ -109,6 +111,9 @@ const router = createBrowserRouter(
       </Route>
 
       <Route path="/blogs" element={<Blogs />} />
+      <Route path="/addblog" element={<AddBlog />} />
+      <Route path="/updateblog" element={<UpdateBlog />} />
+
       <Route path="/vouchers" element={<Vouchers />} />
 
       <Route path="/voucher" element={<Voucher />} />

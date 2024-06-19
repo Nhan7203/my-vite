@@ -36,6 +36,14 @@ const Admin = () => {
     fetchData();
   }, []);
 
+  const handleSeeProductClick = () => {
+    window.location.href = '/manage-product';
+  };
+
+  const handleSeeAccountClick = () => {
+    window.location.href = '/account';
+  };
+  
   return (
     <div className="all-page">
       <div>
@@ -70,7 +78,7 @@ const Admin = () => {
                   <span>Product</span>
                 </div>
                 <div>
-                  <span className="las la-clipboard-list"></span>
+                  <span className="las la-cube"></span>
                 </div>
               </div>
 
@@ -100,7 +108,7 @@ const Admin = () => {
                 <div className="card-product">
                   <div className="card-header">
                     <h3>Recent Products</h3>
-                    <button>
+                    <button onClick={() => handleSeeProductClick()}>
                       See all <span className="las la-arrow-right"></span>
                     </button>
                   </div>
@@ -150,7 +158,7 @@ const Admin = () => {
                 <div className="card-product">
                   <div className="card-header">
                     <h3>Accounts</h3>
-                    <button>
+                    <button onClick={() => handleSeeAccountClick()}>
                       See all <span className="las la-arrow-right"></span>
                     </button>
                   </div>

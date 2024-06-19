@@ -947,3 +947,12 @@ tbody>tr>td {
   background: rgba(0, 0, 0, 0.1);
   transform: translateY(-23px);
 }
+
+.td-content {
+ 
+  display: -webkit-box;
+  -webkit-line-clamp: 7;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -41,7 +41,7 @@ const Sidebar = () => {
               href="/manage-product"
               className={activeUrl === "/manage-product" ? "active" : ""}
             >
-              <span className="las la-clipboard-list"></span>
+               <span className="las la-cube"></span>
               <span>Products</span>
             </a>
           </li>
@@ -53,19 +53,25 @@ const Sidebar = () => {
           </li>
           <li>
             <a href="/blogs" className={activeUrl === "/blogs" ? "active" : ""}>
-              <span className="las la-shopping-bag"></span>
+              <span className="las la-newspaper"></span>
               <span>Blogs</span>
             </a>
           </li>
           <li>
-            <a href="/vouchers" className={activeUrl === "/vouchers" ? "active" : ""}>
-              <span className="las la-shopping-bag"></span>
+            <a
+              href="/vouchers"
+              className={activeUrl === "/vouchers" ? "active" : ""}
+            >
+              <span className="las la-gift"></span>
               <span>Vouchers</span>
             </a>
           </li>
           <li>
-            <a href="/charts" className={activeUrl === "/charts" ? "active" : ""}>
-              <span className="las la-clipboard-list"></span>
+            <a
+              href="/charts"
+              className={activeUrl === "/charts" ? "active" : ""}
+            >
+              <span className="las la-chart-bar"></span>
               <span>Charts</span>
             </a>
           </li>

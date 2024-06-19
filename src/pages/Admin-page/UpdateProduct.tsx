@@ -5,7 +5,7 @@ import "./Admin.css";
 import { useAllProduct } from "../../context/ShopContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import swal from "sweetalert";
-import { ImageProduct } from "../../interfaces";
+import { ImageProduct, ageOptions, categoryOptions } from "../../interfaces";
 
 import { getBrand } from "../../apiServices/BrandServices/brandServices";
 import HeaderMain from "./components/Header-main";
@@ -54,20 +54,7 @@ const UpdateProduct = () => {
 
   const product = allProduct.find((e) => e.productId === parseInt(productId));
 
-  const ageOptions = [
-    { id: 1, name: "0 - 6 Month" },
-    { id: 2, name: "6 - 12 Month" },
-    { id: 3, name: "0 - 1 Year" },
-    { id: 4, name: "1 - 2 year" },
-    { id: 5, name: "+2 year" },
-  ];
-
-  const categoryOptions = [
-    { id: 1, name: "Powdered milk" },
-    { id: 2, name: "Nut milk" },
-    { id: 3, name: "Nutritional drinks" },
-    { id: 4, name: "Fresh milk, Yogurt" },
-  ];
+  
 
   useEffect(() => {
     if (product) {
