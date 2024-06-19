@@ -10,9 +10,7 @@ const CompleteInAdmin = () => {
   const navigate = useNavigate();
 
   const handleViewOrderDetails = (order: aOrder) => {
-
     navigate(`/orderinformation/${order.orderId}/${order.userId}`, {
-
       state: { orderStatus: order.orderStatus },
     });
   };
@@ -24,7 +22,13 @@ const CompleteInAdmin = () => {
         <Sidebar />
 
         <div className="main-content">
-          <HeaderMain />
+          <HeaderMain
+            searchQuery={""}
+            displayed={[]}
+            setSearchQuery={function (): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
 
           <OrderTable
             orderData={orderData.filter(
@@ -38,5 +42,3 @@ const CompleteInAdmin = () => {
   );
 };
 export default CompleteInAdmin;
-
-

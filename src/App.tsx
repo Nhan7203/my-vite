@@ -8,6 +8,7 @@ import {
   Chart,
   ProductDetails,
   Cart,
+  Vouchers,
   Payment,
   User,
   Customer,
@@ -15,6 +16,7 @@ import {
   Order,
   Admin,
   Blog,
+  Blogs,
   Voucher,
   Register,
   SecurityCode,
@@ -68,7 +70,6 @@ const router = createBrowserRouter(
       <Route path="/account" element={<Account />} />
       <Route path="/charts" element={<Chart />} />
 
-      
       <Route path="/complete-staff" element={<CompleteInAdmin />} />
       <Route path="/processing-staff" element={<ProcessingInAdmin />} />
       <Route path="/processed-staff" element={<ProcessedInAdmin />} />
@@ -81,15 +82,13 @@ const router = createBrowserRouter(
       <Route path="/order" element={<Order />} />
 
       <Route path="/orderinformation" element={<OrderInfo />}>
-      
-      <Route path=":orderId/:userId" element={<OrderInfo />} />
+        <Route path=":orderId/:userId" element={<OrderInfo />} />
       </Route>
-      
 
       <Route path="/orderdetails" element={<OrderDetails />}>
         <Route path=":orderId" element={<OrderDetails />} />
       </Route>
-      
+
       <Route path="/complete" element={<Complete />} />
       <Route path="/processing" element={<Processing />} />
       <Route path="/processed" element={<Processed />} />
@@ -108,6 +107,9 @@ const router = createBrowserRouter(
       <Route path="/blogdetails" element={<BlogDetails />}>
         <Route path=":blogId" element={<BlogDetails />} />
       </Route>
+
+      <Route path="/blogs" element={<Blogs />} />
+      <Route path="/vouchers" element={<Vouchers />} />
 
       <Route path="/voucher" element={<Voucher />} />
       <Route path="/adress" element={<Adress />} />
