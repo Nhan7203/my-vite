@@ -2,14 +2,36 @@ import React, { useEffect, useState } from 'react';
 import { ResponsiveLine } from '@nivo/line';
 import { ResponsivePie } from '@nivo/pie';
 import { ResponsiveBar } from '@nivo/bar';
-import { mockLineData, fetchBestSellerProducts, mockBarData } from './mockData.ts';
+import { fetchLineData, fetchBestSellerProducts, fetchBarData } from './mockData.ts';
+import {
+    getTotalOrder,
+    getTotalProfit,
+    getTotalUser,
+} from "../../../apiServices/AdminServices/adminServices.tsx";
+
+
+interface PaymentData {
+    Payment: string;
+    [key: string]: string | number;
+}
 
 const Dashboard: React.FC = () => {
 
     const [mockPieData, setMockPieData] = useState([]);
 
+    const [transactions, setTransactions] = useState<{ name: string, date: string, amount: string }[]>([]);
+
+    const [chartData, setChartData] = useState([]);
+    const [totalSumOfAllOrders, setTotalSumOfAllOrders] = useState(0);
+
+    const [barData, setBarData] = useState<PaymentData[]>([]);
+
+    const [totalOrder, setTotalOrder] = useState<number>();
+    const [totalProfit, setTotalProfit] = useState<number>();
+    const [totalUser, setTotalUser] = useState<number>();
+
+
     useEffect(() => {
-        // Fetch the data from the API
         const getData = async () => {
             const data = await fetchBestSellerProducts();
             setMockPieData(data);
@@ -17,22 +39,74 @@ const Dashboard: React.FC = () => {
         getData();
     }, []);
 
+    useEffect(() => {
+        const fetchTransactions = async () => {
+            try {
+                const response = await fetch('https://localhost:7030/api/Admin/GetOrders');
+                const data = await response.json();
+
+                const transformedData = data.map((transaction: any) => ({
+                    name: transaction.userName,
+                    date: new Date(transaction.orderDate).toLocaleDateString('en-GB'),
+                    amount: `${transaction.total.toLocaleString('en-US')} VND`,
+                }));
+
+                setTransactions(transformedData);
+            } catch (error) {
+                console.error('Error fetching transactions:', error);
+            }
+        };
+
+        fetchTransactions();
+    }, []);
+
+    useEffect(() => {
+        const getData = async () => {
+            const { transformedData, totalSumOfAllOrders } = await fetchLineData();
+            setChartData(transformedData);
+            setTotalSumOfAllOrders(totalSumOfAllOrders);
+        };
+
+        getData();
+    }, []);
+
+    useEffect(() => {
+        const getBarData = async () => {
+            const data = await fetchBarData();
+            setBarData(data);
+        };
+
+        getBarData();
+    }, []);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const result = await getTotalOrder();
+            setTotalOrder(result);
+            const result1 = await getTotalProfit();
+            setTotalProfit(result1);
+            const result2 = await getTotalUser();
+            setTotalUser(result2 - 2);
+        };
+        fetchData();
+    }, []);
+
     return (
         <div style={{ background: '#f8e6e9', padding: '20px', color: '#5a1a1a', minHeight: '100vh' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-                <StatCard title="Total Orders" value="12,361" growth="+14%" />
-                <StatCard title="Sales Obtained" value="431,225" growth="+21%" />
-                <StatCard title="New Customers" value="32,441" growth="+5%" />
+                <StatCard title="Total Orders" value={totalOrder?.toString() || "0"} growth="+14%" />
+                <StatCard title="Sales Obtained" value={totalProfit?.toLocaleString() || "0"} growth="+21%" />
+                <StatCard title="New Customers" value={totalUser?.toString() || "0"} growth="+5%" />
             </div>
 
             <div style={{ display: 'flex', marginBottom: '20px' }}>
                 <div style={{ flex: 2, background: '#fff5f7', padding: '20px', marginRight: '20px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)' }}>
-                    <h3>Revenue Generated</h3>
-                    <h1>$59,342.32</h1>
+                    <h3>Revenue Earned</h3>
+                    <h1>{totalSumOfAllOrders.toLocaleString()} VND</h1>
                     <div style={{ height: '300px' }}>
-                        {mockLineData && (
+                        {chartData.length > 0 && (
                             <ResponsiveLine
-                                data={mockLineData}
+                                data={chartData}
                                 colors={{ scheme: 'pink_yellowGreen' }}
                                 margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
                                 xScale={{ type: 'point' }}
@@ -49,7 +123,7 @@ const Dashboard: React.FC = () => {
                                     tickSize: 5,
                                     tickPadding: 5,
                                     tickRotation: 0,
-                                    legend: 'transportation',
+                                    legend: 'Order Date',
                                     legendOffset: 36,
                                     legendPosition: 'middle'
                                 }}
@@ -57,7 +131,7 @@ const Dashboard: React.FC = () => {
                                     tickSize: 5,
                                     tickPadding: 5,
                                     tickRotation: 0,
-                                    legend: 'count',
+                                    legend: 'Order Count',
                                     legendOffset: -40,
                                     legendPosition: 'middle'
                                 }}
@@ -99,13 +173,13 @@ const Dashboard: React.FC = () => {
                 </div>
                 <div style={{ flex: 1, background: '#fff5f7', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)' }}>
                     <h3>Recent Transactions</h3>
-                    <TransactionList />
+                    <TransactionList transactions={transactions} />
                 </div>
             </div>
 
             <div style={{ display: 'flex', marginBottom: '20px' }}>
                 <div style={{ flex: 1, background: '#fff5f7', padding: '20px', marginRight: '20px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)' }}>
-                    <h3>Campaign</h3>
+                    <h3>Top Seller</h3>
                     <div style={{ height: '200px' }}>
                         {mockPieData && (<ResponsivePie
                             data={mockPieData}
@@ -135,13 +209,13 @@ const Dashboard: React.FC = () => {
                 </div>
 
                 <div style={{ flex: 1, background: '#fff5f7', padding: '20px', marginRight: '20px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)' }}>
-                    <h3>Sales Quantity</h3>
-                    <div style={{ height: '200px' }}>
-                        {mockBarData && (
+                    <h3>Top Brand</h3>
+                    <div style={{ height: '300px' }}>
+                        {barData.length > 0 && (
                             <ResponsiveBar
-                                data={mockBarData}
-                                keys={['hot dog', 'burger', 'sandwich', 'kebab', 'fries', 'donut']}
-                                indexBy="country"
+                                data={barData}
+                                keys={barData.length > 0 ? Object.keys(barData[0]).filter(key => key !== 'Payment' && !key.endsWith('Color')) : []}
+                                indexBy="Payment"
                                 margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
                                 padding={0.3}
                                 colors={{ scheme: 'pink_yellowGreen' }}
@@ -155,7 +229,7 @@ const Dashboard: React.FC = () => {
                                     tickSize: 5,
                                     tickPadding: 5,
                                     tickRotation: 0,
-                                    legend: 'country',
+                                    legend: 'Payment',
                                     legendPosition: 'middle',
                                     legendOffset: 32
                                 }}
@@ -163,7 +237,7 @@ const Dashboard: React.FC = () => {
                                     tickSize: 5,
                                     tickPadding: 5,
                                     tickRotation: 0,
-                                    legend: 'food',
+                                    legend: 'Sales Quantity',
                                     legendPosition: 'middle',
                                     legendOffset: -40
                                 }}
@@ -199,14 +273,14 @@ const Dashboard: React.FC = () => {
                                 ]}
                                 role="application"
                                 ariaLabel="Nivo bar chart demo"
-                                barAriaLabel={function (e) { return e.id + ": " + e.formattedValue + " in country: " + e.indexValue }}
+                                barAriaLabel={function (e) { return `${e.id}: ${e.formattedValue} in payment type: ${e.indexValue}` }}
                             />
                         )}
                     </div>
                 </div>
 
             </div>
-        </div>
+        </div >
     );
 };
 
@@ -220,24 +294,32 @@ const StatCard: React.FC<{ title: string; value: string; growth: string }> = ({ 
     );
 };
 
-const TransactionList: React.FC = () => {
-    const transactions = [
-        { name: 'John Doe', date: '2023-06-01', amount: '$123.45' },
-        { name: 'Jane Smith', date: '2023-06-02', amount: '$678.90' },
-        { name: 'Sam Johnson', date: '2023-06-03', amount: '$234.56' },
-        { name: 'Chris Lee', date: '2023-06-04', amount: '$789.01' },
-    ];
+interface Transaction {
+    name: string;
+    date: string;
+    amount: string;
+}
 
+const TransactionList: React.FC<{ transactions: Transaction[] }> = ({ transactions }) => {
     return (
-        <div>
-            {transactions.map((transaction, index) => (
-                <div key={index} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', padding: '10px', background: '#fce4ec', borderRadius: '4px' }}>
-                    <span>{transaction.name}</span>
-                    <span>{transaction.date}</span>
-                    <span>{transaction.amount}</span>
-                </div>
-            ))}
-        </div>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+                <tr>
+                    <th style={{ borderBottom: '1px solid #ddd', padding: '12px 0', textAlign: 'left' }}>Name</th>
+                    <th style={{ borderBottom: '1px solid #ddd', padding: '12px 0', textAlign: 'left' }}>Date</th>
+                    <th style={{ borderBottom: '1px solid #ddd', padding: '12px 0', textAlign: 'left' }}>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {transactions.map((transaction, index) => (
+                    <tr key={index}>
+                        <td style={{ padding: '10px 0', borderBottom: '1px solid #ddd' }}>{transaction.name}</td>
+                        <td style={{ padding: '10px 0', borderBottom: '1px solid #ddd' }}>{transaction.date}</td>
+                        <td style={{ padding: '10px 0', borderBottom: '1px solid #ddd' }}>{transaction.amount}</td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
     );
 };
 
