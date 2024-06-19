@@ -77,7 +77,7 @@ const Admin = () => {
               <div className="card-single">
                 <div>
                   <h1>{totalOrder}</h1>
-                  <span>orders</span>
+                  <span>Orders</span>
                 </div>
                 <div>
                   <span className="las la-shopping-bag"></span>
@@ -131,9 +131,8 @@ const Admin = () => {
                                 <td>{product.stock}</td>
                                 <td>
                                   <span
-                                    className={`status ${
-                                      product.isActive ? "green" : "purple"
-                                    }`}
+                                    className={`status ${product.isActive ? "green" : "purple"
+                                      }`}
                                   />
                                   {product.isActive ? "in progress" : "pending"}
                                 </td>
