@@ -69,7 +69,6 @@ const Sidebar = () => {
               <span>Charts</span>
             </a>
           </li>
-
         </ul>
       </div>
     </div>

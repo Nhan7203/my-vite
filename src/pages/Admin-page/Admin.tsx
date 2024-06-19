@@ -40,6 +40,7 @@ const Admin = () => {
     <div className="all-page">
       <div>
         <input type="checkbox" id="nav-toggle" />
+
         <Sidebar />
 
         <div className="main-content">
