@@ -9,8 +9,10 @@ const Chart = () => {
         <input type="checkbox" id="nav-toggle" />
         <Sidebar />
 
-        <div className="main-content" style={{ paddingTop: '80px' }}>
-          <HeaderMain />
+        <div className="main-content"  style={{ paddingTop: '80px' }}>
+          <HeaderMain searchQuery={""} displayed={[]} setSearchQuery={function (): void {
+            throw new Error("Function not implemented.");
+          } } />
           <Dashboard />
           <div></div>
         </div>

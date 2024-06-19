@@ -36,8 +36,11 @@ import AddProduct from "../pages/Admin-page/AddProduct";
 import UpdateProduct from "../pages/Admin-page/UpdateProduct";
 import OrderInfo from "../pages/Admin-page/Order-info";
 import SecurityCodeRegister from "../pages/Register-page/SecurityCodeRegister";
+import Vouchers from "../pages/Admin-page/Vouchers";
+import Blogs from "../pages/Admin-page/Blogs";
 export {
   Login,
+  Vouchers,
   OrderInfo,
   Adress,
   Product,
@@ -45,6 +48,7 @@ export {
   Cart,
   Blog,
   Home,
+  Blogs,
   Chart,
   Voucher,
   Register,

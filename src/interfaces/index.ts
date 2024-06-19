@@ -120,18 +120,18 @@ export interface Order {
 }
 
 export interface aProductReview {
-  userId: number,
-  orderDetailId: number,
-  productId: number,
-  date: Date,
-  rating: number,
-  comment: string,
+  userId: number;
+  orderDetailId: number;
+  productId: number;
+  date: Date;
+  rating: number;
+  comment: string;
 }
 
 export interface RatingInfo {
-    averageRating: number,
-    totalRating: number,
-    reviewCount: number,
+  averageRating: number;
+  totalRating: number;
+  reviewCount: number;
 }
 
 export interface OrderDetail {
@@ -164,12 +164,16 @@ export const categoryOptions = [
   { id: 2, name: "Nut milk" },
   { id: 3, name: "Nutritional drinks" },
   { id: 4, name: "Fresh milk, Yogurt" },
-
 ];
 
 export const shippingMethodOptions = [
   { id: 1, price: "30,000" },
   { id: 2, price: "50,000" },
   { id: 3, price: "120,000" },
+];
 
+export const roleOptions = [
+  { id: 1, role: "User" },
+  { id: 2, role: "Staff" },
+  { id: 3, role: "Admin" },
 ];
