@@ -1,4 +1,7 @@
+import { useLocation } from "react-router-dom";
 const Sidebar = () => {
+  const location = useLocation();
+  const activeUrl = location.pathname;
   return (
     <div className="sidebar">
       <div className="sidebar-brand">
@@ -10,48 +13,63 @@ const Sidebar = () => {
       <div className="sidebar-menu">
         <ul>
           <li>
-            <a href="/admin" className="active">
+            <a href="/admin" className={activeUrl === "/admin" ? "active" : ""}>
               <span className="las la-igloo"></span>
               <span>Dashboard</span>
             </a>
           </li>
           <li>
-            <a href="/customer">
-              <span className="las la-users"></span>
-              <span>Customers</span>
-            </a>
-          </li>
-          <li>
-            <a href="/manage-product">
-              <span className="las la-clipboard-list"></span>
-              <span>Products</span>
-            </a>
-          </li>
-          <li>
-            <a href="/order">
-              <span className="las la-shopping-bag"></span>
-              <span>Orders</span>
-            </a>
-          </li>
-
-          <li>
-            <a href="/account">
+            <a
+              href="/account"
+              className={activeUrl === "/account" ? "active" : ""}
+            >
               <span className="las la-user-circle"></span>
               <span>Accounts</span>
             </a>
           </li>
           <li>
-            <a href="">
-              <span className="las la-clipboard-list"></span>
-              <span>Tasks</span>
+            <a
+              href="/customer"
+              className={activeUrl === "/customer" ? "active" : ""}
+            >
+              <span className="las la-users"></span>
+              <span>Customers</span>
             </a>
           </li>
           <li>
-                <a href="/charts">
-                  <span className="las la-clipboard-list"></span>
-                  <span>Đây nè Vũ chó điên</span>
-                </a>
-              </li>
+            <a
+              href="/manage-product"
+              className={activeUrl === "/manage-product" ? "active" : ""}
+            >
+              <span className="las la-clipboard-list"></span>
+              <span>Products</span>
+            </a>
+          </li>
+          <li>
+            <a href="/order" className={activeUrl === "/order" ? "active" : ""}>
+              <span className="las la-shopping-bag"></span>
+              <span>Orders</span>
+            </a>
+          </li>
+          <li>
+            <a href="/blogs" className={activeUrl === "/blogs" ? "active" : ""}>
+              <span className="las la-shopping-bag"></span>
+              <span>Blogs</span>
+            </a>
+          </li>
+          <li>
+            <a href="/vouchers" className={activeUrl === "/vouchers" ? "active" : ""}>
+              <span className="las la-shopping-bag"></span>
+              <span>Vouchers</span>
+            </a>
+          </li>
+          <li>
+            <a href="/charts" className={activeUrl === "/charts" ? "active" : ""}>
+              <span className="las la-clipboard-list"></span>
+              <span>Charts</span>
+            </a>
+          </li>
+
         </ul>
       </div>
     </div>

@@ -1,11 +1,13 @@
 import "./Admin.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction } from "react";
 import "./Admin.css";
-import { aProduct } from "../../interfaces";
+import { aProduct, ageOptions, categoryOptions } from "../../interfaces";
 import { useLocation, useNavigate } from "react-router-dom";
 import * as brandd from "../../apiServices/BrandServices/brandServices";
 import swal from "sweetalert";
-import { useAllProduct, } from "../../context/ShopContext";
+import { useAllProduct } from "../../context/ShopContext";
+import HeaderMain from "./components/Header-main";
+import Sidebar from "./components/Sidebar";
 
 export interface Brand {
   brandId: number;
@@ -14,8 +16,8 @@ export interface Brand {
 }
 
 export interface ImageProduct {
-  imageUrl: string
-  imageFile: File | null
+  imageUrl: string;
+  imageFile: File | null;
 }
 
 const AddProduct = () => {
@@ -31,7 +33,7 @@ const AddProduct = () => {
   const [price, setPrice] = useState<number>(0);
   const [stock, setStock] = useState<number>(0);
   const [imageUrls, setImageUrls] = useState<{
-    [key: number]: ImageProduct,
+    [key: number]: ImageProduct;
   }>({});
   const [brandList, setBrandList] = useState<Brand[]>([]);
   const [products] = useState<aProduct[]>(productList);
@@ -47,8 +49,6 @@ const AddProduct = () => {
   );
   const product = allProduct.find((e) => e.productId === maxProductId);
 
-
-
   useEffect(() => {
     const fetchData = async () => {
       const result = await brandd.getBrand();
@@ -57,23 +57,10 @@ const AddProduct = () => {
     fetchData();
   }, []);
 
-  const ageOptions = [
-    { id: 1, name: "0 - 6 Month" },
-    { id: 2, name: "6 - 12 Month" },
-    { id: 3, name: "0 - 1 Year" },
-    { id: 4, name: "1 - 2 year" },
-    { id: 5, name: "+2 year" },
-  ];
-
-  const categoryOptions = [
-    { id: 1, name: "Powdered milk" },
-    { id: 2, name: "Nut milk" },
-    { id: 3, name: "Nutritional drinks" },
-    { id: 4, name: "Fresh milk, Yogurt" },
-  ];
-
-  const handleImageUpload = (imageIndex: number, event: React.ChangeEvent<HTMLInputElement>) => {
-
+  const handleImageUpload = (
+    imageIndex: number,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
@@ -97,7 +84,7 @@ const AddProduct = () => {
         },
       }));
     }
-  }
+  };
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
@@ -111,23 +98,22 @@ const AddProduct = () => {
     };
 
     if (name === "") {
-      error.name = "Name is Required!"
-      error.check = true
-
+      error.name = "Name is Required!";
+      error.check = true;
     }
     if (description === "") {
-      error.description = "Description is Required!"
-      error.check = true
+      error.description = "Description is Required!";
+      error.check = true;
     }
 
     if (stock === undefined || stock === 0) {
-      error.stock = "pls enter stock"
-      error.check = true
+      error.stock = "pls enter stock";
+      error.check = true;
     }
 
     if (price === undefined || price === 0) {
-      error.price = "pls enter price"
-      error.check = true
+      error.price = "pls enter price";
+      error.check = true;
     }
 
     // Kiểm tra từng phần tử trong imageUrls
@@ -138,7 +124,12 @@ const AddProduct = () => {
       let isAnyImageUploaded = false;
       for (const key in imageUrls) {
         // Nếu giá trị ban đầu là một giá trị falsy (false, 0, "", null, undefined, hoặc NaN), thì kết quả của !! sẽ là false.
-        if (!(!!imageUrls[key] && (!!imageUrls[key].imageFile || !!imageUrls[key].imageUrl))) {
+        if (
+          !(
+            !!imageUrls[key] &&
+            (!!imageUrls[key].imageFile || !!imageUrls[key].imageUrl)
+          )
+        ) {
           isAnyImageUploaded = true;
           break;
         }
@@ -151,42 +142,52 @@ const AddProduct = () => {
       }
     }
 
-    setErrors(error)
+    setErrors(error);
     if (error.check) {
       return;
     }
 
     const formData = new FormData();
-    formData.append('name', name);
-    formData.append('description', description);
-    formData.append('forAgeId', ageId.toString());
-    formData.append('brandId', brandId.toString());
-    formData.append('categoryId', categoryId.toString());
-    formData.append('price', price.toString());
-    formData.append('stock', stock.toString());
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("forAgeId", ageId.toString());
+    formData.append("brandId", brandId.toString());
+    formData.append("categoryId", categoryId.toString());
+    formData.append("price", price.toString());
+    formData.append("stock", stock.toString());
 
     for (const key in imageUrls) {
-      formData.append(`ImageProducts[${key}].ProductId`, (products.length + 1).toString());  // Dummy ProductId since it's a new product
+      formData.append(
+        `ImageProducts[${key}].ProductId`,
+        (products.length + 1).toString()
+      ); // Dummy ProductId since it's a new product
       const imageFile = imageUrls[key].imageFile;
-      if(imageFile) {
+      if (imageFile) {
         formData.append(`ImageProducts[${key}].ImageFile`, imageFile);
       }
     }
-    console.log("hahaha",formData)
+    console.log("hahaha", formData);
     try {
-      const response = await fetch(`https://localhost:7030/api/Products/Create`, {
-        method: "POST",
-        body: formData
-      });
+      const response = await fetch(
+        `https://localhost:7030/api/Products/Create`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (response.status === 201) {
         swal("Success", "Product information created successfully!", "success");
       } else {
-        console.log(response.status)
+        console.log(response.status);
         swal("Error", "Failed to create product information.", "error");
       }
     } catch (error) {
-      swal("Error", "Error occurred during creating product information.", "error");
+      swal(
+        "Error",
+        "Error occurred during creating product information.",
+        "error"
+      );
     }
   };
 
@@ -194,94 +195,20 @@ const AddProduct = () => {
     navigate("/manage-product");
   };
 
-
   return (
     <>
       <div>
         <input type="checkbox" id="nav-toggle" />
-        <div className="sidebar">
-          <div className="sidebar-brand">
-            <h2>
-              <span className="lab la-accusoft"></span> <span>M&B</span>
-            </h2>
-          </div>
-
-          <div className="sidebar-menu">
-            <ul>
-              <li>
-                <a href="/admin" className="active">
-                  <span className="las la-igloo"></span>
-                  <span>Dashboard</span>
-                </a>
-              </li>
-              <li>
-                <a href="/customer">
-                  <span className="las la-users"></span>
-                  <span>Customers</span>
-                </a>
-              </li>
-              <li>
-                <a href="/manage-product">
-                  <span className="las la-clipboard-list"></span>
-                  <span>Products</span>
-                </a>
-              </li>
-              <li>
-                <a href="/order">
-                  <span className="las la-shopping-bag"></span>
-                  <span>Orders</span>
-                </a>
-              </li>
-
-              <li>
-                <a href="/account">
-                  <span className="las la-user-circle"></span>
-                  <span>Accounts</span>
-                </a>
-              </li>
-              <li>
-                <a href="">
-                  <span className="las la-clipboard-list"></span>
-                  <span>Tasks</span>
-                </a>
-              </li>
-              <li>
-                <a href="/charts">
-                  <span className="las la-clipboard-list"></span>
-                  <span>Đây nè Vũ chó điên</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <Sidebar />
 
         <div className="main-content">
-          <div className="header-main">
-            <h2>
-              <label htmlFor="nav-toggle">
-                <span className="las la-bars"></span>
-              </label>
-              Dashboard
-            </h2>
-
-            {/* <div className="search-wrapper">
-              <span className="las la-search"></span>
-              <input type="search" placeholder="Search here" />
-            </div> */}
-
-            <div className="user-wrapper">
-              <img
-                src="/src/assets/anya-cute.jpg"
-                width="40px"
-                height="40px"
-                alt=""
-              />
-              <div>
-                <h4>Datnt nt</h4>
-                <small>Super admin</small>
-              </div>
-            </div>
-          </div>
+          <HeaderMain
+            searchQuery={""}
+            displayed={[]}
+            setSearchQuery={function (): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
 
           <main>
             <form onSubmit={handleSubmit} id="boder-form">
@@ -303,12 +230,16 @@ const AddProduct = () => {
                         <img
                           src={imageUrls[index].imageUrl}
                           alt={`Image ${index + 1}`}
-                          style={{ maxWidth: '200px' }}
+                          style={{ maxWidth: "200px" }}
                         />
                       ) : null}
                     </div>
                   ))}
-                  <div >{errors.imageUrls && <p style={{ color: "red" }}>{errors.imageUrls}</p>}</div>
+                  <div>
+                    {errors.imageUrls && (
+                      <p style={{ color: "red" }}>{errors.imageUrls}</p>
+                    )}
+                  </div>
 
                   <h4>For age</h4>
                   <select
@@ -316,11 +247,7 @@ const AddProduct = () => {
                     onChange={(e) => setAgeId(Number(e.target.value))}
                   >
                     {ageOptions.map((option) => (
-                      <option
-                        key={option.id}
-                        value={option.id}
-
-                      >
+                      <option key={option.id} value={option.id}>
                         {option.name}
                       </option>
                     ))}
@@ -332,11 +259,7 @@ const AddProduct = () => {
                     onChange={(e) => setCategoryId(Number(e.target.value))}
                   >
                     {categoryOptions.map((option) => (
-                      <option
-                        key={option.id}
-                        value={option.id}
-
-                      >
+                      <option key={option.id} value={option.id}>
                         {option.name}
                       </option>
                     ))}
@@ -348,11 +271,7 @@ const AddProduct = () => {
                     onChange={(e) => setBrandId(Number(e.target.value))}
                   >
                     {brandList.map((option) => (
-                      <option
-                        key={option.brandId}
-                        value={option.brandId}
-
-                      >
+                      <option key={option.brandId} value={option.brandId}>
                         {option.name}
                       </option>
                     ))}
@@ -395,7 +314,9 @@ const AddProduct = () => {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                   />
-                  {errors.description && <p style={{ color: "red" }}>{errors.description}</p>}
+                  {errors.description && (
+                    <p style={{ color: "red" }}>{errors.description}</p>
+                  )}
                 </div>
               </div>
               <div className="both-button">

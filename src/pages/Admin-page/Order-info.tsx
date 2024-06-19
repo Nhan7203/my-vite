@@ -8,7 +8,11 @@ import {
   useHandleCancelOrder,
   useHandleConfirmOrder,
 } from "./components/HandleOrder";
-import { ageOptions, categoryOptions, shippingMethodOptions } from "../../interfaces";
+import {
+  ageOptions,
+  categoryOptions,
+  shippingMethodOptions,
+} from "../../interfaces";
 
 const OrderInfo = () => {
   const { orderDetails, products, orderId, userData, order, brandList } =
@@ -65,7 +69,13 @@ const OrderInfo = () => {
         <Sidebar />
 
         <div className="main-content">
-          <HeaderMain />
+          <HeaderMain
+            searchQuery={""}
+            displayed={[]}
+            setSearchQuery={function (): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
 
           <main>
             <form id="boder-form">
@@ -95,11 +105,12 @@ const OrderInfo = () => {
                       <td>Age</td>
                       <td>Brand</td>
                       <td>Category</td>
-                      <div className="spacing-td"></div>
+                      {/* <div className="spacing-td"></div> */}
+                      <td style={{width : 100}}></td>
                       <td>Quantity</td>
                       <td>Price</td>
                     </tr>
-                    <div className="line-row"></div>
+                    <tr className="line-row"></tr>
                     {orderDetails.map((orderDetail) => {
                       const product = products.find(
                         (p) => p.productId === orderDetail.productId
@@ -127,11 +138,11 @@ const OrderInfo = () => {
                         </tr>
                       );
                     })}
-                    <div className="line-row"></div>
+                    <tr className="line-row"></tr>
                   </table>
 
                   <div className="total-discount">
-                    <div className="vertical-line"></div>
+                 
                     <div className="parameter-total">
                       <p>Subtotal</p>
                       <p>Voucher</p>
@@ -200,4 +211,3 @@ const OrderInfo = () => {
   );
 };
 export default OrderInfo;
-

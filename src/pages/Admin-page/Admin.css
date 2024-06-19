@@ -117,6 +117,14 @@
   border-radius: 30px 0 0 30px;
 }
 
+/* .sidebar-menu a:hover{
+  background: #fff;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  color: var(--main-color);
+  border-radius: 30px 0 0 30px;
+} */
+
 .sidebar-menu a span:first-child {
   font-size: 1.5rem;
   padding-right: 1rem;
@@ -549,7 +557,7 @@ td .status {
 .head-table>ul>li {
   padding: 10px 14px;
   height: 36px;
-  font-size: 14px;
+  font-size: 13px;
   text-decoration: none;
   list-style: none;
   cursor: pointer;
@@ -823,22 +831,22 @@ tbody>tr>td {
 }
 
 .product-info {
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  margin-left: 40px;
-  margin-right: 40px;
+  border-top: 2px dashed rgba(0, 0, 0, 0.1);
+  border-bottom: 2px dashed rgba(0, 0, 0, 0.1);
   margin-top: 50px;
   margin-bottom: 40px;
 }
 
+
 .product-info>table {
   border-collapse: separate;
   border-spacing: 23px;
+  width: 100%;
 }
 
-.spacing-td {
+/* .spacing-td {
   width: 200px;
-}
+} */
 
 .img-product {
   width: 100px;
@@ -846,18 +854,13 @@ tbody>tr>td {
   overflow: hidden;
 }
 
-.line-row {
-  height: 1px;
-  width: 715%;
-  margin: 0 -10px;
-  background: rgba(0, 0, 0, 0.1);
-}
 
 .total-discount {
   display: inline-flex;
   justify-content: end;
   font-size: 14px;
   font-family: 'Poppins';
+  width: 100%;
 }
 
 .value-total {
@@ -905,4 +908,42 @@ tbody>tr>td {
   border-radius: 5px;
   border: 1px solid #ff469e;
   cursor: pointer;
+}
+
+.line-row {
+  height: 1px;
+  width: 3rem;
+  position: relative;
+  overflow: hidden;
+  margin-right: 94px;
+  z-index: 0;
+}
+
+
+
+.line-row::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  z-index: -1;
+}
+.parameter-total {
+  margin-left: 20px;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  padding-left: 18px;
+  height: 88px;
+  transform: translateY(-22px);
+  padding-top: 22px;
+}
+.vertical-line {
+  height: 90px;
+  /* width: 129%; */
+  width: 1px;
+  margin-left: 690px;
+  background: rgba(0, 0, 0, 0.1);
+  transform: translateY(-23px);
 }

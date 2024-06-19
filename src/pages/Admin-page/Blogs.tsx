@@ -1,7 +1,7 @@
 import HeaderMain from "./components/Header-main";
 import Sidebar from "./components/Sidebar";
 
-const Chart = () => {
+const Blogs = () => {
   return (
     <>
       <div>
@@ -9,9 +9,13 @@ const Chart = () => {
         <Sidebar />
 
         <div className="main-content">
-          <HeaderMain searchQuery={""} displayed={[]} setSearchQuery={function (): void {
-            throw new Error("Function not implemented.");
-          } } />
+          <HeaderMain
+            searchQuery={""}
+            displayed={[]}
+            setSearchQuery={function (): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
 
           <div></div>
         </div>
@@ -20,4 +24,4 @@ const Chart = () => {
   );
 };
 
-export default Chart;
+export default Blogs;

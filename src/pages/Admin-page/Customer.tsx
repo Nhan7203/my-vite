@@ -1,30 +1,57 @@
 import {
-  getAllUsers,
   deleteCustomer,
+  searchUser,
 } from "../../apiServices/AdminServices/adminServices";
 import { useState, useEffect, swal } from "../../import/import-another";
 import { AllUsers, User } from "../../interfaces";
 import "./Admin.css";
 import { userUpdate } from "../../apiServices/UserServices/userServices";
+import Sidebar from "./components/Sidebar";
+import UserTable from "./components/UserTable";
+import UserHeadTable from "./components/UseHeadTable";
+import HeaderMain from "./components/Header-main";
 
 const Customer = () => {
   const [allUsers, setAllUsers] = useState<AllUsers[]>([]);
   const [action, setAction] = useState(false);
   const [editingUser, setEditingUser] = useState<User>();
-  // const [name, setName] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState("");
+  const [activeOrder, setActiveOrder] = useState("");
+  const [orderBy, setOrderBy] = useState("");
 
   const [errors, setErrors] = useState({
     name: "",
   });
 
+  //---------------------------------------fetchUsersByFilter-----------------------------
+
   useEffect(() => {
-    const fetchData = async () => {
-      const result2 = await getAllUsers();
-      setAllUsers(result2);
+    const fetchUsersByFilter = async () => {
+      const queryParams = new URLSearchParams();
+
+      if (orderBy === "name") {
+        queryParams.append("orderBy", "name");
+      } else if (orderBy === "email") {
+        queryParams.append("orderBy", "email");
+      } else if (orderBy === "id") {
+        queryParams.append("orderBy", "id");
+      } else if (orderBy === "address") {
+        queryParams.append("orderBy", "address");
+      }
+
+      if (searchQuery) {
+        queryParams.append("searchName", searchQuery);
+      }
+
+      const response = await searchUser(queryParams);
+      setAllUsers(response);
     };
-    fetchData();
-  }, []);
-  //----------------------------------------------------------------------------------
+    fetchUsersByFilter();
+  }, [orderBy, searchQuery]);
+
+  //---------------------------------------handleSave-----------------------------
+
   const handleSave = async (
     event: { preventDefault: () => void },
     user: AllUsers
@@ -66,9 +93,14 @@ const Customer = () => {
       const response = await userUpdate(String(user.userId), payload);
 
       if (response) {
-        swal("Success", "User information updated successfully!", "success");
-
-        setAction(false);
+        swal(
+          "Success",
+          "User information updated successfully!",
+          "success"
+        ).then(() => {
+          setAction(false);
+          window.location.reload();
+        });
       } else {
         swal("Error", "Failed to update user information.", "error");
       }
@@ -82,6 +114,8 @@ const Customer = () => {
     }
   };
 
+  //---------------------------------------handleEdit-----------------------------
+
   const handleEdit = async (
     event: { preventDefault: () => void },
     user: AllUsers
@@ -91,7 +125,8 @@ const Customer = () => {
     setAction(true);
   };
 
-  //---------------------------------------------------------------------------------------
+  //---------------------------------------handleDelete-----------------------------
+
   const handleDelete = (user: AllUsers) => {
     try {
       swal({
@@ -105,10 +140,11 @@ const Customer = () => {
           const response = await deleteCustomer(user.userId);
 
           if (response) {
-            swal("Success!", "Customer was deleted!", "success");
-            setAllUsers(
-              allUsers.filter((allUser) => allUser.userId !== user.userId)
-            );
+            swal("Success!", "Customer was deleted!", "success").then(() => {
+              setAllUsers(
+                allUsers.filter((allUser) => allUser.userId !== user.userId)
+              );
+            });
           } else {
             throw new Error("Failed to  delete customer");
           }
@@ -118,8 +154,9 @@ const Customer = () => {
       console.error("Error deleting notification:", error);
     }
   };
+  //---------------------------------------handleEditName-----------------------------
 
-  const handleOnChangeEdit = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOnChangeEditName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditingUser((prevUser) =>
       prevUser
         ? {
@@ -129,201 +166,74 @@ const Customer = () => {
         : undefined
     );
   };
+  //---------------------------------------handleClickView-----------------------------
+
+  const handleClickView = () => {
+    setActiveTab("view-customer");
+    window.location.reload();
+  };
+
+  //---------------------------------------handleOrderChange-----------------------------
+
+  const handleOrderChange = (value: string) => {
+    if (value === "name") {
+      setOrderBy("name");
+      setActiveOrder("name");
+    } else if (value === "email") {
+      setOrderBy("email");
+      setActiveOrder("email");
+    } else if (value === "id") {
+      setOrderBy("id");
+      setActiveOrder("id");
+    } else if (value === "address") {
+      setOrderBy("address");
+      setActiveOrder("address");
+    } else {
+      setOrderBy("");
+      setActiveOrder("");
+      setActiveTab("");
+    }
+  };
 
   return (
     <>
       <body>
         <input type="checkbox" id="nav-toggle" />
-        <div className="sidebar">
-          <div className="sidebar-brand">
-            <h2>
-              <span className="lab la-accusoft"></span> <span>M&B</span>
-            </h2>
-          </div>
-
-          <div className="sidebar-menu">
-            <ul>
-              <li>
-                <a href="/admin" className="active">
-                  <span className="las la-igloo"></span>
-                  <span>Dashboard</span>
-                </a>
-              </li>
-              <li>
-                <a href="/customer">
-                  <span className="las la-users"></span>
-                  <span>Customers</span>
-                </a>
-              </li>
-              <li>
-                <a href="/manage-product">
-                  <span className="las la-clipboard-list"></span>
-                  <span>Products</span>
-                </a>
-              </li>
-              <li>
-                <a href="/order">
-                  <span className="las la-shopping-bag"></span>
-                  <span>Orders</span>
-                </a>
-              </li>
-
-              <li>
-                <a href="/account">
-                  <span className="las la-user-circle"></span>
-                  <span>Accounts</span>
-                </a>
-              </li>
-              <li>
-                <a href="">
-                  <span className="las la-clipboard-list"></span>
-                  <span>Tasks</span>
-                </a>
-              </li>
-              <li>
-                <a href="/charts">
-                  <span className="las la-clipboard-list"></span>
-                  <span>Đây nè Vũ chó điên</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <Sidebar />
 
         <div className="main-content">
-          <div className="header-main">
-            <h2>
-              <label htmlFor="nav-toggle">
-                <span className="las la-bars"></span>
-              </label>
-              Dashboard
-            </h2>
-
-            <div className="search-wrapper">
-              <span className="las la-search"></span>
-              <input type="search" placeholder="Search here" />
-            </div>
-
-            <div className="user-wrapper">
-              <img
-                src="/src/assets/anya-cute.jpg"
-                width="40px"
-                height="40px"
-                alt=""
-              />
-              <div>
-                <h4>Datnt nt</h4>
-                <small>Super admin</small>
-              </div>
-            </div>
-          </div>
+          <HeaderMain
+            displayed={["search"]}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+          />
 
           <main>
             <div>
-              <table className="table-custome">
-                <thead>
-                  <tr>
-                    {/* <th>No</th> */}
-                    <th>UserID</th>
-                    <th>Full Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Address</th>
-                    <th>Password</th>
-                    <th>Update</th>
-                    <th>Delete</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {allUsers.map((user) => (
-                    <tr key={user.userId}>
-                      {/* <td>{index + 1}</td> */}
-                      <td>
-                        <span>{user.userId}</span>
-                      </td>
-                      <td>
-                        {action === true &&
-                        editingUser?.userId === user.userId ? (
-                          <div>
-                            <input
-                              type="text"
-                              name="fullName"
-                              value={editingUser?.name}
-                              //
-                              onChange={handleOnChangeEdit}
-                            />
-                            {errors.name && (
-                              <p style={{ color: "red" }}>{errors.name}</p>
-                            )}
-                          </div>
-                        ) : (
-                          <span>{user.name}</span>
-                        )}
-                      </td>
-                      <td>
-                        {/* <input
-                          type="email"
-                          name="email"
-                          value={user.email}
-                          readOnly
-                        /> */}
-                        {user.email}
-                      </td>
+              <UserHeadTable
+                roleId={0}
+                displayed={["SortByEmail", "SortByAdress"]}
+                activeTab={activeTab}
+                activeOrder={activeOrder}
+                handleClickView={handleClickView}
+                handleOrderChange={handleOrderChange}
+                setRoleId={function (): void {
+                  throw new Error("Function not implemented.");
+                }}
+              />
 
-                      <td>
-                        {/* <input
-                          type="text"
-                          name="phoneNumber"
-                          value={user.phoneNumber}
-                          readOnly
-                        /> */}
-                        {user.phoneNumber}
-                      </td>
-
-                      <td>
-                        {/* <input
-                          type="text"
-                          name="address"
-                          value={user.address}
-                          readOnly
-                        /> */}
-                        {user.address}
-                      </td>
-
-                      <td>
-                        <span>***</span>
-                      </td>
-
-                      <td>
-                        {action === false ? (
-                          <button
-                            className="Edit"
-                            onClick={(e) => handleEdit(e, user)}
-                          >
-                            Edit
-                          </button>
-                        ) : (
-                          <button
-                            className="Save"
-                            onClick={(e) => handleSave(e, user)}
-                          >
-                            Save
-                          </button>
-                        )}
-                      </td>
-
-                      <td>
-                        <button
-                          className="Delete"
-                          onClick={() => handleDelete(user)}
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <UserTable
+                allUsers={allUsers.filter((user) => user.roleId === 1)}
+                action={action}
+                editingUser={editingUser}
+                handleEdit={handleEdit}
+                handleSave={handleSave}
+                handleDelete={handleDelete}
+                errors={errors}
+                handleOnChangeEdit={handleOnChangeEditName}
+                displayedColumns={["email", "phoneNumber", "address"]}
+                displayedRows={["email", "phoneNumber", "address"]}
+              />
             </div>
           </main>
         </div>
