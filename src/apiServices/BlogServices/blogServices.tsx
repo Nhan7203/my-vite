@@ -1,3 +1,4 @@
+import axios from "axios";
 import * as request from "../../utils/request";
 
 export const getBlogId = async (orderId: string) => {
@@ -56,4 +57,12 @@ export const getAllBlogs = async () => {
   }
 };
 
+export const deleteBlog = async (blogId: number) => {
+  try {
+    const response = await axios.delete(`https://localhost:7030/api/Blog/Delete?blogId=${blogId}`);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
