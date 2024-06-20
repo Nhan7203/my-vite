@@ -166,7 +166,6 @@ const AddProduct = () => {
         formData.append(`ImageProducts[${key}].ImageFile`, imageFile);
       }
     }
-    console.log("hahaha", formData);
     try {
       const response = await fetch(
         `https://localhost:7030/api/Products/Create`,
@@ -178,6 +177,7 @@ const AddProduct = () => {
 
       if (response.status === 201) {
         swal("Success", "Product information created successfully!", "success");
+        navigate("/manage-product");
       } else {
         console.log(response.status);
         swal("Error", "Failed to create product information.", "error");

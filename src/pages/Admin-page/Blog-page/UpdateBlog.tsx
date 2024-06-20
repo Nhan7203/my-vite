@@ -8,18 +8,14 @@ import HeaderMain from "../components/Header-main";
 const UpdateBlog = () => {
   const navigate = useNavigate();
   const { blogData } = UserBlogData();
-  const [blogs, setBlogs] = useState<aBlog>();
+  const [blog, setBlog] = useState<aBlog>();
   const [title, setTile] = useState("");
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("");
   const [productId, setProductId] = useState<number>(0);
-  const [uploadDate, setUploadDate] = useState<string>(
-    new Date().toISOString()
-  );
-  const [updateDate, setUpdateDate] = useState<string>(
-    new Date().toISOString()
-  );
-  const [image, setImage] = useState("");
+  const updateDate = new Date().toISOString();
+  const [imageUrl, setImageUrl] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const { state } = useLocation();
   const { blogId } = state;
 
@@ -36,14 +32,12 @@ const UpdateBlog = () => {
     if (blogId) {
       const selectedBlog = blogData.find((e) => e.blogId === blogId);
       if (selectedBlog) {
-        setBlogs(selectedBlog);
+        setBlog(selectedBlog);
         setTile(selectedBlog.title);
         setContent(selectedBlog.content);
         setAuthor(selectedBlog.author);
         setProductId(selectedBlog.productId);
-        setUpdateDate(new Date(selectedBlog.updateDate).toISOString());
-        setUploadDate(new Date(selectedBlog.uploadDate).toISOString());
-        setImage(selectedBlog.imageUrl);
+        setImageUrl(selectedBlog.imageUrl);
       }
     }
   }, [blogId, blogData]);
@@ -55,9 +49,13 @@ const UpdateBlog = () => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const imageUrl = e.target?.result as string;
-        setImage(imageUrl);
+        setImageUrl(imageUrl);
+        setImageFile(file);
       };
       reader.readAsDataURL(file);
+    } else {
+      if (blog) setImageUrl(blog.imageUrl);
+      setImageFile(null);
     }
   };
 
@@ -102,16 +100,6 @@ const UpdateBlog = () => {
       error.check = true;
     }
 
-    if (updateDate === "") {
-      error.content = "UpdateDate is Required!";
-      error.check = true;
-    }
-
-    if (uploadDate === "") {
-      error.content = "uploadDate is Required!";
-      error.check = true;
-    }
-
     setErrors(error);
     if (error.check) {
       return;
@@ -123,9 +111,12 @@ const UpdateBlog = () => {
     formData.append("content", content);
     formData.append("author", author);
     formData.append("productId", productId.toString());
-    formData.append("uploadDate", uploadDate);//////////// error  date not string
     formData.append("updateDate", updateDate);//////////// error  date not string
-    formData.append("imageUrl", image);
+    formData.append("imageUrl", imageUrl);
+    const checkImageFile = imageFile;
+    if (checkImageFile) {
+      formData.append("imageFile", checkImageFile);
+    }
 
     try {
       const response = await fetch(
@@ -138,7 +129,7 @@ const UpdateBlog = () => {
 
       if (response.status === 200) {
         swal("Success", "Blog information updated successfully!", "success");
-        // window.location.reload();
+        navigate("/blogs");
       } else {
         swal("Error", "Failed to update blog information.", "error");
       }
@@ -179,10 +170,10 @@ const UpdateBlog = () => {
                     accept="image/*"
                     onChange={(event) => handleImageUpload(event)}
                   />
-                  {image && (
+                  {imageUrl && (
                     <img
-                      src={blogs?.imageUrl}
-                      alt={`Image ${blogs?.imageUrl}`}
+                      src={imageUrl}
+                      alt={`Image of ${blogId}`}
                       style={{ maxWidth: "200px" }}
                     />
                   )}
@@ -231,27 +222,6 @@ const UpdateBlog = () => {
                     <p style={{ color: "red" }}>{errors.author}</p>
                   )}
 
-                  <h4>UploadDate</h4>
-                  <input
-                    type="date"
-                    name="txtUploadDate"
-                    value={uploadDate}
-                    onChange={(e) => setUploadDate(e.target.value)}
-                  />
-                  {errors.uploadDate && (
-                    <p style={{ color: "red" }}>{errors.uploadDate}</p>
-                  )}
-
-                  <h4>UpdateDate</h4>
-                  <input
-                    type="date"
-                    name="txtUpdatedDate"
-                    value={updateDate}
-                    onChange={(e) => setUpdateDate(e.target.value)}
-                  />
-                  {errors.updateDate && (
-                    <p style={{ color: "red" }}>{errors.updateDate}</p>
-                  )}
                 </div>
               </div>
               <div className="both-button">

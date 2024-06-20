@@ -47,8 +47,9 @@ const handleUpdate = (blog: aBlog) => {
   navigate("/updateblog", { state: { blogId: blog.blogId } });
 };
 
-const handleAdd = (blog: aBlog) => {
-  navigate("/addblog", { state: { blogId: blog.blogId } });
+const handleAdd = () => {
+  const newBlogId = Math.max(...blogData.map((blog) => blog.blogId)) + 1;
+  navigate("/addblog", { state: { blogId: newBlogId } });
 };
 
   return (
@@ -115,7 +116,7 @@ const handleAdd = (blog: aBlog) => {
                       <td>
                         <button
                           className="Edit"
-                          onClick={() => handleAdd(blog)}
+                          onClick={() => handleAdd()}
                         >
                           Add
                         </button>
