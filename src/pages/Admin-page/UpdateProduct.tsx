@@ -183,7 +183,7 @@ const UpdateProduct = () => {
 
       if (response.status === 200) {
         swal("Success", "Product information updated successfully!", "success");
-        // window.location.reload();
+        navigate("/manage-product");
       } else {
         swal("Error", "Failed to update product information.", "error");
       }

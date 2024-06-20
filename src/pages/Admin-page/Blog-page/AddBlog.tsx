@@ -1,45 +1,26 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import UserBlogData from "../components/userBlogData";
-import { useEffect, useState, swal } from "../../../import/import-another";
-import { aBlog } from "../../../interfaces";
+import { useState, swal } from "../../../import/import-another";
 import Sidebar from "../components/Sidebar";
 import HeaderMain from "../components/Header-main";
 
 const AddBlog = () => {
   const navigate = useNavigate();
-  const { blogData } = UserBlogData();
-  const [blogs, setBlogs] = useState<aBlog>();
   const [title, setTile] = useState("");
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("");
   const [productId, setProductId] = useState<number>(0);
-  const [uploadDate, setUploadDate] = useState<string>(
-    new Date().toISOString()
-  );
-  const [updateDate, setUpdateDate] = useState<string>(
-    new Date().toISOString()
-  );
-  const [image, setImage] = useState("");
+  const uploadDate = new Date().toISOString();
+  const [imageUrl, setImageUrl] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const { state } = useLocation();
   const { blogId } = state;
-
   const [errors, setErrors] = useState({
     title: "",
     content: "",
     author: "",
     productId: "",
-    uploadDate: "",
-    updateDate: "",
+    imageUrl: "",
   });
-
-  useEffect(() => {
-    if (blogId) {
-      const selectedBlog = blogData.find((e) => e.blogId === blogId);
-      if (selectedBlog) {
-        setBlogs(selectedBlog);
-      }
-    }
-  }, [blogId, blogData]);
   //-----------------------------------------------------------------------
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,9 +29,13 @@ const AddBlog = () => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const imageUrl = e.target?.result as string;
-        setImage(imageUrl);
+        setImageUrl(imageUrl);
+        setImageFile(file);
       };
       reader.readAsDataURL(file);
+    } else {
+      setImageUrl("");
+      setImageFile(null);
     }
   };
 
@@ -70,8 +55,7 @@ const AddBlog = () => {
       content: "",
       author: "",
       productId: "",
-      uploadDate: "",
-      updateDate: "",
+      imageUrl: "",
       check: false,
     };
 
@@ -86,7 +70,7 @@ const AddBlog = () => {
     }
 
     if (author === "") {
-      error.content = "Author is Required!";
+      error.author = "Author is Required!";
       error.check = true;
     }
 
@@ -95,13 +79,8 @@ const AddBlog = () => {
       error.check = true;
     }
 
-    if (updateDate === "") {
-      error.content = "UpdateDate is Required!";
-      error.check = true;
-    }
-
-    if (uploadDate === "") {
-      error.content = "uploadDate is Required!";
+    if(imageFile == null || imageUrl == "") {
+      error.imageUrl = "image is required!";
       error.check = true;
     }
 
@@ -117,9 +96,11 @@ const AddBlog = () => {
     formData.append("author", author);
     formData.append("productId", productId.toString());
     formData.append("uploadDate", uploadDate);//////////// error  date not string
-    formData.append("updateDate", updateDate);//////////// error  date not string
-    formData.append("imageUrl", image);
-
+    const checkImageFile = imageFile;
+    if(checkImageFile) {
+      formData.append("imageFile", checkImageFile);
+    }
+    
     try {
       const response = await fetch(
         `https://localhost:7030/api/Blog/Create`,
@@ -131,9 +112,9 @@ const AddBlog = () => {
 
       if (response.status === 200) {
         swal("Success", "Blog information created successfully!", "success");
-        // window.location.reload();
+        navigate("/blogs");
       } else {
-        swal("Error", "Failed to create blog information.", "error");
+        swal("Error", `Failed to create blog information.${response.status}`, "error");
       }
     } catch (error) {
       console.log(error);
@@ -172,10 +153,11 @@ const AddBlog = () => {
                     accept="image/*"
                     onChange={(event) => handleImageUpload(event)}
                   />
-                  {image && (
+                  {errors.imageUrl && <p style={{ color: "red" }}>{errors.imageUrl}</p>}
+                  {imageUrl && (
                     <img
-                      src={blogs?.imageUrl}
-                      alt={`Image ${blogs?.imageUrl}`}
+                      src={imageUrl}
+                      alt={`Image blog`}
                       style={{ maxWidth: "200px" }}
                     />
                   )}
@@ -221,36 +203,15 @@ const AddBlog = () => {
                     value={productId}
                     onChange={(e) => setProductId(Number(e.target.value))}
                   />
-                  {errors.author && (
-                    <p style={{ color: "red" }}>{errors.author}</p>
+                  {errors.productId && (
+                    <p style={{ color: "red" }}>{errors.productId}</p>
                   )}
 
-                  <h4>UploadDate</h4>
-                  <input
-                    type="date"
-                    name="txtUploadDate"
-                    value={uploadDate}
-                    onChange={(e) => setUploadDate(e.target.value)}
-                  />
-                  {errors.uploadDate && (
-                    <p style={{ color: "red" }}>{errors.uploadDate}</p>
-                  )}
-
-                  <h4>UpdateDate</h4>
-                  <input
-                    type="date"
-                    name="txtUpdatedDate"
-                    value={updateDate}
-                    onChange={(e) => setUpdateDate(e.target.value)}
-                  />
-                  {errors.updateDate && (
-                    <p style={{ color: "red" }}>{errors.updateDate}</p>
-                  )}
                 </div>
               </div>
               <div className="both-button">
-                <button type="submit" className="bt-add">
-                  Update
+                <button type="submit" className="bt-add" onClick={handleSubmit}>
+                  Add
                 </button>
                 <button className="bt-cancel" onClick={() => handleCancel()}>
                   Cancel
