@@ -15,8 +15,15 @@ import {
 } from "../../interfaces";
 
 const OrderInfo = () => {
-  const { orderDetails, products, orderId, userData, order, brandList } =
-    useOrderDetails();
+  const {
+    orderDetails,
+    products,
+    orderId,
+    userData,
+    order,
+    brandList,
+    orderVoucher,
+  } = useOrderDetails();
   const location = useLocation();
   const { orderStatus } = location.state;
   const { handleCancelOrder } = useHandleCancelOrder();
@@ -106,7 +113,7 @@ const OrderInfo = () => {
                       <td>Brand</td>
                       <td>Category</td>
                       {/* <div className="spacing-td"></div> */}
-                      <td style={{width : 100}}></td>
+                      <td style={{ width: 100 }}></td>
                       <td>Quantity</td>
                       <td>Price</td>
                     </tr>
@@ -142,7 +149,6 @@ const OrderInfo = () => {
                   </table>
 
                   <div className="total-discount">
-                 
                     <div className="parameter-total">
                       <p>Subtotal</p>
                       <p>Voucher</p>
@@ -151,7 +157,10 @@ const OrderInfo = () => {
 
                     <div className="value-total">
                       <p>${getShippingMethodOption(order?.shippingMethodId)}</p>
-                      <p>$0</p>
+                      <p>
+                        {orderVoucher?.discountValue}
+                        {orderVoucher?.discountType}
+                      </p>
                       <p style={{ fontWeight: 700 }}>
                         ${order?.total.toLocaleString()}
                         {/* {orderDetails
@@ -174,7 +183,15 @@ const OrderInfo = () => {
 
                   <div className="value-info">
                     <p>{order?.paymentMethod}</p>
-                    <p>{order?.shippingMethodId}</p>
+                    <p>
+                      {order?.shippingMethodId
+                        ? [
+                            "Economical delivery",
+                            "Regular delivery",
+                            "Express delivery",
+                          ][order.shippingMethodId - 1]
+                        : ""}
+                    </p>
                     <p>{order?.orderDate}</p>
                   </div>
                 </div>

@@ -2,9 +2,11 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   AllUsers,
+  AllVouchers,
   Order,
   OrderDetail,
   User,
+  Voucher,
   aProduct,
 } from "../../../interfaces";
 import { getUserIdFromToken } from "../../../utils/jwtHelper";
@@ -14,6 +16,7 @@ import useOrderData from "../components/useOrderData";
 import { getAllUsers } from "../../../apiServices/StaffServices/staffServices";
 import { Brand } from "../AddProduct";
 import { getBrand } from "../../../apiServices/BrandServices/brandServices";
+import { getAllVouchers } from "../../../apiServices/VoucherServices/voucherServices";
 
 export const useOrderDetails = () => {
   const navigate = useNavigate();
@@ -23,12 +26,15 @@ export const useOrderDetails = () => {
   const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([]);
   const [products, setProducts] = useState<aProduct[]>([]);
   const [allUsers, setAllUsers] = useState<AllUsers[]>([]);
+  const [allVouchers, setAllVouchers] = useState<AllVouchers[]>([]);
+  const [orderVoucher, setOrderVoucher] = useState<Voucher>();
+  
   const [brandList, setBrandList] = useState<Brand[]>([]);
   const [userData, setUserData] = useState<User>();
   const [order, setOrder] = useState<Order>();
   const token = localStorage.getItem("token");
   const roleId = 0;
-
+  
   const currentUserId = useMemo(() => {
     if (!token) {
       console.error("Token not found");
@@ -107,6 +113,35 @@ export const useOrderDetails = () => {
     setProducts(await getProductId(queryParams));
   }, [orderDetails]);
 
+//---------------------------------------------------------
+
+const fetchAllVouchers = useCallback(async () => {
+  try {
+    const response = await getAllVouchers();
+
+    if (response) {
+      setAllVouchers(response);
+    } else {
+      console.error("Failed to retrieve voucher data:", response);
+    }
+  } catch (error) {
+    console.error("Failed to retrieve voucher data:", error);
+  }
+}, []);
+
+//-----------------------------------------------------------------------
+
+const fetchOrderVoucher = useCallback(async () => {
+  if (order) {
+    const orderVoucher = allVouchers.find((v) => v.voucherId === order?.voucherId);
+    if (orderVoucher) {
+      setOrderVoucher(orderVoucher);
+    }
+  }
+}, [allVouchers, order]);
+
+
+//------------------------------------------------------------------------
   useEffect(() => {
     fetchOrderDetails();
   }, [fetchOrderDetails]);
@@ -119,7 +154,16 @@ export const useOrderDetails = () => {
     fetchAllUsers();
   }, [fetchAllUsers]);
 
+  useEffect(() => {
+    fetchOrderVoucher();
+  }, [fetchOrderVoucher]);
+
+  useEffect(() => {
+    fetchAllVouchers();
+  }, [fetchAllVouchers]);
+
   //----------------------------------------------------------------------------------------
+
 
   return {
     orderDetails,
@@ -131,5 +175,6 @@ export const useOrderDetails = () => {
     token,
     order,
     brandList,
+    orderVoucher
   };
 };

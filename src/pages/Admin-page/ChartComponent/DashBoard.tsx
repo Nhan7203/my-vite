@@ -171,7 +171,7 @@ const Dashboard: React.FC = () => {
                         )}
                     </div>
                 </div>
-                <div style={{ flex: 1, background: '#fff5f7', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)' }}>
+                <div style={{ flex: 1, background: '#fff5f7', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)', overflowY: 'auto', height: '480px' }}>
                     <h3>Recent Transactions</h3>
                     <TransactionList transactions={transactions} />
                 </div>

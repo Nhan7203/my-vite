@@ -3,7 +3,6 @@ import {
   OrderInfo,
   Home,
   Login,
-  Adress,
   Product,
   Chart,
   ProductDetails,
@@ -19,7 +18,6 @@ import {
   AddBlog,
   UpdateBlog,
   Blogs,
-  Voucher,
   Register,
   SecurityCode,
   ChangePassword,
@@ -115,9 +113,6 @@ const router = createBrowserRouter(
       <Route path="/updateblog" element={<UpdateBlog />} />
 
       <Route path="/vouchers" element={<Vouchers />} />
-
-      <Route path="/voucher" element={<Voucher />} />
-      <Route path="/adress" element={<Adress />} />
     </Route>
   )
 );

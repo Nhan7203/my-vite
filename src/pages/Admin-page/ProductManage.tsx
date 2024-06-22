@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { aProduct } from "../../interfaces";
+import { aProduct, ageOptions, categoryOptions } from "../../interfaces";
 import { useNavigate } from "react-router-dom";
 import { useAllProduct } from "../../context/ShopContext";
 import * as brandd from "../../apiServices/BrandServices/brandServices";
@@ -16,20 +16,6 @@ export interface ImageProduct {
   imageUrl: string;
 }
 
-const ageOptions = [
-  { id: 1, name: "0 - 6 Month" },
-  { id: 2, name: "6 - 12 Month" },
-  { id: 3, name: "0 - 1 Year" },
-  { id: 4, name: "1 - 2 year" },
-  { id: 5, name: "+2 year" },
-];
-
-const categoryOptions = [
-  { id: 1, name: "Powdered milk" },
-  { id: 2, name: "Nut milk" },
-  { id: 3, name: "Nutritional drinks" },
-  { id: 4, name: "Fresh milk, Yogurt" },
-];
 
 const ProductManage = () => {
   const { allProduct } = useAllProduct();
