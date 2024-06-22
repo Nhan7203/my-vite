@@ -28,7 +28,6 @@ export const useOrderDetails = () => {
   const [allUsers, setAllUsers] = useState<AllUsers[]>([]);
   const [allVouchers, setAllVouchers] = useState<AllVouchers[]>([]);
   const [orderVoucher, setOrderVoucher] = useState<Voucher>();
-  
   const [brandList, setBrandList] = useState<Brand[]>([]);
   const [userData, setUserData] = useState<User>();
   const [order, setOrder] = useState<Order>();
