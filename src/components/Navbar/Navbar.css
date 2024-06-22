@@ -200,11 +200,13 @@ a.white {
 }
 .avatar {
   display: flex;
+  align-items: center;
 }
 .avatar > img {
   width: 30px;
   height: 30px;
   border-radius: 100px;
+  margin-right: 10px;
 }
 
 .noti-box {

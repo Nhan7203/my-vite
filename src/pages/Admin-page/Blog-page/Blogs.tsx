@@ -6,10 +6,8 @@ import { aBlog } from "../../../interfaces";
 import UserBlogData from "../components/userBlogData";
 
 const Blogs = () => {
-
   const { blogData, setBlogData } = UserBlogData();
   const navigate = useNavigate();
-  
 
   //------------------------------------------------------------------------------------
 
@@ -23,13 +21,11 @@ const Blogs = () => {
         dangerMode: true,
       }).then(async (confirmDelete) => {
         if (confirmDelete) {
-          const response = await deleteBlog(blogId)
+          const response = await deleteBlog(blogId);
 
           if (response) {
             swal("Success!", "Blog was deleted!", "success").then(() => {
-              setBlogData(
-                blogData.filter((blog) => blog.blogId !== blogId)
-              );
+              setBlogData(blogData.filter((blog) => blog.blogId !== blogId));
             });
           } else {
             throw new Error("Failed to delete blog");
@@ -41,16 +37,16 @@ const Blogs = () => {
     }
   };
 
-//---------------------------------------------------------------------
+  //---------------------------------------------------------------------
 
-const handleUpdate = (blog: aBlog) => {
-  navigate("/updateblog", { state: { blogId: blog.blogId } });
-};
+  const handleUpdate = (blog: aBlog) => {
+    navigate("/updateblog", { state: { blogId: blog.blogId } });
+  };
 
-const handleAdd = () => {
-  const newBlogId = Math.max(...blogData.map((blog) => blog.blogId)) + 1;
-  navigate("/addblog", { state: { blogId: newBlogId } });
-};
+  const handleAdd = () => {
+    const newBlogId = Math.max(...blogData.map((blog) => blog.blogId)) + 1;
+    navigate("/addblog", { state: { blogId: newBlogId } });
+  };
 
   return (
     <>
@@ -69,21 +65,27 @@ const handleAdd = () => {
 
           <main>
             <div>
+              <div className="head-table">
+                <ul>
+                  <li className="Edit" onClick={() => handleAdd()}>
+                    Add Blog
+                  </li>
+                </ul>
+              </div>
               <table className="table-custome">
                 <thead>
                   <tr>
                     {/* <th>No</th> */}
-                    <th>BlogId</th>                 
-                    <th>Image</th>  
-                    <th>ProductId</th>                 
+                    <th>BlogId</th>
+                    <th>Image</th>
+                    <th>ProductId</th>
                     <th>Title</th>
                     <th>Content</th>
-                    <th>author</th>                  
+                    <th>author</th>
                     <th>UploadDate</th>
                     <th>UpdateDate</th>
                     <th>view</th>
                     <th>Like</th>
-                    <th>Add</th>
                     <th>Update</th>
                     <th>Delete</th>
                   </tr>
@@ -94,33 +96,22 @@ const handleAdd = () => {
                     <tr key={index}>
                       {/* <td>{index + 1}</td> */}
 
-                      <td>{blog.blogId}</td>                      
+                      <td>{blog.blogId}</td>
                       <td>
                         <div className="img-table">
-                          <img
-                            className="img-pro"
-                            src={blog.imageUrl}
-                            alt=""
-                          />
+                          <img className="img-pro" src={blog.imageUrl} alt="" />
                         </div>
                       </td>
                       <td>{blog.productId}</td>
                       <td>{blog.title}</td>
-                      <td className="td-content" style={{height: "145px"}}>{blog.content}</td>
+                      <td className="td-content" style={{ height: "145px" }}>
+                        {blog.content}
+                      </td>
                       <td>{blog.author}</td>
                       <td> {new Date(blog.uploadDate).toLocaleDateString()}</td>
-                      <td> {new Date(blog.updateDate).toLocaleDateString()}</td>                
+                      <td> {new Date(blog.updateDate).toLocaleDateString()}</td>
                       <td>{blog.view}</td>
                       <td>{blog.like}</td>
-
-                      <td>
-                        <button
-                          className="Edit"
-                          onClick={() => handleAdd()}
-                        >
-                          Add
-                        </button>
-                      </td>
 
                       <td>
                         <button

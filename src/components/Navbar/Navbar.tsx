@@ -15,8 +15,8 @@ import {
   updateNotificationReadStatus,
 } from "../../apiServices/NotificationService/notificationService";
 import { avatar, noti, trash, empty, logo } from "../../import/import-assets";
-import { useState, useEffect } from "react";
-import { getUserIdFromToken } from "../../utils/jwtHelper";
+import { useState, useEffect, useMemo } from "react";
+import { getNameFromToken, getUserIdFromToken } from "../../utils/jwtHelper";
 import { Notification } from "../../interfaces";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../pages/Cart-page/CartContext";
@@ -45,6 +45,17 @@ const Navbar = () => {
       fetchNotifications();
     }
   }, [token]);
+
+  const userName = useMemo(() => {
+    if (!token) {
+      console.error("Token not found");
+      return null;
+    }
+    const usernameIdentifier = getNameFromToken(token);
+
+    return usernameIdentifier;
+  }, [token]);
+
   //-----------------------------------------------
   const deleteNotification = async (notificationId: number) => {
     try {
@@ -162,16 +173,12 @@ const Navbar = () => {
 
           <li>Tel: (+84) 3939393939</li>
 
-          <li>
-            <Link to="/Adress">
-              <GiPositionMarker />
-              Add address to purchase
-            </Link>
-          </li>
+          
           {isLoggedIn ? (
             <div className="user-menu">
               <div className="avatar">
                 <img src={avatar} alt="Avatar"></img>
+                <h4>{userName}</h4>
               </div>
               <div className="menu-box">
                 <a href="/profile">View Profile</a>
@@ -325,11 +332,6 @@ const Navbar = () => {
           <li>
             <NavLink to="/Blog" className="nav-link">
               Blog
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/Voucher" className="nav-link">
-              Voucher
             </NavLink>
           </li>
         </ul>

@@ -26,13 +26,11 @@ import AddProduct from "../pages/Admin-page/AddProduct";
 import Blogs from "../pages/Admin-page/Blog-page/Blogs";
 import Register from "../pages/Register-page/Register";
 import OrderInfo from "../pages/Admin-page/Order-info";
-import Voucher from "../pages/Voucher-page/Voucher";
 import Product from "../pages/Product-page/Product";
 import Payment from "../pages/Payment-page/Payment";
 import Customer from "../pages/Admin-page/Customer";
 import Vouchers from "../pages/Admin-page/Vouchers";
 import Account from "../pages/Admin-page/Account";
-import Adress from "../pages/Adress-page/Adress";
 import Chart from "../pages/Admin-page/Chart";
 import Admin from "../pages/Admin-page/Admin";
 import Login from "../pages/Login-page/Login";
@@ -67,12 +65,10 @@ export {
   PreOrder,
   Complete,
   Profile,
-  Voucher,
   Account,
   Product,
   AddBlog,
   Payment,
-  Adress,
   Login,
   Blogs,
   Chart,

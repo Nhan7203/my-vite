@@ -10,49 +10,70 @@ import "./Cart.css";
 
 const ShoppingCart = () => {
   const { cart, decrementQuantity, incrementQuantity, removeItems } = useCart();
+  const [isPreorder, setIsPreorder] = useState(false);
+  const [isNotPreorder, setIsNotPreorder] = useState(false);
 
   const totalAmount = cart.reduce(
     (total, product) => total + product.price * product.quantity,
     0
   );
 
-  // const handleIncrement = (productId: number, quantity: number, stock: number) => {
-  //   if (quantity < stock) {
+  cart.forEach((product) => {
+    if (!isPreorder && product.stock === 0) {
+      setIsPreorder(true);
+    } else if (!isNotPreorder && product.stock > 0) {
+      setIsNotPreorder(true);
+    }
+  });
+
+  // const [isPreOrder, setIsPreOrder] = useState(false);
+  // const handleIncrement = (
+  //   productId: number,
+  //   quantity: number,
+  //   stock: number
+  // ) => {
+  //   if (quantity < stock || isPreOrder) {
   //     incrementQuantity(productId);
   //   } else {
-  //     Swal.fire({
-  //       title: "Oops!",
-  //       text: "Cannot increase quantity beyond available stock!",
-  //       icon: "error",
+  //     swal({
+  //       title: "Out of stock",
+  //       text: "This product is currently out of stock, but you can place a pre-order.",
+  //       icon: "info",
+  //       buttons: ["Cancel", "Confirm"],
+  //       dangerMode: true,
+  //     }).then(async (confirm) => {
+  //       if (confirm) {
+  //         incrementQuantity(productId);
+  //         setIsPreOrder(true);
+  //       }
   //     });
   //   }
   // };
-  const [isPreOrder, setIsPreOrder] = useState(false);
+
   const handleIncrement = (
     productId: number,
     quantity: number,
     stock: number
   ) => {
-    if (quantity < stock || isPreOrder) {
+    if (quantity < stock) {
       incrementQuantity(productId);
-    } else {
+    } else if (quantity >= stock && stock !== 0) {
       swal({
         title: "Out of stock",
-        text: "This product is currently out of stock, but you can place a pre-order.",
+        text: "This product is currently out of stock.",
         icon: "info",
-        buttons: ["Cancel", "Confirm"],
         dangerMode: true,
-      }).then(async (confirm) => {
-        if (confirm) {
-          incrementQuantity(productId);
-          setIsPreOrder(true);
-        }
+      }).then(() => {
+        return;
       });
+    } else if (quantity >= stock && stock == 0) {
+      incrementQuantity(productId);
     }
   };
 
+  //---------------------------------------------------------------------------------------------
   const token = localStorage.getItem("token");
-  
+
   const isLoggedIn = token ? getUserIdFromToken(token) : null;
   const hasAddress = token ? getAddressFromToken(token) : null;
 
@@ -124,7 +145,10 @@ const ShoppingCart = () => {
                         </div>
                         <div
                           className="icon"
-                          onClick={() => removeItems(product.productId)}
+                          onClick={() => {
+                            removeItems(product.productId);
+                            window.location.reload();
+                          }}
                         >
                           <FaRegTrashCan />
                         </div>
@@ -146,7 +170,7 @@ const ShoppingCart = () => {
               {isLoggedIn ? (
                 <>
                   {hasAddress ? (
-                    <Link to="/profile" >
+                    <Link to="/profile">
                       <div className="box-adress">
                         <div>{hasAddress}</div>
                       </div>
@@ -169,7 +193,14 @@ const ShoppingCart = () => {
             </div>
             <div className="voucher">
               <p>Voucher</p>
-              <div className="box-voucher" style={{backgroundColor: "#B4B4B4", color: "white", border: "none"}}>
+              <div
+                className="box-voucher"
+                style={{
+                  backgroundColor: "#B4B4B4",
+                  color: "white",
+                  border: "none",
+                }}
+              >
                 <div>Promo Code</div>
               </div>
             </div>
@@ -186,9 +217,26 @@ const ShoppingCart = () => {
               <div className="vat">(Incl. VAT)</div>
               {totalAmount ? (
                 isLoggedIn ? (
-                  <Link to="/payment" style={{ color: "white" }}>
-                    <div className="box-continue">Payment</div>
-                  </Link>
+                  isPreorder && isNotPreorder ? (
+                    <div
+                      className="box-continue"
+                      style={{ color: "white" }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        Swal.fire({
+                          title: "Oops!",
+                          text: "You cannot purchase a mix of in-stock and pre-order items in the same order. Please remove the in-stock items or the pre-order items from your cart before proceeding to payment.",
+                          icon: "error",
+                        });
+                      }}
+                    >
+                      Payment
+                    </div>
+                  ) : (
+                    <Link to="/payment" style={{ color: "white" }}>
+                      <div className="box-continue">Payment</div>
+                    </Link>
+                  )
                 ) : (
                   <Link
                     to="/login"

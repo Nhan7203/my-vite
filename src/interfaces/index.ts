@@ -94,6 +94,7 @@ export interface CartContextType {
 export interface aOrder {
   orderId: number;
   userId: number;
+  voucherId: number;
   orderDate: string;
   address: string;
   paymentMethod: string;
@@ -111,6 +112,7 @@ export interface aOrder {
 
 export interface Order {
   orderId: number;
+  voucherId: number;
   userId: number;
   orderDate: string;
   address: string;
@@ -149,6 +151,20 @@ export interface ReviewData {
   rating: number;
   comment: string;
   isRated: boolean;
+}
+
+export interface AllVouchers {
+  voucherId: number;
+  name: string;
+  discountValue: number;
+  discountType: string
+}
+
+export interface Voucher {
+  voucherId: number
+  name: string;
+  discountValue: number;
+  discountType: string
 }
 
 export const ageOptions = [
