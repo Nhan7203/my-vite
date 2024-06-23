@@ -1,11 +1,11 @@
-import { useNavigate } from "../../../import/import-another";
-import useOrderData from "../components/useOrderData";
-import HeaderMain from "../components/Header-main";
-import OrderTable from "../components/OrderTable";
-import Sidebar from "../components/Sidebar";
-import { aOrder } from "../../../interfaces";
+import { useNavigate } from "../../../../import/import-another";
+import { aOrder } from "../../../../interfaces";
+import useOrderData from "../../components/useOrderData";
+import HeaderMain from "../../components/Header-main";
+import OrderTable from "../../components/OrderTable";
+import Sidebar from "../../components/Sidebar";
 
-const CompleteInAdmin = () => {
+const PreOrderInAdmin = () => {
   const { orderData } = useOrderData();
   const navigate = useNavigate();
 
@@ -29,10 +29,9 @@ const CompleteInAdmin = () => {
               throw new Error("Function not implemented.");
             }}
           />
-
           <OrderTable
             orderData={orderData.filter(
-              (order) => order.orderStatus === "Completed"
+              (order) => order.orderStatus === "Pre-Order"
             )}
             handleViewOrderDetails={handleViewOrderDetails}
           />
@@ -41,4 +40,4 @@ const CompleteInAdmin = () => {
     </>
   );
 };
-export default CompleteInAdmin;
+export default PreOrderInAdmin;

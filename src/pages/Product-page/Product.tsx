@@ -6,8 +6,8 @@ import { useLocation } from "react-router-dom";
 import { aProduct } from "../../interfaces";
 import { BsCart3 } from "react-icons/bs";
 import { useCart } from "../../pages/Cart-page/CartContext";
-import * as searchServices from "../../apiServices/SearchServices/searchServices";
-import * as brand from "../../apiServices/BrandServices/brandServices";
+import { search } from "../../apiServices/ProductServices/productServices";
+import { getBrand } from "../../apiServices/BrandServices/brandServices";
 import by from "../../assets/search-empty.png";
 import { MdNavigateBefore, MdNavigateNext } from "../../import/import-libary";
 import "./Product.css";
@@ -75,7 +75,7 @@ interface RatingDetails {
         queryParams.append("search", location.state.query);
       }
 
-      const response = await searchServices.search(queryParams);
+      const response = await search(queryParams);
       setProducts(response);
     };
     fetchProductsByFilter();
@@ -94,7 +94,7 @@ interface RatingDetails {
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await brand.getBrand();
+      const result = await getBrand();
       setBrandList(result);
     };
     fetchData();

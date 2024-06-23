@@ -7,11 +7,19 @@ import {
 import useGlowingEffect from "../components/useGlowingEffect.tsx";
 import useOrderData from "../components/useOrderData.tsx";
 import OrderTable from "../components/OrderTable.tsx";
+import { useHandleCancelOrder } from "../components/HandleOrder.tsx";
 
 const PreOrder = () => {
   const isGlowing = useGlowingEffect(true, 1000);
-
+  
   const { orderData } = useOrderData();
+
+  const { handleCancelOrder } = useHandleCancelOrder();
+
+  const handleCancelClick = (orderId: number) => {
+    handleCancelOrder(orderId);
+  };
+  
   return (
     <div>
       <Navbar />
@@ -44,9 +52,7 @@ const PreOrder = () => {
                             (order) => order.orderStatus === "Pre-Order"
                           )}
                           isGlowing={isGlowing}
-                          handleCancelClick={function (): void {
-                            throw new Error("Function not implemented.");
-                          }}
+                          handleCancelClick={handleCancelClick}                        
                           handleReceiveClick={function (): void {
                             throw new Error("Function not implemented.");
                           }}

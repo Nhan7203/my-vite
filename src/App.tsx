@@ -49,6 +49,8 @@ import { CartProvider } from "./pages/Cart-page/CartContext";
 import { ToastContainer } from "./import/import-libary";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
+import ProtectedRoute from "./utils/protectedRoute";
+import PaymentWrapper from "./utils/protectedRoutePayment";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -62,32 +64,162 @@ const router = createBrowserRouter(
       <Route path="/securitycode" element={<SecurityCode />} />
       <Route path="/changepassword" element={<ChangePassword />} />
 
-      <Route path="/admin" element={<Admin />} />
-      <Route path="/manage-product" element={<ProductManage />} />
-      <Route path="/addproduct" element={<AddProduct />} />
-      <Route path="/updateproduct" element={<UpdateProduct />} />
-      <Route path="/customer" element={<Customer />} />
-      <Route path="/account" element={<Account />} />
-      <Route path="/charts" element={<Chart />} />
-
-      <Route path="/complete-staff" element={<CompleteInAdmin />} />
-      <Route path="/processing-staff" element={<ProcessingInAdmin />} />
-      <Route path="/processed-staff" element={<ProcessedInAdmin />} />
-      <Route path="/cancelled-staff" element={<CancelledInAdmin />} />
-      <Route path="/preorder-staff" element={<PreOrderInAdmin />} />
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute allowedRoles={["Admin"]}>
+            <Admin />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/charts"
+        element={
+          <ProtectedRoute allowedRoles={["Admin"]}>
+            <Chart />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/account"
+        element={
+          <ProtectedRoute allowedRoles={["Admin"]}>
+            <Account />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/customer"
+        element={
+          <ProtectedRoute allowedRoles={["Admin", "Staff"]}>
+            <Customer />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/manage-product"
+        element={
+          <ProtectedRoute allowedRoles={["Admin", "Staff"]}>
+            <ProductManage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/addproduct"
+        element={
+          <ProtectedRoute allowedRoles={["Admin", "Staff"]}>
+            <AddProduct />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/updateproduct"
+        element={
+          <ProtectedRoute allowedRoles={["Admin", "Staff"]}>
+            <UpdateProduct />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/order"
+        element={
+          <ProtectedRoute allowedRoles={["Admin", "Staff"]}>
+            <Order />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/orderinformation"
+        element={
+          <ProtectedRoute allowedRoles={["Admin", "Staff"]}>
+            <OrderInfo />
+          </ProtectedRoute>
+        }
+      >
+        <Route
+          path=":orderId/:userId"
+          element={
+            <ProtectedRoute allowedRoles={["Admin", "Staff"]}>
+              <OrderInfo />
+            </ProtectedRoute>
+          }
+        />
+      </Route>
+      <Route
+        path="/complete-staff"
+        element={
+          <ProtectedRoute allowedRoles={["Admin", "Staff"]}>
+            <CompleteInAdmin />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/processing-staff"
+        element={
+          <ProtectedRoute allowedRoles={["Admin", "Staff"]}>
+            <ProcessingInAdmin />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/processed-staff"
+        element={
+          <ProtectedRoute allowedRoles={["Admin", "Staff"]}>
+            <ProcessedInAdmin />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/cancelled-staff"
+        element={
+          <ProtectedRoute allowedRoles={["Admin", "Staff"]}>
+            <CancelledInAdmin />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/preorder-staff"
+        element={
+          <ProtectedRoute allowedRoles={["Admin", "Staff"]}>
+            <PreOrderInAdmin />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/blogs"
+        element={
+          <ProtectedRoute allowedRoles={["Admin", "Staff"]}>
+            <Blogs />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/addblog"
+        element={
+          <ProtectedRoute allowedRoles={["Admin", "Staff"]}>
+            <AddBlog />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/updateblog"
+        element={
+          <ProtectedRoute allowedRoles={["Admin", "Staff"]}>
+            <UpdateBlog />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/vouchers"
+        element={
+          <ProtectedRoute allowedRoles={["Admin", "Staff"]}>
+            <Vouchers />
+          </ProtectedRoute>
+        }
+      />
 
       <Route path="/user" element={<User />} />
       <Route path="/profile" element={<Profile />} />
-
-      <Route path="/order" element={<Order />} />
-
-      <Route path="/orderinformation" element={<OrderInfo />}>
-        <Route path=":orderId/:userId" element={<OrderInfo />} />
-      </Route>
-
-      <Route path="/orderdetails" element={<OrderDetails />}>
-        <Route path=":orderId" element={<OrderDetails />} />
-      </Route>
 
       <Route path="/complete" element={<Complete />} />
       <Route path="/processing" element={<Processing />} />
@@ -95,24 +227,22 @@ const router = createBrowserRouter(
       <Route path="/cancelled" element={<Cancelled />} />
       <Route path="/preorder" element={<PreOrder />} />
 
-      <Route path="/cart" element={<Cart />} />
-      <Route path="/payment" element={<Payment />} />
-
       <Route path="/product" element={<Product />} />
       <Route path="/productDetails" element={<ProductDetails />}>
         <Route path=":productId" element={<ProductDetails />} />
       </Route>
 
+      <Route path="/orderdetails" element={<OrderDetails />}>
+        <Route path=":orderId" element={<OrderDetails />} />
+      </Route>
+
+      <Route path="/cart" element={<Cart />} />
+      <Route path="/payment" element={<PaymentWrapper><Payment /></PaymentWrapper>} />
+
       <Route path="/blog" element={<Blog />} />
       <Route path="/blogdetails" element={<BlogDetails />}>
         <Route path=":blogId" element={<BlogDetails />} />
       </Route>
-
-      <Route path="/blogs" element={<Blogs />} />
-      <Route path="/addblog" element={<AddBlog />} />
-      <Route path="/updateblog" element={<UpdateBlog />} />
-
-      <Route path="/vouchers" element={<Vouchers />} />
     </Route>
   )
 );

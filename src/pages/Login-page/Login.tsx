@@ -46,7 +46,7 @@ const Login = () => {
         }
         else if (role === "Staff") {
           alert("Oke bạn nay Staff ne");
-          navigate("/admin");
+          navigate("/order");
 
         } else if (role === "Admin") {
 

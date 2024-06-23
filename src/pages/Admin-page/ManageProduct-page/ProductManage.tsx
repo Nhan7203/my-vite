@@ -1,21 +1,17 @@
-import { useEffect, useState } from "react";
-import { aProduct, ageOptions, categoryOptions } from "../../interfaces";
-import { useNavigate } from "react-router-dom";
-import { useAllProduct } from "../../context/ShopContext";
-import * as brandd from "../../apiServices/BrandServices/brandServices";
-import "./Admin.css";
-import { Brand } from "../Product-page/Product";
-import * as searchServices from "../../apiServices/SearchServices/searchServices";
-import swal from "sweetalert";
-import HeaderMain from "./components/Header-main";
-import Sidebar from "./components/Sidebar";
-
+import { useEffect, useState, swal, useNavigate } from "../../../import/import-another";
+import { aProduct, ageOptions, categoryOptions } from "../../../interfaces";
+import { deleteProducts, search } from "../../../apiServices/ProductServices/productServices";
+import { useAllProduct } from "../../../context/ShopContext";
+import { getBrand } from "../../../apiServices/BrandServices/brandServices";
+import { Brand } from "../../Product-page/Product";
+import HeaderMain from "../components/Header-main";
+import Sidebar from "../components/Sidebar";
+import "../Admin.css";
 export interface ImageProduct {
   imageId: number;
   productId: number;
   imageUrl: string;
 }
-
 
 const ProductManage = () => {
   const { allProduct } = useAllProduct();
@@ -32,7 +28,7 @@ const ProductManage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await brandd.getBrand();
+      const result = await getBrand();
       setBrandList(result);
     };
     fetchData();
@@ -83,14 +79,9 @@ const ProductManage = () => {
         dangerMode: true,
       }).then(async (confirmDelete) => {
         if (confirmDelete) {
-          const response = await fetch(
-            `https://localhost:7030/api/Products/Delete?id=${productId}`,
-            {
-              method: "DELETE",
-            }
-          );
+          const response = await deleteProducts(productId);
 
-          if (response.ok) {
+          if (response) {
             swal("Success!", "Product was deleted!", "success");
             setProducts(
               products.filter((product) => product.productId !== productId)
@@ -131,7 +122,7 @@ const ProductManage = () => {
         queryParams.append("search", searchQuery);
       }
 
-      const response = await searchServices.search(queryParams);
+      const response = await search(queryParams);
       setProducts(response);
     };
     fetchProductsByFilter();

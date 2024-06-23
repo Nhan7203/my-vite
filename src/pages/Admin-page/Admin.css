@@ -222,6 +222,13 @@
 }
 
 .user-wrapper {
+  position: relative;
+  display: inline-block;
+  z-index: 50;
+  align-items: center;
+}
+
+.avatar-admin {
   display: flex;
   align-items: center;
 }
@@ -231,10 +238,19 @@
   margin-right: 1rem;
 }
 
+.user-wrapper:hover .menu-box {
+  opacity: 1;
+  visibility: visible;
+}
+
 .user-wrapper small {
   display: inline-block;
   color: var(--text-grey);
 }
+
+.name-role > p {
+  font-weight: bold;
+} 
 
 .sidebar-menu > ul {
   padding-left: 0px;

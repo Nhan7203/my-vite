@@ -1,11 +1,12 @@
-import { useNavigate } from "../../../import/import-another";
-import useOrderData from "../components/useOrderData";
-import HeaderMain from "../components/Header-main";
-import OrderTable from "../components/OrderTable";
-import Sidebar from "../components/Sidebar";
-import { aOrder } from "../../../interfaces";
+import { useNavigate } from "../../../../import/import-another";
+import { aOrder } from "../../../../interfaces";
+import useOrderData from "../../components/useOrderData";
+import HeaderMain from "../../components/Header-main";
+import OrderTable from "../../components/OrderTable";
+import Sidebar from "../../components/Sidebar";
 
-const Order = () => {
+
+const CancelledInAdmin = () => {
   const { orderData } = useOrderData();
   const navigate = useNavigate();
 
@@ -31,7 +32,9 @@ const Order = () => {
           />
 
           <OrderTable
-            orderData={orderData}
+            orderData={orderData.filter(
+              (order) => order.orderStatus === "Canceled"
+            )}
             handleViewOrderDetails={handleViewOrderDetails}
           />
         </div>
@@ -39,4 +42,4 @@ const Order = () => {
     </>
   );
 };
-export default Order;
+export default CancelledInAdmin;

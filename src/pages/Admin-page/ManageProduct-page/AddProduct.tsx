@@ -1,13 +1,11 @@
-import "./Admin.css";
-import { useState, useEffect } from "react";
-import "./Admin.css";
-import { aProduct, ageOptions, categoryOptions } from "../../interfaces";
-import { useLocation, useNavigate } from "react-router-dom";
-import * as brandd from "../../apiServices/BrandServices/brandServices";
-import swal from "sweetalert";
-import { useAllProduct } from "../../context/ShopContext";
-import HeaderMain from "./components/Header-main";
-import Sidebar from "./components/Sidebar";
+import { useEffect, useState, swal, useNavigate } from "../../../import/import-another";
+import { aProduct, ageOptions, categoryOptions } from "../../../interfaces";
+import { useAllProduct } from "../../../context/ShopContext";
+import { useLocation } from "react-router-dom";
+import { getBrand } from "../../../apiServices/BrandServices/brandServices";
+import HeaderMain from "../components/Header-main";
+import Sidebar from "../components/Sidebar";
+
 
 export interface Brand {
   brandId: number;
@@ -51,7 +49,7 @@ const AddProduct = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await brandd.getBrand();
+      const result = await getBrand();
       setBrandList(result);
     };
     fetchData();

@@ -1,19 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useOrderDetails } from "./components/useOrderDetails";
-import "./Admin.css";
-import Sidebar from "./components/Sidebar";
-import HeaderMain from "./components/Header-main";
-import { useLocation } from "react-router-dom";
-import {
-  useHandleCancelOrder,
-  useHandleConfirmOrder,
-} from "./components/HandleOrder";
 import {
   ageOptions,
   categoryOptions,
   shippingMethodOptions,
-} from "../../interfaces";
+} from "../../../../interfaces";
+import { useLocation } from "react-router-dom";
+import {
+  useHandleCancelOrder,
+  useHandleConfirmOrder,
+} from "../../components/HandleOrder";
+import { useOrderDetails } from "../../components/useOrderDetails";
+import HeaderMain from "../../components/Header-main";
+import Sidebar from "../../components/Sidebar";
 
+import "../../Admin.css";
 const OrderInfo = () => {
   const {
     orderDetails,
@@ -157,15 +157,17 @@ const OrderInfo = () => {
 
                     <div className="value-total">
                       <p>${getShippingMethodOption(order?.shippingMethodId)}</p>
-                      <p>
-                        {orderVoucher?.discountValue}
-                        {orderVoucher?.discountType}
-                      </p>
+                      {orderVoucher ? (
+                        <p>
+                          {orderVoucher?.discountValue}
+                          {orderVoucher?.discountType}
+                        </p>
+                      ) : (
+                        <p>None</p>
+                      )}
+
                       <p style={{ fontWeight: 700 }}>
                         ${order?.total.toLocaleString()}
-                        {/* {orderDetails
-                          .reduce((total, order) => total + order.total, 0)
-                          .toLocaleString()} */}
                       </p>
                     </div>
                   </div>
@@ -197,7 +199,7 @@ const OrderInfo = () => {
                 </div>
 
                 <div className="button-payment">
-                  {orderStatus === "Pending" && (
+                  {(orderStatus === "Pending" || orderStatus === 'Pre-Order') && (
                     <div
                       className="add-product"
                       style={{ display: "flex", flexDirection: "row-reverse" }}

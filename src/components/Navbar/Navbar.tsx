@@ -5,7 +5,6 @@ import {
   IoNotificationsOutline,
   FaSearch,
   BsFillPeopleFill,
-  GiPositionMarker,
   FaRegTrashCan,
 } from "../../import/import-libary";
 import {

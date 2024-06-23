@@ -13,6 +13,7 @@ const Processing = () => {
   const isGlowing = useGlowingEffect(true, 1000);
 
   const { orderData } = useOrderData();
+
   const { handleCancelOrder } = useHandleCancelOrder();
 
   const handleCancelClick = (orderId: number) => {
@@ -53,8 +54,8 @@ const Processing = () => {
                           orderData={orderData.filter(
                             (order) => order.orderStatus === "Pending"
                           )}
-                          handleCancelClick={handleCancelClick}
                           isGlowing={isGlowing}
+                          handleCancelClick={handleCancelClick}
                           handleReceiveClick={function (): void {
                             throw new Error("Function not implemented.");
                           }}

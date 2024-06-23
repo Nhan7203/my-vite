@@ -1,6 +1,6 @@
-import Dashboard from "./ChartComponent/DashBoard";
-import HeaderMain from "./components/Header-main";
-import Sidebar from "./components/Sidebar";
+import Dashboard from "../ChartComponent/DashBoard";
+import HeaderMain from "../components/Header-main";
+import Sidebar from "../components/Sidebar";
 
 const Chart = () => {
   return (
