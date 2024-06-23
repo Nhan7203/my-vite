@@ -1,43 +1,43 @@
 import {
   deleteCustomer,
   searchUser,
-} from "../../apiServices/AdminServices/adminServices";
-import { useState, useEffect, swal } from "../../import/import-another";
-import { AllUsers, User } from "../../interfaces";
-import { userUpdate } from "../../apiServices/UserServices/userServices";
-import Sidebar from "./components/Sidebar";
-import "./Admin.css";
-import UserTable from "./components/UserTable";
-import UserHeadTable from "./components/UseHeadTable";
-import HeaderMain from "./components/Header-main";
+} from "../../../apiServices/AdminServices/adminServices";
+import { useState, useEffect, swal } from "../../../import/import-another";
+import { AllUsers, User } from "../../../interfaces";
+import { userUpdate } from "../../../apiServices/UserServices/userServices";
+import UserHeadTable from "../components/UseHeadTable";
+import HeaderMain from "../components/Header-main";
+import UserTable from "../components/UserTable";
+import Sidebar from "../components/Sidebar";
+import "../Admin.css";
 
-const Account = () => {
+const Customer = () => {
   const [allUsers, setAllUsers] = useState<AllUsers[]>([]);
   const [action, setAction] = useState(false);
   const [editingUser, setEditingUser] = useState<User>();
   const [searchQuery, setSearchQuery] = useState("");
-  const [roleId, setRoleId] = useState<number>(0);
   const [activeTab, setActiveTab] = useState("");
   const [activeOrder, setActiveOrder] = useState("");
   const [orderBy, setOrderBy] = useState("");
+
   const [errors, setErrors] = useState({
     name: "",
   });
 
-  useEffect(() => {
-    const fetchProductsByFilter = async () => {
-      const queryParams = new URLSearchParams();
+  //---------------------------------------fetchUsersByFilter-----------------------------
 
-      if (roleId !== 0) {
-        queryParams.append("roleId", roleId.toString());
-      }
+  useEffect(() => {
+    const fetchUsersByFilter = async () => {
+      const queryParams = new URLSearchParams();
 
       if (orderBy === "name") {
         queryParams.append("orderBy", "name");
-      } else if (orderBy === "role") {
-        queryParams.append("orderBy", "role");
+      } else if (orderBy === "email") {
+        queryParams.append("orderBy", "email");
       } else if (orderBy === "id") {
         queryParams.append("orderBy", "id");
+      } else if (orderBy === "address") {
+        queryParams.append("orderBy", "address");
       }
 
       if (searchQuery) {
@@ -47,10 +47,11 @@ const Account = () => {
       const response = await searchUser(queryParams);
       setAllUsers(response);
     };
-    fetchProductsByFilter();
-  }, [orderBy, roleId, searchQuery]);
+    fetchUsersByFilter();
+  }, [orderBy, searchQuery]);
 
-  //----------------------------------------------------------------------------------
+  //---------------------------------------handleSave-----------------------------
+
   const handleSave = async (
     event: { preventDefault: () => void },
     user: AllUsers
@@ -94,24 +95,26 @@ const Account = () => {
       if (response) {
         swal(
           "Success",
-          "Account information updated successfully!",
+          "User information updated successfully!",
           "success"
         ).then(() => {
           setAction(false);
           window.location.reload();
         });
       } else {
-        swal("Error", "Failed to update account information.", "error");
+        swal("Error", "Failed to update user information.", "error");
       }
     } catch (error) {
       console.log(error);
       swal(
         "Error",
-        "Error occurred during updating account information.",
+        "Error occurred during updating user information.",
         "error"
       );
     }
   };
+
+  //---------------------------------------handleEdit-----------------------------
 
   const handleEdit = async (
     event: { preventDefault: () => void },
@@ -122,11 +125,12 @@ const Account = () => {
     setAction(true);
   };
 
-  //---------------------------------------------------------------------------------------
+  //---------------------------------------handleDelete-----------------------------
+
   const handleDelete = (user: AllUsers) => {
     try {
       swal({
-        title: "Are you sure you want to delete this account?",
+        title: "Are you sure you want to delete this customer?",
         text: "This action cannot be undone!",
         icon: "warning",
         buttons: ["Cancel", "Confirm"],
@@ -136,12 +140,13 @@ const Account = () => {
           const response = await deleteCustomer(user.userId);
 
           if (response) {
-            swal("Success!", "Account was deleted!", "success");
-            setAllUsers(
-              allUsers.filter((allUser) => allUser.userId !== user.userId)
-            );
+            swal("Success!", "Customer was deleted!", "success").then(() => {
+              setAllUsers(
+                allUsers.filter((allUser) => allUser.userId !== user.userId)
+              );
+            });
           } else {
-            throw new Error("Failed to  delete account");
+            throw new Error("Failed to  delete customer");
           }
         }
       });
@@ -149,6 +154,7 @@ const Account = () => {
       console.error("Error deleting notification:", error);
     }
   };
+  //---------------------------------------handleEditName-----------------------------
 
   const handleOnChangeEditName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditingUser((prevUser) =>
@@ -160,22 +166,28 @@ const Account = () => {
         : undefined
     );
   };
+  //---------------------------------------handleClickView-----------------------------
 
   const handleClickView = () => {
-    setActiveTab("view-account");
+    setActiveTab("view-customer");
     window.location.reload();
   };
+
+  //---------------------------------------handleOrderChange-----------------------------
 
   const handleOrderChange = (value: string) => {
     if (value === "name") {
       setOrderBy("name");
       setActiveOrder("name");
-    } else if (value === "role") {
-      setOrderBy("role");
-      setActiveOrder("role");
+    } else if (value === "email") {
+      setOrderBy("email");
+      setActiveOrder("email");
     } else if (value === "id") {
       setOrderBy("id");
       setActiveOrder("id");
+    } else if (value === "address") {
+      setOrderBy("address");
+      setActiveOrder("address");
     } else {
       setOrderBy("");
       setActiveOrder("");
@@ -199,26 +211,28 @@ const Account = () => {
           <main>
             <div>
               <UserHeadTable
-                roleId={roleId}
+                roleId={0}
+                displayed={["SortByEmail", "SortByAdress"]}
                 activeTab={activeTab}
                 activeOrder={activeOrder}
-                displayed={["SortByRole", "select-role"]}
-                setRoleId={setRoleId}
                 handleClickView={handleClickView}
                 handleOrderChange={handleOrderChange}
+                setRoleId={function (): void {
+                  throw new Error("Function not implemented.");
+                }}
               />
 
               <UserTable
+                allUsers={allUsers.filter((user) => user.roleId === 1)}
                 action={action}
-                errors={errors}
-                allUsers={allUsers}
                 editingUser={editingUser}
-                displayedRows={["roleId"]}
-                displayedColumns={["roleId"]}
                 handleEdit={handleEdit}
                 handleSave={handleSave}
                 handleDelete={handleDelete}
+                errors={errors}
                 handleOnChangeEdit={handleOnChangeEditName}
+                displayedColumns={["email", "phoneNumber", "address"]}
+                displayedRows={["email", "phoneNumber", "address"]}
               />
             </div>
           </main>
@@ -228,4 +242,4 @@ const Account = () => {
   );
 };
 
-export default Account;
+export default Customer;

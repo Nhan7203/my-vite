@@ -1,15 +1,10 @@
-//import { toast } from "react-toastify";
-import "./Admin.css";
-import { useState, useEffect } from "react";
-import "./Admin.css";
-import { useAllProduct } from "../../context/ShopContext";
-import { useNavigate, useLocation } from "react-router-dom";
-import swal from "sweetalert";
-import { ImageProduct, ageOptions, categoryOptions } from "../../interfaces";
-
-import { getBrand } from "../../apiServices/BrandServices/brandServices";
-import HeaderMain from "./components/Header-main";
-import Sidebar from "./components/Sidebar";
+import { ImageProduct, ageOptions, categoryOptions } from "../../../interfaces";
+import { useEffect, useState, swal, useNavigate } from "../../../import/import-another";
+import { useAllProduct } from "../../../context/ShopContext";
+import { useLocation } from "react-router-dom";
+import { getBrand } from "../../../apiServices/BrandServices/brandServices";
+import HeaderMain from "../components/Header-main";
+import Sidebar from "../components/Sidebar";
 
 export interface Brand {
   brandId: number;

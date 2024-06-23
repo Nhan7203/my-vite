@@ -151,6 +151,8 @@ const Payment = () => {
 
   const discountedTotal = calculateDiscountedTotal();
 
+  localStorage.removeItem("hasAccessedCart");
+
   return (
     <div>
       <div className="header-payment">

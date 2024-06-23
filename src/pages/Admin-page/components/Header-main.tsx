@@ -1,6 +1,6 @@
-import { useMemo } from "react";
+import { useEffect, useState } from "../../../import/import-another";
+import { getNameFromToken, getRoleFromToken } from "../../../utils/jwtHelper";
 import { avatar } from "../../../import/import-assets";
-import { getNameFromToken } from "../../../utils/jwtHelper";
 
 interface HeaderMainProps {
   searchQuery: string;
@@ -13,18 +13,23 @@ const HeaderMain: React.FC<HeaderMainProps> = ({
   searchQuery,
   setSearchQuery,
 }) => {
-
   const token = localStorage.getItem("token");
+  const [userName, setUserName] = useState();
+  const [role, setRole] = useState();
 
-  const userName = useMemo(() => {
+  useEffect(() => {
     if (!token) {
-      console.error("Token not found");
-      return null;
+      return;
     }
+    const roleIdentifier = getRoleFromToken(token);
+    setRole(roleIdentifier)
     const usernameIdentifier = getNameFromToken(token);
-
-    return usernameIdentifier;
+    setUserName(usernameIdentifier);
   }, [token]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+  };
 
   return (
     <div className="header-main">
@@ -47,10 +52,19 @@ const HeaderMain: React.FC<HeaderMainProps> = ({
       )}
 
       <div className="user-wrapper">
-        <img src={avatar} width="40px" height="40px" alt="" />
-        <div>
-          <h4>{userName}</h4>
-          <small>Super admin</small>
+        <div className="avatar-admin">
+          <img src={avatar} width="40px" height="40px" alt="" />
+          <div className="name-role">
+            <p>{userName}</p>
+            <small>{(role)}</small>
+          </div>
+        </div>
+
+        <div className="menu-box">
+          {/* <a href="/">View Home</a> */}
+          <a href="/login" onClick={handleLogout} style={{ border: "none" }}>
+            Logout
+          </a>
         </div>
       </div>
     </div>

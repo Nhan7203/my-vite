@@ -14,7 +14,7 @@ import { getOrderDetails } from "../../../apiServices/UserServices/userServices"
 import { getProductId } from "../../../apiServices/ProductServices/productServices";
 import useOrderData from "../components/useOrderData";
 import { getAllUsers } from "../../../apiServices/StaffServices/staffServices";
-import { Brand } from "../AddProduct";
+import { Brand } from "../ManageProduct-page/AddProduct";
 import { getBrand } from "../../../apiServices/BrandServices/brandServices";
 import { getAllVouchers } from "../../../apiServices/VoucherServices/voucherServices";
 

@@ -155,7 +155,7 @@ const OrderDetailItem: React.FC<OrderDetailItemProps> = ({
           );
         })}
       </div>
-      {orderStatus === "Pending" && (
+      {(orderStatus === "Pending" || orderStatus === 'Pre-Order') && (
         <div
           className="add-product"
           style={{ display: "flex", flexDirection: "row-reverse" }}

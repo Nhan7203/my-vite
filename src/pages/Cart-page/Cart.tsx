@@ -7,12 +7,13 @@ import Swal from "sweetalert2";
 import swal from "sweetalert";
 import ra from "../../assets/rabbit.png";
 import "./Cart.css";
+import { useNavigate } from "react-router-dom";
 
 const ShoppingCart = () => {
   const { cart, decrementQuantity, incrementQuantity, removeItems } = useCart();
   const [isPreorder, setIsPreorder] = useState(false);
   const [isNotPreorder, setIsNotPreorder] = useState(false);
-
+  const navigate = useNavigate();
   const totalAmount = cart.reduce(
     (total, product) => total + product.price * product.quantity,
     0
@@ -76,6 +77,13 @@ const ShoppingCart = () => {
 
   const isLoggedIn = token ? getUserIdFromToken(token) : null;
   const hasAddress = token ? getAddressFromToken(token) : null;
+
+//-------------------------------------
+
+const handlePaymentClick = () => {
+  localStorage.setItem('hasAccessedCart', 'true');
+  navigate('/payment');
+};
 
   return (
     <div>
@@ -233,7 +241,11 @@ const ShoppingCart = () => {
                       Payment
                     </div>
                   ) : (
-                    <Link to="/payment" style={{ color: "white" }}>
+                    <Link
+                      to="#"
+                      onClick={handlePaymentClick}
+                      style={{ color: "white" }}
+                    >
                       <div className="box-continue">Payment</div>
                     </Link>
                   )

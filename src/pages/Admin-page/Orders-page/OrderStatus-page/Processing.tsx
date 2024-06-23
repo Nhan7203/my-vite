@@ -1,11 +1,11 @@
-import { useNavigate } from "../../../import/import-another";
-import useOrderData from "../components/useOrderData";
-import HeaderMain from "../components/Header-main";
-import OrderTable from "../components/OrderTable";
-import Sidebar from "../components/Sidebar";
-import { aOrder } from "../../../interfaces";
+import { useNavigate } from "../../../../import/import-another";
+import { aOrder } from "../../../../interfaces";
+import useOrderData from "../../components/useOrderData";
+import HeaderMain from "../../components/Header-main";
+import OrderTable from "../../components/OrderTable";
+import Sidebar from "../../components/Sidebar";
 
-const ProcessedInAdmin = () => {
+const ProcessingInAdmin = () => {
   const { orderData } = useOrderData();
   const navigate = useNavigate();
 
@@ -32,7 +32,7 @@ const ProcessedInAdmin = () => {
 
           <OrderTable
             orderData={orderData.filter(
-              (order) => order.orderStatus === "Submitted"
+              (order) => order.orderStatus === "Pending"
             )}
             handleViewOrderDetails={handleViewOrderDetails}
           />
@@ -41,4 +41,4 @@ const ProcessedInAdmin = () => {
     </>
   );
 };
-export default ProcessedInAdmin;
+export default ProcessingInAdmin;
