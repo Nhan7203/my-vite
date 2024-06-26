@@ -58,7 +58,7 @@ const ChangePassword = () => {
     const handleBtCancel = () => {
         navigate("/securitycode");
     };
-
+    localStorage.removeItem("hasAccessedForgetPassword");
     return (
         <>
             <body>
