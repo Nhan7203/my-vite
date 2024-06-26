@@ -53,6 +53,7 @@ const Forgetpassword = () => {
                 )
                 .then((result) => {
                   console.log(result.text);
+                  localStorage.setItem('hasAccessedForgetPassword', 'true');
                   navigate('/securitycode', {
                     state: { email, code },
                   });

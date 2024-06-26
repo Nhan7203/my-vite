@@ -51,6 +51,8 @@ import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import ProtectedRoute from "./utils/protectedRoute";
 import PaymentWrapper from "./utils/protectedRoutePayment";
+import Unauthorized from "./pages/Unauthorized-page/Unauthorized";
+import ChangePasswordWrapper from "./utils/protectedRouteChangePassword";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -61,8 +63,10 @@ const router = createBrowserRouter(
       <Route path="/register" element={<Register />} />
       <Route path="/securityCodeRegister" element={<SecurityCodeRegister />} />
       <Route path="/forgetpassword" element={<Forgetpassword />} />
-      <Route path="/securitycode" element={<SecurityCode />} />
-      <Route path="/changepassword" element={<ChangePassword />} />
+      <Route path="/securitycode" element={<ChangePasswordWrapper><SecurityCode /></ChangePasswordWrapper>} />
+      <Route path="/changepassword" element={<ChangePasswordWrapper><ChangePassword /></ChangePasswordWrapper>} />
+
+      <Route path="/unauthorized" element={<Unauthorized />} />
 
       <Route
         path="/admin"

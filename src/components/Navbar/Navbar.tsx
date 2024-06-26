@@ -15,7 +15,7 @@ import {
 } from "../../apiServices/NotificationService/notificationService";
 import { avatar, noti, trash, empty, logo } from "../../import/import-assets";
 import { useState, useEffect, useMemo } from "react";
-import { getNameFromToken, getUserIdFromToken } from "../../utils/jwtHelper";
+import { getNameFromToken, getRoleFromToken, getUserIdFromToken } from "../../utils/jwtHelper";
 import { Notification } from "../../interfaces";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../pages/Cart-page/CartContext";
@@ -26,6 +26,8 @@ const Navbar = () => {
   const { cart } = useCart();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [showNotification, setShowNotification] = useState(false);
+  const [userName, setUserName] = useState();
+  const [role, setRole] = useState();
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -45,14 +47,16 @@ const Navbar = () => {
     }
   }, [token]);
 
-  const userName = useMemo(() => {
+
+  useEffect(() => {
     if (!token) {
       console.error("Token not found");
-      return null;
+      return;
     }
+    const roleIdentifier = getRoleFromToken(token);
+    setRole(roleIdentifier)
     const usernameIdentifier = getNameFromToken(token);
-
-    return usernameIdentifier;
+    setUserName(usernameIdentifier);
   }, [token]);
 
   //-----------------------------------------------
@@ -180,6 +184,12 @@ const Navbar = () => {
                 <h4>{userName}</h4>
               </div>
               <div className="menu-box">
+              {role === 'Admin'  &&(
+                <a href="/admin">DashBoard</a>
+              )}
+              {role === 'Staff'  &&(
+                <a href="/order">Order Management</a>
+              )}
                 <a href="/profile">View Profile</a>
                 <a href="/user">Purchase order</a>
                 <a

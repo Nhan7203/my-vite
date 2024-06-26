@@ -61,7 +61,7 @@ const HeaderMain: React.FC<HeaderMainProps> = ({
         </div>
 
         <div className="menu-box">
-          {/* <a href="/">View Home</a> */}
+          <a href="/">View Home</a>
           <a href="/login" onClick={handleLogout} style={{ border: "none" }}>
             Logout
           </a>

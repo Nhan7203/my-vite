@@ -1,21 +1,21 @@
 import { useEffect, useNavigate } from "../import/import-another";
 
-const PaymentWrapper = ({ children }: { children: React.ReactNode }) => {
+const ChangePasswordWrapper = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
 
   // Kiểm tra nếu người dùng đã truy cập trang "cart" trước đó
-  const hasAccessedCart = localStorage.getItem("hasAccessedCart");
+  const hasAccessedForgetPassword = localStorage.getItem("hasAccessedForgetPassword");
   // Nếu chưa truy cập trang "cart", chuyển hướng về trang "cart"
 
   useEffect(() => {
-    if (hasAccessedCart === null) {
-        navigate("/cart");
+    if (hasAccessedForgetPassword === null) {
+        navigate("/forgetpassword");
         return;
       }
-  }, [hasAccessedCart, navigate]);
+  }, [hasAccessedForgetPassword, navigate]);
   
 
   return children;
 };
 
-export default PaymentWrapper;
+export default ChangePasswordWrapper;
