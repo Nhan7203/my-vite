@@ -14,6 +14,7 @@ import HeaderMain from "../../components/Header-main";
 import Sidebar from "../../components/Sidebar";
 
 import "../../Admin.css";
+import { useAllProduct, swal } from "../../../../import/import-another";
 const OrderInfo = () => {
   const {
     orderDetails,
@@ -25,6 +26,7 @@ const OrderInfo = () => {
     orderVoucher,
   } = useOrderDetails();
   const location = useLocation();
+  const { allProduct } = useAllProduct();
   const { orderStatus } = location.state;
   const { handleCancelOrder } = useHandleCancelOrder();
   const { handleConfirmOrder } = useHandleConfirmOrder();
@@ -63,9 +65,26 @@ const OrderInfo = () => {
 
   const handleConfirmClick = (
     orderId: number,
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    orderStatus: string
   ) => {
     event.preventDefault();
+    const product = allProduct.find(p => products.some(orderedProduct => orderedProduct.productId === p.productId && p.stock === 0));
+    if(product && orderStatus === 'Pre-Order') {
+      swal({
+        title: "Oops!",
+        text: "You have run out of products in stock!!! Please add more products.",
+        icon: "warning",
+        buttons: {
+          ok: {
+            text: "OK",
+            value: true,
+            className: "swal-ok-button",
+          },
+        },
+      });
+      return;
+    }
     handleConfirmOrder(orderId);
   };
 
@@ -213,7 +232,7 @@ const OrderInfo = () => {
                       </button>
                       <button
                         onClick={(event) =>
-                          handleConfirmClick(parseInt(orderId ?? ""), event)
+                          handleConfirmClick(parseInt(orderId ?? ""), event, orderStatus)
                         }
                       >
                         Confirm Order

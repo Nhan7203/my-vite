@@ -16,6 +16,8 @@
   margin-top: 30px;
   border-radius: 15px;
   padding: 24px 0px;
+  overflow: auto;
+  height: 850px;
 }
 
 .box-blog {
