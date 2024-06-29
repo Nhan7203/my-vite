@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   getAllRating,
   getProductRating,
@@ -5,15 +6,13 @@ import {
 import { Link, BsCart3, FontAwesomeIcon } from "../../../import/import-libary";
 import { useEffect, useState } from "react";
 import { aProduct } from "../../../interfaces";
-import { useCart } from "../../../pages/Cart-page/CartContext";
 import {
   faStar as regularStarOutline,
   faStar as solidStar,
   faStarHalfAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import swal from "sweetalert";
 import "./Main.css";
-import Swal from "sweetalert2";
+import { HandleAddToCart } from "../../../pages/Cart-page/HandleAddToCart";
 
 const getGridColumn = (index: number) => {
   const gridColumnMap = ["1 / 3", "4 / 6", "7 / 9", "10 / 12"];
@@ -27,65 +26,14 @@ const ProductCard = ({
   product: aProduct;
   index: number;
 }) => {
-  const { addToCart } = useCart();
-
   //--------------------------------------------------------------------------------------------
 
-  interface CurrentQuantities {
-    [key: string]: number;
-  }
-  const [currentQuantities, setCurrentQuantities] = useState<CurrentQuantities>(
-    {}
-  );
+  const { handleAddToCart } = HandleAddToCart();
 
-  useEffect(() => {
-    const storedQuantitiesStr = localStorage.getItem("currentQuantities");
-    const storedQuantities = storedQuantitiesStr
-      ? JSON.parse(storedQuantitiesStr)
-      : {};
-    setCurrentQuantities(storedQuantities);
-  }, []);
-
-  const handleCartClick = (product: aProduct) => {
-    if (product.stock > 0) {
-      const newCurrentQuantities = { ...currentQuantities };
-      const newQuantity = (newCurrentQuantities[product.productId] || 0) + 1;
-
-      if (newQuantity > product.stock) {
-        Swal.fire({
-          title: `${newCurrentQuantities[product.productId]}/ ${product.stock}`,
-          text: `You cannot order more than ${product.stock} items of this product.`,
-          icon: "info",
-        }).then(() => {
-          return;
-        });
-      } else {
-        newCurrentQuantities[product.productId] = newQuantity;
-        setCurrentQuantities(newCurrentQuantities);
-        localStorage.setItem(
-          "currentQuantities",
-          JSON.stringify(newCurrentQuantities)
-        );
-        addToCart(product);
-      }
-    } else {
-      try {
-        swal({
-          title: "Out of stock",
-          text: "This product is currently out of stock, but you can place a pre-order.",
-          icon: "info",
-          buttons: ["Cancel", "Confirm"],
-          dangerMode: true,
-        }).then(async (confirm) => {
-          if (confirm) {
-            addToCart(product);
-          }
-        });
-      } catch (error) {
-        console.error("Error: ", error);
-      }
-    }
+  const HandleAddToCartClick = (product: aProduct) => {
+    handleAddToCart(product);
   };
+
   //-----------------------------------------------------------------------------------------------------
   const [ratingInfo, setRatingInfo] = useState({
     averageRating: 0,
@@ -189,7 +137,7 @@ const ProductCard = ({
             <BsCart3
               className="icon-shopping"
               fontSize="1.5em"
-              onClick={() => handleCartClick(product)}
+              onClick={() => HandleAddToCartClick(product)}
             />
           </div>
         </div>

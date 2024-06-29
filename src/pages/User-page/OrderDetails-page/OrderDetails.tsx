@@ -31,10 +31,10 @@ const OrderDetails = () => {
 
   //---------------------------------------------- quantitty handle -------------------------------------------------------------
 
-  const { handleAddToCart } = HandleAddToCart();
+  const { handleAddToCart2 } = HandleAddToCart();
 
   const HandleAddToCartClick = (product: aProduct, quantity: number) => {
-    handleAddToCart(product, quantity);
+    handleAddToCart2(product, quantity);
   };
 
   //-----------------------------------------  Order handle ---------------------------------------------------------------

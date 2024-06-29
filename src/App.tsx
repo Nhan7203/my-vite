@@ -38,6 +38,7 @@ import {
   ProcessedInAdmin,
   CancelledInAdmin,
   PreOrderInAdmin,
+  Unauthorized
 } from "./import/import-router";
 import {
   createBrowserRouter,
@@ -51,7 +52,6 @@ import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import ProtectedRoute from "./utils/protectedRoute";
 import PaymentWrapper from "./utils/protectedRoutePayment";
-import Unauthorized from "./pages/Unauthorized-page/Unauthorized";
 import ChangePasswordWrapper from "./utils/protectedRouteChangePassword";
 
 const router = createBrowserRouter(

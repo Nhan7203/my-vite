@@ -8,8 +8,8 @@ import { useState, useEffect } from "react";
 import { getUserIdFromToken } from "../../utils/jwtHelper";
 import { Navbar, Footer } from "../../import/import-components";
 import { FaHeart } from "react-icons/fa";
+import { aBlog } from "../../interfaces";
 import { Link } from "../../import/import-libary";
-import  { aBlog } from "../../interfaces";
 import view from "../../assets/view.png";
 // import "./Blog.css";
 

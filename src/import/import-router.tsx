@@ -3,6 +3,7 @@ import ProcessedInAdmin from "../pages/Admin-page/Orders-page/OrderStatus-page/P
 import CancelledInAdmin from "../pages/Admin-page/Orders-page/OrderStatus-page/Cancelled";
 import PreOrderInAdmin from "../pages/Admin-page/Orders-page/OrderStatus-page/PreOrder";
 import CompleteInAdmin from "../pages/Admin-page/Orders-page/OrderStatus-page/Complete";
+import OrderInfo from "../pages/Admin-page/Orders-page/OrderInfo-page/Order-info";
 import ProductManage from "../pages/Admin-page/ManageProduct-page/ProductManage";
 import UpdateProduct from "../pages/Admin-page/ManageProduct-page/UpdateProduct";
 import SecurityCodeRegister from "../pages/Register-page/SecurityCodeRegister";
@@ -18,6 +19,7 @@ import Cancelled from "../pages/User-page/OrderStatus-page/Cancelled";
 import Complete from "../pages/User-page/OrderStatus-page/Complete";
 import PreOrder from "../pages/User-page/OrderStatus-page/PreOrder";
 import SecurityCode from "../pages/SecurityCode-page/SecurityCode";
+import Unauthorized from "../pages/Unauthorized-page/Unauthorized";
 import UpdateBlog from "../pages/Admin-page/Blog-page/UpdateBlog";
 import Customer from "../pages/Admin-page/Customer-page/Customer";
 import Account from "../pages/Admin-page/Account-page/Account";
@@ -28,7 +30,6 @@ import Chart from "../pages/Admin-page/Charts-page/Chart";
 import BlogDetails from "../pages/Blog-page/BlogDetails";
 import Blogs from "../pages/Admin-page/Blog-page/Blogs";
 import Register from "../pages/Register-page/Register";
-import OrderInfo from "../pages/Admin-page/Orders-page/OrderInfo-page/Order-info";
 import Product from "../pages/Product-page/Product";
 import Payment from "../pages/Payment-page/Payment";
 import Vouchers from "../pages/Admin-page/Vouchers";
@@ -52,6 +53,7 @@ export {
   UpdateProduct,
   SecurityCode,
   OrderDetails,
+  Unauthorized,
   BlogDetails,
   UpdateBlog,
   Processing,

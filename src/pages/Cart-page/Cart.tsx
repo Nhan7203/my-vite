@@ -1,13 +1,9 @@
+import { useState, useNavigate, useCart, swal2, swal } from "../../import/import-another";
 import { getUserIdFromToken, getAddressFromToken } from "../../utils/jwtHelper";
 import { StickyBox, Link, FaRegTrashCan } from "../../import/import-libary";
 import { Navbar, Footer } from "../../import/import-components";
-import { useState } from "react";
-import { useCart } from "./CartContext";
-import Swal from "sweetalert2";
-import swal from "sweetalert";
-import ra from "../../assets/rabbit.png";
+import { ra } from "../../import/import-assets";
 import "./Cart.css";
-import { useNavigate } from "react-router-dom";
 
 const ShoppingCart = () => {
   const { cart, decrementQuantity, incrementQuantity, removeItems } = useCart();
@@ -26,30 +22,6 @@ const ShoppingCart = () => {
       setIsNotPreorder(true);
     }
   });
-
-  // const [isPreOrder, setIsPreOrder] = useState(false);
-  // const handleIncrement = (
-  //   productId: number,
-  //   quantity: number,
-  //   stock: number
-  // ) => {
-  //   if (quantity < stock || isPreOrder) {
-  //     incrementQuantity(productId);
-  //   } else {
-  //     swal({
-  //       title: "Out of stock",
-  //       text: "This product is currently out of stock, but you can place a pre-order.",
-  //       icon: "info",
-  //       buttons: ["Cancel", "Confirm"],
-  //       dangerMode: true,
-  //     }).then(async (confirm) => {
-  //       if (confirm) {
-  //         incrementQuantity(productId);
-  //         setIsPreOrder(true);
-  //       }
-  //     });
-  //   }
-  // };
 
   const handleIncrement = (
     productId: number,
@@ -231,7 +203,7 @@ const handlePaymentClick = () => {
                       style={{ color: "white" }}
                       onClick={(e) => {
                         e.preventDefault();
-                        Swal.fire({
+                        swal2.fire({
                           title: "Oops!",
                           text: "You cannot purchase a mix of in-stock and pre-order items in the same order. Please remove the in-stock items or the pre-order items from your cart before proceeding to payment.",
                           icon: "error",
@@ -255,7 +227,7 @@ const handlePaymentClick = () => {
                     style={{ color: "white" }}
                     onClick={(e) => {
                       e.preventDefault(); // Prevent the default link behavior
-                      Swal.fire({
+                      swal2.fire({
                         title: "Oops!",
                         text: "You haven't logged in yet! Redirecting to Login...",
                         icon: "error",

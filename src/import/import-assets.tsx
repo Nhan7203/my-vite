@@ -1,28 +1,36 @@
+import bgProduct from "../assets/bg-product.jpg";
+import voucher from "../assets/voucher.png";
+import watched from "../assets/watched.png";
+import comment from "../assets/comment.png";
+import adress from "../assets/adress.png";
 import avatar from "../assets/Kequing.jpg";
-import noti from "../assets/notification.png";
+import iblog from "../assets/blogging.png";
 import trash from "../assets/trash-can.png";
 import empty from "../assets/folder.png";
+import noti from "../assets/notification.png";
 import logo from "../assets/logo.png";
 import adv from "../assets/adv.png";
 import adv1 from "../assets/adv1.png";
 import adv2 from "../assets/adv1.png";
-import vu from "../assets/vu.jpg";
+import box from "../assets/box.png";
 import sec from "../assets/ship-economical.png";
 import sr from "../assets/ship-regular.png";
 import se from "../assets/ship-Epress.png";
-import bgProduct from "../assets/bg-product.jpg";
-import comment from "../assets/comment.png";
-import iblog from "../assets/blogging.png";
-import watched from "../assets/watched.png";
-import box from "../assets/box.png";
-import adress from "../assets/adress.png";
-import voucher from "../assets/voucher.png";
+import vu from "../assets/vu.jpg";
+import ra from "../assets/rabbit.png";
+import by from "../assets/search-empty.png";
 // import bgProduct1 from "../assets/bg-product.jpg";
 export {
+  bgProduct,
+  comment,
+  watched,
+  voucher,
+  adress,
   avatar,
-  noti,
   trash,
   empty,
+  iblog,
+  noti,
   logo,
   adv,
   adv1,
@@ -31,11 +39,7 @@ export {
   sec,
   sr,
   se,
-  bgProduct,
-  comment,
-  iblog,
-  watched,
   box,
-  adress,
-  voucher
+  ra,
+  by
 };
