@@ -1,5 +1,6 @@
-import { swal, swal2, useCart, useAllProduct, useEffect, useState } from "../../import/import-another";
+import { useAllProduct, useEffect, useState } from "../../import/import-another";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { HandleAddToCart } from "../Cart-page/HandleAddToCart";
 import { aProduct, aBlog } from "../../interfaces";
 import { Navbar, Footer } from "../../import/import-components";
 import { getBlogId } from "../../apiServices/BlogServices/blogServices";
@@ -8,10 +9,9 @@ import view from "../../assets/view.png";
 import "./Blog.css";
 
 const BlogDetails = () => {
+  const navigate = useNavigate();
   const { blogId } = useParams<{ blogId: string }>();
   const [blogDetails, setBlogDetails] = useState<aBlog | null>(null);
-  const { addToCart } = useCart();
-  const navigate = useNavigate();
   const { allProduct } = useAllProduct();
 
   useEffect(() => {
@@ -36,61 +36,11 @@ const BlogDetails = () => {
     : null;
 //--------------------------------------------------------------------------------------------
 
-interface CurrentQuantities {
-  [key: string]: number;
-}
-const [currentQuantities, setCurrentQuantities] = useState<CurrentQuantities>(
-  {}
-);
+const { handleAddToCart } = HandleAddToCart();
 
-useEffect(() => {
-  const storedQuantitiesStr = localStorage.getItem("currentQuantities");
-  const storedQuantities = storedQuantitiesStr
-    ? JSON.parse(storedQuantitiesStr)
-    : {};
-  setCurrentQuantities(storedQuantities);
-}, []);
-
-const handleCartClick = (product: aProduct) => {
-  if (product.stock > 0) {
-    const newCurrentQuantities = { ...currentQuantities };
-    const newQuantity = (newCurrentQuantities[product.productId] || 0) + 1;
-
-    if (newQuantity > product.stock) {
-      swal2.fire({
-        title: `${newCurrentQuantities[product.productId]}/ ${product.stock}`,
-        text: `You cannot order more than ${product.stock} items of this product.`,
-        icon: "info",
-      }).then(() => {
-        return;
-      });
-    } else {
-      newCurrentQuantities[product.productId] = newQuantity;
-      setCurrentQuantities(newCurrentQuantities);
-      localStorage.setItem(
-        "currentQuantities",
-        JSON.stringify(newCurrentQuantities)
-      );
-      addToCart(product);
-    }
-  } else {
-    try {
-      swal({
-        title: "Out of stock",
-        text: "This product is currently out of stock, but you can place a pre-order.",
-        icon: "info",
-        buttons: ["Cancel", "Confirm"],
-        dangerMode: true,
-      }).then(async (confirm) => {
-        if (confirm) {
-          addToCart(product);
-        }
-      });
-    } catch (error) {
-      console.error("Error: ", error);
-    }
-  }
-};
+  const HandleAddToCartClick = (product: aProduct) => {
+    handleAddToCart(product);
+  };
 //-----------------------------------------------------------------------------------------------------
 
 
@@ -141,7 +91,7 @@ const handleCartClick = (product: aProduct) => {
                     <BsCart3
                       className="icon-shopping"
                       fontSize="1.5em"
-                      onClick={() => handleCartClick (product)}
+                      onClick={() => HandleAddToCartClick(product)}
                     />
                   </div>
                 </div>

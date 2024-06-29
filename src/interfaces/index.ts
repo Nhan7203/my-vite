@@ -54,6 +54,18 @@ export interface ShopContextType {
   allProduct: aProduct[];
 }
 
+export interface Brand {
+  brandId: number;
+  name: string;
+  imageBrandUrl: string;
+}
+
+export interface RatingDetails {
+  averageRating: number;
+  totalRating: number;
+  reviewCount: number;
+}
+
 export interface aBlog {
   blogId: number;
   title: string;

@@ -310,10 +310,6 @@ html {
   height: 150px;
 }
 
-.box-white {
-  background-color: #f5f7fc;
-}
-
 .box-empty {
   display: flex;
   justify-content: center;

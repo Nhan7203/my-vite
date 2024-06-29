@@ -1,4 +1,4 @@
-import * as request from "../../utils/request";
+      import * as request from "../../utils/request";
 
 export const getAllNotisByUser = async (userId: number) => {
   try {
