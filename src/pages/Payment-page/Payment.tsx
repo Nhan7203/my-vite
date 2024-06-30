@@ -57,6 +57,7 @@ const Payment = () => {
       //console.error("Token not found", address);
       const products = cart.map((product) => ({
         productId: product.productId,
+        nameProduct: product.name,
         quantity: product.quantity,
         price: product.price,
         total: discountedTotal + subtotal,

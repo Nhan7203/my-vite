@@ -81,6 +81,7 @@ const ButtonWrapper: React.FC<ButtonWrapperProps>  = ({
 
         const products = payload.map((product: any) => ({
           productId: product.productId,
+          nameProduct: product.name,
           quantity: product.quantity,
           price: product.price,
           total: product.quantity * product.price,

@@ -76,9 +76,9 @@ const OrderDetailItem: React.FC<OrderDetailItemProps> = ({
                     alt=""
                   />
                 </div>
-                <div className="name">{product?.name}</div>
+                <div className="name">{orderDetail.nameProduct}</div>
                 <div className="price-order">
-                  ${product?.price.toLocaleString()}
+                  ${orderDetail?.price.toLocaleString()}
                 </div>
                 <div className="quantity-count">
                   {`${orderDetail.quantity}`}
