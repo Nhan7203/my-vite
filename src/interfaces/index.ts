@@ -150,6 +150,7 @@ export interface RatingInfo {
 
 export interface OrderDetail {
   productId: number;
+  nameProduct: string;
   quantity: number;
   price: number;
   total: number;

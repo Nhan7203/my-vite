@@ -1,9 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  ageOptions,
-  categoryOptions,
-  shippingMethodOptions,
-} from "../../../../interfaces";
+import { shippingMethodOptions } from "../../../../interfaces";
 import { useLocation } from "react-router-dom";
 import {
   useHandleCancelOrder,
@@ -22,7 +18,6 @@ const OrderInfo = () => {
     orderId,
     userData,
     order,
-    brandList,
     orderVoucher,
   } = useOrderDetails();
   const location = useLocation();
@@ -30,23 +25,6 @@ const OrderInfo = () => {
   const { orderStatus } = location.state;
   const { handleCancelOrder } = useHandleCancelOrder();
   const { handleConfirmOrder } = useHandleConfirmOrder();
-
-  const getBrandOptionName = (brandId: any) => {
-    const brandOption = brandList.find((option) => option.brandId === brandId);
-    return brandOption ? brandOption.name : "";
-  };
-
-  const getAgeOptionName = (ageId: any) => {
-    const ageOption = ageOptions.find((option) => option.id === ageId);
-    return ageOption ? ageOption.name : "";
-  };
-
-  const getCategoryOptionName = (categoryId: any) => {
-    const categoryOption = categoryOptions.find(
-      (option) => option.id === categoryId
-    );
-    return categoryOption ? categoryOption.name : "";
-  };
 
   const getShippingMethodOption = (shippingMethodId: any) => {
     const shippingMethodOption = shippingMethodOptions.find(
@@ -69,8 +47,13 @@ const OrderInfo = () => {
     orderStatus: string
   ) => {
     event.preventDefault();
-    const product = allProduct.find(p => products.some(orderedProduct => orderedProduct.productId === p.productId && p.stock === 0));
-    if(product && orderStatus === 'Pre-Order') {
+    const product = allProduct.find((p) =>
+      products.some(
+        (orderedProduct) =>
+          orderedProduct.productId === p.productId && p.stock === 0
+      )
+    );
+    if (product && orderStatus === "Pre-Order") {
       swal({
         title: "Oops!",
         text: "You have run out of products in stock!!! Please add more products.",
@@ -119,7 +102,7 @@ const OrderInfo = () => {
                     <p>{userData?.name}</p>
                     <p>{userData?.phoneNumber}</p>
                     <p>{userData?.email}</p>
-                    <p>{userData?.address}</p>
+                    <p>{order?.address}</p>
                   </div>
                 </div>
 
@@ -128,9 +111,6 @@ const OrderInfo = () => {
                     <tr>
                       <td>Image</td>
                       <td>Product</td>
-                      <td>Age</td>
-                      <td>Brand</td>
-                      <td>Category</td>
                       {/* <div className="spacing-td"></div> */}
                       <td style={{ width: 100 }}></td>
                       <td>Quantity</td>
@@ -152,15 +132,12 @@ const OrderInfo = () => {
                               />
                             </div>
                           </td>
-                          <td>{product?.name}</td>
-                          <td>{getAgeOptionName(product?.forAgeId)}</td>
-                          <td>{getBrandOptionName(product?.brandId)}</td>
-                          <td>{getCategoryOptionName(product?.categoryId)}</td>
+                          <td>{orderDetail.nameProduct}</td>
                           <div className="spacing-td"></div>
                           <td style={{ textAlign: "center" }}>
                             {orderDetail.quantity}
                           </td>
-                          <td>${product?.price.toLocaleString()}</td>
+                          <td>${orderDetail.price.toLocaleString()}</td>
                         </tr>
                       );
                     })}
@@ -218,7 +195,8 @@ const OrderInfo = () => {
                 </div>
 
                 <div className="button-payment">
-                  {(orderStatus === "Pending" || orderStatus === 'Pre-Order') && (
+                  {(orderStatus === "Pending" ||
+                    orderStatus === "Pre-Order") && (
                     <div
                       className="add-product"
                       style={{ display: "flex", flexDirection: "row-reverse" }}
@@ -232,7 +210,11 @@ const OrderInfo = () => {
                       </button>
                       <button
                         onClick={(event) =>
-                          handleConfirmClick(parseInt(orderId ?? ""), event, orderStatus)
+                          handleConfirmClick(
+                            parseInt(orderId ?? ""),
+                            event,
+                            orderStatus
+                          )
                         }
                       >
                         Confirm Order
