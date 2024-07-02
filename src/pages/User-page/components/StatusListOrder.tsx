@@ -19,7 +19,7 @@ const StatusListOrder = () => {
           style={{
             color: location.pathname === link.to ? '#ff469e' : 'black',
             fontWeight: location.pathname === link.to ? 'bold' : 'normal',
-            borderBottom: location.pathname === link.to ? '3px solid #b3b3b3' : 'normal',
+            // borderBottom: location.pathname === link.to ? '3px solid #b3b3b3' : 'normal',
             borderRadius: location.pathname === link.to ? '5px' : 'normal',
           }}
         >

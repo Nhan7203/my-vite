@@ -1,58 +1,50 @@
-import { getUserIdFromToken, getAddressFromToken } from "../../utils/jwtHelper";
-import { GiPositionMarker, Link } from "../../import/import-libary";
+import { getUserIdFromToken, getAddressFromToken, getRoleFromToken, getNameFromToken } from "../../utils/jwtHelper";
+import { useEffect, useState, swal } from "../../import/import-another";
 import { avatar, sec, sr, se } from "../../import/import-assets";
 import { refreshToken } from "../../apiServices/AccountServices/refreshTokenServices";
-import { useState } from "react";
 import { useCart } from "../Cart-page/CartContext";
+import { Voucher } from "../../interfaces";
+import { orders } from "../../apiServices/OrderServices/OrderServices";
+import { Link } from "../../import/import-libary";
 import VoucherModal from "../../components/Voucher/VoucherModal";
 import Footer from "../../components/Footer/footer";
 import Paypal from "./Paypal";
-import swal from "sweetalert";
 import "./Payment.css";
-import { orders } from "../../apiServices/OrderServices/OrderServices";
-
-interface Voucher {
-  voucherId: number;
-  name: string;
-  code: string;
-  discountType: string;
-  discountValue: number;
-  minimumTotal: number;
-  createdDate: string;
-  expDate: string;
-  isActive: boolean;
-  productId: number | null;
-}
 
 const Payment = () => {
   const [shippingMethodId, setShippingMethodId] = useState<number>(0);
   const [subtotal, setSubtotal] = useState<number>(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedVoucher, setSelectedVoucher] = useState<Voucher | null>(null);
-
+  const [userName, setUserName] = useState();
+  const [role, setRole] = useState();
+  const [address, setAdress] = useState();
+  const [userId, setId] = useState();
   const { cart } = useCart();
 
-  const totalAmount = cart.reduce(
-    (total, product) => total + product.price * product.quantity,
-    0
-  );
   const token = localStorage.getItem("token");
+  useEffect(() => {
+    if (!token) {
+      console.error("Token not found");
+      return;
+    }
+    const userIdFromToken = getUserIdFromToken(token);
+    setId(userIdFromToken);
+    const roleIdentifier = getRoleFromToken(token);
+    setRole(roleIdentifier);
+    const usernameIdentifier = getNameFromToken(token);
+    setUserName(usernameIdentifier);
+    const userAddress = getAddressFromToken(token);
+    setAdress(userAddress);
+  }, [token]);
 
-  if (!token) {
-    console.error("Token not found");
-    return;
-  }
-  const hasAddress = getAddressFromToken(token);
+  //------------------- Handle Continue Click ------------------
+
   const handleContinueClick = async () => {
     try {
-      const userIdFromToken = getUserIdFromToken(token);
-      const userAddress = getAddressFromToken(token);
-
-      const userId = userIdFromToken;
       const orderDate = new Date().toISOString();
 
       const paymentMethod = "By Cash"; //From web
-      const address = userAddress; //From web
 
       //console.error("Token not found", address);
       const products = cart.map((product) => ({
@@ -76,7 +68,7 @@ const Payment = () => {
 
       console.log(JSON.stringify(order));
 
-      const response = await orders(order)
+      const response = await orders(order);
 
       if (!response) {
         throw new Error("Failed to store cart data");
@@ -98,7 +90,8 @@ const Payment = () => {
     location.href = "/";
   };
 
-  //get money from box-ship
+  //----------------- Get Money From box-ship --------------------
+
   const handleOrderShipChange = (value: number) => {
     if (value === 1) {
       setSubtotal(30000);
@@ -112,12 +105,7 @@ const Payment = () => {
     }
   };
 
-  //Renove token logout
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("cart");
-    localStorage.removeItem("currentQuantities");
-  };
+  //-------------------------------------------------------------
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -128,9 +116,16 @@ const Payment = () => {
   };
 
   const handleVoucherSelect = (voucher: Voucher) => {
-    console.log('Selected Voucher:', voucher);
+    console.log("Selected Voucher:", voucher);
     setSelectedVoucher(voucher);
   };
+
+  //---------------- Calculate Disconunted ToTal --------------
+
+  const totalAmount = cart.reduce(
+    (total, product) => total + product.price * product.quantity,
+    0
+  );
 
   const calculateDiscountedTotal = () => {
     if (selectedVoucher) {
@@ -145,12 +140,22 @@ const Payment = () => {
     return totalAmount;
   };
 
+  const discountedTotal = calculateDiscountedTotal();
+
+  //---------------- Handle Remove Voucher -------------------
+
   const handleRemoveVoucher = () => {
     setSelectedVoucher(null);
     setIsModalOpen(false);
   };
 
-  const discountedTotal = calculateDiscountedTotal();
+  //------------- Renove token logout ----------------------
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("cart");
+    localStorage.removeItem("currentQuantities");
+  };
 
   localStorage.removeItem("hasAccessedCart");
 
@@ -163,20 +168,21 @@ const Payment = () => {
 
             <li>Tel: (+84) 3939393939</li>
 
-            <li>
-              <Link to="/Adress">
-                <GiPositionMarker />
-                Add address to purchase
-              </Link>
-            </li>
-
             <div className="user-menu">
               <div className="avatar">
                 <img src={avatar} alt="Avatar"></img>
+                <h4>{userName}</h4>
               </div>
               <div className="menu-box">
-                <a href="/user">View Profile</a>
-                <a href="/login" onClick={handleLogout}>
+                {role === "Admin" && <a href="/admin">DashBoard</a>}
+                {role === "Staff" && <a href="/order">Order Management</a>}
+                <a href="/profile">View Profile</a>
+                <a href="/user">Purchase order</a>
+                <a
+                  href="/login"
+                  onClick={handleLogout}
+                  style={{ border: "none" }}
+                >
                   Logout
                 </a>
               </div>
@@ -240,10 +246,10 @@ const Payment = () => {
           <div className="box-right">
             <div className="adress">
               <p>Shipping Address</p>
-              {hasAddress ? (
+              {address ? (
                 <Link to="/profile">
                   <div className="box-adress">
-                    <div>{hasAddress}</div>
+                    <div>{address}</div>
                   </div>
                 </Link>
               ) : (
@@ -264,18 +270,16 @@ const Payment = () => {
                         onClick={handleRemoveVoucher}
                         style={{ cursor: "pointer", marginRight: "8px" }}
                       >
-                        &#x2715; 
+                        &#x2715;
                       </div>
                       <div>{selectedVoucher.code}</div>
                     </div>
                   </div>
                 ) : (
-                  <div >Select Vouchers</div>
+                  <div>Select Vouchers</div>
                 )}
                 {!selectedVoucher && (
-
                   <div style={{ zIndex: 999 }}>
-
                     <VoucherModal
                       isOpen={isModalOpen}
                       onRequestClose={handleCloseModal}
@@ -300,13 +304,14 @@ const Payment = () => {
                   }))}
                   amount={(totalAmount / 23500).toFixed(2)}
                   shippingMethod={shippingMethodId}
-                  total={(discountedTotal + subtotal)}
+                  total={discountedTotal + subtotal}
                 />
               ) : (
                 <Paypal
-                    payload={[]}
-                    amount="0.00"
-                    shippingMethod={shippingMethodId} total={0}                  
+                  payload={[]}
+                  amount="0.00"
+                  shippingMethod={shippingMethodId}
+                  total={0}
                 />
               )}
             </div>

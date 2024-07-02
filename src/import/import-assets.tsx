@@ -19,6 +19,7 @@ import se from "../assets/ship-Epress.png";
 import vu from "../assets/vu.jpg";
 import ra from "../assets/rabbit.png";
 import by from "../assets/search-empty.png";
+
 // import bgProduct1 from "../assets/bg-product.jpg";
 export {
   bgProduct,

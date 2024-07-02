@@ -329,14 +329,14 @@ html {
 
 .scroll-left {
   position: relative;
-  transform: translateX(82px) translateY(184px);
+  transform: translateX(82px) translateY(260px);
   z-index: 50;
   cursor: pointer;
 }
 
 .scroll-right {
   position: relative;
-  transform: translateX(1280px) translateY(-164px);
+  transform: translateX(1280px) translateY(-240px);
   z-index: 50;
   cursor: pointer;
 }

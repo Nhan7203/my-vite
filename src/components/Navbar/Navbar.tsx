@@ -2,21 +2,13 @@ import {
   NavLink,
   Link,
   BsCart3,
-  IoNotificationsOutline,
   FaSearch,
   BsFillPeopleFill,
-  FaRegTrashCan,
 } from "../../import/import-libary";
-import {
-  getAllNotisByUser,
-  deleteOneNotification,
-  deleteAllNotificationsByUser,
-  updateNotificationReadStatus,
-} from "../../apiServices/NotificationService/notificationService";
-import { avatar, noti, trash, empty, logo } from "../../import/import-assets";
-import { useState, useEffect, useMemo } from "react";
-import { getNameFromToken, getRoleFromToken, getUserIdFromToken } from "../../utils/jwtHelper";
-import { Notification } from "../../interfaces";
+import { avatar, logo } from "../../import/import-assets";
+import { useState, useEffect } from "react";
+import { getNameFromToken, getRoleFromToken } from "../../utils/jwtHelper";
+import Notification from "../../components/Notification/Notification";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../pages/Cart-page/CartContext";
 import "./Navbar.css";
@@ -24,29 +16,9 @@ import "./Navbar.css";
 const Navbar = () => {
   const [cartCount, setCartCount] = useState(0);
   const { cart } = useCart();
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [showNotification, setShowNotification] = useState(false);
   const [userName, setUserName] = useState();
   const [role, setRole] = useState();
   const token = localStorage.getItem("token");
-
-  useEffect(() => {
-    if (token) {
-      const userIdFromToken = getUserIdFromToken(token);
-
-      const fetchNotifications = async () => {
-        try {
-          const result = await getAllNotisByUser(userIdFromToken);
-          setNotifications(result);
-        } catch (error) {
-          console.error("Error retrieving notifications:", error);
-        }
-      };
-
-      fetchNotifications();
-    }
-  }, [token]);
-
 
   useEffect(() => {
     if (!token) {
@@ -54,62 +26,10 @@ const Navbar = () => {
       return;
     }
     const roleIdentifier = getRoleFromToken(token);
-    setRole(roleIdentifier)
+    setRole(roleIdentifier);
     const usernameIdentifier = getNameFromToken(token);
     setUserName(usernameIdentifier);
   }, [token]);
-
-  //-----------------------------------------------
-  const deleteNotification = async (notificationId: number) => {
-    try {
-      await deleteOneNotification(notificationId);
-
-      setNotifications(
-        notifications.filter(
-          (notification) => notification.notificationId !== notificationId
-        )
-      );
-    } catch (error) {
-      console.error("Error deleting notification:", error);
-    }
-  };
-  //-----------------------------------------------
-  const deleteAllNotifications = async () => {
-    try {
-      if (token) {
-        const userIdFromToken = getUserIdFromToken(token);
-
-        await deleteAllNotificationsByUser(userIdFromToken);
-
-        setNotifications([]);
-      }
-    } catch (error) {
-      console.error("Error deleting notifications:", error);
-    }
-  };
-
-  const handleNotificationClick = async (notification: Notification) => {
-    if (!notification.isRead) {
-      const updatedNotifications = notifications.map((n) =>
-        n.notificationId === notification.notificationId
-          ? { ...n, isRead: true }
-          : n
-      );
-      setNotifications(updatedNotifications);
-
-      try {
-        const response = await updateNotificationReadStatus(
-          notification.notificationId
-        );
-
-        if (!response) {
-          throw new Error("Error updating notification status");
-        }
-      } catch (error) {
-        console.error("Error updating notification status:", error);
-      }
-    }
-  };
 
   useEffect(() => {
     // Calculate the total quantity in stock
@@ -160,14 +80,6 @@ const Navbar = () => {
     localStorage.removeItem("cart");
   };
 
-  const toggleNotification = () => {
-    setShowNotification(!showNotification);
-  };
-
-  const handleMouseLeave = () => {
-    setShowNotification(false);
-  };
-
   return (
     <nav className="header">
       <div className="top-navbar">
@@ -176,7 +88,6 @@ const Navbar = () => {
 
           <li>Tel: (+84) 3939393939</li>
 
-          
           {isLoggedIn ? (
             <div className="user-menu">
               <div className="avatar">
@@ -184,12 +95,8 @@ const Navbar = () => {
                 <h4>{userName}</h4>
               </div>
               <div className="menu-box">
-              {role === 'Admin'  &&(
-                <a href="/admin">DashBoard</a>
-              )}
-              {role === 'Staff'  &&(
-                <a href="/order">Order Management</a>
-              )}
+                {role === "Admin" && <a href="/admin">DashBoard</a>}
+                {role === "Staff" && <a href="/order">Order Management</a>}
                 <a href="/profile">View Profile</a>
                 <a href="/user">Purchase order</a>
                 <a
@@ -242,87 +149,7 @@ const Navbar = () => {
             <div className="cart-count">{cartCount}</div>
           </div>
 
-          <div className="icon-noti">
-            <IoNotificationsOutline
-              fontSize="2.0em"
-              className="icon-noti "
-              onClick={toggleNotification}
-            />
-            <div className="cart-count">
-              {
-                notifications.filter((notification) => !notification.isRead)
-                  .length
-              }
-            </div>
-            <div
-              className={`noti-box ${showNotification ? "active" : ""}`}
-              onMouseLeave={handleMouseLeave}
-            >
-              {notifications && notifications.length > 0 ? (
-                <>
-                  <div
-                    style={{
-                      overflow: "auto",
-                      height: "400px",
-                      width: "499px",
-                    }}
-                  >
-                    {notifications.map((notification) => (
-                      <div
-                        className={`element-noti ${
-                          notification.isRead ? "" : "unread"
-                        }`}
-                        key={notification.notificationId}
-                        onClick={() => handleNotificationClick(notification)}
-                      >
-                        <div className="img-noti">
-                          <img src={noti} alt="" />
-                        </div>
-                        <div className="text-noti">
-                          <div className="header-noti">
-                            {notification.header}
-                          </div>
-                          <div className="content-noti">
-                            {notification.content}
-                          </div>
-                          <div className="date-noti">
-                            {new Date(notification.createdDate).toLocaleString(
-                              "en-GB",
-                              {
-                                day: "2-digit",
-                                month: "2-digit",
-                                year: "numeric",
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              }
-                            )}
-                          </div>
-                        </div>
-                        <div className="status-noti">
-                          <FaRegTrashCan
-                            fontSize="1.5em"
-                            style={{ cursor: "pointer" }}
-                            onClick={() =>
-                              deleteNotification(notification.notificationId)
-                            }
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div
-                    className="icon-trash-all"
-                    onClick={deleteAllNotifications}
-                  >
-                    <img src={trash} alt=""></img>
-                    Delete all
-                  </div>
-                </>
-              ) : (
-                <img src={empty} alt="" style={{ width: "50px" }} />
-              )}
-            </div>
-          </div>
+          <Notification />
         </div>
       </div>
 
