@@ -46,8 +46,15 @@
   margin: 0 0 5px 0;
 }
 
-.onlick-profile > p {
-  font-size: 10px;
+.profile-user> p {
+  font-size: 11px;
+  
+}
+
+.profile-user {
+  border-radius: 15px;
+  background-color: #eaeaea;
+  padding: 2px 10px;
 }
 
 .box-oder-adress-voucher {

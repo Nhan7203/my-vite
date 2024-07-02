@@ -1,6 +1,8 @@
-import { useEffect, useState } from "../../../import/import-another";
 import { getNameFromToken, getRoleFromToken } from "../../../utils/jwtHelper";
+import { useEffect, useState } from "../../../import/import-another";
 import { avatar } from "../../../import/import-assets";
+import ChatIconComponent from "../../../components/Chat/ChatIconComponent";
+import Notification from "../../../components/Notification/Notification";
 
 interface HeaderMainProps {
   searchQuery: string;
@@ -17,15 +19,19 @@ const HeaderMain: React.FC<HeaderMainProps> = ({
   const [userName, setUserName] = useState();
   const [role, setRole] = useState();
 
+  // ------------ Get User Name and Role ------------------
+
   useEffect(() => {
     if (!token) {
       return;
     }
     const roleIdentifier = getRoleFromToken(token);
-    setRole(roleIdentifier)
+    setRole(roleIdentifier);
     const usernameIdentifier = getNameFromToken(token);
     setUserName(usernameIdentifier);
   }, [token]);
+
+  //----------------- Handle Logout ---------------------
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -51,12 +57,15 @@ const HeaderMain: React.FC<HeaderMainProps> = ({
         </div>
       )}
 
+      {<ChatIconComponent />}
+
       <div className="user-wrapper">
         <div className="avatar-admin">
+          {role === "Staff" && <Notification />}
           <img src={avatar} width="40px" height="40px" alt="" />
           <div className="name-role">
             <p>{userName}</p>
-            <small>{(role)}</small>
+            <small>{role}</small>
           </div>
         </div>
 

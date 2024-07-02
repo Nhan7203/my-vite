@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export interface Notification {
+export interface iNotification {
   notificationId: number;
   userId: number;
   header: string;
@@ -174,10 +174,16 @@ export interface AllVouchers {
 }
 
 export interface Voucher {
-  voucherId: number
+  voucherId: number;
   name: string;
+  code: string;
+  discountType: string;
   discountValue: number;
-  discountType: string
+  minimumTotal: number;
+  createdDate: string;
+  expDate: string;
+  isActive: boolean;
+  productId: number | null;
 }
 
 export const ageOptions = [

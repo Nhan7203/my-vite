@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
 import { MdNavigateBefore, MdNavigateNext } from "../../../import/import-libary";
 import { Brand } from "../../../interfaces";
-
 interface BrandCarouselProps {
   brandId: number;
   brandList: Brand[];
