@@ -8,6 +8,8 @@ import {
   ProductDetails,
   Cart,
   Vouchers,
+  AddVoucher,
+  UpdateVoucher,
   Payment,
   User,
   Customer,
@@ -53,6 +55,7 @@ import ProtectedRoute from "./utils/protectedRoute";
 import PaymentWrapper from "./utils/protectedRoutePayment";
 import Unauthorized from "./pages/Unauthorized-page/Unauthorized";
 import ChangePasswordWrapper from "./utils/protectedRouteChangePassword";
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -213,11 +216,31 @@ const router = createBrowserRouter(
           </ProtectedRoute>
         }
       />
+
+
       <Route
         path="/vouchers"
         element={
           <ProtectedRoute allowedRoles={["Admin", "Staff"]}>
             <Vouchers />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/addvoucher"
+        element={
+          <ProtectedRoute allowedRoles={["Admin", "Staff"]}>
+            <AddVoucher />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/updatevoucher"
+        element={
+          <ProtectedRoute allowedRoles={["Admin", "Staff"]}>
+            <UpdateVoucher />
           </ProtectedRoute>
         }
       />
