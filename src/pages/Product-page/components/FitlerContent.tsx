@@ -85,7 +85,7 @@ const FitlerContent: React.FC<FitlerContentProps> = ({
                   </div>
                 </div>
 
-                <div className="filter-under-line"></div>
+              
               </div>
             </div>
   )

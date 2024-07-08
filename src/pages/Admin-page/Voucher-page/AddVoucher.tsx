@@ -1,54 +1,37 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import UserVoucherData from "../Admin-page/components/userVoucherData";
-import { useEffect, useState, swal } from "../../import/import-another";
-import { aVoucher } from "../../interfaces";
-import Sidebar from "../Admin-page/components/Sidebar";
-import HeaderMain from "../Admin-page/components/Header-main";
-import axios from "axios";
-const UpdateVoucher = () => {
+import { useState, swal, useEffect } from "../../../import/import-another";
+import Sidebar from "../../Admin-page/components/Sidebar";
+import HeaderMain from "../../Admin-page/components/Header-main";
+import { createVoucher } from "../../../apiServices/VoucherServices/voucherServices";
+
+const AddVoucher = () => {
   const navigate = useNavigate();
-  const { voucherData } = UserVoucherData();
-  const [voucher, setVoucher] = useState<aVoucher>();
   const [name, setName] = useState("");
-  const [isActive, setIsActive] = useState<boolean>(false);
   const [code, setCode] = useState("");
   const [discountType, setDiscountType] = useState("");
   const [discountValue, setDiscountValue] = useState<number>(0);
   const [productId, setProductId] = useState<number>(0);
+  const [createdDate, setCreatedDate] = useState("");
   const [minimumTotal, setMinimumTotal] = useState<number>(0);
-  const createdDate = new Date().toISOString();
   const [expDate, setExpDate] = useState("");
+  const currentDate = new Date();
   const { state } = useLocation();
   const { voucherId } = state;
   const [errors, setErrors] = useState({
     name: "",
     code: "",
-    productId: "",
+    voucherId: "",
     discountType: "",
     minimumTotal: "",
     discountValue: "",
-    createdDate: "",
     expDate: "",
-    isActive: "",
   });
 
   useEffect(() => {
-    if (voucherId) {
-      const selectedVoucher = voucherData.find((e) => e.voucherId === voucherId);
-      if (selectedVoucher) {
-        setVoucher(selectedVoucher);
-        setName(selectedVoucher.name);
-        setCode(selectedVoucher.code);
-        setDiscountType(selectedVoucher.discountType);
-        setDiscountValue(selectedVoucher.discountValue);
-        setProductId(selectedVoucher.productId);
-        setMinimumTotal(selectedVoucher.minimumTotal);
-        setExpDate(selectedVoucher.expDate);
-        setIsActive(selectedVoucher.isActive);
-      }
-    }
-  }, [voucherId, voucherData]);
+    setCreatedDate(new Date().toISOString());
+  }, []);
   //-----------------------------------------------------------------------
+
 
   const handleCancel = () => {
     navigate("/vouchers");
@@ -56,19 +39,17 @@ const UpdateVoucher = () => {
 
   //-----------------------------------------------------------------------------
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
 
     const error = {
       name: "",
       code: "",
-      productId: "",
       discountType: "",
       minimumTotal: "",
       discountValue: "",
-      createdDate: "",
+      voucherId: "",
       expDate: "",
-      isActive: "",
       check: false,
     };
 
@@ -87,18 +68,23 @@ const UpdateVoucher = () => {
       error.check = true;
     }
 
-    if (minimumTotal === 0) {
-      error.minimumTotal = "MinimumTotal must be greater than 0.";
+    if (discountType !== "%" && discountType !== "K") {
+      error.discountType = "DiscountType is '%' or 'K'";
       error.check = true;
     }
 
     if (discountValue === 0) {
-      error.discountValue = "DiscountValue must be greater than 0.";
+      error.discountValue = "DiscountValue is Required!";
       error.check = true;
     }
 
-    if (productId === 0) {
-      error.productId = "ProductId must be greater than 0.";
+    if (minimumTotal === 0) {
+      error.minimumTotal = "MinimumTotal is Required!";
+      error.check = true;
+    }
+
+    if (voucherId === 0) {
+      error.voucherId = "VoucherId must be greater than 0.";
       error.check = true;
     }
 
@@ -107,53 +93,42 @@ const UpdateVoucher = () => {
       error.check = true;
     }
 
+    if(currentDate > new Date(expDate)) {
+      error.expDate = "ExpDate must be greater than or equal to the current date!";
+      error.check = true;
+    }
+
     setErrors(error);
     if (error.check) {
       return;
     }
 
-
-
+    const requestData = {
+      voucherId: voucherId,
+      name: name,
+      code: code,
+      discountType: discountType,
+      discountValue: discountValue,
+      productId: productId === 0 ? null : productId,
+      minimumTotal: minimumTotal,
+      expDate: expDate,
+      createdDate: createdDate,
+    };
 
     try {
+      const response = await createVoucher(requestData);
 
-      const updatedVoucher = {
-        voucherId: voucherId,
-        name: name,
-        code: code,
-        discountType: discountType,
-        discountValue: discountValue,
-        minimumTotal: minimumTotal,
-        productId: productId,
-        createdDate: createdDate, // Check if this is needed in the API
-        expDate: expDate,
-        isActive: isActive,
-      };
-
-      const response = await axios.put(
-        `https://localhost:7030/api/Voucher/UpdateVoucher?id=${voucherId}`,
-        updatedVoucher,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-
-
-      if (response.status === 200) {
-        swal("Success", "Voucher information updated successfully!", "success");
+      if (response) {
+        swal("Success", "Voucher information created successfully!", "success");
         navigate("/vouchers");
       } else {
-        swal("Error", "Failed to update voucher information.", "error");
-        console.log("Dataaaaa", response);
+        swal("Error", `Failed to create voucher information.${response}`, "error");
       }
     } catch (error) {
-      console.error("Error:", error);
+      console.log(error);
       swal(
         "Error",
-        "Error occurred during updating voucher information.",
+        "Error occurred during creating blog information.",
         "error"
       );
     }
@@ -217,7 +192,6 @@ const UpdateVoucher = () => {
                   <input
                     type="number"
                     name="txtDiscountValue"
-                    min={0}
                     value={discountValue}
                     onChange={(e) => setDiscountValue(Number(e.target.value))}
                   />
@@ -225,11 +199,10 @@ const UpdateVoucher = () => {
                     <p style={{ color: "red" }}>{errors.discountValue}</p>
                   )}
 
-                  <h4>Minimum Total</h4>
+                  <h4>MinimumTotal</h4>
                   <input
                     type="number"
                     name="txtMinimumTotal"
-                    min={0}
                     value={minimumTotal}
                     onChange={(e) => setMinimumTotal(Number(e.target.value))}
                   />
@@ -256,29 +229,12 @@ const UpdateVoucher = () => {
                     value={productId}
                     onChange={(e) => setProductId(Number(e.target.value))}
                   />
-                  {errors.productId && (
-                    <p style={{ color: "red" }}>{errors.productId}</p>
-                  )}
-
-                  <h4>Is Active</h4>
-                  <select
-                    id="isActive"
-                    name="isActive"
-                    value={isActive.toString()}
-                    onChange={(e) => setIsActive(e.target.value === "true")}
-                  >
-                    <option value="true">True</option>
-                    <option value="false">False</option>
-                  </select>
-                  {errors.isActive && (
-                    <p style={{ color: "red" }}>{errors.isActive}</p>
-                  )}
 
                 </div>
               </div>
               <div className="both-button">
-                <button type="submit" className="bt-add">
-                  Update
+                <button type="submit" className="bt-add" onClick={handleSubmit}>
+                  Add
                 </button>
                 <button className="bt-cancel" onClick={() => handleCancel()}>
                   Cancel
@@ -292,4 +248,4 @@ const UpdateVoucher = () => {
   );
 };
 
-export default UpdateVoucher;
+export default AddVoucher;

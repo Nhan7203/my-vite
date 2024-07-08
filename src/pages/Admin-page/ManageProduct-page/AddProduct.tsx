@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import { getBrand } from "../../../apiServices/BrandServices/brandServices";
 import HeaderMain from "../components/Header-main";
 import Sidebar from "../components/Sidebar";
+import { createProduct } from "../../../apiServices/ProductServices/productServices";
 
 
 export interface Brand {
@@ -165,19 +166,13 @@ const AddProduct = () => {
       }
     }
     try {
-      const response = await fetch(
-        `https://localhost:7030/api/Products/Create`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await createProduct(formData);
 
-      if (response.status === 201) {
+      if (response) {
         swal("Success", "Product information created successfully!", "success");
         navigate("/manage-product");
       } else {
-        console.log(response.status);
+        console.log(response);
         swal("Error", "Failed to create product information.", "error");
       }
     } catch (error) {
@@ -319,7 +314,7 @@ const AddProduct = () => {
               </div>
               <div className="both-button">
                 <button type="submit" className="bt-add">
-                  Update
+                  Add
                 </button>
                 <button className="bt-cancel" onClick={() => handleCancel()}>
                   Cancel

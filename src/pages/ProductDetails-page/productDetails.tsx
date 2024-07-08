@@ -21,8 +21,9 @@ import { faStar as regularStarOutline } from "@fortawesome/free-regular-svg-icon
 import { ProductCard, Navbar, Footer } from "../../import/import-components";
 import { RatingInfo, aProduct, aProductReview } from "../../interfaces";
 import { FontAwesomeIcon, Link } from "../../import/import-libary";
-import { bgProduct } from "../../import/import-assets";
+import { bgProduct, giftCard, paypal } from "../../import/import-assets";
 import "./ProductDetail.css";
+import UserVoucherData from "../Admin-page/components/userVoucherData";
 
 const ProductDetail = () => {
   const { allProduct } = useAllProduct();
@@ -308,6 +309,12 @@ const ProductDetail = () => {
     ));
   };
 
+  //------------------------------Find Product have voucher----------------
+  const { voucherData } = UserVoucherData();
+  const productHaveVoucher = voucherData.find(
+    (voucher) => voucher.voucherId == parseInt(productId ?? "")
+  );
+
   return (
     <>
       <Navbar />
@@ -334,15 +341,33 @@ const ProductDetail = () => {
                 <p>Total Rating: {ratingInfo.reviewCount}</p>
               </div>
               <h3>${product.price.toLocaleString()}</h3>
-              <div className="trans-zalo">
-                <div className="img-zalo">
-                  <img src="" alt="" />
-                </div>
+              <div className="trans-voucher">
+                {productHaveVoucher ? (
+                  <>
+                    <div className="img-voucher">
+                      <img src={giftCard} alt="" />
+                    </div>
 
-                <span>
-                  30,000 VND discount for orders from 900,000 VND when entering
-                  code ZLPYEUCON to pay with ZaloPay wallet
-                </span>
+                    <span>
+                      🎉 Great deal with this special voucher! <br />
+                      <br />
+                      💰 Save big with our exclusive voucher offer. <br />
+                      <br />✨ Don't miss out on this voucher discount!
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <div className="img-paypal">
+                      <img src={paypal} alt="" />
+                    </div>
+
+                    <span style={{fontSize: "18px"}}>
+                    
+                  We support PayPal payment - easy, secure, and fast.
+                    
+                    </span>
+                  </>
+                )}
               </div>
               <div className="quantity-content">
                 <span>Quantity</span>

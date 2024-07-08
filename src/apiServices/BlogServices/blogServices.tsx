@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 import * as request from "../../utils/request";
 
@@ -60,6 +61,17 @@ export const getAllBlogs = async () => {
 export const deleteBlog = async (blogId: number) => {
   try {
     const response = await axios.delete(`https://localhost:7030/api/Blog/Delete?blogId=${blogId}`);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const createBlog = async (formData: any) => {
+  try {
+    const response = await axios.post(`https://localhost:7030/api/Blog/Create`,
+      formData
+    );
     return response;
   } catch (error) {
     console.log(error);

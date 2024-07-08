@@ -19,7 +19,8 @@ import se from "../assets/ship-Epress.png";
 import vu from "../assets/vu.jpg";
 import ra from "../assets/rabbit.png";
 import by from "../assets/search-empty.png";
-
+import giftCard from "../assets/gift-voucher.png";
+import paypal from "../assets/rgb_vn_new_branding_paypal_2014_logo_detail.png";
 // import bgProduct1 from "../assets/bg-product.jpg";
 export {
   bgProduct,
@@ -42,5 +43,7 @@ export {
   se,
   box,
   ra,
-  by
+  by,
+  giftCard,
+  paypal
 };

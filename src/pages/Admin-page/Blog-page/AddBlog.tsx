@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState, swal } from "../../../import/import-another";
 import Sidebar from "../components/Sidebar";
 import HeaderMain from "../components/Header-main";
+import { createBlog } from "../../../apiServices/BlogServices/blogServices";
 
 const AddBlog = () => {
   const navigate = useNavigate();
@@ -102,19 +103,13 @@ const AddBlog = () => {
     }
     
     try {
-      const response = await fetch(
-        `https://localhost:7030/api/Blog/Create`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await createBlog(formData)
 
-      if (response.status === 200) {
+      if (response) {
         swal("Success", "Blog information created successfully!", "success");
         navigate("/blogs");
       } else {
-        swal("Error", `Failed to create blog information.${response.status}`, "error");
+        swal("Error", `Failed to create blog information.${response}`, "error");
       }
     } catch (error) {
       console.log(error);

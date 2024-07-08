@@ -106,14 +106,35 @@
   grid-column: 7 / 13;
 }
 
-.trans-zalo {
+.trans-voucher {
   display: grid;
   grid-template-columns: 180px 380px;
   column-gap: 20px;
 }
 
-.img-zalo {
+.trans-voucher > span {
+  align-content: center;
+  font-size: 14px;
+}
+
+.img-voucher {
   height: 120px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.img-voucher > img {
+  width: 120px;
+}
+
+.img-paypal {
+  height: 120px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.img-paypal > img {
+  width: 120px;
 }
 
 .name-pro {

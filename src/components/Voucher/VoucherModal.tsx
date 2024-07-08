@@ -53,21 +53,20 @@ const CustomModal: React.FC<CustomModalProps> = ({
     const currentDate = new Date();
     const expirationDate = new Date(voucher.expDate);
 
-    if (currentDate <= expirationDate) {
-      if (voucher.productId === null) {
-        return totalAmount >= voucher.minimumTotal;
-      } else {
-        return (
-          cart.some((product) => product.productId === voucher.productId) &&
-          totalAmount >= voucher.minimumTotal
-        );
+      if (currentDate <= expirationDate) {
+        if (voucher.productId === null) {
+          return totalAmount >= voucher.minimumTotal;
+        } else {
+          return (
+            cart.some((product) => product.productId === voucher.productId) &&
+            totalAmount >= voucher.minimumTotal
+          );
+        }
       }
-    }
-
     return false;
   };
 
-  const sortedVouchers = [...vouchers].sort((a, b) => {
+  const sortedVouchers = [...vouchers].filter((v) => v.isActive).sort((a, b) => {
     const aIsValid = checkVoucherValidity(a);
     const bIsValid = checkVoucherValidity(b);
     return aIsValid === bIsValid ? 0 : aIsValid ? -1 : 1;

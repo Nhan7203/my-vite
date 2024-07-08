@@ -1,11 +1,11 @@
 
 import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
-import HeaderMain from "../Admin-page/components/Header-main";
-import Sidebar from "../Admin-page/components/Sidebar";
-import { aVoucher } from "../../interfaces";
-import UserVoucherData from "../Admin-page/components/userVoucherData";
-import { deleteVoucher } from "../../apiServices/VoucherServices/voucherServices";
+import HeaderMain from "../../Admin-page/components/Header-main";
+import Sidebar from "../../Admin-page/components/Sidebar";
+import { aVoucher } from "../../../interfaces";
+import UserVoucherData from "../../Admin-page/components/userVoucherData";
+import { deleteVoucher } from "../../../apiServices/VoucherServices/voucherServices";
 const Vouchers = () => {
   // const { allVoucher } = useAllProduct();
   // const [products, setProducts] = useState<aProduct[]>(allProduct);
@@ -87,7 +87,6 @@ const Vouchers = () => {
               <table className="table-custome">
                 <thead>
                   <tr>
-                    <th>No</th>
                     <th>VoucherId</th>
                     <th>ProductId</th>
                     <th>Name</th>
@@ -105,14 +104,13 @@ const Vouchers = () => {
                 <tbody>
                   {voucherData.map((voucher, index: number) => (
                     <tr key={index}>
-                      <td>{index + 1}</td>
                       <td>{voucher.voucherId}</td>
                       <td>{voucher.productId}</td>
                       <td>{voucher.name}</td>
                       <td>{voucher.code}</td>
                       <td>{voucher.discountType}</td>
-                      <td>{voucher.discountValue}</td>
-                      <td>{voucher.minimumTotal}</td>
+                      <td>{voucher.discountValue.toLocaleString()}</td>
+                      <td>{voucher.minimumTotal.toLocaleString()}</td>
                       <td>{formatDate(voucher.createdDate)}</td>
                       <td>{formatDate(voucher.expDate)}</td>
                       <td>

@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import { getBrand } from "../../../apiServices/BrandServices/brandServices";
 import HeaderMain from "../components/Header-main";
 import Sidebar from "../components/Sidebar";
+import { updateProduct } from "../../../apiServices/ProductServices/productServices";
 
 export interface Brand {
   brandId: number;
@@ -168,15 +169,9 @@ const UpdateProduct = () => {
     });
 
     try {
-      const response = await fetch(
-        `https://localhost:7030/api/Products/Update?id=${parseInt(productId)}`,
-        {
-          method: "PUT",
-          body: formData,
-        }
-      );
+      const response = await updateProduct(productId,formData)
 
-      if (response.status === 200) {
+      if (response) {
         swal("Success", "Product information updated successfully!", "success");
         navigate("/manage-product");
       } else {
