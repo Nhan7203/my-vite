@@ -1,6 +1,6 @@
 import request from "../../utils/request";
 
-export const loginApi = async (email: string, password: string) => {
+export const login = async (email: string, password: string) => {
   try {
     const res = await request.post("Account/Login", { email, password });
     //console.log("check data search: ", res);

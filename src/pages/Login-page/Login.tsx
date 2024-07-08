@@ -1,7 +1,7 @@
 import { getRoleFromToken } from "../../utils/jwtHelper";
 import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
-import { loginApi } from '../../apiServices/AccountServices/loginServices';
+import { login } from '../../apiServices/AccountServices/loginServices';
 import { toast } from 'react-toastify';
 import ReCAPTCHA from "react-google-recaptcha";
 import swal from 'sweetalert';
@@ -27,7 +27,7 @@ const Login = () => {
     }
 
     try {
-      const response = await loginApi(email, password);
+      const response = await login(email, password);
 
       if (response) {
         // Login successful
