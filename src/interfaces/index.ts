@@ -9,6 +9,19 @@ export interface iNotification {
   createdDate: Date;
 }
 
+export interface aVoucher {
+  voucherId: number;
+  productId: number;
+  name: string;
+  code: string;
+  discountType: string;
+  discountValue: number;
+  minimumTotal: number;
+  createdDate: string;
+  expDate: string;
+  isActive: boolean;
+}
+
 export interface aProduct {
   productId: number;
   forAgeId: number;

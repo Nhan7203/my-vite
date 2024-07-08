@@ -32,7 +32,9 @@ import Blogs from "../pages/Admin-page/Blog-page/Blogs";
 import Register from "../pages/Register-page/Register";
 import Product from "../pages/Product-page/Product";
 import Payment from "../pages/Payment-page/Payment";
-import Vouchers from "../pages/Admin-page/Vouchers";
+import Vouchers from "../pages/Voucher-page/Vouchers";
+import AddVoucher from "../pages/Voucher-page/AddVoucher";
+import UpdateVoucher from "../pages/Voucher-page/UpdateVoucher";
 import Admin from "../pages/Admin-page/Admin";
 import Login from "../pages/Login-page/Login";
 import Cart from "../pages/Cart-page/Cart";
@@ -64,6 +66,8 @@ export {
   Customer,
   Register,
   Vouchers,
+  AddVoucher,
+  UpdateVoucher,
   PreOrder,
   Complete,
   Profile,
