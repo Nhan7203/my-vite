@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
 import HeaderMain from "../../Admin-page/components/Header-main";
@@ -34,7 +33,9 @@ const Vouchers = () => {
 
           if (response) {
             swal("Success!", "Blog was deleted!", "success").then(() => {
-              setVoucherData(voucherData.filter((voucher) => voucher.voucherId !== voucherId));
+              setVoucherData(
+                voucherData.filter((voucher) => voucher.voucherId !== voucherId)
+              );
             });
           } else {
             throw new Error("Failed to delete blog");
@@ -52,10 +53,10 @@ const Vouchers = () => {
   };
 
   const handleAdd = () => {
-    const newVoucherId = Math.max(...voucherData.map((voucher) => voucher.voucherId)) + 1;
+    const newVoucherId =
+      Math.max(...voucherData.map((voucher) => voucher.voucherId)) + 1;
     navigate("/addvoucher", { state: { voucherId: newVoucherId } });
   };
-
 
   return (
     <>
@@ -76,10 +77,7 @@ const Vouchers = () => {
             <div>
               <div className="head-table">
                 <ul>
-                  <li
-                    className="add-product"
-                    onClick={() => handleAdd()}
-                  >
+                  <li className="add-product" onClick={() => handleAdd()}>
                     Add Voucher
                   </li>
                 </ul>
@@ -96,6 +94,7 @@ const Vouchers = () => {
                     <th>Minimum Total</th>
                     <th>Created Date</th>
                     <th>ExpDate</th>
+                    <th>Is Active</th>
                     <th>Update</th>
                     <th>Delete</th>
                   </tr>
@@ -113,6 +112,7 @@ const Vouchers = () => {
                       <td>{voucher.minimumTotal.toLocaleString()}</td>
                       <td>{formatDate(voucher.createdDate)}</td>
                       <td>{formatDate(voucher.expDate)}</td>
+                      <td>{voucher.isActive.toString()}</td>
                       <td>
                         <button
                           className="Edit"
@@ -131,19 +131,13 @@ const Vouchers = () => {
                         </button>
                       </td>
                     </tr>
-
-
-
-
                   ))}
-
-
                 </tbody>
               </table>
             </div>
-          </main >
-        </div >
-      </div >
+          </main>
+        </div>
+      </div>
     </>
   );
 };

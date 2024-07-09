@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState, swal, useEffect } from "../../../import/import-another";
+import { useState, swal, useEffect, useAllProduct } from "../../../import/import-another";
 import Sidebar from "../../Admin-page/components/Sidebar";
 import HeaderMain from "../../Admin-page/components/Header-main";
 import { createVoucher } from "../../../apiServices/VoucherServices/voucherServices";
@@ -17,10 +17,12 @@ const AddVoucher = () => {
   const currentDate = new Date();
   const { state } = useLocation();
   const { voucherId } = state;
+  const { allProduct } = useAllProduct();
   const [errors, setErrors] = useState({
     name: "",
     code: "",
     voucherId: "",
+    productId: "",
     discountType: "",
     minimumTotal: "",
     discountValue: "",
@@ -49,6 +51,7 @@ const AddVoucher = () => {
       minimumTotal: "",
       discountValue: "",
       voucherId: "",
+      productId: "",
       expDate: "",
       check: false,
     };
@@ -78,6 +81,13 @@ const AddVoucher = () => {
       error.check = true;
     }
 
+    if (discountType === "%") {
+      if (discountValue <= 0 || discountValue > 100) {
+        error.discountValue = "DiscountValue(%) must be greater than 0 and less than or equal to 100.";
+        error.check = true;
+      }
+    }
+
     if (minimumTotal === 0) {
       error.minimumTotal = "MinimumTotal is Required!";
       error.check = true;
@@ -91,6 +101,16 @@ const AddVoucher = () => {
     if (expDate === "") {
       error.expDate = "ExpDate is Required!";
       error.check = true;
+    }
+
+    if (productId) {
+      const product = allProduct.find(
+        (e) => e.productId === productId 
+      );
+      if (!product) {
+        error.productId = "ProductId does not exist.";
+        error.check = true;
+      }
     }
 
     if(currentDate > new Date(expDate)) {
@@ -229,7 +249,9 @@ const AddVoucher = () => {
                     value={productId}
                     onChange={(e) => setProductId(Number(e.target.value))}
                   />
-
+                  {errors.productId && (
+                    <p style={{ color: "red" }}>{errors.productId}</p>
+                  )}
                 </div>
               </div>
               <div className="both-button">
