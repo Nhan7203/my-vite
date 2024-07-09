@@ -182,8 +182,14 @@ export interface ReviewData {
 export interface AllVouchers {
   voucherId: number;
   name: string;
+  code: string;
+  discountType: string;
   discountValue: number;
-  discountType: string
+  minimumTotal: number;
+  createdDate: string;
+  expDate: string;
+  isActive: boolean;
+  productId: number | null;
 }
 
 export interface Voucher {

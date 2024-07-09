@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import UserVoucherData from "../../Admin-page/components/userVoucherData";
-import { useEffect, useState, swal } from "../../../import/import-another";
+import { useEffect, useState, swal, useAllProduct } from "../../../import/import-another";
 import Sidebar from "../../Admin-page/components/Sidebar";
 import HeaderMain from "../../Admin-page/components/Header-main";
 import { updateVoucher } from "../../../apiServices/VoucherServices/voucherServices";
@@ -15,8 +15,9 @@ const UpdateVoucher = () => {
   const [productId, setProductId] = useState<number>(0);
   const [minimumTotal, setMinimumTotal] = useState<number>(0);
   const currentDate = new Date();
-  const [expDate, setExpDate] = useState("");
+  const [expDate, setExpDate] = useState(new Date);
   const { state } = useLocation();
+  const { allProduct } = useAllProduct();
   const { voucherId } = state;
   const [errors, setErrors] = useState({
     name: "",
@@ -24,6 +25,7 @@ const UpdateVoucher = () => {
     discountType: "",
     minimumTotal: "",
     discountValue: "",
+    productId: "",
     expDate: "",
     isActive: "",
   });
@@ -40,7 +42,7 @@ const UpdateVoucher = () => {
         setDiscountValue(selectedVoucher.discountValue);
         setProductId(selectedVoucher.productId);
         setMinimumTotal(selectedVoucher.minimumTotal);
-        setExpDate(selectedVoucher.expDate);
+        setExpDate(new Date (selectedVoucher.expDate));
         setIsActive(selectedVoucher.isActive);
       }
     }
@@ -62,6 +64,7 @@ const UpdateVoucher = () => {
       discountType: "",
       minimumTotal: "",
       discountValue: "",
+      productId: "",
       expDate: "",
       isActive: "",
       check: false,
@@ -97,7 +100,19 @@ const UpdateVoucher = () => {
       error.check = true;
     }
 
-    if (expDate === "") {
+    if (discountValue === 0) {
+      error.discountValue = "DiscountValue must be greater than 0.";
+      error.check = true;
+    }
+
+    if (discountType === "%") {
+      if (discountValue <= 0 || discountValue > 100) {
+        error.discountValue = "DiscountValue(%) must be greater than 0 and less than or equal to 100.";
+        error.check = true;
+      }
+    }
+
+    if (!expDate || isNaN(expDate.getTime())) {
       error.expDate = "ExpDate is Required!";
       error.check = true;
     }
@@ -105,6 +120,16 @@ const UpdateVoucher = () => {
     if(currentDate > new Date(expDate)) {
       error.expDate = "ExpDate must be greater than or equal to the current date!";
       error.check = true;
+    }
+
+    if (productId) {
+      const product = allProduct.find(
+        (e) => e.productId === productId 
+      );
+      if (!product) {
+        error.productId = "ProductId does not exist.";
+        error.check = true;
+      }
     }
 
     setErrors(error);
@@ -222,8 +247,8 @@ const UpdateVoucher = () => {
                   <input
                     type="date"
                     name="txtExpDate"
-                    value={expDate}
-                    onChange={(e) => setExpDate(e.target.value)}
+                    value={expDate.toISOString().slice(0, 10)}
+                    onChange={(e) => setExpDate(new Date (e.target.value))}
                   />
                   {errors.expDate && (
                     <p style={{ color: "red" }}>{errors.expDate}</p>
@@ -237,6 +262,9 @@ const UpdateVoucher = () => {
                     value={productId}
                     onChange={(e) => setProductId(Number(e.target.value))}
                   />
+                  {errors.productId && (
+                    <p style={{ color: "red" }}>{errors.productId}</p>
+                  )}
 
                   <h4>Is Active</h4>
                   <select
