@@ -5,6 +5,7 @@ import Sidebar from "../../Admin-page/components/Sidebar";
 import { aVoucher } from "../../../interfaces";
 import UserVoucherData from "../../Admin-page/components/userVoucherData";
 import { deleteVoucher } from "../../../apiServices/VoucherServices/voucherServices";
+import "./Vouchers.css"
 const Vouchers = () => {
   // const { allVoucher } = useAllProduct();
   // const [products, setProducts] = useState<aProduct[]>(allProduct);
