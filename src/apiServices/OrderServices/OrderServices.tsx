@@ -28,10 +28,9 @@ export const ordersPaypal = async (order: any, token: any) => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-        },
-        
+        },       
       );
-      //console.log("check data search: ", res);
+      // console.log("mmmmmmmmmmmmmmmmmmmmmmmmmmmmm: ", res);
       return res;
     } catch (error) {
       console.log(error);

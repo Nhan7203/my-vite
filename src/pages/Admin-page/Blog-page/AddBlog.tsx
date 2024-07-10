@@ -106,8 +106,10 @@ const AddBlog = () => {
       const response = await createBlog(formData)
 
       if (response) {
-        swal("Success", "Blog information created successfully!", "success");
-        navigate("/blogs");
+        swal("Success", "Blog information created successfully!", "success").then(() => {
+          navigate("/blogs");
+        });
+        
       } else {
         swal("Error", `Failed to create blog information.${response}`, "error");
       }

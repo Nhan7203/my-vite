@@ -145,8 +145,11 @@ const Profile = () => {
 
       if (response) {
         const updatedUser = response;
-        swal("Success", "User information updated successfully!", "success");
-        setUser(updatedUser); // Cập nhật state user với dữ liệu mới
+        swal("Success", "User information updated successfully!", "success").then(() => {
+          setUser(updatedUser); // Cập nhật state user với dữ liệu mới
+          
+          window.location.reload();
+        });
         refreshToken();
       } else {
         swal("Error", "Failed to update user information.", "error");

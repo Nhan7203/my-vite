@@ -128,8 +128,9 @@ const UpdateBlog = () => {
       );
 
       if (response.status === 200) {
-        swal("Success", "Blog information updated successfully!", "success");
-        navigate("/blogs");
+        swal("Success", "Blog information updated successfully!", "success").then(() => {
+          navigate("/blogs");
+        });
       } else {
         swal("Error", "Failed to update blog information.", "error");
       }

@@ -2,7 +2,6 @@ import React from "react";
 import { aOrder } from "../../../interfaces";
 import StatusListOrder from "./StatusListOrder";
 
-
 interface OrderTableProps {
   orderData: aOrder[];
   handleViewOrderDetails: (order: aOrder) => void;
