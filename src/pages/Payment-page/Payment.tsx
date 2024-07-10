@@ -134,7 +134,8 @@ const Payment = () => {
           totalAmount - (totalAmount * selectedVoucher.discountValue) / 100
         );
       } else if (selectedVoucher.discountType === "K") {
-        return totalAmount - selectedVoucher.discountValue * 1000;
+        const t = totalAmount - selectedVoucher.discountValue * 1000;
+         return t < 0 ? 0 : t;
       }
     }
     return totalAmount;
@@ -296,22 +297,17 @@ const Payment = () => {
               <p>Payment methods</p>
               {subtotal ? (
                 <Paypal
-                  payload={cart.map((product) => ({
-                    productId: product.productId,
-                    quantity: product.quantity,
-                    price: product.price,
-                    total: product.quantity * product.price,
-                  }))}
                   amount={(totalAmount / 23500).toFixed(2)}
                   shippingMethod={shippingMethodId}
+                  selectedVoucher = {selectedVoucher} 
                   total={discountedTotal + subtotal}
                 />
               ) : (
-                <Paypal
-                  payload={[]}
-                  amount="0.00"
-                  shippingMethod={shippingMethodId}
-                  total={0}
+                <Paypal                 
+                    amount="0.00"
+                    shippingMethod={shippingMethodId}                  
+                    selectedVoucher={undefined}       
+                    total={0} 
                 />
               )}
             </div>

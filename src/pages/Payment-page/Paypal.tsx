@@ -9,6 +9,8 @@ import { useEffect } from "react";
 import swal from "sweetalert";
 import { ordersPaypal } from "../../apiServices/OrderServices/OrderServices";
 import { useNavigate } from "react-router-dom";
+import { iProduct } from "../../interfaces";
+import { useCart } from "../Cart-page/CartContext";
 
 type PayPalButtonStyle = {
   layout?: "vertical" | "horizontal";
@@ -19,29 +21,26 @@ const style: PayPalButtonStyle = {
   layout: "vertical",
 };
 
-
 interface ButtonWrapperProps {
-  currency: string,
-  showSpinner: boolean,
-  amount: any,
-  payload: any,
-  shippingMethodIdPay: number
-  total: number
+  currency: string;
+  showSpinner: boolean;
+  amount: any;
+  shippingMethodIdPay: number;
+  total: number;
+  selectedVoucher: any;
 }
 
-
 // Layout Loading Screen Paypal
-const ButtonWrapper: React.FC<ButtonWrapperProps>  = ({
+const ButtonWrapper: React.FC<ButtonWrapperProps> = ({
   currency,
   showSpinner,
   amount,
-  payload,
   shippingMethodIdPay,
-  total
+  total,
+  selectedVoucher,
 }) => {
-
   const navigate = useNavigate();
-
+  const { cart } = useCart();
   const [{ isPending, options }, dispatch] = usePayPalScriptReducer();
 
   useEffect(() => {
@@ -52,15 +51,13 @@ const ButtonWrapper: React.FC<ButtonWrapperProps>  = ({
         currency: currency,
       },
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currency, showSpinner]);
 
   const handlePaymentSuccess = async (_data: any, actions: any) => {
-
     try {
       const response = await actions.order.capture();
       console.log(response);
-      console.log(payload);
 
       if (response.status === "COMPLETED") {
         const token = localStorage.getItem("token");
@@ -77,27 +74,31 @@ const ButtonWrapper: React.FC<ButtonWrapperProps>  = ({
         const orderDate = new Date().toISOString();
         const shippingMethodId = shippingMethodIdPay; // From web
         const paymentMethod = "By Paypal"; // From web
-        const address = userAddress; // From web
-
-        const products = payload.map((product: any) => ({
+        const address = String(userAddress); // From web
+        const voucherId = parseInt(
+          selectedVoucher ? selectedVoucher.voucherId : null
+        );
+        const products = cart.map((product: iProduct) => ({
           productId: product.productId,
           nameProduct: product.name,
           quantity: product.quantity,
           price: product.price,
           total: product.quantity * product.price,
         }));
-
+        console.log("Check data products", JSON.stringify(products));
         const order = {
           userId,
           orderDate,
           address,
           paymentMethod,
           shippingMethodId,
+          voucherId,
+          total: total,
           products,
-          total: total
         };
-        console.log(JSON.stringify(order));//
-        const apiResponse = await ordersPaypal(order,token)
+        console.log("Check data order:   ", JSON.stringify(order)); //
+        //const apiResponse = await ordersPaypal2(order)
+        const apiResponse = await ordersPaypal(order, token);
 
         if (!apiResponse) {
           throw new Error("Failed to store cart data");
@@ -108,9 +109,9 @@ const ButtonWrapper: React.FC<ButtonWrapperProps>  = ({
         swal("Congrat!", "Order was created!", "success").then(() => {
           navigate("/processing");
         });
-        
-        const data = await apiResponse.data;//
-        console.log("Cart data stored:", data);//
+
+        // const data = await apiResponse.json;//
+        // console.log("Cart data stored:", data);//
       }
     } catch (error) {
       console.error("Error storing cart data:", error);
@@ -144,20 +145,29 @@ const ButtonWrapper: React.FC<ButtonWrapperProps>  = ({
   );
 };
 
-export default function Paypal({ amount, payload, shippingMethod, total } : {amount: any, payload: any, shippingMethod: number, total: number}) {
-
+export default function Paypal({
+  amount,
+  shippingMethod,
+  total,
+  selectedVoucher,
+}: {
+  amount: any;
+  shippingMethod: number;
+  total: number;
+  selectedVoucher: any;
+}) {
   return (
     <div style={{ maxWidth: "750px", minHeight: "156px" }}>
       <PayPalScriptProvider
         options={{ clientId: "test", components: "buttons", currency: "USD" }}
       >
         <ButtonWrapper
-          payload={payload}
           currency={"USD"}
           amount={amount}
           showSpinner={false}
           shippingMethodIdPay={shippingMethod}
           total={total}
+          selectedVoucher={selectedVoucher}
         />
       </PayPalScriptProvider>
     </div>

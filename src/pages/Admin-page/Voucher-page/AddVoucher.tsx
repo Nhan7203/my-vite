@@ -82,7 +82,7 @@ const AddVoucher = () => {
     }
 
     if (discountType === "%") {
-      if (discountValue <= 0 || discountValue > 100) {
+      if (discountValue <= 0 || discountValue > 80) {
         error.discountValue = "DiscountValue(%) must be greater than 0 and less than or equal to 100.";
         error.check = true;
       }
