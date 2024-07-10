@@ -1,0 +1,14 @@
+.table-custome>tbody>tr>td {
+    font-size: 12px;
+    font-family: "Poppins";
+    max-width: 140px;
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+}
+
+.table-custome>thead>tr {
+    font-size: 15px;
+    font-family: "Poppins";
+}
