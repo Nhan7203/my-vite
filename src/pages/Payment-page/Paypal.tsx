@@ -11,6 +11,7 @@ import { ordersPaypal } from "../../apiServices/OrderServices/OrderServices";
 import { useNavigate } from "react-router-dom";
 import { iProduct } from "../../interfaces";
 import { useCart } from "../Cart-page/CartContext";
+import { refreshToken } from "../../apiServices/AccountServices/refreshTokenServices";
 
 type PayPalButtonStyle = {
   layout?: "vertical" | "horizontal";
@@ -75,9 +76,8 @@ const ButtonWrapper: React.FC<ButtonWrapperProps> = ({
         const shippingMethodId = shippingMethodIdPay; // From web
         const paymentMethod = "By Paypal"; // From web
         const address = String(userAddress); // From web
-        const voucherId = parseInt(
-          selectedVoucher ? selectedVoucher.voucherId : null
-        );
+        const voucherId =  selectedVoucher 
+      
         const products = cart.map((product: iProduct) => ({
           productId: product.productId,
           nameProduct: product.name,
@@ -103,15 +103,16 @@ const ButtonWrapper: React.FC<ButtonWrapperProps> = ({
         if (!apiResponse) {
           throw new Error("Failed to store cart data");
         }
-
+        
+        if (response.status === 401) {
+          await refreshToken();
+        }
         localStorage.removeItem("cart");
         localStorage.removeItem("currentQuantities");
         swal("Congrat!", "Order was created!", "success").then(() => {
-          navigate("/processing");
+          
+          window.location.href = "/processing";
         });
-
-        // const data = await apiResponse.json;//
-        // console.log("Cart data stored:", data);//
       }
     } catch (error) {
       console.error("Error storing cart data:", error);
