@@ -107,7 +107,7 @@ const UpdateVoucher = () => {
 
     if (discountType === "%") {
       if (discountValue <= 0 || discountValue > 100) {
-        error.discountValue = "DiscountValue(%) must be greater than 0 and less than or equal to 100.";
+        error.discountValue = "DiscountValue(%) must be greater than 0 and less than or equal to 80.";
         error.check = true;
       }
     }
@@ -117,7 +117,10 @@ const UpdateVoucher = () => {
       error.check = true;
     }
 
-    if(currentDate > new Date(expDate)) {
+    const currentDateOnly = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+    const expirationDateOnly = new Date(expDate.getFullYear(), expDate.getMonth(), expDate.getDate());
+
+    if(currentDateOnly > expirationDateOnly) {
       error.expDate = "ExpDate must be greater than or equal to the current date!";
       error.check = true;
     }

@@ -13,7 +13,7 @@ const AddVoucher = () => {
   const [productId, setProductId] = useState<number>(0);
   const [createdDate, setCreatedDate] = useState("");
   const [minimumTotal, setMinimumTotal] = useState<number>(0);
-  const [expDate, setExpDate] = useState("");
+  const [expDate, setExpDate] = useState(new Date);
   const currentDate = new Date();
   const { state } = useLocation();
   const { voucherId } = state;
@@ -83,7 +83,7 @@ const AddVoucher = () => {
 
     if (discountType === "%") {
       if (discountValue <= 0 || discountValue > 80) {
-        error.discountValue = "DiscountValue(%) must be greater than 0 and less than or equal to 100.";
+        error.discountValue = "DiscountValue(%) must be greater than 0 and less than or equal to 80.";
         error.check = true;
       }
     }
@@ -98,7 +98,7 @@ const AddVoucher = () => {
       error.check = true;
     }
 
-    if (expDate === "") {
+    if (!expDate || isNaN(expDate.getTime())) {
       error.expDate = "ExpDate is Required!";
       error.check = true;
     }
@@ -112,8 +112,10 @@ const AddVoucher = () => {
         error.check = true;
       }
     }
-
-    if(currentDate > new Date(expDate)) {
+    const currentDateOnly = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+    const expirationDateOnly = new Date(expDate.getFullYear(), expDate.getMonth(), expDate.getDate());
+    
+    if(currentDateOnly > expirationDateOnly) {
       error.expDate = "ExpDate must be greater than or equal to the current date!";
       error.check = true;
     }
@@ -234,8 +236,8 @@ const AddVoucher = () => {
                   <input
                     type="date"
                     name="txtExpDate"
-                    value={expDate}
-                    onChange={(e) => setExpDate(e.target.value)}
+                    value={new Date (expDate).toISOString().slice(0, 10)}
+                    onChange={(e) => setExpDate(new Date (e.target.value))}
                   />
                   {errors.expDate && (
                     <p style={{ color: "red" }}>{errors.expDate}</p>

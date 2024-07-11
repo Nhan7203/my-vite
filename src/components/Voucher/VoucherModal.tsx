@@ -53,7 +53,11 @@ const CustomModal: React.FC<CustomModalProps> = ({
     const currentDate = new Date();
     const expirationDate = new Date(voucher.expDate);
 
-      if (currentDate <= expirationDate) {
+// Extract just the date portion, ignoring the time
+    const currentDateOnly = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+    const expirationDateOnly = new Date(expirationDate.getFullYear(), expirationDate.getMonth(), expirationDate.getDate());
+
+      if (currentDateOnly <= expirationDateOnly) {
         if (voucher.productId === null) {
           return totalAmount >= voucher.minimumTotal;
         } else {

@@ -52,7 +52,7 @@ const Payment = () => {
         nameProduct: product.name,
         quantity: product.quantity,
         price: product.price,
-        total: discountedTotal + subtotal,
+        total: product.quantity * product.price,
       }));
 
       const order = {
@@ -295,19 +295,19 @@ const Payment = () => {
 
             <div className="payment-methods">
               <p>Payment methods</p>
-              {subtotal ? (
+              {subtotal && selectedVoucher !== null ? (
                 <Paypal
                   amount={(totalAmount / 23500).toFixed(2)}
                   shippingMethod={shippingMethodId}
-                  selectedVoucher = {selectedVoucher} 
+                  selectedVoucher = {selectedVoucher.voucherId} 
                   total={discountedTotal + subtotal}
                 />
               ) : (
                 <Paypal                 
                     amount="0.00"
                     shippingMethod={shippingMethodId}                  
-                    selectedVoucher={undefined}       
-                    total={0} 
+                    selectedVoucher={null}       
+                    total={discountedTotal + subtotal} 
                 />
               )}
             </div>
