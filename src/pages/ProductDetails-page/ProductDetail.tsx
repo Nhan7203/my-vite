@@ -1,30 +1,14 @@
-import {
-    useCart,
-    useNavigate,
-    useCallback,
-    useParams,
-    useAllProduct,
-    useState,
-    useEffect,
-    swal,
-    swal2,
-  } from "../../import/import-another";
-  import {
-    faStar as solidStar,
-    faStarHalfAlt,
-  } from "@fortawesome/free-solid-svg-icons";
-  import {
-    getAllRating,
-    getProductRating,
-  } from "../../apiServices/ReviewServices/reviewServices";
-  import { faStar as regularStarOutline } from "@fortawesome/free-regular-svg-icons";
-  import { ProductCard, Navbar, Footer } from "../../import/import-components";
-  import { RatingInfo, aProduct, aProductReview } from "../../interfaces";
-  import { FontAwesomeIcon, Link } from "../../import/import-libary";
-  import { bgProduct, giftCard, paypal } from "../../import/import-assets";
-  import "./ProductDetail.css";
-  import UserVoucherData from "../Admin-page/components/userVoucherData";
-  
+import { useCart, useNavigate,useCallback, useParams, useAllProduct,useState, useEffect, swal,swal2, } from "../../import/import-another";
+import { faStar as solidStar, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons";
+import { getAllRating, getProductRating } from "../../apiServices/ReviewServices/reviewServices";
+import { faStar as regularStarOutline } from "@fortawesome/free-regular-svg-icons";
+import { ProductCard, Navbar, Footer } from "../../import/import-components";
+import { RatingInfo, aProduct, aProductReview } from "../../interfaces";
+import { FontAwesomeIcon, Link } from "../../import/import-libary";
+import { bgProduct, giftCard, paypal } from "../../import/import-assets";
+import UserVoucherData from "../Admin-page/components/userVoucherData";
+import "./ProductDetail.css";
+
   const ProductDetails = () => {
     const { allProduct } = useAllProduct();
     const { productId } = useParams<{ productId?: string }>();
@@ -32,6 +16,8 @@ import {
     const [currentProductId, setCurrentProductId] = useState<number>();
     const [product, setProduct] = useState<aProduct | null>(null);
   
+
+    //---------------------------------------------------------------------------------------------
     useEffect(() => {
       if (productId) {
         const selectedProduct = allProduct.find(

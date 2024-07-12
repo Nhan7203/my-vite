@@ -12,7 +12,7 @@ import Order from "../pages/Admin-page/Orders-page/OrderStatus-page/Orders";
 import AddProduct from "../pages/Admin-page/ManageProduct-page/AddProduct";
 import Forgetpassword from "../pages/Forgetpassword-page/Forgetpassword";
 import ChangePassword from "../pages/ChangePassword-page/ChangePassword";
-import ProductDetails from "../pages/ProductDetails-page/ProductDetails";
+import ProductDetails from "../pages/ProductDetails-page/ProductDetail";
 import Processing from "../pages/User-page/OrderStatus-page/Processing";
 import Processed from "../pages/User-page/OrderStatus-page/Processed";
 import Cancelled from "../pages/User-page/OrderStatus-page/Cancelled";
