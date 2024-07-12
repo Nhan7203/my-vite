@@ -21,13 +21,10 @@ const Navbar = () => {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    if (!token) {
-      console.error("Token not found");
-      return;
-    }
-    const roleIdentifier = getRoleFromToken(token);
+    
+    const roleIdentifier = token ? getRoleFromToken(token) : null;
     setRole(roleIdentifier);
-    const usernameIdentifier = getNameFromToken(token);
+    const usernameIdentifier = token ? getNameFromToken(token) : null;
     setUserName(usernameIdentifier);
   }, [token]);
 
@@ -71,7 +68,7 @@ const Navbar = () => {
   }, [searchQuery]);
 
   //Get token login
-  const isLoggedIn = localStorage.getItem("token");
+  const isLoggedIn = token;
 
   //Renove token logout
   const handleLogout = () => {

@@ -96,7 +96,7 @@ const AddBlog = () => {
     formData.append("content", content);
     formData.append("author", author);
     formData.append("productId", productId.toString());
-    formData.append("uploadDate", uploadDate);//////////// error  date not string
+    formData.append("uploadDate", uploadDate);
     const checkImageFile = imageFile;
     if(checkImageFile) {
       formData.append("imageFile", checkImageFile);

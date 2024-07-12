@@ -40,7 +40,7 @@ import {
   ProcessedInAdmin,
   CancelledInAdmin,
   PreOrderInAdmin,
-  Unauthorized
+  Unauthorized,
 } from "./import/import-router";
 import {
   createBrowserRouter,
@@ -56,7 +56,6 @@ import ProtectedRoute from "./utils/protectedRoute";
 import PaymentWrapper from "./utils/protectedRoutePayment";
 import ChangePasswordWrapper from "./utils/protectedRouteChangePassword";
 
-
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
@@ -66,8 +65,22 @@ const router = createBrowserRouter(
       <Route path="/register" element={<Register />} />
       <Route path="/securityCodeRegister" element={<SecurityCodeRegister />} />
       <Route path="/forgetpassword" element={<Forgetpassword />} />
-      <Route path="/securitycode" element={<ChangePasswordWrapper><SecurityCode /></ChangePasswordWrapper>} />
-      <Route path="/changepassword" element={<ChangePasswordWrapper><ChangePassword /></ChangePasswordWrapper>} />
+      <Route
+        path="/securitycode"
+        element={
+          <ChangePasswordWrapper>
+            <SecurityCode />
+          </ChangePasswordWrapper>
+        }
+      />
+      <Route
+        path="/changepassword"
+        element={
+          <ChangePasswordWrapper>
+            <ChangePassword />
+          </ChangePasswordWrapper>
+        }
+      />
 
       <Route path="/unauthorized" element={<Unauthorized />} />
 
@@ -217,7 +230,6 @@ const router = createBrowserRouter(
         }
       />
 
-
       <Route
         path="/vouchers"
         element={
@@ -245,9 +257,17 @@ const router = createBrowserRouter(
         }
       />
 
-      <Route path="/user" element={<User />} />
-      <Route path="/profile" element={<Profile />} />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute allowedRoles={["Admin", "Staff", "User"]}>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
 
+      <Route path="/user" element={<User />} />
+      
       <Route path="/complete" element={<Complete />} />
       <Route path="/processing" element={<Processing />} />
       <Route path="/processed" element={<Processed />} />
@@ -264,7 +284,14 @@ const router = createBrowserRouter(
       </Route>
 
       <Route path="/cart" element={<Cart />} />
-      <Route path="/payment" element={<PaymentWrapper><Payment /></PaymentWrapper>} />
+      <Route
+        path="/payment"
+        element={
+          <PaymentWrapper>
+            <Payment />
+          </PaymentWrapper>
+        }
+      />
 
       <Route path="/blog" element={<Blog />} />
       <Route path="/blogdetails" element={<BlogDetails />}>
