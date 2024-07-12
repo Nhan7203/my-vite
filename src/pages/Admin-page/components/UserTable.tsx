@@ -22,7 +22,8 @@ interface UserTableProps {
     user: AllUsers
   ) => Promise<void>;
   handleDelete: (user: AllUsers) => void;
-  handleOnChangeEdit: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleOnChangeEditName: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleOnChangeEditIsActive: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const UserTable: React.FC<UserTableProps> = ({
@@ -33,7 +34,8 @@ const UserTable: React.FC<UserTableProps> = ({
   handleSave,
   handleDelete,
   errors,
-  handleOnChangeEdit,
+  handleOnChangeEditName,
+  handleOnChangeEditIsActive,
   displayedColumns,
 }) => {
   return (
@@ -49,6 +51,7 @@ const UserTable: React.FC<UserTableProps> = ({
           {displayedColumns.includes("address") && <th>Address</th>}
           {displayedColumns.includes("roleId") && <th>RoleID</th>}
           <th>Password</th>
+          <th>Is Active</th>
           <th>Update</th>
           <th>Delete</th>
         </tr>
@@ -69,7 +72,7 @@ const UserTable: React.FC<UserTableProps> = ({
                     type="text"
                     name="fullName"
                     value={editingUser?.name}
-                    onChange={handleOnChangeEdit}
+                    onChange={handleOnChangeEditName}
                   />
                   {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
                 </div>
@@ -91,6 +94,21 @@ const UserTable: React.FC<UserTableProps> = ({
 
             <td>
               <span>***</span>
+            </td>
+
+            <td>
+              {action === true && editingUser?.userId === user.userId ? (
+                <div>
+                  <input
+                    type="checkbox"
+                    checked={editingUser.isActive}                
+                    onChange={handleOnChangeEditIsActive}
+                  />
+                  {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
+                </div>
+              ) : (
+                <span>{user.isActive.toString()}</span>
+              )}
             </td>
 
             <td>

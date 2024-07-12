@@ -1,482 +1,483 @@
 import {
-  useCart,
-  useNavigate,
-  useCallback,
-  useParams,
-  useAllProduct,
-  useState,
-  useEffect,
-  swal,
-  swal2,
-} from "../../import/import-another";
-import {
-  faStar as solidStar,
-  faStarHalfAlt,
-} from "@fortawesome/free-solid-svg-icons";
-import {
-  getAllRating,
-  getProductRating,
-} from "../../apiServices/ReviewServices/reviewServices";
-import { faStar as regularStarOutline } from "@fortawesome/free-regular-svg-icons";
-import { ProductCard, Navbar, Footer } from "../../import/import-components";
-import { RatingInfo, aProduct, aProductReview } from "../../interfaces";
-import { FontAwesomeIcon, Link } from "../../import/import-libary";
-import { bgProduct, giftCard, paypal } from "../../import/import-assets";
-import "./ProductDetail.css";
-import UserVoucherData from "../Admin-page/components/userVoucherData";
-
-const ProductDetail = () => {
-  const { allProduct } = useAllProduct();
-  const { productId } = useParams<{ productId?: string }>();
-
-  const [currentProductId, setCurrentProductId] = useState<number>();
-  const [product, setProduct] = useState<aProduct | null>(null);
-
-  useEffect(() => {
-    if (productId) {
-      const selectedProduct = allProduct.find(
-        (e) => e.productId === parseInt(productId ?? "")
-      );
-      if (selectedProduct) {
-        setProduct(selectedProduct);
-        setCurrentProductId(parseInt(productId));
-      }
-    }
-  }, [productId, allProduct]);
-
-  //--------------------------- load product ------------------------------------------------------------------
-
-  const [noOfElement, setNoOfElement] = useState(8);
-  const loadMore = () => {
-    setNoOfElement((prevNoOfElement) => prevNoOfElement + noOfElement);
-  };
-  const slice = allProduct.slice(0, noOfElement);
-
-  //---------------------------------next sile and select img product -----------------------------------------
-
-  const [bannerImages, setBannerImages] = useState<string[]>([]);
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  useEffect(() => {
-    if (product && product.imageProducts) {
-      setBannerImages(
-        product.imageProducts.map(
-          (image: { imageUrl: string }) => image.imageUrl
-        )
-      );
-    }
-  }, [product]);
-
-  const nextSlide = useCallback(() => {
-    setCurrentSlide((prevSlide) => (prevSlide + 1) % bannerImages.length);
-  }, [bannerImages]);
-
-  useEffect(() => {
-    const interval = setInterval(nextSlide, 5000);
-    return () => clearInterval(interval);
-  }, [nextSlide]);
-
-  const handleImageClick = (index: number) => {
-    setCurrentSlide(index);
-  };
-
-  //--------------------------------Product Quantity Handling-------------------------------
-  interface CurrentQuantities {
-    [key: string]: number;
-  }
-  const navigate = useNavigate();
-  const [quantity, setQuantity] = useState(1);
-  const [currentQuantities, setCurrentQuantities] = useState<CurrentQuantities>(
-    {}
-  );
-
-  useEffect(() => {
-    const storedQuantitiesStr = localStorage.getItem("currentQuantities");
-    const storedQuantities = storedQuantitiesStr
-      ? JSON.parse(storedQuantitiesStr)
-      : {};
-    setCurrentQuantities(storedQuantities);
-  }, []);
-
-  const handleDecrementQuantity = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
-    }
-  };
-
-  const handleIncrementQuantity = (product: aProduct) => {
-    if (quantity < product.stock) {
-      setQuantity(quantity + 1);
-    }
-  };
-
-  const { addToCart2 } = useCart();
-
-  const handleAddToCart = (product: aProduct) => {
-    if (product.stock > 0) {
-      const newCurrentQuantities = { ...currentQuantities };
-      const newQuantity =
-        (newCurrentQuantities[product.productId] || 0) + quantity;
-
-      if (newQuantity > product.stock) {
-        swal2
-          .fire({
-            title: `${newCurrentQuantities[product.productId]}/ ${
-              product.stock
-            }`,
-            text: `You cannot order more than ${product.stock} items of this product.`,
-            icon: "info",
-          })
-          .then(() => {
-            return;
-          });
-      } else {
-        newCurrentQuantities[product.productId] = newQuantity;
-        setCurrentQuantities(newCurrentQuantities);
-        localStorage.setItem(
-          "currentQuantities",
-          JSON.stringify(newCurrentQuantities)
+    useCart,
+    useNavigate,
+    useCallback,
+    useParams,
+    useAllProduct,
+    useState,
+    useEffect,
+    swal,
+    swal2,
+  } from "../../import/import-another";
+  import {
+    faStar as solidStar,
+    faStarHalfAlt,
+  } from "@fortawesome/free-solid-svg-icons";
+  import {
+    getAllRating,
+    getProductRating,
+  } from "../../apiServices/ReviewServices/reviewServices";
+  import { faStar as regularStarOutline } from "@fortawesome/free-regular-svg-icons";
+  import { ProductCard, Navbar, Footer } from "../../import/import-components";
+  import { RatingInfo, aProduct, aProductReview } from "../../interfaces";
+  import { FontAwesomeIcon, Link } from "../../import/import-libary";
+  import { bgProduct, giftCard, paypal } from "../../import/import-assets";
+  import "./ProductDetail.css";
+  import UserVoucherData from "../Admin-page/components/userVoucherData";
+  
+  const ProductDetails = () => {
+    const { allProduct } = useAllProduct();
+    const { productId } = useParams<{ productId?: string }>();
+  
+    const [currentProductId, setCurrentProductId] = useState<number>();
+    const [product, setProduct] = useState<aProduct | null>(null);
+  
+    useEffect(() => {
+      if (productId) {
+        const selectedProduct = allProduct.find(
+          (e) => e.productId === parseInt(productId ?? "")
         );
-        addToCart2(product, quantity, "add");
+        if (selectedProduct) {
+          setProduct(selectedProduct);
+          setCurrentProductId(parseInt(productId));
+        }
       }
-    } else {
-      try {
-        swal({
-          title: "Out of stock",
-          text: "This product is currently out of stock, but you can place a pre-order.",
-          icon: "info",
-          buttons: ["Cancel", "Confirm"],
-          dangerMode: true,
-        }).then(async (confirm) => {
-          if (confirm) {
-            addToCart2(product, quantity, "add");
-          }
-        });
-      } catch (error) {
-        console.error("Error: ", error);
+    }, [productId, allProduct]);
+  
+    //--------------------------- load product ------------------------------------------------------------------
+  
+    const [noOfElement, setNoOfElement] = useState(8);
+    const loadMore = () => {
+      setNoOfElement((prevNoOfElement) => prevNoOfElement + noOfElement);
+    };
+    const slice = allProduct.slice(0, noOfElement);
+  
+    //---------------------------------next sile and select img product -----------------------------------------
+  
+    const [bannerImages, setBannerImages] = useState<string[]>([]);
+    const [currentSlide, setCurrentSlide] = useState(0);
+  
+    useEffect(() => {
+      if (product && product.imageProducts) {
+        setBannerImages(
+          product.imageProducts.map(
+            (image: { imageUrl: string }) => image.imageUrl
+          )
+        );
       }
+    }, [product]);
+  
+    const nextSlide = useCallback(() => {
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % bannerImages.length);
+    }, [bannerImages]);
+  
+    useEffect(() => {
+      const interval = setInterval(nextSlide, 5000);
+      return () => clearInterval(interval);
+    }, [nextSlide]);
+  
+    const handleImageClick = (index: number) => {
+      setCurrentSlide(index);
+    };
+  
+    //--------------------------------Product Quantity Handling-------------------------------
+    interface CurrentQuantities {
+      [key: string]: number;
     }
-  };
-
-  const handleBuyNow = (product: aProduct) => {
-    if (product.stock > 0) {
-      const newCurrentQuantities = { ...currentQuantities };
-      const newQuantity =
-        (newCurrentQuantities[product.productId] || 0) + quantity;
-      if (newQuantity > product.stock) {
-        swal2
-          .fire({
-            title: `${newCurrentQuantities[product.productId]}/ ${
-              product.stock
-            }`,
-            text: `You cannot order more than ${product.stock} items.`,
-            icon: "info",
-          })
-          .then(() => {
-            return;
-          });
+    const navigate = useNavigate();
+    const [quantity, setQuantity] = useState(1);
+    const [currentQuantities, setCurrentQuantities] = useState<CurrentQuantities>(
+      {}
+    );
+  
+    useEffect(() => {
+      const storedQuantitiesStr = localStorage.getItem("currentQuantities");
+      const storedQuantities = storedQuantitiesStr
+        ? JSON.parse(storedQuantitiesStr)
+        : {};
+      setCurrentQuantities(storedQuantities);
+    }, []);
+  
+    const handleDecrementQuantity = () => {
+      if (quantity > 1) {
+        setQuantity(quantity - 1);
+      }
+    };
+  
+    const handleIncrementQuantity = (product: aProduct) => {
+      if (quantity < product.stock) {
+        setQuantity(quantity + 1);
+      }
+    };
+  
+    const { addToCart2 } = useCart();
+  
+    const handleAddToCart = (product: aProduct) => {
+      if (product.stock > 0) {
+        const newCurrentQuantities = { ...currentQuantities };
+        const newQuantity =
+          (newCurrentQuantities[product.productId] || 0) + quantity;
+  
+        if (newQuantity > product.stock) {
+          swal2
+            .fire({
+              title: `${newCurrentQuantities[product.productId]}/ ${
+                product.stock
+              }`,
+              text: `You cannot order more than ${product.stock} items of this product.`,
+              icon: "info",
+            })
+            .then(() => {
+              return;
+            });
+        } else {
+          newCurrentQuantities[product.productId] = newQuantity;
+          setCurrentQuantities(newCurrentQuantities);
+          localStorage.setItem(
+            "currentQuantities",
+            JSON.stringify(newCurrentQuantities)
+          );
+          addToCart2(product, quantity, "add");
+        }
       } else {
-        newCurrentQuantities[product.productId] = newQuantity;
-        setCurrentQuantities(newCurrentQuantities);
-        addToCart2(product, quantity, "buy");
-        navigate("/cart");
+        try {
+          swal({
+            title: "Out of stock",
+            text: "This product is currently out of stock, but you can place a pre-order.",
+            icon: "info",
+            buttons: ["Cancel", "Confirm"],
+            dangerMode: true,
+          }).then(async (confirm) => {
+            if (confirm) {
+              addToCart2(product, quantity, "add");
+            }
+          });
+        } catch (error) {
+          console.error("Error: ", error);
+        }
       }
-    } else {
+    };
+  
+    const handleBuyNow = (product: aProduct) => {
+      if (product.stock > 0) {
+        const newCurrentQuantities = { ...currentQuantities };
+        const newQuantity =
+          (newCurrentQuantities[product.productId] || 0) + quantity;
+        if (newQuantity > product.stock) {
+          swal2
+            .fire({
+              title: `${newCurrentQuantities[product.productId]}/ ${
+                product.stock
+              }`,
+              text: `You cannot order more than ${product.stock} items.`,
+              icon: "info",
+            })
+            .then(() => {
+              return;
+            });
+        } else {
+          newCurrentQuantities[product.productId] = newQuantity;
+          setCurrentQuantities(newCurrentQuantities);
+          addToCart2(product, quantity, "buy");
+          navigate("/cart");
+        }
+      } else {
+        try {
+          swal({
+            title: "Out of stock",
+            text: "This product is currently out of stock, but you can place a pre-order.",
+            icon: "info",
+            buttons: ["Cancel", "Confirm"],
+            dangerMode: true,
+          }).then(async (confirm) => {
+            if (confirm) {
+              addToCart2(product, quantity, "add");
+              navigate("/cart");
+            }
+          });
+        } catch (error) {
+          console.error("Error: ", error);
+        }
+      }
+    };
+  
+    //------------------------------------------Product Reviews Section"---------------------------
+  
+    const [productReviews, setProductReviews] = useState<aProductReview[]>([]);
+    const [ratingInfo, setRatingInfo] = useState<RatingInfo>({
+      averageRating: 0,
+      totalRating: 0,
+      reviewCount: 0,
+    });
+  
+    useEffect(() => {
+      if (currentProductId) {
+        fetchRatings(currentProductId);
+      }
+    }, [currentProductId]);
+  
+    const fetchRatings = async (productId: number) => {
       try {
-        swal({
-          title: "Out of stock",
-          text: "This product is currently out of stock, but you can place a pre-order.",
-          icon: "info",
-          buttons: ["Cancel", "Confirm"],
-          dangerMode: true,
-        }).then(async (confirm) => {
-          if (confirm) {
-            addToCart2(product, quantity, "add");
-            navigate("/cart");
-          }
-        });
-      } catch (error) {
-        console.error("Error: ", error);
-      }
-    }
-  };
-
-  //------------------------------------------Product Reviews Section"---------------------------
-
-  const [productReviews, setProductReviews] = useState<aProductReview[]>([]);
-  const [ratingInfo, setRatingInfo] = useState<RatingInfo>({
-    averageRating: 0,
-    totalRating: 0,
-    reviewCount: 0,
-  });
-
-  useEffect(() => {
-    if (currentProductId) {
-      fetchRatings(currentProductId);
-    }
-  }, [currentProductId]);
-
-  const fetchRatings = async (productId: number) => {
-    try {
-      const response = await getAllRating();
-      if (!response) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const allRatings = await response;
-
-      const productRatings = allRatings.filter(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (rating: any) => String(rating.productId) === String(productId)
-      );
-      setProductReviews(productRatings);
-
-      if (productRatings.length > 0) {
-        const response = await getProductRating(productId);
+        const response = await getAllRating();
         if (!response) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const productRatingDetails = await response;
-        setRatingInfo({
-          averageRating: productRatingDetails.averageRating,
-          totalRating: productRatingDetails.totalRating,
-          reviewCount: productRatingDetails.reviewCount,
-        });
-      } else {
-        setRatingInfo({
-          averageRating: 0,
-          totalRating: 0,
-          reviewCount: 0,
-        });
+        const allRatings = await response;
+  
+        const productRatings = allRatings.filter(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (rating: any) => String(rating.productId) === String(productId)
+        );
+        setProductReviews(productRatings);
+  
+        if (productRatings.length > 0) {
+          const response = await getProductRating(productId);
+          if (!response) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const productRatingDetails = await response;
+          setRatingInfo({
+            averageRating: productRatingDetails.averageRating,
+            totalRating: productRatingDetails.totalRating,
+            reviewCount: productRatingDetails.reviewCount,
+          });
+        } else {
+          setRatingInfo({
+            averageRating: 0,
+            totalRating: 0,
+            reviewCount: 0,
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch product ratings:", error);
       }
-    } catch (error) {
-      console.error("Failed to fetch product ratings:", error);
-    }
-  };
-
-  const renderStars = (rating = ratingInfo.averageRating) => {
-    const fullStars = Math.floor(rating);
-    const halfStar = rating - fullStars >= 0.5;
-    const stars = [];
-
-    for (let i = 0; i < fullStars; i++) {
-      stars.push(
-        <FontAwesomeIcon
-          key={`full-${i}`}
-          icon={solidStar}
-          style={{ color: "yellow" }}
-        />
-      );
-    }
-
-    if (halfStar) {
-      stars.push(
-        <FontAwesomeIcon
-          key="half"
-          icon={faStarHalfAlt}
-          style={{ color: "yellow" }}
-        />
-      );
-    }
-
-    const emptyStars = 5 - stars.length;
-    for (let i = 0; i < emptyStars; i++) {
-      stars.push(
-        <FontAwesomeIcon
-          key={`empty-${i}`}
-          icon={regularStarOutline}
-          style={{ color: "grey" }}
-        />
-      );
-    }
-
-    return stars;
-  };
-
-  const renderProductReviews = () => {
-    return productReviews.map((review, index) => (
-      <div key={index} className="review">
-        <div className="review-header">
-          <span className="review-user">User: {review.userId}</span>
-          <span className="review-date">
-            Date: {new Date(review.date).toLocaleDateString()}
-          </span>
+    };
+  
+    const renderStars = (rating = ratingInfo.averageRating) => {
+      const fullStars = Math.floor(rating);
+      const halfStar = rating - fullStars >= 0.5;
+      const stars = [];
+  
+      for (let i = 0; i < fullStars; i++) {
+        stars.push(
+          <FontAwesomeIcon
+            key={`full-${i}`}
+            icon={solidStar}
+            style={{ color: "yellow" }}
+          />
+        );
+      }
+  
+      if (halfStar) {
+        stars.push(
+          <FontAwesomeIcon
+            key="half"
+            icon={faStarHalfAlt}
+            style={{ color: "yellow" }}
+          />
+        );
+      }
+  
+      const emptyStars = 5 - stars.length;
+      for (let i = 0; i < emptyStars; i++) {
+        stars.push(
+          <FontAwesomeIcon
+            key={`empty-${i}`}
+            icon={regularStarOutline}
+            style={{ color: "grey" }}
+          />
+        );
+      }
+  
+      return stars;
+    };
+  
+    const renderProductReviews = () => {
+      return productReviews.map((review, index) => (
+        <div key={index} className="review">
+          <div className="review-header">
+            <span className="review-user">User: {review.userId}</span>
+            <span className="review-date">
+              Date: {new Date(review.date).toLocaleDateString()}
+            </span>
+          </div>
+          <div className="review-rating">{renderStars(review.rating)}</div>
+          <div className="review-comment">
+            <p>{review.comment}</p>
+          </div>
         </div>
-        <div className="review-rating">{renderStars(review.rating)}</div>
-        <div className="review-comment">
-          <p>{review.comment}</p>
-        </div>
-      </div>
-    ));
-  };
-
-  //------------------------------Find Product have voucher----------------
-  const { voucherData } = UserVoucherData();
-  const productHaveVoucher = voucherData.find(
-    (voucher) => voucher.voucherId == parseInt(productId ?? "")
-  );
-
-  return (
-    <>
-      <Navbar />
-      {product ? (
-        <div className="body-detail">
-          <div className="grid-12">
-            <div
-              className="big-image"
-              style={{ backgroundImage: `url(${bgProduct})` }}
-            >
-              <img
-                className="img-detail"
-                src={bannerImages[currentSlide]}
-                alt=""
-              />
-            </div>
-            <div className="content-product">
-              <p className="name-pro">{product.name}</p>
-              <div className="rating-sold">
-                <span className="sold">Available: {product.stock}</span>
+      ));
+    };
+  
+    //------------------------------Find Product have voucher----------------
+    const { voucherData } = UserVoucherData();
+    const productHaveVoucher = voucherData.find(
+      (voucher) => voucher.voucherId == parseInt(productId ?? "")
+    );
+  
+    return (
+      <>
+        <Navbar />
+        {product ? (
+          <div className="body-detail">
+            <div className="grid-12">
+              <div
+                className="big-image"
+                style={{ backgroundImage: `url(${bgProduct})` }}
+              >
+                <img
+                  className="img-detail"
+                  src={bannerImages[currentSlide]}
+                  alt=""
+                />
               </div>
-              <div className="rate-sold">
-                <div className="rating-stars">{renderStars()}</div>
-                <p>Total Rating: {ratingInfo.reviewCount}</p>
-              </div>
-              <h3>${product.price.toLocaleString()}</h3>
-              <div className="trans-voucher">
-                {productHaveVoucher ? (
-                  <>
-                    <div className="img-voucher">
-                      <img src={giftCard} alt="" />
+              <div className="content-product">
+                <p className="name-pro">{product.name}</p>
+                <div className="rating-sold">
+                  <span className="sold">Available: {product.stock}</span>
+                </div>
+                <div className="rate-sold">
+                  <div className="rating-stars">{renderStars()}</div>
+                  <p>Total Rating: {ratingInfo.reviewCount}</p>
+                </div>
+                <h3>${product.price.toLocaleString()}</h3>
+                <div className="trans-voucher">
+                  {productHaveVoucher ? (
+                    <>
+                      <div className="img-voucher">
+                        <img src={giftCard} alt="" />
+                      </div>
+  
+                      <span>
+                        🎉 Great deal with this special voucher! <br />
+                        <br />
+                        💰 Save big with our exclusive voucher offer. <br />
+                        <br />✨ Don't miss out on this voucher discount!
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <div className="img-paypal">
+                        <img src={paypal} alt="" />
+                      </div>
+  
+                      <span style={{fontSize: "18px"}}>
+                      
+                    We support PayPal payment - easy, secure, and fast.
+                      
+                      </span>
+                    </>
+                  )}
+                </div>
+                <div className="quantity-content">
+                  <span>Quantity</span>
+                  <div>
+                    <div id="btMinus" onClick={handleDecrementQuantity}>
+                      <img src="/src/assets/minus.svg" alt="" />
                     </div>
-
-                    <span>
-                      🎉 Great deal with this special voucher! <br />
-                      <br />
-                      💰 Save big with our exclusive voucher offer. <br />
-                      <br />✨ Don't miss out on this voucher discount!
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <div className="img-paypal">
-                      <img src={paypal} alt="" />
+  
+                    <span id="quantity">{quantity}</span>
+                    <div
+                      id="btPlus"
+                      onClick={() => handleIncrementQuantity(product)}
+                    >
+                      <img src="/src/assets/plus.svg" alt="" />
                     </div>
-
-                    <span style={{fontSize: "18px"}}>
-                    
-                  We support PayPal payment - easy, secure, and fast.
-                    
-                    </span>
-                  </>
-                )}
-              </div>
-              <div className="quantity-content">
-                <span>Quantity</span>
-                <div>
-                  <div id="btMinus" onClick={handleDecrementQuantity}>
-                    <img src="/src/assets/minus.svg" alt="" />
-                  </div>
-
-                  <span id="quantity">{quantity}</span>
-                  <div
-                    id="btPlus"
-                    onClick={() => handleIncrementQuantity(product)}
-                  >
-                    <img src="/src/assets/plus.svg" alt="" />
                   </div>
                 </div>
+  
+                <div className="button-cart">
+                  {product.stock > 0 ? (
+                    <>
+                      <span
+                        className="add-cart"
+                        onClick={() => handleAddToCart(product)}
+                      >
+                        Add to cart
+                      </span>
+  
+                      <span
+                        className="buy-now"
+                        onClick={() => handleBuyNow(product)}
+                      >
+                        Buy now
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span
+                        className="add-cart"
+                        onClick={() => handleAddToCart(product)}
+                      >
+                        Add to cart
+                      </span>
+  
+                      <span
+                        className="buy-now"
+                        onClick={() => handleBuyNow(product)}
+                      >
+                        Order now
+                      </span>
+                    </>
+                  )}
+                </div>
               </div>
-
-              <div className="button-cart">
-                {product.stock > 0 ? (
-                  <>
-                    <span
-                      className="add-cart"
-                      onClick={() => handleAddToCart(product)}
-                    >
-                      Add to cart
-                    </span>
-
-                    <span
-                      className="buy-now"
-                      onClick={() => handleBuyNow(product)}
-                    >
-                      Buy now
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <span
-                      className="add-cart"
-                      onClick={() => handleAddToCart(product)}
-                    >
-                      Add to cart
-                    </span>
-
-                    <span
-                      className="buy-now"
-                      onClick={() => handleBuyNow(product)}
-                    >
-                      Order now
-                    </span>
-                  </>
-                )}
+  
+              <div className="box-img-1" onClick={() => handleImageClick(1)}>
+                <img
+                  className="img-1"
+                  src={product.imageProducts[1].imageUrl}
+                  alt=""
+                />
+              </div>
+              <div className="box-img-2" onClick={() => handleImageClick(2)}>
+                <img
+                  className="img-2"
+                  src={product.imageProducts[2].imageUrl}
+                  alt=""
+                />
+              </div>
+              <div className="box-img-3" onClick={() => handleImageClick(3)}>
+                <img
+                  className="img-3"
+                  src={product.imageProducts[3].imageUrl}
+                  alt=""
+                />
               </div>
             </div>
-
-            <div className="box-img-1" onClick={() => handleImageClick(1)}>
-              <img
-                className="img-1"
-                src={product.imageProducts[1].imageUrl}
-                alt=""
-              />
-            </div>
-            <div className="box-img-2" onClick={() => handleImageClick(2)}>
-              <img
-                className="img-2"
-                src={product.imageProducts[2].imageUrl}
-                alt=""
-              />
-            </div>
-            <div className="box-img-3" onClick={() => handleImageClick(3)}>
-              <img
-                className="img-3"
-                src={product.imageProducts[3].imageUrl}
-                alt=""
-              />
+  
+            <div className="product-reviews">
+              <h3>Product Reviews</h3>
+              {productReviews.length > 0 ? (
+                renderProductReviews()
+              ) : (
+                <p>No reviews available for this product.</p>
+              )}
             </div>
           </div>
-
-          <div className="product-reviews">
-            <h3>Product Reviews</h3>
-            {productReviews.length > 0 ? (
-              renderProductReviews()
-            ) : (
-              <p>No reviews available for this product.</p>
-            )}
+        ) : (
+          <Link to="/product"></Link>
+        )}
+  
+        <div className="home-product">
+          <div>
+            <h4>Similar Products</h4>
+            {slice.map((product, index) => (
+              <ProductCard key={index} index={index} product={product} />
+            ))}
           </div>
         </div>
-      ) : (
-        <Link to="/product"></Link>
-      )}
-
-      <div className="home-product">
-        <div>
-          <h4>Similar Products</h4>
-          {slice.map((product, index) => (
-            <ProductCard key={index} index={index} product={product} />
-          ))}
-        </div>
-      </div>
-
-      {slice.length < allProduct.length && (
-        <div className="load-more">
-          <button onClick={loadMore}>Load more</button>
-        </div>
-      )}
-
-      <Footer />
-    </>
-  );
-};
-
-export default ProductDetail;
+  
+        {slice.length < allProduct.length && (
+          <div className="load-more">
+            <button onClick={loadMore}>Load more</button>
+          </div>
+        )}
+  
+        <Footer />
+      </>
+    );
+  };
+  
+  export default ProductDetails;
+  

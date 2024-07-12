@@ -139,10 +139,10 @@ const Admin = () => {
                                 <td>{product.stock}</td>
                                 <td>
                                   <span
-                                    className={`status ${product.isActive ? "green" : "purple"
+                                    className={`status ${product.isActive == true ? "green" : "red"
                                       }`}
                                   />
-                                  {product.isActive ? "in progress" : "pending"}
+                                  {product.isActive == true ? "in progress" : "stopped"}
                                 </td>
                               </tr>
                             ))}
@@ -164,7 +164,7 @@ const Admin = () => {
 
                   <div className="card-body">
                     <div className="customer-list">
-                      {allUsers.map((user) => (
+                      {allUsers.slice(0, 4).map((user) => (
                         <div className="customer" key={user.userId}>
                           <div className="info">
                             <img

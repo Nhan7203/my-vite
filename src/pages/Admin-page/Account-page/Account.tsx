@@ -10,6 +10,7 @@ import HeaderMain from "../components/Header-main";
 import UserTable from "../components/UserTable";
 import Sidebar from "../components/Sidebar";
 import "../Admin.css";
+import { getUserIdFromToken } from "../../../utils/jwtHelper";
 
 const Account = () => {
   const [allUsers, setAllUsers] = useState<AllUsers[]>([]);
@@ -23,7 +24,8 @@ const Account = () => {
   const [errors, setErrors] = useState({
     name: "",
   });
-
+  const token = localStorage.getItem("token");
+  const userIdFromToken = token ? getUserIdFromToken(token) : null;
 //--------------------------------------------------------------------=
 
   useEffect(() => {
@@ -86,6 +88,7 @@ const Account = () => {
       email: user.email,
       phoneNumber: user.phoneNumber,
       address: user.address,
+      isActive: editingUser?.isActive
     };
 
     console.log(payload);
@@ -163,6 +166,17 @@ const Account = () => {
     );
   };
 
+  const handleOnChangeEditIsActive = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditingUser((prevUser) =>
+      prevUser
+        ? {
+            ...prevUser,
+            isActive: e.target.checked,
+          }
+        : undefined
+    );
+  };
+
   const handleClickView = () => {
     setActiveTab("view-account");
     window.location.reload();
@@ -213,14 +227,17 @@ const Account = () => {
               <UserTable
                 action={action}
                 errors={errors}
-                allUsers={allUsers}
+                allUsers={allUsers.filter(
+                  (u) => u.userId !== parseInt(userIdFromToken)
+                )}
                 editingUser={editingUser}
                 displayedRows={["roleId"]}
                 displayedColumns={["roleId"]}
                 handleEdit={handleEdit}
                 handleSave={handleSave}
                 handleDelete={handleDelete}
-                handleOnChangeEdit={handleOnChangeEditName}
+                handleOnChangeEditName={handleOnChangeEditName}
+                handleOnChangeEditIsActive={handleOnChangeEditIsActive}
               />
             </div>
           </main>

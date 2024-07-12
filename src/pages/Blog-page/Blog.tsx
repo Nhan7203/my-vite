@@ -89,12 +89,12 @@ const Blog = () => {
   // Get the userId from the token
   const token = localStorage.getItem("token");
 
-  if (!token) {
-    console.error("Token not found");
-    return null;
-  }
+  // if (!token) {
+  //   console.error("Token not found");
+  //   return null;
+  // }
 
-  const userIdFromToken = getUserIdFromToken(token);
+  const userIdFromToken = token ? getUserIdFromToken(token) : null;
 
   const userId = userIdFromToken;
 

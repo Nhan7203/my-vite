@@ -85,6 +85,7 @@ const Customer = () => {
       email: user.email,
       phoneNumber: user.phoneNumber,
       address: user.address,
+      isActive: editingUser?.isActive
     };
 
     console.log(payload);
@@ -166,6 +167,19 @@ const Customer = () => {
         : undefined
     );
   };
+
+
+  const handleOnChangeEditIsActive = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditingUser((prevUser) =>
+      prevUser
+        ? {
+            ...prevUser,
+            isActive: e.target.checked,
+          }
+        : undefined
+    );
+  };
+
   //---------------------------------------handleClickView-----------------------------
 
   const handleClickView = () => {
@@ -230,7 +244,8 @@ const Customer = () => {
                 handleSave={handleSave}
                 handleDelete={handleDelete}
                 errors={errors}
-                handleOnChangeEdit={handleOnChangeEditName}
+                handleOnChangeEditName={handleOnChangeEditName}
+                handleOnChangeEditIsActive={handleOnChangeEditIsActive}
                 displayedColumns={["email", "phoneNumber", "address"]}
                 displayedRows={["email", "phoneNumber", "address"]}
               />
