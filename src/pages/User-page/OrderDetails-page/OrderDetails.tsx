@@ -105,9 +105,9 @@ const OrderDetails = () => {
       date: new Date().toISOString(),
       rating: rating,
       comment: comment || "",
-      isRated: false,
+      // isRated: false,
     };
-    console.log("h0000", reviewData);
+    console.log("h0000", JSON.stringify(reviewData));
     try {
       const response = await review(token, reviewData);
 
