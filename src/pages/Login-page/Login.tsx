@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import ReCAPTCHA from "react-google-recaptcha";
 import swal from 'sweetalert';
 import './Login.css';
+import { AxiosError } from "axios";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -28,68 +29,84 @@ const Login = () => {
 
     try {
       const response = await login(email, password);
-
-      if (response) {
+  
+      if (response?.status === 200) {
         // Login successful
-        //Lay-Luu token vao local storage
-        const { token, refreshToken} = response.data;
-
+        // Lay-Luu token vao local storage
+        const { token, refreshToken } = response.data;
+  
         localStorage.setItem('token', token);
         localStorage.setItem('refreshToken', refreshToken);
-
+  
         const role = getRoleFromToken(token);
-
+  
         if (role === "User") {
           alert("Oke bạn nay User ne");
-          //Redirect to 'User' page
+          // Redirect to 'User' page
           navigate("/");
-        }
-        else if (role === "Staff") {
+        } else if (role === "Staff") {
           alert("Oke bạn nay Staff ne");
           navigate("/order");
-
         } else if (role === "Admin") {
-
           alert("Oke bạn nay Admin ne");
           navigate("/admin");
         }
-      } else {
-        // Login failed
-        console.error("Login failed");
-        swal({
-          title: "Incorrect Account or Password ",
-          text: "Please click 'Forgot password?' to reset your password or 'Register' to create a new account.",
-          icon: "error",
-          buttons: {
-            ok: {
-              text: "OK",
-              value: true,
-              className: "swal-ok-button",
-            },
-            forgot: {
-              text: "Forgot?",
-              value: "forgot",
-              className: "swal-forgot-button",
-            },
-            register: {
-              text: "Register",
-              value: "register",
-              className: "swal-register-button",
-            },
-          },
-        }).then((value) => {
-          if (value === "forgot") {
-            // Redirect the user to the password reset page
-            window.location.href = "/forgetpassword";
-          } else if (value === "register") {
-            // Redirect the user to the registration page
-            window.location.href = "/register";
-          }
-        });
       }
     } catch (error) {
-      // Handle any network or server errors
-      console.error("An error occurred:", error);
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 403) {
+          swal({
+            title: "Banned",
+            text: "Your account has been banned indefinitely and cannot log in.",
+            icon: "error",
+            buttons: {
+              ok: {
+                text: "OK",
+                value: true,
+                className: "swal-ok-button",
+              },
+            },
+          });
+        } else if (error.response?.status === 400) {
+          swal({
+            title: "Incorrect Account or Password",
+            text: "Please click 'Forgot password?' to reset your password or 'Register' to create a new account.",
+            icon: "error",
+            buttons: {
+              ok: {
+                text: "OK",
+                value: true,
+                className: "swal-ok-button",
+              },
+              forgot: {
+                text: "Forgot?",
+                value: "forgot",
+                className: "swal-forgot-button",
+              },
+              register: {
+                text: "Register",
+                value: "register",
+                className: "swal-register-button",
+              },
+            },
+          }).then((value) => {
+            if (value === "forgot") {
+// Redirect the user to the password reset page
+              window.location.href = "/forgetpassword";
+            } else if (value === "register") {
+              // Redirect the user to the registration page
+              window.location.href = "/register";
+            }
+          });
+        } else {
+          // Handle other status codes
+          console.error("Login failed:", error.response?.status);
+          toast.error("Login failed. Please try again.");
+        }
+      } else {
+        console.error("An error occurred:", error);
+        toast.error("An unexpected error occurred. Please try again.");
+      }
     }
   };
 
@@ -175,7 +192,7 @@ const Login = () => {
               <ul>
                 <h3>Reach us</h3>
                 <li>
-                  <img src="/src/assets/phone.svg" alt="" />
+<img src="/src/assets/phone.svg" alt="" />
                   <span>+843899999999</span>
                 </li>
                 <li>

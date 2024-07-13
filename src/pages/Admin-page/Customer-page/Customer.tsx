@@ -85,7 +85,8 @@ const Customer = () => {
       email: user.email,
       phoneNumber: user.phoneNumber,
       address: user.address,
-      isActive: editingUser?.isActive
+      isActive: editingUser?.isActive,
+      roleId: user.roleId,
     };
 
     console.log(payload);

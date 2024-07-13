@@ -133,9 +133,11 @@ const Profile = () => {
 
     const payload = {
       name: name,
+      roleId: user.roleId,
       email: user.email,
       phoneNumber: phoneNumber,
       address: address,
+      isActive: user.isActive
     };
 
     console.log(payload);

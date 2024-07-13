@@ -86,6 +86,7 @@ const Account = () => {
     const payload = {
       name: editingUser?.name,
       email: user.email,
+      roleId: editingUser?.roleId,
       phoneNumber: user.phoneNumber,
       address: user.address,
       isActive: editingUser?.isActive
@@ -141,10 +142,13 @@ const Account = () => {
           const response = await deleteCustomer(user.userId);
 
           if (response) {
-            swal("Success!", "Account was deleted!", "success");
-            setAllUsers(
-              allUsers.filter((allUser) => allUser.userId !== user.userId)
-            );
+            swal("Success!", "Account was deleted!", "success").then(() => { 
+              window.location.reload();
+              setAllUsers(
+                allUsers.filter((allUser) => allUser.userId !== user.userId)
+              );
+            });
+           
           } else {
             throw new Error("Failed to  delete account");
           }
@@ -161,6 +165,18 @@ const Account = () => {
         ? {
             ...prevUser,
             name: e.target.value,
+          }
+        : undefined
+    );
+  };
+
+  const handleOnChangeEditRole = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log("maaa",e.target.value )
+    setEditingUser((prevUser) =>
+      prevUser
+        ? {
+            ...prevUser,
+            roleId: parseInt(e.target.value),
           }
         : undefined
     );
@@ -237,6 +253,7 @@ const Account = () => {
                 handleSave={handleSave}
                 handleDelete={handleDelete}
                 handleOnChangeEditName={handleOnChangeEditName}
+                handleOnChangeEditRole={handleOnChangeEditRole}
                 handleOnChangeEditIsActive={handleOnChangeEditIsActive}
               />
             </div>
