@@ -118,6 +118,7 @@ const Payment = () => {
   const handleVoucherSelect = (voucher: Voucher) => {
     console.log("Selected Voucher:", voucher);
     setSelectedVoucher(voucher);
+    localStorage.setItem("selectedVoucher",JSON.stringify(voucher));
   };
 
   //---------------- Calculate Disconunted ToTal --------------
@@ -295,19 +296,19 @@ const Payment = () => {
 
             <div className="payment-methods">
               <p>Payment methods</p>
-              {subtotal && selectedVoucher !== null ? (
+              {subtotal ? (
                 <Paypal
                   amount={(totalAmount / 23500).toFixed(2)}
                   shippingMethod={shippingMethodId}
-                  selectedVoucher = {selectedVoucher.voucherId} 
-                  total={discountedTotal + subtotal}
+                  subtotal={subtotal}
+                  totalAmount={totalAmount}
                 />
               ) : (
                 <Paypal                 
                     amount="0.00"
-                    shippingMethod={shippingMethodId}                  
-                    selectedVoucher={null}       
-                    total={discountedTotal + subtotal} 
+                    shippingMethod={shippingMethodId} 
+                    subtotal={0}                       
+                    totalAmount={0} 
                 />
               )}
             </div>

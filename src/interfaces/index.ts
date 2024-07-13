@@ -176,7 +176,7 @@ export interface ReviewData {
   date: string;
   rating: number;
   comment: string;
-  isRated: boolean;
+  // isRated: boolean;
 }
 
 export interface AllVouchers {

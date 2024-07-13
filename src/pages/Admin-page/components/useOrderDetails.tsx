@@ -13,7 +13,7 @@ import { getUserIdFromToken } from "../../../utils/jwtHelper";
 import { getOrderDetails } from "../../../apiServices/UserServices/userServices";
 import { getProductId } from "../../../apiServices/ProductServices/productServices";
 import useOrderData from "../components/useOrderData";
-import { getAllUsers } from "../../../apiServices/StaffServices/staffServices";
+import { getAllUsers } from "../../../apiServices/AdminServices/adminServices";
 import { Brand } from "../ManageProduct-page/AddProduct";
 import { getBrand } from "../../../apiServices/BrandServices/brandServices";
 import { getAllVouchers } from "../../../apiServices/VoucherServices/voucherServices";
@@ -32,7 +32,7 @@ export const useOrderDetails = () => {
   const [userData, setUserData] = useState<User>();
   const [order, setOrder] = useState<Order>();
   const token = localStorage.getItem("token");
-  const roleId = 0;
+  // const roleId = 0;
   
   const currentUserId = useMemo(() => {
     if (!token) {
@@ -47,7 +47,7 @@ export const useOrderDetails = () => {
 
   const fetchAllUsers = useCallback(async () => {
     try {
-      const response = await getAllUsers(roleId);
+      const response = await getAllUsers();
 
       if (response) {
         setAllUsers(response);
@@ -57,7 +57,7 @@ export const useOrderDetails = () => {
     } catch (error) {
       console.error("Failed to retrieve user data:", error);
     }
-  }, [roleId]);
+  }, []);
 
   //--------------------------------------------------------------------------------------------------
 

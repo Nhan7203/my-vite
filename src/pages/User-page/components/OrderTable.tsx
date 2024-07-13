@@ -54,7 +54,7 @@ const OrderTable: React.FC<OrderTableProps> = ({
           </td>
           <td className="column7 dynamic-content">{order.orderStatus}</td>
           <td className="column8 dynamic-content">
-            {order.orderStatus === 'Pending' || order.orderStatus === 'Pre-Order' && (
+            {(order.orderStatus === 'Pending' || order.orderStatus === 'Pre-Order') && (
               <button className="cancel-button" onClick={() => handleCancelClick(order.orderId)}>
                 Cancel
               </button>

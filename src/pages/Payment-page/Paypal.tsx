@@ -8,8 +8,7 @@ import { getUserIdFromToken, getAddressFromToken } from "../../utils/jwtHelper";
 import { useEffect } from "react";
 import swal from "sweetalert";
 import { ordersPaypal } from "../../apiServices/OrderServices/OrderServices";
-import { useNavigate } from "react-router-dom";
-import { iProduct } from "../../interfaces";
+import { iProduct, Voucher } from "../../interfaces";
 import { useCart } from "../Cart-page/CartContext";
 import { refreshToken } from "../../apiServices/AccountServices/refreshTokenServices";
 
@@ -27,8 +26,8 @@ interface ButtonWrapperProps {
   showSpinner: boolean;
   amount: any;
   shippingMethodIdPay: number;
-  total: number;
-  selectedVoucher: any;
+  subtotal: number;
+  totalAmount: number;
 }
 
 // Layout Loading Screen Paypal
@@ -36,9 +35,9 @@ const ButtonWrapper: React.FC<ButtonWrapperProps> = ({
   currency,
   showSpinner,
   amount,
+  subtotal,
   shippingMethodIdPay,
-  total,
-  selectedVoucher,
+  totalAmount,
 }) => {
   const { cart } = useCart();
   const [{ isPending, options }, dispatch] = usePayPalScriptReducer();
@@ -54,6 +53,28 @@ const ButtonWrapper: React.FC<ButtonWrapperProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currency, showSpinner]);
 
+//------------------------------------------------------------------------------
+
+const storedVoucher = localStorage.getItem("selectedVoucher");
+
+  const selectedVoucher: Voucher = storedVoucher ? JSON.parse(storedVoucher) : null;
+
+  const calculateDiscountedTotal = () => {
+    if (selectedVoucher) {
+      if (selectedVoucher.discountType === "%") {
+        return (
+          totalAmount - (totalAmount * selectedVoucher.discountValue) / 100
+        );
+      } else if (selectedVoucher.discountType === "K") {
+        const t = totalAmount - selectedVoucher.discountValue * 1000;
+         return t < 0 ? 0 : t;
+      }
+    }
+    return totalAmount;
+  };
+
+  const discountedTotal = calculateDiscountedTotal();
+
   const handlePaymentSuccess = async (_data: any, actions: any) => {
     try {
       const response = await actions.order.capture();
@@ -66,7 +87,7 @@ const ButtonWrapper: React.FC<ButtonWrapperProps> = ({
           console.error("Token not found");
           return;
         }
-
+        
         const userIdFromToken = getUserIdFromToken(token);
         const userAddress = getAddressFromToken(token);
 
@@ -74,8 +95,7 @@ const ButtonWrapper: React.FC<ButtonWrapperProps> = ({
         const orderDate = new Date().toISOString();
         const shippingMethodId = shippingMethodIdPay; // From web
         const paymentMethod = "By Paypal"; // From web
-        const address = String(userAddress); // From web
-        const voucherId =  selectedVoucher 
+        const address = String(userAddress); // From web      
       
         const products = cart.map((product: iProduct) => ({
           productId: product.productId,
@@ -91,8 +111,8 @@ const ButtonWrapper: React.FC<ButtonWrapperProps> = ({
           address,
           paymentMethod,
           shippingMethodId,
-          voucherId,
-          total: total,
+          voucherId: selectedVoucher ? selectedVoucher.voucherId : null,
+          total: discountedTotal + subtotal,
           products,
         };
         console.log("Check data order:   ", JSON.stringify(order)); //
@@ -109,7 +129,7 @@ const ButtonWrapper: React.FC<ButtonWrapperProps> = ({
         localStorage.removeItem("cart");
         localStorage.removeItem("currentQuantities");
         swal("Congrat!", "Order was created!", "success").then(() => {
-          
+          localStorage.removeItem("selectedVoucher");
           window.location.href = "/processing";
         });
       }
@@ -148,13 +168,13 @@ const ButtonWrapper: React.FC<ButtonWrapperProps> = ({
 export default function Paypal({
   amount,
   shippingMethod,
-  total,
-  selectedVoucher,
+  subtotal,
+  totalAmount,
 }: {
   amount: any;
+  subtotal: number;
   shippingMethod: number;
-  total: number;
-  selectedVoucher: any;
+  totalAmount: number;
 }) {
   return (
     <div style={{ maxWidth: "750px", minHeight: "156px" }}>
@@ -166,8 +186,8 @@ export default function Paypal({
           amount={amount}
           showSpinner={false}
           shippingMethodIdPay={shippingMethod}
-          total={total}
-          selectedVoucher={selectedVoucher}
+          subtotal={subtotal}
+          totalAmount={totalAmount}
         />
       </PayPalScriptProvider>
     </div>
