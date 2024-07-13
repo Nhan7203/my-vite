@@ -40,7 +40,6 @@ const ButtonWrapper: React.FC<ButtonWrapperProps> = ({
   total,
   selectedVoucher,
 }) => {
-  const navigate = useNavigate();
   const { cart } = useCart();
   const [{ isPending, options }, dispatch] = usePayPalScriptReducer();
 

@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import request from "../../utils/request";
 
 export const login = async (email: string, password: string) => {
@@ -6,6 +7,12 @@ export const login = async (email: string, password: string) => {
     //console.log("check data search: ", res);
     return res;
   } catch (error) {
-    console.log(error);
+    if (error instanceof AxiosError) {
+      // Ném lại lỗi để có thể xử lý nó ở hàm gọi
+      throw error;
+    } else {
+      console.error("Unexpected error:", error);
+      throw error;
+    }
   }
-};
+}

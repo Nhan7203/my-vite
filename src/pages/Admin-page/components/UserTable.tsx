@@ -1,4 +1,8 @@
 import { AllUsers, User } from "../../../interfaces";
+const roleOptions = [
+  { id: 1, role: "User" },
+  { id: 2, role: "Staff" },
+];
 
 interface UserTableProps {
   displayedColumns: string[];
@@ -24,6 +28,7 @@ interface UserTableProps {
   handleDelete: (user: AllUsers) => void;
   handleOnChangeEditName: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleOnChangeEditIsActive: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleOnChangeEditRole: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 const UserTable: React.FC<UserTableProps> = ({
@@ -35,6 +40,7 @@ const UserTable: React.FC<UserTableProps> = ({
   handleDelete,
   errors,
   handleOnChangeEditName,
+  handleOnChangeEditRole,
   handleOnChangeEditIsActive,
   displayedColumns,
 }) => {
@@ -88,7 +94,22 @@ const UserTable: React.FC<UserTableProps> = ({
             {displayedColumns.includes("address") && <td>{user.address}</td>}
             {displayedColumns.includes("roleId") && (
               <td>
-                <span>{user.roleId}</span>
+                {action === true && editingUser?.userId === user.userId ? (
+                  <div>
+                    <select
+                      value={editingUser?.roleId}
+                      onChange={handleOnChangeEditRole}
+                    >
+                      {roleOptions.map((option) => (
+                        <option key={option.id} value={option.id}>
+                          {option.role}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                ) : (
+                  <span>{user.roleId}</span>
+                )}
               </td>
             )}
 
@@ -101,7 +122,7 @@ const UserTable: React.FC<UserTableProps> = ({
                 <div>
                   <input
                     type="checkbox"
-                    checked={editingUser.isActive}                
+                    checked={editingUser.isActive}
                     onChange={handleOnChangeEditIsActive}
                   />
                   {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
