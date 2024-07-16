@@ -11,6 +11,7 @@ import UserTable from "../components/UserTable";
 import Sidebar from "../components/Sidebar";
 import "../Admin.css";
 import { getUserIdFromToken } from "../../../utils/jwtHelper";
+import { refreshToken } from "../../../apiServices/AccountServices/refreshTokenServices";
 
 const Account = () => {
   const [allUsers, setAllUsers] = useState<AllUsers[]>([]);
@@ -103,9 +104,10 @@ const Account = () => {
           "Account information updated successfully!",
           "success"
         ).then(() => {
-          setAction(false);
+          setAction(false);       
           window.location.reload();
         });
+        refreshToken();
       } else {
         swal("Error", "Failed to update account information.", "error");
       }
