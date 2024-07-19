@@ -9,6 +9,10 @@ export interface iNotification {
   createdDate: Date;
 }
 
+export interface CartData {
+  [orderId: string]: iProduct[];
+}
+
 export interface aVoucher {
   voucherId: number;
   productId: number;
