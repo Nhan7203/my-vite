@@ -38,7 +38,7 @@ export const refreshToken = async () => {
                 if (value) {
                     localStorage.removeItem("token");
                     localStorage.removeItem("refreshToken");
-                    localStorage.removeItem("cart");
+                    // localStorage.removeItem("cart");
                     location.href = "/login"
                 }
             })

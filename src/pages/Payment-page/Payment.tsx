@@ -3,7 +3,7 @@ import { useEffect, useState, swal } from "../../import/import-another";
 import { avatar, sec, sr, se } from "../../import/import-assets";
 import { refreshToken } from "../../apiServices/AccountServices/refreshTokenServices";
 import { useCart } from "../Cart-page/CartContext";
-import { Voucher } from "../../interfaces";
+import { CartData, Voucher } from "../../interfaces";
 import { orders } from "../../apiServices/OrderServices/OrderServices";
 import { Link } from "../../import/import-libary";
 import VoucherModal from "../../components/Voucher/VoucherModal";
@@ -19,7 +19,7 @@ const Payment = () => {
   const [userName, setUserName] = useState();
   const [role, setRole] = useState();
   const [address, setAdress] = useState();
-  const [userId, setId] = useState();
+  const [userId, setId] = useState<string>("");
   const { cart } = useCart();
 
   const token = localStorage.getItem("token");
@@ -77,7 +77,13 @@ const Payment = () => {
       if (response.status === 401) {
         await refreshToken();
       }
-      localStorage.removeItem("cart");
+      
+      const cartData: CartData = JSON.parse(
+        localStorage.getItem("storedCart") || "{}"
+      );
+      delete cartData[userId];
+      localStorage.setItem("storedCart", JSON.stringify(cartData));
+      
       localStorage.removeItem("currentQuantities");
       const data = await response.data;
       console.log("Cart data stored:", data);
@@ -155,7 +161,6 @@ const Payment = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("cart");
     localStorage.removeItem("currentQuantities");
   };
 

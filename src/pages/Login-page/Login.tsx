@@ -1,11 +1,11 @@
 import { getRoleFromToken } from "../../utils/jwtHelper";
 import { useNavigate } from "react-router-dom";
-import { useState } from 'react';
-import { login } from '../../apiServices/AccountServices/loginServices';
-import { toast } from 'react-toastify';
+import { useState } from "react";
+import { login } from "../../apiServices/AccountServices/loginServices";
+import { toast } from "react-toastify";
 import ReCAPTCHA from "react-google-recaptcha";
-import swal from 'sweetalert';
-import './Login.css';
+import swal from "sweetalert";
+import "./Login.css";
 import { AxiosError } from "axios";
 
 const Login = () => {
@@ -29,21 +29,22 @@ const Login = () => {
 
     try {
       const response = await login(email, password);
-  
+
       if (response?.status === 200) {
         // Login successful
         // Lay-Luu token vao local storage
         const { token, refreshToken } = response.data;
-  
-        localStorage.setItem('token', token);
-        localStorage.setItem('refreshToken', refreshToken);
-  
+
+        localStorage.setItem("token", token);
+        localStorage.setItem("refreshToken", refreshToken);
+
         const role = getRoleFromToken(token);
-  
+
         if (role === "User") {
           alert("Oke bạn nay User ne");
           // Redirect to 'User' page
           navigate("/");
+          window.location.reload();
         } else if (role === "Staff") {
           alert("Oke bạn nay Staff ne");
           navigate("/order");
@@ -91,7 +92,7 @@ const Login = () => {
             },
           }).then((value) => {
             if (value === "forgot") {
-// Redirect the user to the password reset page
+              // Redirect the user to the password reset page
               window.location.href = "/forgetpassword";
             } else if (value === "register") {
               // Redirect the user to the registration page
@@ -124,11 +125,9 @@ const Login = () => {
 
   return (
     <>
-      <body>
+      <>
         <header>
-
-          <div >
-
+          <div>
             <div className="logo-mandb" onClick={() => handleOnClick()}>
               <h3>M</h3>
               <h3 id="and">&</h3>
@@ -169,8 +168,10 @@ const Login = () => {
                 />
               </div>
               <div className="Recapcha">
-                <ReCAPTCHA sitekey="6LeOW-gpAAAAAIjpbDvMlkseUc96hpxAWvxDofYQ"
-                  onChange={(val) => setCaptchaValue(val)} />
+                <ReCAPTCHA
+                  sitekey="6LeOW-gpAAAAAIjpbDvMlkseUc96hpxAWvxDofYQ"
+                  onChange={(val) => setCaptchaValue(val)}
+                />
               </div>
               <a href="/forgetpassword">Forgot password?</a>
               <input
@@ -180,7 +181,9 @@ const Login = () => {
                 value="Login"
               />
 
-              <p>Don't have an account? <a href="/register">Register</a></p>
+              <p>
+                Don't have an account? <a href="/register">Register</a>
+              </p>
             </form>
           </div>
         </div>
@@ -192,7 +195,7 @@ const Login = () => {
               <ul>
                 <h3>Reach us</h3>
                 <li>
-<img src="/src/assets/phone.svg" alt="" />
+                  <img src="/src/assets/phone.svg" alt="" />
                   <span>+843899999999</span>
                 </li>
                 <li>
@@ -229,7 +232,7 @@ const Login = () => {
             <h5>Copyright&copy : m&b@gmail.com</h5>
           </div>
         </div>
-      </body>
+      </>
     </>
   );
 };

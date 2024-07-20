@@ -9,6 +9,10 @@ export interface iNotification {
   createdDate: Date;
 }
 
+export interface CartData {
+  [orderId: string]: iProduct[];
+}
+
 export interface aVoucher {
   voucherId: number;
   productId: number;
@@ -79,6 +83,13 @@ export interface RatingDetails {
   reviewCount: number;
 }
 
+export interface userBlogViews {
+  blogId: number;
+  userId: number
+  like: number
+  UserBlogViewId: number
+}
+
 export interface aBlog {
   blogId: number;
   title: string;
@@ -90,6 +101,8 @@ export interface aBlog {
   view: number;
   like: number;
   imageUrl: string;
+  userBlogViews: userBlogViews[];
+  liked: boolean
 }
 
 export interface iProduct {

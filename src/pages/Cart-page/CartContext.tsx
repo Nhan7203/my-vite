@@ -1,12 +1,24 @@
 import { createContext, useState, useContext, useEffect } from "react";
+import { getUserIdFromToken } from "../../utils/jwtHelper";
 import { aProduct, iProduct } from "../../interfaces";
 import { CartContextType } from "../../interfaces"
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Cart.css";
 
+interface CartData {
+  [orderId: string]: iProduct[];
+}
+
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+//--------------------------------------------------------------------------------------------------------
+const token = localStorage.getItem("token");
+
+const userIdFromToken = token ? getUserIdFromToken(token) : null;
+
+  const userId = userIdFromToken;
+//----------------------------------------------------------------------------------------------------------
 // eslint-disable-next-line react-refresh/only-export-components
 export const useCart = () => {
   const context = useContext(CartContext);
@@ -20,13 +32,38 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [cart, setCart] = useState<iProduct[]>([]);
   const [totals, setTotals] = useState<{ [productId: number]: number }>({});
 
+  //------------------------------------------------- localStorage orderData ------------------------------------------
   useEffect(() => {
-    const storedCart = localStorage.getItem("cart");
+    if (userId && cart.length > 0) {
+      const cartData: CartData = {
+        ...JSON.parse(localStorage.getItem("storedCart") || "{}"),
+        [userId]: cart,
+      };
+      localStorage.setItem("storedCart", JSON.stringify(cartData));
+    }
+  }, [cart]);
 
-    if (storedCart) {
-      setCart(JSON.parse(storedCart));
+
+  useEffect(() => {
+    const cartData: CartData = JSON.parse(
+      localStorage.getItem("storedCart") || "{}"
+    );
+    if (userId) {
+      setCart(cartData[userId] || []);
+    } else {
+      setCart([]);
     }
   }, []);
+
+  // useEffect(() => {
+  //   const storedCart = localStorage.getItem("cart");
+
+  //   if (storedCart) {
+  //     setCart(JSON.parse(storedCart));
+  //   }
+  // }, []);
+
+  //----------------------------------------------------------------------------------------------------------------------
 
   const [isToastVisible, setIsToastVisible] = useState(false);
 
@@ -50,7 +87,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       ];
 
       setCart(updatedCart);
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      // localStorage.setItem("cart", JSON.stringify(updatedCart));
       setTotals(calculateTotals(updatedCart));
       showToast(aProduct.name);
     } else {
@@ -60,7 +97,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
           : item
       );
       setCart(updatedCart);
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      // localStorage.setItem("cart", JSON.stringify(updatedCart));
       setTotals(calculateTotals(updatedCart));
 
       if (!isToastVisible) {
@@ -107,7 +144,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       ];
 
       setCart(updatedCart);
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      // localStorage.setItem("cart", JSON.stringify(updatedCart));
       setTotals(calculateTotals(updatedCart));
     } else {
       const updatedCart = cart.map((item) =>
@@ -116,7 +153,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
           : item
       );
       setCart(updatedCart);
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      // localStorage.setItem("cart", JSON.stringify(updatedCart));
       setTotals(calculateTotals(updatedCart));
     }
     if (actionType == "add")
@@ -139,7 +176,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         : item
     );
     setCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    // localStorage.setItem("cart", JSON.stringify(updatedCart));
     setTotals(calculateTotals(updatedCart));
   };
 
@@ -150,14 +187,14 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         : item
     );
     setCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    // localStorage.setItem("cart", JSON.stringify(updatedCart));
 
     const existingProduct = cart.find((item) => item.productId === productId);
     if (existingProduct && existingProduct.quantity > 1) {
       setTotals(calculateTotals(updatedCart));
     }
 
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    // localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
   const calculateTotals = (cart: iProduct[]) => {
@@ -177,8 +214,15 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const removeItems = (productId: number) => {
     const updatedCart = cart.filter((item) => item.productId !== productId);
     setCart(updatedCart);
-    localStorage.removeItem("cart");
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+
+    const cartData: CartData = JSON.parse(
+      localStorage.getItem("storedCart") || "{}"
+    );
+    delete cartData[userId];
+    localStorage.setItem("storedCart", JSON.stringify(cartData));
+
+    // localStorage.removeItem("cart");
+    // localStorage.setItem("cart", JSON.stringify(updatedCart));
 
     const storedQuantitiesStr = localStorage.getItem("currentQuantities");
     const storedQuantities = storedQuantitiesStr
