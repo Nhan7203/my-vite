@@ -279,7 +279,8 @@ import "./ProductDetail.css";
     };
   
     const renderProductReviews = () => {
-      return productReviews.map((review, index) => (
+      const latestReviews = productReviews.slice(-4);
+      return latestReviews.map((review, index) => (
         <div key={index} className="review">
           <div className="review-header">
             <span className="review-user">User: {review.userId}</span>
