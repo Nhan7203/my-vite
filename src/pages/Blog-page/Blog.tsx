@@ -3,14 +3,15 @@ import {
   cancelLike,
   getAllBlogs,
   increaseView,
+  getLikedBlogsByUser,
 } from "../../apiServices/BlogServices/blogServices";
 import { useState, useEffect } from "react";
 import { getUserIdFromToken } from "../../utils/jwtHelper";
 import { Navbar, Footer } from "../../import/import-components";
 import { FaHeart } from "react-icons/fa";
 import { aBlog } from "../../interfaces";
+import { Link } from "../../import/import-libary";
 import view from "../../assets/view.png";
-import { useNavigate } from "react-router-dom";
 // import "./Blog.css";
 
 const getGridColumn = (index: number) => {
@@ -20,7 +21,6 @@ const getGridColumn = (index: number) => {
 
 const Blog = () => {
   const [blogList, setBlogList] = useState<aBlog[]>([]);
-  const navigate = useNavigate();
 
   const handleLikeClick = async (blogId: number) => {
     const likedBlog = blogList.find((blog) => blog.blogId === blogId);
@@ -67,9 +67,11 @@ const Blog = () => {
     const fetchData = async () => {
       try {
         const response = await getAllBlogs();
+        const likedResponse = await getLikedBlogsByUser(userId);
+        const likedBlogs = likedResponse.map((blogId: number) => blogId);
         const updatedBlogList = response.map((blog: aBlog) => ({
           ...blog,
-          liked: false,
+          liked: likedBlogs.includes(blog.blogId),
         }));
         setBlogList(updatedBlogList);
       } catch (error) {
@@ -81,10 +83,14 @@ const Blog = () => {
 
   const increaseViewCount = async (userId: string, blogId: number) => {
     try {
-       await increaseView(userId, blogId);
-    
-        navigate(`/blogdetails/${blogId}`);
-     
+      await increaseView(userId, blogId);
+      setBlogList((prevBlogList) =>
+        prevBlogList.map((blog) =>
+          blog.blogId === blogId
+            ? { ...blog, view: blog.view + 1 }
+            : blog
+        )
+      );
     } catch (error) {
       console.error("Error increasing view count:", error);
     }
@@ -112,13 +118,16 @@ const Blog = () => {
               }}
             >
               <div className="element-blog">
-                <div onClick={() => increaseViewCount(userId, blog.blogId)}>
+                <Link
+                  to={`/blogdetails/${blog.blogId}`}
+                  onClick={() => increaseViewCount(userId, blog.blogId)}
+                >
                   <div className="box-img-blog">
                     <img src={blog.imageUrl} className="img-blog" alt="" />
                   </div>
                   <div className="box-title">{blog.title}</div>
                   <div className="box-content">{blog.content}</div>
-                </div>
+                </Link>
                 <div className="box-footer-blog">
                   <div className="icon-blog">
                     <img src={view} className="view" alt="view" />
@@ -128,7 +137,7 @@ const Blog = () => {
                       className="my-icon"
                       style={{
                         cursor: "pointer",
-                        color: blog.liked ? "red" : "inherit",
+                        color: blog.like ? "red" : "inherit",
                       }}
                       onClick={() => handleLikeClick(blog.blogId)}
                     />

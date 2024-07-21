@@ -34,14 +34,14 @@ const BlogDetails = () => {
   const product = blogDetails?.productId
     ? allProduct.find((e) => e.productId === blogDetails.productId)
     : null;
-//--------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------
 
-const { handleAddToCart } = HandleAddToCart();
+  const { handleAddToCart } = HandleAddToCart();
 
   const HandleAddToCartClick = (product: aProduct) => {
     handleAddToCart(product);
   };
-//-----------------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------------
 
 
   return (

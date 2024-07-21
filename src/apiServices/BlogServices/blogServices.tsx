@@ -78,3 +78,8 @@ export const createBlog = async (formData: any) => {
   }
 };
 
+export const getLikedBlogsByUser = async (userId: number) => {
+  const response = await axios.get(`https://localhost:7030/api/Blog/GetBlogLikeByUser?userId=${userId}`);
+  return response.data;
+};
+
