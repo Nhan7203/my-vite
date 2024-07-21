@@ -45,71 +45,72 @@ const Register = () => {
                 registerUser();
             }
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [errors]);
 
-    
+
     const registerUser = useCallback(async () => {
         try {
-          const response = await checkMail(registerValues.email);
-          if (response) {
-            swal({
-              title: "Email Sent!",
-              text: "We have sent you an Email if this Email was linked with your account!",
-              icon: "success",
-              buttons: {
-                ok: {
-                  text: "OK",
-                  value: true,
-                  className: "swal-ok-button",
-                }
-              },
-            }).then((value) => {
-              if (value) {
-                const code = Math.floor(10000000 + Math.random() * 90000000);
-                const templateParams = {
-                  from_name: 'MnB Shop <no-reply@mnbshop.com>',
-                  to_email: registerValues.email,
-                  subject: 'Send mail',
-                  code: code,
-                };
-                emailjs
-                  .send(
-                    'service_4j0f6f9',
-                    'template_pyes21y',
-                    templateParams,
-                    'Fm8U5RN0vDmjsIl4S'
-                  )
-                  .then(() => {
-                    navigate('/securityCodeRegister', { state: { registerValues, code } });
-                  })
-                  .catch((error) => {
-                    console.log(error);
-                  });
-              }
-            });
-          } else {
-            swal({
-              title: "registered email!!!",
-              text: "Email has been registered, you can log in",
-              icon: "error",
-              buttons: {
-                ok: {
-                  text: "OK",
-                  value: true,
-                  className: "swal-ok-button",
-                }
-              },
-            });
-          }
+            const response = await checkMail(registerValues.email);
+            if (response) {
+                swal({
+                    title: "Email Sent!",
+                    text: "We have sent you an Email if this Email was linked with your account!",
+                    icon: "success",
+                    buttons: {
+                        ok: {
+                            text: "OK",
+                            value: true,
+                            className: "swal-ok-button",
+                        }
+                    },
+                }).then((value) => {
+                    if (value) {
+                        const code = Math.floor(10000000 + Math.random() * 90000000);
+                        const timestamp = Date.now(); // Get the current timestamp
+                        const templateParams = {
+                            from_name: 'MnB Shop <no-reply@mnbshop.com>',
+                            to_email: registerValues.email,
+                            subject: 'Send mail',
+                            code: code,
+                        };
+                        emailjs
+                            .send(
+                                'service_4j0f6f9',
+                                'template_pyes21y',
+                                templateParams,
+                                'Fm8U5RN0vDmjsIl4S'
+                            )
+                            .then(() => {
+                                navigate('/securityCodeRegister', { state: { registerValues, code, timestamp } });
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                            });
+                    }
+                });
+            } else {
+                swal({
+                    title: "registered email!!!",
+                    text: "Email has been registered, you can log in",
+                    icon: "error",
+                    buttons: {
+                        ok: {
+                            text: "OK",
+                            value: true,
+                            className: "swal-ok-button",
+                        }
+                    },
+                });
+            }
         } catch (error) {
-          toast.error('some request fail');
-          console.error(error);
+            toast.error('some request fail');
+            console.error(error);
         }
-        
-      }, [navigate, registerValues]);
 
-      
+    }, [navigate, registerValues]);
+
+
 
     return (
         <>

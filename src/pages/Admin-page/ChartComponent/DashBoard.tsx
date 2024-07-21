@@ -9,7 +9,6 @@ import {
     getTotalUser,
 } from "../../../apiServices/AdminServices/adminServices.tsx";
 
-
 interface PaymentData {
     Payment: string;
     [key: string]: string | number;
@@ -30,7 +29,6 @@ const Dashboard: React.FC = () => {
     const [totalProfit, setTotalProfit] = useState<number>();
     const [totalUser, setTotalUser] = useState<number>();
 
-
     useEffect(() => {
         const getData = async () => {
             const data = await fetchBestSellerProducts();
@@ -45,11 +43,15 @@ const Dashboard: React.FC = () => {
                 const response = await fetch('https://localhost:7030/api/Admin/GetOrders');
                 const data = await response.json();
 
-                const transformedData = data.map((transaction: any) => ({
-                    name: transaction.userName,
-                    date: new Date(transaction.orderDate).toLocaleDateString('en-GB'),
-                    amount: `${transaction.total.toLocaleString('en-US')} VND`,
-                }));
+                const transformedData = data.map((transaction: any) => {
+                    const date = new Date(transaction.orderDate);
+                    const formattedDate = `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+                    return {
+                        name: transaction.userName,
+                        date: formattedDate,
+                        amount: `${transaction.total.toLocaleString('en-US')} VND`,
+                    };
+                }).sort((a: any, b: any) => new Date(b.date.split('/').reverse().join('/')).getTime() - new Date(a.date.split('/').reverse().join('/')).getTime());
 
                 setTransactions(transformedData);
             } catch (error) {

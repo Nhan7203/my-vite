@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../SecurityCode-page/SecurityCode.css';
@@ -7,21 +6,31 @@ import { register } from '../../apiServices/AccountServices/accountServices';
 
 const SecurityCodeRegister = () => {
     const [otp, setOtp] = useState('');
-
     const [isCodeValid, setIsCodeValid] = useState(true);
+    const [isTimeValid, setIsTimeValid] = useState(true);
+
     const location = useLocation();
     const navigate = useNavigate();
-    const { registerValues, code: initialCode } = location.state || {};
+    const { registerValues, code: initialCode, timestamp: initialTimestamp } = location.state || {};
 
     useEffect(() => {
-        if (!registerValues || !initialCode) {
-            // Redirect to the registration page if registerValues or code is missing
+        if (!registerValues || !initialCode || !initialTimestamp) {
             navigate('/register');
         }
-    }, [registerValues, initialCode, navigate]);
+    }, [registerValues, initialCode, initialTimestamp, navigate]);
 
     const handleOnContinue = async (event: any) => {
         event.preventDefault();
+
+        const currentTime = Date.now();
+        const timeDifference = currentTime - initialTimestamp;
+
+        if (timeDifference > 300000) {
+            setIsTimeValid(false);
+            setIsCodeValid(true);
+            toast.error('OTP has expired');
+            return;
+        }
 
         if (otp == initialCode) {
             try {
@@ -36,6 +45,7 @@ const SecurityCodeRegister = () => {
             }
         } else {
             setIsCodeValid(false);
+            setIsTimeValid(true);
         }
     };
 
@@ -59,7 +69,7 @@ const SecurityCodeRegister = () => {
                         </div>
 
                         <div className="line"></div>
-                        <h3 className="text-login">ForgetPassword</h3>
+                        <h3 className="text-login">Forget Password</h3>
                     </div>
                 </header>
 
@@ -72,15 +82,14 @@ const SecurityCodeRegister = () => {
                                 <label>Please check your email for a message with the code. Your code has 8 characters</label>
                                 <input
                                     type="number"
-                                    id=" "
                                     placeholder="Insert your code here!"
                                     required
                                     value={otp}
                                     onChange={(e) => setOtp(e.target.value)}
                                 />
                                 {!isCodeValid && <p className="text-msg">Your code is not valid!</p>}
+                                {!isTimeValid && <p className="text-msg">Your code has expired!</p>}
                             </div>
-
 
                             <div className="two-button">
                                 <input
@@ -98,9 +107,7 @@ const SecurityCodeRegister = () => {
                                     value="Cancel"
                                     onClick={() => handleBtCancel()}
                                 />
-
                             </div>
-
 
                             <p>Don't have an account? <a href="/register">Register</a></p>
                         </form>
