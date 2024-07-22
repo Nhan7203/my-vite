@@ -266,7 +266,7 @@ const ProductManage = () => {
                       <td>{getBrandOptionName(product.brandId)}</td>
                       <td>{getCategoryOptionName(product.categoryId)}</td>
                       <td>{product.stock}</td>
-                      <td>${product.price.toLocaleString()}</td>
+                      <td>₫{product.price.toLocaleString()}</td>
                       <td>{product.name}</td>
                       <td>{product.description}</td>
 

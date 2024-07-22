@@ -327,7 +327,7 @@ import "./ProductDetail.css";
                   <div className="rating-stars">{renderStars()}</div>
                   <p>Total Rating: {ratingInfo.reviewCount}</p>
                 </div>
-                <h3>${product.price.toLocaleString()}</h3>
+                <h3>₫{product.price.toLocaleString()}</h3>
                 <div className="trans-voucher">
                   {productHaveVoucher ? (
                     <>

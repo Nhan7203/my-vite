@@ -132,7 +132,7 @@ const ProductCard = ({
           <p>Total Rating: {ratingInfo.reviewCount}</p>
         </div>
         <div className="footer-card">
-          <h2 className="price">${product.price.toLocaleString()}</h2>
+          <h2 className="price">₫{product.price.toLocaleString()}</h2>
           <div className="box-shopping">
             <BsCart3
               className="icon-shopping"

@@ -33,7 +33,7 @@ const OrderTable: React.FC<OrderTableProps> = ({
           <td className="column5 dynamic-content">
             {['Economical delivery', 'Regular delivery', 'Express delivery'][order.shippingMethodId - 1]}
           </td>
-          <td className="column6 dynamic-content">${order.total.toLocaleString()}</td>
+          <td className="column6 dynamic-content">₫{order.total.toLocaleString()}</td>
           <td className="column65 dynamic-content">
             <span
               style={{ margin: '0 0 0 15px' }}

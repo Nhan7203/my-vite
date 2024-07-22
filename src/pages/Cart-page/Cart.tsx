@@ -92,7 +92,7 @@ const handlePaymentClick = () => {
                         </div>
                         <div className="name">{product.name}</div>
                         <div className="price-order">
-                          ${product.price.toLocaleString()}
+                        ₫{product.price.toLocaleString()}
                         </div>
                         <div className="quantity-count">
                           <div
@@ -121,7 +121,7 @@ const handlePaymentClick = () => {
                           </div>
                         </div>
                         <div className="money">
-                          ${formattedProductTotalAmount}
+                        ₫{formattedProductTotalAmount}
                         </div>
                         <div
                           className="icon"
@@ -190,7 +190,7 @@ const handlePaymentClick = () => {
               <div className="total">
                 <p>Total</p>
                 <div className="total-price">
-                  ${totalAmount.toLocaleString()}
+                ₫{totalAmount.toLocaleString()}
                 </div>
               </div>
 

@@ -84,7 +84,7 @@ const BlogDetails = () => {
                 </div>
 
                 <div className="price-product-blog">
-                  <p>${product.price.toLocaleString()}</p>
+                  <p>₫{product.price.toLocaleString()}</p>
                 </div>
                 <div>
                   <div className="icon-product-blog">

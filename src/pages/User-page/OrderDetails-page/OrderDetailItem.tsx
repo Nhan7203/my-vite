@@ -78,13 +78,13 @@ const OrderDetailItem: React.FC<OrderDetailItemProps> = ({
                 </div>
                 <div className="name">{orderDetail.nameProduct}</div>
                 <div className="price-order">
-                  ${orderDetail?.price.toLocaleString()}
+                  ₫{orderDetail?.price.toLocaleString()}
                 </div>
                 <div className="quantity-count">
                   {`${orderDetail.quantity}`}
                 </div>
                 <div className="money">
-                  ${orderDetail.total.toLocaleString()}
+                  ₫{orderDetail.total.toLocaleString()}
                 </div>
                 {orderStatus === "Completed" && (
                   <div className="">
