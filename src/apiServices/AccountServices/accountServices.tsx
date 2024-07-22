@@ -20,6 +20,24 @@ export const checkMail = async (email: string) => {
     }
   };
 
+  export const checkMailExist = async (email: string) => {
+    try {
+      const res = await request.post(
+        `Account/checkMailExist?email=${encodeURIComponent(email)}`
+      ,
+      {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+      }
+    )
+      //console.log("check data search: ", res);
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
   export const resetPassword = async (email: string) => {
     try {
       const res = await request.post(

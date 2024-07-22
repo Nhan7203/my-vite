@@ -10,8 +10,8 @@ import { getUserIdFromToken } from "../../utils/jwtHelper";
 import { Navbar, Footer } from "../../import/import-components";
 import { FaHeart } from "react-icons/fa";
 import { aBlog } from "../../interfaces";
-import { Link } from "../../import/import-libary";
 import view from "../../assets/view.png";
+import { useNavigate } from "react-router-dom";
 // import "./Blog.css";
 
 const getGridColumn = (index: number) => {
@@ -21,7 +21,8 @@ const getGridColumn = (index: number) => {
 
 const Blog = () => {
   const [blogList, setBlogList] = useState<aBlog[]>([]);
-
+  const navigate = useNavigate();
+  
   const handleLikeClick = async (blogId: number) => {
     const likedBlog = blogList.find((blog) => blog.blogId === blogId);
 
@@ -91,6 +92,7 @@ const Blog = () => {
             : blog
         )
       );
+      navigate(`/blogdetails/${blogId}`);
     } catch (error) {
       console.error("Error increasing view count:", error);
     }
@@ -118,16 +120,13 @@ const Blog = () => {
               }}
             >
               <div className="element-blog">
-                <Link
-                  to={`/blogdetails/${blog.blogId}`}
-                  onClick={() => increaseViewCount(userId, blog.blogId)}
-                >
+              <div onClick={() => increaseViewCount(userId, blog.blogId)}>
                   <div className="box-img-blog">
                     <img src={blog.imageUrl} className="img-blog" alt="" />
                   </div>
                   <div className="box-title">{blog.title}</div>
                   <div className="box-content">{blog.content}</div>
-                </Link>
+                </div>
                 <div className="box-footer-blog">
                   <div className="icon-blog">
                     <img src={view} className="view" alt="view" />
