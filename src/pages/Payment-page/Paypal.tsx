@@ -8,7 +8,7 @@ import { getUserIdFromToken, getAddressFromToken } from "../../utils/jwtHelper";
 import { useEffect } from "react";
 import swal from "sweetalert";
 import { ordersPaypal } from "../../apiServices/OrderServices/OrderServices";
-import { iProduct, Voucher } from "../../interfaces";
+import { CartData, iProduct, Voucher } from "../../interfaces";
 import { useCart } from "../Cart-page/CartContext";
 import { refreshToken } from "../../apiServices/AccountServices/refreshTokenServices";
 
@@ -126,7 +126,13 @@ const storedVoucher = localStorage.getItem("selectedVoucher");
         if (response.status === 401) {
           await refreshToken();
         }
-        localStorage.removeItem("cart");
+        
+        const cartData: CartData = JSON.parse(
+          localStorage.getItem("storedCart") || "{}"
+        );
+        delete cartData[userId];
+        localStorage.setItem("storedCart", JSON.stringify(cartData));
+
         localStorage.removeItem("currentQuantities");
         swal("Congrat!", "Order was created!", "success").then(() => {
           localStorage.removeItem("selectedVoucher");
