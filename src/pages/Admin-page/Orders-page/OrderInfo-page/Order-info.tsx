@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// OrderInfo.tsx
 import { shippingMethodOptions } from "../../../../interfaces";
 import { useLocation } from "react-router-dom";
 import {
@@ -11,6 +11,7 @@ import Sidebar from "../../components/Sidebar";
 
 import "../../Admin.css";
 import { useAllProduct, swal } from "../../../../import/import-another";
+
 const OrderInfo = () => {
   const {
     orderDetails,
@@ -68,7 +69,7 @@ const OrderInfo = () => {
       });
       return;
     }
-    handleConfirmOrder(orderId);
+    handleConfirmOrder(orderId, userData);
   };
 
   return (
@@ -184,10 +185,10 @@ const OrderInfo = () => {
                     <p>
                       {order?.shippingMethodId
                         ? [
-                            "Economical delivery",
-                            "Regular delivery",
-                            "Express delivery",
-                          ][order.shippingMethodId - 1]
+                          "Economical delivery",
+                          "Regular delivery",
+                          "Express delivery",
+                        ][order.shippingMethodId - 1]
                         : ""}
                     </p>
                     <p>{order?.orderDate}</p>
@@ -197,30 +198,30 @@ const OrderInfo = () => {
                 <div className="button-payment">
                   {(orderStatus === "Pending" ||
                     orderStatus === "Pre-Order") && (
-                    <div
-                      className="add-product"
-                      style={{ display: "flex", flexDirection: "row-reverse" }}
-                    >
-                      <button
-                        onClick={(event) =>
-                          handleCancelClick(parseInt(orderId ?? ""), event)
-                        }
+                      <div
+                        className="add-product"
+                        style={{ display: "flex", flexDirection: "row-reverse" }}
                       >
-                        Cancel Order
-                      </button>
-                      <button
-                        onClick={(event) =>
-                          handleConfirmClick(
-                            parseInt(orderId ?? ""),
-                            event,
-                            orderStatus
-                          )
-                        }
-                      >
-                        Confirm Order
-                      </button>
-                    </div>
-                  )}
+                        <button
+                          onClick={(event) =>
+                            handleCancelClick(parseInt(orderId ?? ""), event)
+                          }
+                        >
+                          Cancel Order
+                        </button>
+                        <button
+                          onClick={(event) =>
+                            handleConfirmClick(
+                              parseInt(orderId ?? ""),
+                              event,
+                              orderStatus
+                            )
+                          }
+                        >
+                          Confirm Order
+                        </button>
+                      </div>
+                    )}
                 </div>
               </div>
             </form>
@@ -230,4 +231,5 @@ const OrderInfo = () => {
     </>
   );
 };
+
 export default OrderInfo;
