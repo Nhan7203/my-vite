@@ -22,7 +22,12 @@ const getGridColumn = (index: number) => {
 const Blog = () => {
   const [blogList, setBlogList] = useState<aBlog[]>([]);
   const navigate = useNavigate();
-  
+
+  // Get the userId from the token
+  const token = localStorage.getItem("token");
+  const userIdFromToken = token ? getUserIdFromToken(token) : null;
+  const userId = userIdFromToken;
+
   const handleLikeClick = async (blogId: number) => {
     const likedBlog = blogList.find((blog) => blog.blogId === blogId);
 
@@ -67,22 +72,26 @@ const Blog = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getAllBlogs();
-        const likedResponse = await getLikedBlogsByUser(userId);
-        const likedBlogs = likedResponse.map((blogId: number) => blogId);
-        const updatedBlogList = response.map((blog: aBlog) => ({
-          ...blog,
-          liked: likedBlogs.includes(blog.blogId),
-        }));
-        setBlogList(updatedBlogList);
+        const allBlogsResponse = await getAllBlogs();
+        if (userId) {
+          const likedResponse = await getLikedBlogsByUser(userId);
+          const likedBlogs = likedResponse.map((blogId: number) => blogId);
+          const updatedBlogList = allBlogsResponse.map((blog: aBlog) => ({
+            ...blog,
+            liked: likedBlogs.includes(blog.blogId),
+          }));
+          setBlogList(updatedBlogList);
+        } else {
+          setBlogList(allBlogsResponse);
+        }
       } catch (error) {
         console.error("Error fetching blogs:", error);
       }
     };
     fetchData();
-  }, []);
+  }, [userId]);
 
-  const increaseViewCount = async (userId: string, blogId: number) => {
+  const increaseViewCount = async (userId: string | null, blogId: number) => {
     try {
       await increaseView(userId, blogId);
       setBlogList((prevBlogList) =>
@@ -97,13 +106,6 @@ const Blog = () => {
       console.error("Error increasing view count:", error);
     }
   };
-
-  // Get the userId from the token
-  const token = localStorage.getItem("token");
-
-  const userIdFromToken = token ? getUserIdFromToken(token) : null;
-
-  const userId = userIdFromToken;
 
   return (
     <div>
@@ -120,7 +122,7 @@ const Blog = () => {
               }}
             >
               <div className="element-blog">
-              <div onClick={() => increaseViewCount(userId, blog.blogId)}>
+                <div onClick={() => increaseViewCount(userId, blog.blogId)}>
                   <div className="box-img-blog">
                     <img src={blog.imageUrl} className="img-blog" alt="" />
                   </div>
