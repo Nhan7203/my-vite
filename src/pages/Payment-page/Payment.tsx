@@ -226,7 +226,7 @@ const Payment = () => {
                   onClick={() => handleOrderShipChange(1)}
                 >
                   <img src={sec} alt="" className="logo-sec" />
-                  <div>Economical delivery $30,000</div>
+                  <div>Economical delivery ₫30,000</div>
                 </div>
               </div>
               <div className="regular">
@@ -235,7 +235,7 @@ const Payment = () => {
                   onClick={() => handleOrderShipChange(2)}
                 >
                   <img src={sr} alt="" className="logo-sr" />
-                  <div>Regular delivery $50,000</div>
+                  <div>Regular delivery ₫50,000</div>
                 </div>
               </div>
               <div className="express">
@@ -244,7 +244,7 @@ const Payment = () => {
                   onClick={() => handleOrderShipChange(3)}
                 >
                   <img src={se} alt="" className="logo-se" />
-                  <div>Express delivery $120,000</div>
+                  <div>Express delivery ₫120,000</div>
                 </div>
               </div>
             </div>
@@ -321,7 +321,7 @@ const Payment = () => {
             <div className="bill">
               <div className="total-sub">
                 <p>Subtotal</p>
-                <div>${subtotal.toLocaleString()}</div>
+                <div>₫{subtotal.toLocaleString()}</div>
               </div>
               <div className="money-voucher">
                 <p>Voucher</p>
@@ -339,7 +339,7 @@ const Payment = () => {
               <div className="total">
                 <p>Total</p>
                 <div className="total-price">
-                  ${(discountedTotal + subtotal).toLocaleString()}
+                ₫{(discountedTotal + subtotal).toLocaleString()}
                 </div>
               </div>
 
@@ -404,13 +404,13 @@ const Payment = () => {
                       </div>
                       <div className="name">{product.name}</div>
                       <div className="price-order">
-                        ${product.price.toLocaleString()}
+                      ₫{product.price.toLocaleString()}
                       </div>
                       <div className="quantity-count">
                         {`${product.quantity}`}
                       </div>
                       <div className="money">
-                        ${formattedProductTotalAmount}
+                      ₫{formattedProductTotalAmount}
                       </div>
                     </div>
                   </div>

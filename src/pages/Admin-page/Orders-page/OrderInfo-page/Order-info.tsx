@@ -138,7 +138,7 @@ const OrderInfo = () => {
                           <td style={{ textAlign: "center" }}>
                             {orderDetail.quantity}
                           </td>
-                          <td>${orderDetail.price.toLocaleString()}</td>
+                          <td>₫{orderDetail.price.toLocaleString()}</td>
                         </tr>
                       );
                     })}
@@ -153,7 +153,7 @@ const OrderInfo = () => {
                     </div>
 
                     <div className="value-total">
-                      <p>${getShippingMethodOption(order?.shippingMethodId)}</p>
+                      <p>₫{getShippingMethodOption(order?.shippingMethodId)}</p>
                       {orderVoucher ? (
                         <p>
                           {orderVoucher?.discountValue}
@@ -164,7 +164,7 @@ const OrderInfo = () => {
                       )}
 
                       <p style={{ fontWeight: 700 }}>
-                        ${order?.total.toLocaleString()}
+                      ₫{order?.total.toLocaleString()}
                       </p>
                     </div>
                   </div>

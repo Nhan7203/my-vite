@@ -57,7 +57,7 @@ const OrderTable: React.FC<OrderTableProps> = ({
                   <div className="under-square">
                     <span className="total-text">
                       Total
-                      <p id="p-total">${order.total.toLocaleString()}</p>
+                      <p id="p-total">₫{order.total.toLocaleString()}</p>
                     </span>
                     <p> {order.orderDate}</p>
                   </div>

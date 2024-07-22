@@ -81,7 +81,7 @@ const ListProduct: React.FC<ListProductProps> = ({
                 </div>
                 <div className="body-text">
                   <span className="element-price">
-                    ${product.price.toLocaleString()}{" "}
+                  ₫{product.price.toLocaleString()}{" "}
                   </span>
                   <div className="box-icon-product-page">
                     <BsCart3
